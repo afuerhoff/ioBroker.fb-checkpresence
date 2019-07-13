@@ -1,0 +1,88 @@
+{
+    "common": {
+        "name": "fb-checkpresence",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Fritzbox CheckPresence",
+        "titleLang": {
+            "en": "Fritzbox CheckPresence",
+            "de": "Fritzbox CheckPresence",
+            "ru": "Fritzbox CheckPresence",
+            "pt": "Fritzbox CheckPresence",
+            "nl": "Fritzbox CheckPresence",
+            "fr": "Fritzbox CheckPresence",
+            "it": "Fritzbox CheckPresence",
+            "es": "Fritzbox CheckPresence",
+            "pl": "Fritzbox CheckPresence",
+            "zh-cn": "Fritzbox CheckPresence"
+        },
+        "desc": {
+            "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
+            "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
+            "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
+            "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
+            "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
+            "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
+            "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
+            "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
+            "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
+            "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
+        },
+        "authors": [
+            "Achim Fürhoff <achim.fuerhoff@hotmail.de>"
+        ],
+        "keywords": [
+            "ioBroker",
+            "presence",
+            "family",
+            "tr064",
+            "fritz.box"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "fb-checkpresence.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
+        "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "infrastructure",
+        "compact": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "admin": ">=3.0.0"
+            }
+        ]
+    },
+    "native": {
+        "devices": [],
+        "ipaddress": "192.168.178.1",
+        "interval": 1
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        }
+    ]
+}

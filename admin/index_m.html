@@ -1,0 +1,177 @@
+<html>
+
+<head>
+    <!-- Load ioBroker scripts and styles-->
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+
+    <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="../../js/translate.js"></script>
+    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+    <!-- Load our own files -->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="words.js"></script>
+
+    <script type="text/javascript">
+		var familymembers = [];
+
+		function setValue(id, value, onChange) {
+			var $value = $('#' + id + '.value');
+			if ($value.attr('type') === 'checkbox') {
+				$value.prop('checked', value).change(function() {
+					onChange();
+				});
+			} else {
+				$value.val(value).change(function() {
+					onChange();
+				}).keyup(function() {
+					// Check that only numbers entered
+					if ($(this).hasClass('number')) {
+						var val = $(this).val();
+						if (val) {
+							var newVal = '';
+							for (var i = 0; i < val.length; i++) {
+								if (val[i] >= '0' && val[i] <= '9') {
+									newVal += val[i];
+								}
+							}
+							if (val != newVal) $(this).val(newVal);
+						}
+					}
+					onChange();
+				});
+			}
+		}
+
+        // This will be called by the admin adapter when the settings page loads
+        function load(settings, onChange) {
+            // example: select elements with id=key and class=value and insert value
+            if (!settings) return;
+
+			familymembers = settings.familymembers || [];
+			for (var key in settings) {
+				if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
+			}
+			values2table('values', familymembers, onChange);
+
+            /*$('.value').each(function () {
+                var $key = $(this);
+                var id = $key.attr('id');
+                if ($key.attr('type') === 'checkbox') {
+                    // do not call onChange direct, because onChange could expect some arguments
+                    $key.prop('checked', settings[id])
+                        .on('change', () => onChange())
+                        ;
+                } else {
+                    // do not call onChange direct, because onChange could expect some arguments
+                    $key.val(settings[id])
+                        .on('change', () => onChange())
+                        .on('keyup', () => onChange())
+                        ;
+                }
+            });*/
+            onChange(false);
+            // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
+            if (M) M.updateTextFields();
+        }
+
+        // This will be called by the admin adapter when the user presses the save button
+        function save(callback) {
+            // example: select elements with class=value and build settings object
+            var obj = {};
+            $('.value').each(function () {
+                var $this = $(this);
+                if ($this.attr('type') === 'checkbox') {
+                    obj[$this.attr('id')] = $this.prop('checked');
+                } else {
+                    obj[$this.attr('id')] = $this.val();
+                }
+            });
+			// Get table
+			obj.familymembers = table2values('values');
+
+            callback(obj);
+        }
+    </script>
+
+</head>
+
+<body>
+
+	<div class="m adapter-container">
+  
+		<div class="row">
+			<div class="col s12">
+				<ul class="tabs">
+				  <li class="tab col s3"><a href="#tab-main" class="translate active">Main settings</a></li>
+				  <li class="tab col s3"><a href="#tab-keys" class="translate">Family settings</a></li>
+				</ul>
+			</div>
+
+		<div id="tab-main" class="col s12 page">
+			<div class="row">
+			  <div class="input-field col s2">
+				<img src="fb-checkpresence.png" class="logo">
+			  </div>
+			</div>
+			<div class="row">
+				<div class="col s2 input-field tooltip">	
+					<input type="text" class="value" maxLength="15" id="ipaddress"/>
+					<label for="ipaddress" class="translate">IP Fritzbox</label>
+					<!--span class="helper-text" data-error="wrong" data-success="right">Helper text</span-->
+					<span class="tooltiptext translate">Please enter the IP-Address from your Fritzbox</span>
+				</div>
+				<div class="col s2 input-field tooltip">
+					<input type="number" class="value" min="1" max="59" id="interval" />
+					<label for="interval" class="translate">polling interval</label>
+					<span class="tooltiptext translate">Please enter the polling interval</span>
+				</div>
+			</div>
+		</div>
+
+		<div id="tab-keys" class="col s12 page">
+			<div class="row">
+				<div class="input-field col s6">
+				  <img src="fb-checkpresence.png" class="logo">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+				  <p class="translate">Please insert a name and a mac address for a family member.</p>
+				  <p class="translate">For every enabled table line an object will be created.</p>
+				</div>
+			</div>
+
+			<div id="values">
+				<div class="row">
+					<div class="col s12">
+						<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s10">
+						<table class="table-values" style="width: 100%;">
+							<thead>
+								<tr>
+									<th data-name="_index" style="width: 40px" class="translate"></th>
+									<th data-name="familymember" style="width: 140px" data-style="width: 140px" class="translate" for="familymember">Family member</th>
+									<th data-name="macaddress" style="width: 140px" data-style="width: 140px" class="translate" for="macaddress">Mac-Address</th>
+									<th data-name="comment" style="width: 140px" data-style="width: 140px" class="translate" for="comment">Comment</th>
+									<th data-name="enabled"  style="width: 70px" data-style="width: 70px" data-type="checkbox" class="translate">Enabled</th>
+									<th data-buttons="delete" style="width: 40px"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>
