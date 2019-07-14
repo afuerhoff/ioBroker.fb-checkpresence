@@ -12,6 +12,7 @@ const utils = require('@iobroker/adapter-core');
 const request = require('request');
 const schedule = require('node-schedule');
 var parser = require('cron-parser');
+var util = require('util');
 
 var gthis; //Global verfügbar machen
 
@@ -114,8 +115,10 @@ class FbCheckpresence extends utils.Adapter {
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-        this.log.info('config ip-address: ' + this.config.ipaddress);
-        this.log.info('config interval: ' + this.config.interval);
+		var sCron = "*/" + this.config.interval + " * * * *";
+		var interval = parser.parseExpression(sCron);
+
+        this.log.info('start fb-checkpresence: ip-address: ' + this.config.ipaddress + ' polling interval: ' + this.config.interval + " (" + sCron + ")");
 
         // Reset connection state at start
         this.setState('info.connection', false, true);
@@ -125,9 +128,7 @@ class FbCheckpresence extends utils.Adapter {
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
-	    this.log.info('adapter fb-checkpresence started');
 		var sIpfritz = this.config.ipaddress;
-		this.log.info('ip address fritzbox: '+ sIpfritz);
 		if (!this.config.familymembers) {
 			this.log.info('no family members defined');
 			return
@@ -191,7 +192,7 @@ class FbCheckpresence extends utils.Adapter {
 				var enabled = device.enabled;
 				
 				if (enabled == true){
-					this.log.info('family member: ' + member + "(" + mac + ")");
+					//this.log.info('family member: ' + member + "(" + mac + ")");
 
 					await this.setObjectAsync(member, {
 						type: "state",
@@ -232,64 +233,67 @@ class FbCheckpresence extends utils.Adapter {
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");	
 
-		var sCron = "*/" + this.config.interval + " * * * *";
-		var interval = parser.parseExpression(sCron);
-		this.log.info("CRON string: " + sCron);
 		var pres = false;
 		var j = schedule.scheduleJob(sCron, async function(){
 			pres = false;
 			var jsontab = "[";
 			var sHTML = "<table style='width:100%'><thead><tr><th style='text-align:left;'>Name</th><th style='text-align:left;'>Status</th><th style='text-align:left;'>Kommt</th><th style='text-align:left;'>Geht</th></tr></thead><tbody>";
 			for (var k = 0; k < gthis.config.familymembers.length; k++) {
-				var device = gthis.config.familymembers[k];
-				var member = device.familymember;
+				var device = gthis.config.familymembers[k]; //Zeile aus der Tabelle Familymembers
+				var member = device.familymember; 
 				var mac = device.macaddress;
 				var enabled = device.enabled;
 				let current_datetime = new Date()
 				let formatted_date = current_datetime.getFullYear() + "-" + aLZ(current_datetime.getMonth() + 1) + "-" + aLZ(current_datetime.getDate()) + " " + aLZ(current_datetime.getHours()) + ":" + aLZ(current_datetime.getMinutes()) + ":" + aLZ(current_datetime.getSeconds())
 				var bActive = false;
-				var sComming;
-				var sGoing;
+				var sComming = "";
+				var sGoing = "";
+				const getStateP = util.promisify(gthis.getState);
 				
 				if (enabled == true){
-					gthis.log.info("start user action");
 					try {
-						const user = await userAction(sIpfritz, "/upnp/control/hosts", "Hosts:1", "GetSpecificHostEntry", "NewMACAddress", mac);
-						gthis.setState("info.connection", { val: true, ack: true });
-						gthis.log.info(user);
+						//gthis.log.info("start user action: " + member);
+						var user = await userAction(sIpfritz, "/upnp/control/hosts", "Hosts:1", "GetSpecificHostEntry", "NewMACAddress", mac);
 						var n = user.search("NewActive>1</NewActive");
 						//gthis.log.info("Position: " + n);
+						var curVal = getStateP(member);
 						if (n >= 0){
 							bActive = true;
-							gthis.getState(member, function (err, state) {
-								gthis.log.info("state: " + state.val);
-								gthis.log.info("Date: " + formatted_date);
-								if (state.val == false){
+							pres = true;
+							gthis.log.info(member + " (true): " + user);
+							if (curVal != null){
+								if (curVal == false){
 									gthis.log.info(member + ".comming: " + formatted_date);
 									gthis.setState(member + ".comming", { val: formatted_date, ack: true });
 								}
-							});
-							gthis.setState(member, { val: true, ack: true });
-							gthis.log.info(member + ".active: " + true);
-							pres = true;
+								gthis.setState(member, { val: true, ack: true });
+								//gthis.log.info(member + ".active: " + true);
+							}else{
+								gthis.log.error("object " + member + " is deleted!")
+							}
 						}else{
-							gthis.getState(member, function (err, state) {
-								gthis.log.info("Date: " + formatted_date);
-								gthis.log.info("state: " + state.val);
-								if (state.val == true){
-									gthis.log.info(member + ".going: " + formatted_date);
-									gthis.setState(member + ".going", { val: formatted_date, ack: true });
+							//var curVal = getState(member);
+							//gthis.getState(member, function (err, state) {
+								gthis.log.info(member + " (false): " + user);
+								if (curVal != null){
+									//gthis.log.info("state: " + curVal);
+									if (curVal == true){
+										gthis.log.info(member + ".going: " + formatted_date);
+										gthis.setState(member + ".going", { val: formatted_date, ack: true });
+									}
+									gthis.setState(member, { val: false, ack: true });
+									//gthis.log.info(member + ".active: " + false);
+								}else{
+									gthis.log.error("object " + member + " is deleted!")									
 								}
-							});
-							gthis.setState(member, { val: false, ack: true });
-							gthis.log.info(member + ".active: " + false);
+							//});
 						}
-						gthis.getState(member + ".comming", function (err, state) {
-							sComming = state.val;
-						});
-						gthis.getState(member + ".going", function (err, state) {
-							sGoing = state.val;
-						});
+						gthis.setState("info.connection", { val: true, ack: true });
+						curVal = getStateP(member + ".comming");
+						if (curVal != null) sComming = curVal;
+						curVal = getStateP(member + ".going");
+						if (curVal != null) sGoing = curVal;
+
 						jsontab += CreateRow("Name", member, "Active", bActive, "Kommt", sComming, "Geht", sGoing);
 						sHTML += CreateHTMLRow(member, bActive, sComming, sGoing);
 						if (k < gthis.config.familymembers.length-1){
@@ -297,10 +301,10 @@ class FbCheckpresence extends utils.Adapter {
 						}
 					} catch (error) {
 						gthis.setState("info.connection", { val: false, ack: true });
-						gthis.log.error('ERROR:');
-						gthis.log.error(error);
+						gthis.log.error('ERROR:' + error);
 					}
 				}
+				
 			}
 			jsontab += "]";
 			sHTML += "</body></table>";  
