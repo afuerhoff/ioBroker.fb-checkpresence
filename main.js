@@ -30,7 +30,7 @@ function CreateHTMLRow (sUser, sStatus, sComming, sGoing) {
 }
 
 // JSON Tabelle
-function CreateRow (sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming,sComming, sHeadGoing,sGoing) {
+function CreateRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming,sComming, sHeadGoing,sGoing) {
 	var sJson = "{";
 	sJson += '"'  + sHeadUser + '":';
 	sJson += '"'  + sUser + '"' + ",";
@@ -119,9 +119,7 @@ class FbCheckpresence extends utils.Adapter {
 		var interval = parser.parseExpression(sCron);
 
         this.log.info('start fb-checkpresence: ip-address: ' + this.config.ipaddress + ' polling interval: ' + this.config.interval + " (" + sCron + ")");
-
-        // Reset connection state at start
-        this.setState('info.connection', false, true);
+		const getStateP = util.promisify(gthis.getState);
 
         /*
         For every state in the system there has to be also an object of type state
@@ -137,7 +135,7 @@ class FbCheckpresence extends utils.Adapter {
 			For every state in the system there has to be also an object of type state
 			Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 			*/
-			await this.setObjectAsync("info.connection", {
+			await this.setObjectNotExists("info.connection", {
 				type: "state",
 				common: {
 					name: "Fritzbox connection",
@@ -148,8 +146,10 @@ class FbCheckpresence extends utils.Adapter {
 				},
 				native: {},
 			});
+			// Reset connection state at start
+			gthis.setState('info.connection', false, true);
 
-			await this.setObjectAsync("presence", {
+			await this.setObjectNotExists("presence", {
 				type: "state",
 				common: {
 					name: "presence",
@@ -160,8 +160,9 @@ class FbCheckpresence extends utils.Adapter {
 				},
 				native: {},
 			});
+			if (await getStateP('presence') == null) gthis.setState('presence', false, true);
 
-			await this.setObjectAsync("json", {
+			await this.setObjectNotExists("json", {
 				type: "state",
 				common: {
 					name: "JSON table",
@@ -172,8 +173,9 @@ class FbCheckpresence extends utils.Adapter {
 				},
 				native: {},
 			});
+			if (await getStateP('json') == null) gthis.setState('json', "", true);
 
-			await this.setObjectAsync("html", {
+			await this.setObjectNotExists("html", {
 				type: "state",
 				common: {
 					name: "HTML table",
@@ -184,6 +186,7 @@ class FbCheckpresence extends utils.Adapter {
 				},
 				native: {},
 			});
+			if (await getStateP('html') == null) gthis.setState('html', "", true);
 			
 			for (var k = 0; k < this.config.familymembers.length; k++) {
 				var device = this.config.familymembers[k];
@@ -192,9 +195,7 @@ class FbCheckpresence extends utils.Adapter {
 				var enabled = device.enabled;
 				
 				if (enabled == true){
-					//this.log.info('family member: ' + member + "(" + mac + ")");
-
-					await this.setObjectAsync(member, {
+					await this.setObjectNotExists(member, {
 						type: "state",
 						common: {
 							name: member,
@@ -205,18 +206,20 @@ class FbCheckpresence extends utils.Adapter {
 						},
 						native: {},
 					});
-					await this.setObjectAsync(member + ".going", {
+					if (await getStateP(member) == null) gthis.setState(member, false, true);
+					await this.setObjectNotExists(member + ".going", {
 						type: "state",
 						common: {
 							name: member + ".going",
 							type: "string",
-							role: "indicator",
+							role: "indicator", 
 							read: true,
 							write: false,
 						},
 						native: {},
 					});
-					await this.setObjectAsync(member + ".comming", {
+					if (await getStateP(member + ".going") == null) gthis.setState(member + ".going", " ", true);
+					await this.setObjectNotExists(member + ".comming", {
 						type: "state",
 						common: {
 							name: member + ".comming",
@@ -227,6 +230,7 @@ class FbCheckpresence extends utils.Adapter {
 						},
 						native: {},
 					});
+					if (await getStateP(member + ".comming") == null) gthis.setState(member + ".comming", " ", true);
 				}
 			}
 		}			
@@ -236,8 +240,9 @@ class FbCheckpresence extends utils.Adapter {
 		var pres = false;
 		var j = schedule.scheduleJob(sCron, async function(){
 			pres = false;
-			var jsontab = "[";
-			var sHTML = "<table style='width:100%'><thead><tr><th style='text-align:left;'>Name</th><th style='text-align:left;'>Status</th><th style='text-align:left;'>Kommt</th><th style='text-align:left;'>Geht</th></tr></thead><tbody>";
+			let jsontab = "[";
+			let sHTML = "<table style='width:100%'><thead><tr><th style='text-align:left;'>Name</th><th style='text-align:left;'>Status</th><th style='text-align:left;'>Kommt</th><th style='text-align:left;'>Geht</th></tr></thead><tbody>";
+			let fbcon = false; // connection to fritzbox
 			for (var k = 0; k < gthis.config.familymembers.length; k++) {
 				var device = gthis.config.familymembers[k]; //Zeile aus der Tabelle Familymembers
 				var member = device.familymember; 
@@ -245,54 +250,51 @@ class FbCheckpresence extends utils.Adapter {
 				var enabled = device.enabled;
 				let current_datetime = new Date()
 				let formatted_date = current_datetime.getFullYear() + "-" + aLZ(current_datetime.getMonth() + 1) + "-" + aLZ(current_datetime.getDate()) + " " + aLZ(current_datetime.getHours()) + ":" + aLZ(current_datetime.getMinutes()) + ":" + aLZ(current_datetime.getSeconds())
-				var bActive = false;
-				var sComming = "";
-				var sGoing = "";
-				const getStateP = util.promisify(gthis.getState);
+				var bActive = false; 
 				
 				if (enabled == true){
 					try {
-						//gthis.log.info("start user action: " + member);
 						var user = await userAction(sIpfritz, "/upnp/control/hosts", "Hosts:1", "GetSpecificHostEntry", "NewMACAddress", mac);
 						var n = user.search("NewActive>1</NewActive");
-						//gthis.log.info("Position: " + n);
-						var curVal = getStateP(member);
+						if (user != null) fbcon = true;
+						let sComming = "";
+						let sGoing = "";
+						let curVal = await getStateP(member);
 						if (n >= 0){
 							bActive = true;
 							pres = true;
 							gthis.log.info(member + " (true): " + user);
-							if (curVal != null){
-								if (curVal == false){
+							if (curVal.val != null){
+								if (curVal.val == false){
 									gthis.log.info(member + ".comming: " + formatted_date);
 									gthis.setState(member + ".comming", { val: formatted_date, ack: true });
 								}
 								gthis.setState(member, { val: true, ack: true });
-								//gthis.log.info(member + ".active: " + true);
 							}else{
 								gthis.log.error("object " + member + " is deleted!")
 							}
 						}else{
-							//var curVal = getState(member);
-							//gthis.getState(member, function (err, state) {
 								gthis.log.info(member + " (false): " + user);
 								if (curVal != null){
-									//gthis.log.info("state: " + curVal);
-									if (curVal == true){
+									if (curVal.val == true){
 										gthis.log.info(member + ".going: " + formatted_date);
 										gthis.setState(member + ".going", { val: formatted_date, ack: true });
 									}
 									gthis.setState(member, { val: false, ack: true });
-									//gthis.log.info(member + ".active: " + false);
 								}else{
 									gthis.log.error("object " + member + " is deleted!")									
 								}
-							//});
 						}
-						gthis.setState("info.connection", { val: true, ack: true });
-						curVal = getStateP(member + ".comming");
-						if (curVal != null) sComming = curVal;
-						curVal = getStateP(member + ".going");
-						if (curVal != null) sGoing = curVal;
+						if (await !getStateP(member + ".comming")){
+							curVal = await getStateP(member + ".comming");
+							gthis.log.info("val: " + curVal.val);
+							sComming = curVal.val;
+						} 
+						if (await !getStateP(member + ".going")){
+							curVal = await getStateP(member + ".going");
+							gthis.log.info("val: " + curVal.val);
+							sGoing = curVal.val;
+						} 
 
 						jsontab += CreateRow("Name", member, "Active", bActive, "Kommt", sComming, "Geht", sGoing);
 						sHTML += CreateHTMLRow(member, bActive, sComming, sGoing);
@@ -306,6 +308,7 @@ class FbCheckpresence extends utils.Adapter {
 				}
 				
 			}
+			gthis.setState("info.connection", { val: fbcon, ack: true });
 			jsontab += "]";
 			sHTML += "</body></table>";  
 			gthis.setState("json", { val: jsontab, ack: true });
