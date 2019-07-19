@@ -241,7 +241,7 @@ class FbCheckpresence extends utils.Adapter {
 		var j = schedule.scheduleJob(sCron, async function(){
 			pres = false;
 			let jsontab = "[";
-			let sHTML = "<table style='width:100%'><thead><tr><th style='text-align:left;'>Name</th><th style='text-align:left;'>Status</th><th style='text-align:left;'>Kommt</th><th style='text-align:left;'>Geht</th></tr></thead><tbody>";
+			let sHTML = "<table class='mdui-table' ><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody>";
 			let fbcon = false; // connection to fritzbox
 			for (var k = 0; k < gthis.config.familymembers.length; k++) {
 				var device = gthis.config.familymembers[k]; //Zeile aus der Tabelle Familymembers
