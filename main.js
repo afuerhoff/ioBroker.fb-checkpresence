@@ -285,12 +285,12 @@ class FbCheckpresence extends utils.Adapter {
 									gthis.log.error("object " + member + " is deleted!")									
 								}
 						}
-						if (await !getStateP(member + ".comming")){
+						if (!await getStateP(member + ".comming")){
 							curVal = await getStateP(member + ".comming");
 							gthis.log.info("val: " + curVal.val);
 							sComming = curVal.val;
 						} 
-						if (await !getStateP(member + ".going")){
+						if (!await !getStateP(member + ".going")){
 							curVal = await getStateP(member + ".going");
 							gthis.log.info("val: " + curVal.val);
 							sGoing = curVal.val;
