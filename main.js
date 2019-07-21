@@ -212,25 +212,27 @@ class FbCheckpresence extends utils.Adapter {
 						common: {
 							name: member + ".going",
 							type: "string",
-							role: "indicator", 
+							role: "indicator",
+							def: "-",
 							read: true,
 							write: false,
 						},
 						native: {},
 					});
-					if (await getStateP(member + ".going") == null) gthis.setState(member + ".going", " ", true);
+					if (await getStateP(member + ".going") == null) gthis.setState(member + ".going", "-", true);
 					await this.setObjectNotExists(member + ".comming", {
 						type: "state",
 						common: {
 							name: member + ".comming",
 							type: "string",
 							role: "indicator",
+							def: "-",
 							read: true,
 							write: false,
 						},
 						native: {},
 					});
-					if (await getStateP(member + ".comming") == null) gthis.setState(member + ".comming", " ", true);
+					if (await getStateP(member + ".comming") == null) gthis.setState(member + ".comming", "-", true);
 				}
 			}
 		}			
@@ -285,16 +287,22 @@ class FbCheckpresence extends utils.Adapter {
 									gthis.log.error("object " + member + " is deleted!")									
 								}
 						}
-						if (!await getStateP(member + ".comming")){
+						/*if (!await getStateP(member + ".comming")){
 							curVal = await getStateP(member + ".comming");
 							gthis.log.info("val: " + curVal.val);
 							sComming = curVal.val;
-						} 
-						if (!await getStateP(member + ".going")){
+						}*/
+						curVal = await getStateP(member + ".comming");
+						gthis.log.info("val: " + curVal.val);
+						sComming = curVal.val;
+						/*if (!await getStateP(member + ".going")){
 							curVal = await getStateP(member + ".going");
 							gthis.log.info("val: " + curVal.val);
 							sGoing = curVal.val;
-						} 
+						}*/
+						curVal = await getStateP(member + ".going");
+						gthis.log.info("val: " + curVal.val);
+						sGoing = curVal.val;
 
 						jsontab += CreateRow("Name", member, "Active", bActive, "Kommt", sComming, "Geht", sGoing);
 						sHTML += CreateHTMLRow(member, bActive, sComming, sGoing);
