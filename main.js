@@ -290,7 +290,7 @@ class FbCheckpresence extends utils.Adapter {
 							gthis.log.info("val: " + curVal.val);
 							sComming = curVal.val;
 						} 
-						if (!await !getStateP(member + ".going")){
+						if (!await getStateP(member + ".going")){
 							curVal = await getStateP(member + ".going");
 							gthis.log.info("val: " + curVal.val);
 							sGoing = curVal.val;
