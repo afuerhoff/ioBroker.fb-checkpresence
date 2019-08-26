@@ -42,7 +42,7 @@
             "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
         },
         "authors": [
-            "Achim Fürhoff <achim.fuerhoff@hotmail.de>"
+            "Achim Fürhoff <achim.fuerhoff@outlook.de>"
         ],
         "keywords": [
             "ioBroker",
@@ -65,7 +65,8 @@
         "materialize": true,
         "dependencies": [
             {
-                "admin": ">=3.0.0"
+                "admin": ">=3.0.0",
+                "history": ">=1.8.6"
             }
         ]
     },
