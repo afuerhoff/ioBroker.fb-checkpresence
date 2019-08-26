@@ -15,7 +15,10 @@ Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/afuerho
 
 ## fb-checkpresence adapter for ioBroker
 
-The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.
+The adapter checks the presence of family members over the fritzbox. 
+You must fill in the name of the family member and the mac-address of the used device. 
+The comment is optional and you can enable or disable the family member. 
+The datapoint is based on the member name.
 
 ## Changelog
 

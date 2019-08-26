@@ -30,7 +30,7 @@ function CreateHTMLRow (sUser, sStatus, sComming, sGoing) {
 }
 
 // JSON Tabelle
-function CreateRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming,sComming, sHeadGoing,sGoing) {
+function CreateRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, sComming, sHeadGoing, sGoing) {
 	var sJson = "{";
 	sJson += '"'  + sHeadUser + '":';
 	sJson += '"'  + sUser + '"' + ",";
@@ -40,7 +40,6 @@ function CreateRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming,sComming
 	sJson += '"'  + sComming + '"' + ",";
 	sJson += '"'  + sHeadGoing + '"' + ":";
 	sJson += '"'  + sGoing + '"' + "}";
-
 	return sJson;
 }
 
@@ -115,32 +114,35 @@ class FbCheckpresence extends utils.Adapter {
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-		var sCron = "*/" + this.config.interval + " * * * *";
-		var interval = parser.parseExpression(sCron);
+		let sCron = "*/" + this.config.interval + " * * * *";
+		let interval = parser.parseExpression(sCron);
 
         this.log.info('start fb-checkpresence: ip-address: ' + this.config.ipaddress + ' polling interval: ' + this.config.interval + " (" + sCron + ")");
 		const getStateP = util.promisify(gthis.getState);
+		const getObjectP = util.promisify(gthis.getObject);
 
         /*
         For every state in the system there has to be also an object of type state
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
-		var sIpfritz = this.config.ipaddress;
+		let sIpfritz = this.config.ipaddress;
 		if (!this.config.familymembers) {
-			this.log.info('no family members defined');
+			this.log.info('no family members defined -> nothing to do');
 			return
 		}else{
 			/*
 			For every state in the system there has to be also an object of type state
 			Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 			*/
+			//Übergeordnete Objekte anlegen
 			await this.setObjectNotExists("info.connection", {
 				type: "state",
 				common: {
-					name: "Fritzbox connection",
+					name: "Fritzbox connection stable",
 					type: "boolean",
 					role: "indicator",
+					def: false,
 					read: true,
 					write: false,
 				},
@@ -155,6 +157,7 @@ class FbCheckpresence extends utils.Adapter {
 					name: "presence",
 					type: "boolean",
 					role: "indicator",
+					def: false,
 					read: true,
 					write: false,
 				},
@@ -167,27 +170,43 @@ class FbCheckpresence extends utils.Adapter {
 				common: {
 					name: "JSON table",
 					type: "string",
-					role: "indicator",
+					role: "json",
+					def: "[]",
 					read: true,
 					write: false,
 				},
 				native: {},
 			});
-			if (await getStateP('json') == null) gthis.setState('json', "", true);
+			if (await getStateP('json') == null) gthis.setState('json', "[]", true);
 
 			await this.setObjectNotExists("html", {
 				type: "state",
 				common: {
 					name: "HTML table",
 					type: "string",
-					role: "indicator",
+					role: "html",
+					def: "<table class='mdui-table' ><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody></body></table>" ,
 					read: true,
 					write: false,
 				},
 				native: {},
 			});
-			if (await getStateP('html') == null) gthis.setState('html', "", true);
+			if (await getStateP('html') == null) gthis.setState('html', "<table class='mdui-table' ><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody></body></table>", true);
 			
+			await this.setObjectNotExists("info.lastupdate", {
+				type: "state",
+				common: {
+					name: "last connection date/time",
+					type: "string",
+					role: "date",
+					def: "never",
+					read: true,
+					write: false,
+				},
+				native: {},
+			});
+			
+			//Objekte für Familienmitglieder anlegen
 			for (var k = 0; k < this.config.familymembers.length; k++) {
 				var device = this.config.familymembers[k];
 				var member = device.familymember;
@@ -198,21 +217,38 @@ class FbCheckpresence extends utils.Adapter {
 					await this.setObjectNotExists(member, {
 						type: "state",
 						common: {
-							name: member,
+							name: "used device of family member",
 							type: "boolean",
 							role: "indicator",
+							def: false,
 							read: true,
 							write: false,
 						},
 						native: {},
 					});
 					if (await getStateP(member) == null) gthis.setState(member, false, true);
+
+					await this.setObjectNotExists(member + ".history", {
+						type: "state",
+						common: {
+							name: "24h history of family member",
+							type: "string",
+							role: "json",
+							def: "[]",
+							read: true,
+							write: false,
+						},
+						native: {},
+					});
+					if (await getStateP(member + ".history") == null) gthis.setState(member + ".history", "[]", true);
+					
 					await this.setObjectNotExists(member + ".going", {
 						type: "state",
 						common: {
-							name: member + ".going",
+							name: "leaving home",
 							type: "string",
-							role: "indicator",
+							role: "date",
+							unit: "",
 							def: "-",
 							read: true,
 							write: false,
@@ -220,12 +256,14 @@ class FbCheckpresence extends utils.Adapter {
 						native: {},
 					});
 					if (await getStateP(member + ".going") == null) gthis.setState(member + ".going", "-", true);
+					
 					await this.setObjectNotExists(member + ".comming", {
 						type: "state",
 						common: {
-							name: member + ".comming",
+							name: "arriving at home",
 							type: "string",
-							role: "indicator",
+							role: "date",
+							unit: "",
 							def: "-",
 							read: true,
 							write: false,
@@ -233,6 +271,86 @@ class FbCheckpresence extends utils.Adapter {
 						native: {},
 					});
 					if (await getStateP(member + ".comming") == null) gthis.setState(member + ".comming", "-", true);
+					
+					await this.setObjectNotExists(member + ".absent.since", {
+						type: "state",
+						common: {
+							name: "how long away from home",
+							type: "string",
+							role: "value",
+							unit: "min.",
+							def: "-",
+							read: true,
+							write: false,
+						},
+						native: {},
+					});
+					if (await getStateP(member + ".absent.since") == null) gthis.setState(member + ".absent.since", "-", true);
+
+					await this.setObjectNotExists(member + ".present.since", {
+						type: "state",
+						common: {
+							name: "how long at home",
+							type: "string",
+							role: "value",
+							unit: "min.",
+							def: "-",
+							read: true,
+							write: false,
+						},
+						native: {},
+					});
+					if (await getStateP(member + ".present.since") == null) gthis.setState(member + ".present.since", "-", true);
+
+					await this.setObjectNotExists(member + ".absent.sum_day", {
+						type: "state",
+						common: {
+							name: "how long absent per day",
+							type: "string",
+							role: "value",
+							unit: "min.",
+							def: "-",
+							read: true,
+							write: false,
+						},
+						native: {},
+					});
+					if (await getStateP(member + ".absent.sum_day") == null) gthis.setState(member + ".absent.sum_day", "-", true);
+					
+					await this.setObjectNotExists(member + ".present.sum_day", {
+						type: "state",
+						common: {
+							name: "how long present per day",
+							type: "string",
+							role: "value",
+							unit: "min.",
+							def: "-",
+							read: true,
+							write: false,
+						},
+						native: {},
+					});
+					if (await getStateP(member + ".present.sum_day") == null) gthis.setState(member + ".present.sum_day", "-", true);
+					
+					//History einschalten
+					gthis.sendTo('history.0', 'enableHistory', {
+						id: 'fb-checkpresence.0.' + member,
+						options: {
+							changesOnly:  true,
+							debounce:     0,
+							retention:    31536000,
+							maxLength:    10,
+							changesMinDelta: 0,
+							aliasId: ''
+						}
+					}, function (result) {
+						if (result.error) {
+							gthis.log.info('enable history ' + member + " " + result.error);
+						}
+						if (result.success) {
+							gthis.log.info('enable history ' + member + " " + result.success);
+						}
+					});
 				}
 			}
 		}			
@@ -241,6 +359,14 @@ class FbCheckpresence extends utils.Adapter {
 
 		var pres = false;
 		var j = schedule.scheduleJob(sCron, async function(){
+			let midnight = new Date();
+			midnight.setHours(0,0,0);
+			let dnow = new Date();
+			let present = Math.round((dnow - midnight)/1000/60);
+			gthis.log.info("present=" + present);
+			//let present = dnow.getTime() - midnight.getTime();
+			let firstFalse = midnight;
+			let bfirstFalse = false;
 			pres = false;
 			let jsontab = "[";
 			let sHTML = "<table class='mdui-table' ><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody>";
@@ -250,60 +376,148 @@ class FbCheckpresence extends utils.Adapter {
 				var member = device.familymember; 
 				var mac = device.macaddress;
 				var enabled = device.enabled;
-				let current_datetime = new Date()
-				let formatted_date = current_datetime.getFullYear() + "-" + aLZ(current_datetime.getMonth() + 1) + "-" + aLZ(current_datetime.getDate()) + " " + aLZ(current_datetime.getHours()) + ":" + aLZ(current_datetime.getMinutes()) + ":" + aLZ(current_datetime.getSeconds())
+				let current_datetime = new Date();
+				let formatted_date = current_datetime.getFullYear() + "-" + aLZ(current_datetime.getMonth() + 1) + "-" + aLZ(current_datetime.getDate()) + " " + aLZ(current_datetime.getHours()) + ":" + aLZ(current_datetime.getMinutes()) + ":" + aLZ(current_datetime.getSeconds());
 				var bActive = false; 
+				let absent = 0;
 				
-				if (enabled == true){
-					try {
+				if (enabled == true){ //in configuration settings
+					try { //get fritzbox data
 						var user = await userAction(sIpfritz, "/upnp/control/hosts", "Hosts:1", "GetSpecificHostEntry", "NewMACAddress", mac);
 						var n = user.search("NewActive>1</NewActive");
-						if (user != null) fbcon = true;
+						if (user != null){ 
+							fbcon = true; //connection established
+							gthis.setState("info.lastupdate", { val: formatted_date, ack: true });
+						}
 						let sComming = "";
 						let sGoing = "";
 						let curVal = await getStateP(member);
-						if (n >= 0){
+						let sHistory = "[";
+
+						//get history data
+						var end = new Date().getTime();
+						let dPoint = await getObjectP('fb-checkpresence.0.' + member);
+						let ind = -1;
+						//gthis.log.info(JSON.stringify(dPoint));
+						if (dPoint.common.custom['history.0'].enabled == true){
+							await gthis.sendTo('history.0', 'getHistory', {
+								id: 'fb-checkpresence.0.' + member,
+								options: {
+									start:      end - 86400000,
+									end:        end,
+									aggregate: 'onchange'
+								}
+							}, function (result) {
+								if (result == null) {
+									gthis.log.info('list history ' + member + " " + result.error);
+								}else{
+									for (var i = 0; i < result.result.length; i++) {
+										if (result.result[i].val != null && result.result[i].from == 'system.adapter.fb-checkpresence.0'){
+											ind = i;
+											gthis.log.info("History " + member + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
+											sHistory += '{"'  + "Active" + '"' + ":";
+											sHistory += '"'  + result.result[i].val + '"' + ",";
+											sHistory += '"'  + "Date" + '"' + ":";
+											sHistory += '"'  + new Date(result.result[i].ts).toString() + '"}';
+											if (i < result.result.length-1){
+												sHistory += ",";
+											}
+											let hTime = new Date(result.result[i].ts);
+											if (hTime >= midnight.getTime()){
+												if (result.result[i].val == false && bfirstFalse == false){
+													firstFalse = new Date(result.result[i].ts);
+													bfirstFalse = true;
+												}
+												if (result.result[i].val == true){
+													if (bfirstFalse == true){
+														bfirstFalse = false;
+														absent += Math.round((hTime - firstFalse.getTime())/1000/60);
+													}
+												}
+											}
+										}
+									}
+									if (bfirstFalse == true){
+										absent += Math.round((dnow - firstFalse.getTime())/1000/60);
+									}
+
+									gthis.setState(member + ".present.sum_day", { val: (present-absent), ack: true });
+									if (ind != -1){
+										if (result.result[ind].val == true){
+											let d1 = new Date(result.result[ind].ts)
+											let diff = Math.round((dnow - d1)/1000/60);
+											gthis.setState(member + ".present.since", { val: diff, ack: true });
+											gthis.setState(member + ".absent.since", { val: 0, ack: true });
+										}
+										if (result.result[ind].val == false){
+											let d1 = new Date(result.result[ind].ts)
+											let diff = Math.round((dnow - d1)/1000/60);
+											gthis.setState(member + ".absent.since", { val: diff, ack: true });
+											gthis.setState(member + ".present.since", { val: 0, ack: true });
+										}
+									}
+									gthis.setState(member + ".absent.sum_day", { val: absent, ack: true });
+									sHistory += ']';
+									gthis.setState(member + ".history", { val: sHistory, ack: true });
+									//gthis.log.info('enable history ' + member + " " + result.success);
+								}
+							});
+						}else{
+							gthis.log.info("History not enabled")
+						}
+						
+						//analyse fritzbox response 
+						if (n >= 0){ //member = true
 							bActive = true;
 							pres = true;
 							gthis.log.info(member + " (true): " + user);
 							if (curVal.val != null){
-								if (curVal.val == false){
+								if (curVal.val == false){ //signal changing to true
 									gthis.log.info(member + ".comming: " + formatted_date);
 									gthis.setState(member + ".comming", { val: formatted_date, ack: true });
+								}else{ //stable true signal
+									//let sComming = await getStateP(member + ".comming");
+									//let formatted = formatted_date.replace(" ","T");
+									//var dCur = new Date(formatted);
+									//sComming = sComming.val.replace(" ","T");
+									//var dComming = new Date(sComming);
+									//let dDiff = Math.round((dCur - dComming)/1000/60);
+									//let val1 = await getStateP(member + ".present.sum_day");
+									//let val2 = await getStateP(member + ".present.since");
+									//gthis.setState(member + ".present", { val: Math.round(val1.val + (dDiff - val2.val)), ack: true });
+									//gthis.setState(member + ".athome", { val: dDiff, ack: true });
 								}
 								gthis.setState(member, { val: true, ack: true });
-							}else{
-								gthis.log.error("object " + member + " is deleted!")
+							}else{ //null value
+								gthis.log.error("object " + member + " is deleted!");
 							}
-						}else{
+						}else{ //member = false
 								gthis.log.info(member + " (false): " + user);
 								if (curVal != null){
-									if (curVal.val == true){
+									if (curVal.val == true){ //signal changing to false
 										gthis.log.info(member + ".going: " + formatted_date);
 										gthis.setState(member + ".going", { val: formatted_date, ack: true });
+									}else{ //stable false signal
+										//let sGoing = await getStateP(member + ".going");
+										//let formatted = formatted_date.replace(" ","T");
+										//var dCur = new Date(formatted);
+										//sGoing = sGoing.val.replace(" ","T");
+										//var dGoing = new Date(sGoing);
+										//let dDiff = Math.round((dCur - dGoing)/1000/60);
+										//let val1 = await getStateP(member + ".absent.sum_day");
+										//let val2 = await getStateP(member + ".absent.since");
+										//gthis.setState(member + ".absent", { val: Math.round(val1.val + (dDiff - val2.val)), ack: true });
+										//gthis.setState(member + ".away", { val: dDiff, ack: true });
 									}
 									gthis.setState(member, { val: false, ack: true });
-								}else{
-									gthis.log.error("object " + member + " is deleted!")									
+								}else{ //null value
+									gthis.log.error("object " + member + " is deleted!");								
 								}
 						}
-						/*if (!await getStateP(member + ".comming")){
-							curVal = await getStateP(member + ".comming");
-							gthis.log.info("val: " + curVal.val);
-							sComming = curVal.val;
-						}*/
 						curVal = await getStateP(member + ".comming");
-						gthis.log.info("val: " + curVal.val);
 						sComming = curVal.val;
-						/*if (!await getStateP(member + ".going")){
-							curVal = await getStateP(member + ".going");
-							gthis.log.info("val: " + curVal.val);
-							sGoing = curVal.val;
-						}*/
 						curVal = await getStateP(member + ".going");
-						gthis.log.info("val: " + curVal.val);
 						sGoing = curVal.val;
-
 						jsontab += CreateRow("Name", member, "Active", bActive, "Kommt", sComming, "Geht", sGoing);
 						sHTML += CreateHTMLRow(member, bActive, sComming, sGoing);
 						if (k < gthis.config.familymembers.length-1){

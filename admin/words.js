@@ -2,44 +2,16 @@
 'use strict';
 
 systemDictionary = {
-
-    'fb-checkpresence adapter settings': {
-        'en': 'Adapter settings for fb-checkpresence',
-        'de': 'Adaptereinstellungen für fb-checkpresence',
-        'ru': 'Настройки адаптера для fb-checkpresence',
-        'pt': 'Configurações do adaptador para fb-checkpresence',
-        'nl': 'Adapterinstellingen voor fb-checkpresence',
-        'fr': "Paramètres d'adaptateur pour fb-checkpresence",
-        'it': "Impostazioni dell'adattatore per fb-checkpresence",
-        'es': 'Ajustes del adaptador para fb-checkpresence',
-        'pl': 'Ustawienia adaptera dla fb-checkpresence',
-        'zh-cn': 'fb-checkpresence的适配器设置'
-    },
-
-    'ip address of the fritzbox': {
-        'en': 'ip address of the fritzbox',
-        'de': 'ip adresse der fritzbox',
-        'ru': 'IP-адрес fritzbox',
-        'pt': 'endereço ip do fritzbox',
-        'nl': 'ip-adres van de fritzbox',
-        'fr': 'adresse ip de la fritzbox',
-        'it': 'indirizzo IP della fritzbox',
-        'es': 'dirección ip del fritzbox',
-        'pl': 'adres IP fritzboxa',
-        'zh-cn': 'fritzbox的ip地址'
-    },
-
-    'polling interval': {
-        'en': 'polling interval',
-        'de': 'Abrufintervall',
-        'ru': 'интервал опроса',
-        'pt': 'intervalo de pesquisa',
-        'nl': 'polling-interval',
-        'fr': "intervalle d'interrogation",
-        'it': 'intervallo di polling',
-        'es': 'intervalo de votación',
-        'pl': 'interwał odpytywania',
-        'zh-cn': '轮询间隔'
-    }
-
+    "fb-checkpresence adapter settings": {           "en": "Adapter settings for fb-checkpresence",           "de": "Adaptereinstellungen für fb-checkpresence",       "ru": "Настройки адаптера для fb-checkpresence",         "pt": "Configurações do adaptador para fb-checkpresence", "nl": "Adapterinstellingen voor fb-checkpresence",       "fr": "Paramètres d'adaptateur pour fb-checkpresence",   "it": "Impostazioni dell'adattatore per fb-checkpresence", "es": "Ajustes del adaptador para fb-checkpresence",     "pl": "Ustawienia adaptera dla fb-checkpresence",        "zh-cn": "fb-checkpresence的适配器设置"},
+    "ip address of the fritzbox": {                  "en": "ip address of the fritzbox",                      "de": "ip adresse der fritzbox",                         "ru": "IP-адрес fritzbox",                               "pt": "endereço ip do fritzbox",                         "nl": "ip-adres van de fritzbox",                        "fr": "adresse ip de la fritzbox",                       "it": "indirizzo IP della fritzbox",                     "es": "dirección ip del fritzbox",                       "pl": "adres IP fritzboxa",                              "zh-cn": "fritzbox的ip地址"},
+    "polling interval": {                            "en": "polling interval",                                "de": "Abrufintervall",                                  "ru": "интервал опроса",                                 "pt": "intervalo de pesquisa",                           "nl": "polling-interval",                                "fr": "intervalle d'interrogation",                      "it": "intervallo di polling",                           "es": "intervalo de votación",                           "pl": "interwał odpytywania",                            "zh-cn": "轮询间隔"},
+    "Family member": {                               "en": "Family member",                                   "de": "Familienmitglied",                                "ru": "Член семьи",                                      "pt": "Membro da família",                               "nl": "Familielid",                                      "fr": "Membre de la famille",                            "it": "Membro della famiglia",                           "es": "Miembro de la familia",                           "pl": "Członek rodziny",                                 "zh-cn": "家庭成员"},
+    "Mac-Address": {                                 "en": "Mac-Address",                                     "de": "MAC-Adresse",                                     "ru": "MAC-адрес",                                       "pt": "Endereço MAC",                                    "nl": "Mac adres",                                       "fr": "Adresse Mac",                                     "it": "Indirizzo MAC",                                   "es": "Dirección MAC",                                   "pl": "Adres Mac",                                       "zh-cn": "MAC地址"},
+    "Comment": {                                     "en": "Comment",                                         "de": "Kommentar",                                       "ru": "Комментарий",                                     "pt": "Comente",                                         "nl": "Commentaar",                                      "fr": "Commentaire",                                     "it": "Commento",                                        "es": "Comentario",                                      "pl": "Komentarz",                                       "zh-cn": "评论"},
+    "Enabled": {                                     "en": "Enabled",                                         "de": "aktiviert",                                       "ru": "Включено",                                        "pt": "ativado",                                         "nl": "Ingeschakeld",                                    "fr": "Activée",                                         "it": "Abilitato",                                       "es": "Habilitado",                                      "pl": "Włączone",                                        "zh-cn": "启用"},
+    "Please insert a name and a mac address for a family member.": {"en": "Please insert a name and a mac address for a family member.", "de": "Bitte geben Sie einen Namen und eine MAC-Adresse für ein Familienmitglied ein.", "ru": "Пожалуйста, введите имя и MAC-адрес члена семьи.", "pt": "Por favor, insira um nome e um endereço mac para um membro da família.", "nl": "Voer een naam en een mac-adres in voor een familielid.", "fr": "Veuillez insérer un nom et une adresse mac pour un membre de la famille.", "it": "Inserisci un nome e un indirizzo mac per un membro della famiglia.", "es": "Inserte un nombre y una dirección mac para un miembro de la familia.", "pl": "Wpisz nazwisko i adres MAC członka rodziny.",     "zh-cn": "请为家庭成员插入姓名和mac地址。"},
+    "For every enabled table line an object will be created.": {"en": "For every enabled table line an object will be created.", "de": "Für jede aktivierte Tabellenzeile wird ein Objekt erstellt.", "ru": "Для каждой включенной строки таблицы будет создан объект.", "pt": "Para cada linha de tabela ativada, um objeto será criado.", "nl": "Voor elke ingeschakelde tabelregel wordt een object gemaakt.", "fr": "Un objet sera créé pour chaque ligne de tableau activée.", "it": "Per ogni riga di tabella abilitata verrà creato un oggetto.", "es": "Por cada línea de tabla habilitada se creará un objeto.", "pl": "Dla każdej włączonej linii tabeli zostanie utworzony obiekt.", "zh-cn": "对于每个启用的表格行，将创建一个对象。"},
+    "Family settings": {                             "en": "Family settings",                                 "de": "Familieneinstellungen",                           "ru": "Семейные настройки",                              "pt": "Configurações da família",                        "nl": "Familie instellingen",                            "fr": "Milieu familial",                                 "it": "Impostazioni familiari",                          "es": "Ajustes familiares",                              "pl": "Ustawienia rodzinne",                             "zh-cn": "家庭设置"},
+    "Please enter the IP-Address from your Fritzbox": {"en": "Please enter the IP-Address from your Fritzbox",  "de": "Bitte geben Sie die IP-Adresse Ihrer Fritzbox ein", "ru": "Пожалуйста, введите IP-адрес с вашего Fritzbox",  "pt": "Por favor insira o endereço IP do seu Fritzbox",  "nl": "Voer het IP-adres van uw Fritzbox in",            "fr": "S'il vous plaît entrer l'adresse IP de votre Fritzbox", "it": "Inserisci l'indirizzo IP dalla tua Fritzbox",     "es": "Ingrese la dirección IP de su Fritzbox",          "pl": "Wprowadź adres IP ze swojego Fritzbox",           "zh-cn": "请输入您的Fritzbox的IP地址"},
+    "Please enter the polling interval": {           "en": "Please enter the polling interval",               "de": "Bitte geben Sie das Abfrageintervall ein",        "ru": "Пожалуйста, введите интервал опроса",             "pt": "Por favor insira o intervalo de pesquisa",        "nl": "Voer het polling-interval in",                    "fr": "S'il vous plaît entrer l'intervalle de sondage",  "it": "Inserisci l'intervallo di polling",               "es": "Por favor, introduzca el intervalo de sondeo",    "pl": "Wprowadź interwał odpytywania",                   "zh-cn": "请输入轮询间隔"},
 };
