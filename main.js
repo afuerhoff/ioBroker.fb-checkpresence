@@ -120,6 +120,7 @@ class FbCheckpresence extends utils.Adapter {
         this.log.info('start fb-checkpresence: ip-address: ' + this.config.ipaddress + ' polling interval: ' + this.config.interval + " (" + sCron + ")");
 		const getStateP = util.promisify(gthis.getState);
 		const getObjectP = util.promisify(gthis.getObject);
+		const getHistoryP = util.promisify(gthis.getHistory);
 
         /*
         For every state in the system there has to be also an object of type state
@@ -390,18 +391,6 @@ class FbCheckpresence extends utils.Adapter {
 						let sGoing = "";
 						let sHistory = "[";
 						let curVal = await getStateP(member);
-						let present = Math.round((dnow - midnight)/1000/60);
-						let absent = 0;
-						if (curVal.val == true && curVal.lc < midnight.getTime()){
-							absent = 0;
-							present = Math.round((dnow - midnight)/1000/60);
-						}
-						if (curVal.val == false && curVal.lc < midnight.getTime()){
-							absent = Math.round((dnow - midnight)/1000/60);
-							present = 0;
-						}
-						gthis.log.info("present=" + present);
-						gthis.log.info("absent=" + absent);
 
 						let d1 = new Date(curVal.lc)
 						let diff = Math.round((dnow - d1)/1000/60);
@@ -414,79 +403,103 @@ class FbCheckpresence extends utils.Adapter {
 							gthis.setState(member + ".present.since", { val: 0, ack: true });
 						}
 
-
 						//get history data
+						let present = Math.round((dnow - midnight)/1000/60);
+						let absent = 0;
+						if (curVal.val == true && curVal.lc < midnight.getTime()){
+							absent = 0;
+							present = Math.round((dnow - midnight)/1000/60);
+						}
+						if (curVal.val == false && curVal.lc < midnight.getTime()){
+							absent = Math.round((dnow - midnight)/1000/60);
+							present = 0;
+						}
+
 						var end = new Date().getTime();
+						let start = (end-midnight.getTime());
+						let lastVal = false;
 						let dPoint = await getObjectP('fb-checkpresence.0.' + member);
-						let ind = -1;
 						//gthis.log.info(JSON.stringify(dPoint));
 						if (dPoint.common.custom['history.0'].enabled == true){
-							await gthis.sendTo('history.0', 'getHistory', {
-								id: 'fb-checkpresence.0.' + member,
-								options: {
-									start:      end - 86400000, //1 day
+							try {
+								gthis.sendTo('history.0', 'getHistory', {
+									id: 'fb-checkpresence.0.' + member,
+									options:{
 									end:        end,
-									aggregate: 'onchange'
-								}
-							}, function (result) {
-								if (result == null) {
-									gthis.log.info('list history ' + member + " " + result.error);
-								}else{
-									for (var i = 0; i < result.result.length; i++) {
-										if (result.result[i].val != null ){ //&& result.result[i].from == 'system.adapter.fb-checkpresence.0'
-											ind = i;
-											gthis.log.info("History " + member + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
-											sHistory += '{"'  + "Active" + '"' + ":";
-											sHistory += '"'  + result.result[i].val + '"' + ",";
-											sHistory += '"'  + "Date" + '"' + ":";
-											sHistory += '"'  + new Date(result.result[i].ts).toString() + '"}';
-											if (i < result.result.length-1){
-												sHistory += ",";
+									start:      start, //end - 86400000, //1 day
+									aggregate: 'onchange'}
+								}, function (result) {
+									if (result == null) {
+										gthis.log.info('list history ' + member + " " + result.error);
+									}else{
+										gthis.sendTo('history.0', 'getHistory', {
+											id: 'fb-checkpresence.0.' + member,
+											options: {
+												end:        end,
+												count:		result.result.length + 1,
+												aggregate: 'onchange'
 											}
-											let hTime = new Date(result.result[i].ts);
-											if (hTime >= midnight.getTime() && curVal.lc >= midnight.getTime()){
-												if (result.result[i].val == false && bfirstFalse == false){
-													firstFalse = new Date(result.result[i].ts);
-													bfirstFalse = true;
-												}
-												if (result.result[i].val == true){
-													if (bfirstFalse == true){
-														bfirstFalse = false;
-														absent += Math.round((hTime - firstFalse.getTime())/1000/60);
-														present -= absent;
+										}, function (result) {
+											if (result == null) {
+												gthis.log.info('list history ' + member + " " + result.error);
+											}else{
+												for (var i = 0; i < result.result.length; i++) {
+													if (result.result[i].val != null ){
+														//Json History aufbauen
+														gthis.log.info("History " + member + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
+														sHistory += '{"'  + "Active" + '"' + ":";
+														sHistory += '"'  + result.result[i].val + '"' + ",";
+														sHistory += '"'  + "Date" + '"' + ":";
+														sHistory += '"'  + new Date(result.result[i].ts).toString() + '"}';
+														if (i < result.result.length-1){
+															sHistory += ",";
+														}
+														
+														let hTime = new Date(result.result[i].ts);
+														if (hTime >= midnight.getTime()){
+															if (lastVal == null){
+																
+															}else{
+																if (lastVal == false){
+																	absent = Math.round((hTime - midnight.getTime())/1000/60);
+																	if (result.result[i].val == false){
+																		if (bfirstFalse == false){
+																			firstFalse = new Date(result.result[i].ts);
+																			bfirstFalse = true;
+																		}
+																	}
+																}
+																if (result.result[i].val == true){
+																	if (bfirstFalse == true){
+																		bfirstFalse = false;
+																		absent += Math.round((hTime - firstFalse.getTime())/1000/60);
+																	}
+																}
+															}
+														}else{
+															lastVal = result.result[i].val;
+														}	
 													}
 												}
-											}
-										}
-									}
-									if (bfirstFalse == true){
-										absent += Math.round((dnow - firstFalse.getTime())/1000/60);
-										present -= absent;
-									}
+												if (bfirstFalse == true){
+													absent += Math.round((dnow - firstFalse.getTime())/1000/60);
+												}
+												present -= absent;
 
-									gthis.setState(member + ".present.sum_day", { val: (present), ack: true });
-									gthis.setState(member + ".absent.sum_day", { val: absent, ack: true });
-									/*if (ind != -1){
-										if (result.result[ind].val == true){
-											let d1 = new Date(result.result[ind].ts)
-											let diff = Math.round((dnow - d1)/1000/60);
-											gthis.setState(member + ".present.since", { val: diff, ack: true });
-											gthis.setState(member + ".absent.since", { val: 0, ack: true });
-										}
-										if (result.result[ind].val == false){
-											let d1 = new Date(result.result[ind].ts)
-											let diff = Math.round((dnow - d1)/1000/60);
-											gthis.setState(member + ".absent.since", { val: diff, ack: true });
-											gthis.setState(member + ".present.since", { val: 0, ack: true });
-										}
-									}*/
-									sHistory += ']';
-									gthis.setState(member + ".history", { val: sHistory, ack: true });
-									//gthis.log.info('enable history ' + member + " " + result.success);
-								}
-							});
+												gthis.setState(member + ".present.sum_day", { val: (present), ack: true });
+												gthis.setState(member + ".absent.sum_day", { val: absent, ack: true });
+
+												sHistory += ']';
+												gthis.setState(member + ".history", { val: sHistory, ack: true });
+											}
+										});
+									}
+								});
+							} catch (ex) {
+								gthis.log.info("Error: " + ex.message);
+							}
 						}else{
-							gthis.log.info("History not enabled")
+							gthis.log.info("History not enabled");
 						}
 						
 						//analyse fritzbox response 
@@ -498,17 +511,6 @@ class FbCheckpresence extends utils.Adapter {
 								if (curVal.val == false){ //signal changing to true
 									gthis.log.info(member + ".comming: " + formatted_date);
 									gthis.setState(member + ".comming", { val: formatted_date, ack: true });
-								}else{ //stable true signal
-									//let sComming = await getStateP(member + ".comming");
-									//let formatted = formatted_date.replace(" ","T");
-									//var dCur = new Date(formatted);
-									//sComming = sComming.val.replace(" ","T");
-									//var dComming = new Date(sComming);
-									//let dDiff = Math.round((dCur - dComming)/1000/60);
-									//let val1 = await getStateP(member + ".present.sum_day");
-									//let val2 = await getStateP(member + ".present.since");
-									//gthis.setState(member + ".present", { val: Math.round(val1.val + (dDiff - val2.val)), ack: true });
-									//gthis.setState(member + ".athome", { val: dDiff, ack: true });
 								}
 								gthis.setState(member, { val: true, ack: true });
 							}else{ //null value
@@ -520,17 +522,6 @@ class FbCheckpresence extends utils.Adapter {
 									if (curVal.val == true){ //signal changing to false
 										gthis.log.info(member + ".going: " + formatted_date);
 										gthis.setState(member + ".going", { val: formatted_date, ack: true });
-									}else{ //stable false signal
-										//let sGoing = await getStateP(member + ".going");
-										//let formatted = formatted_date.replace(" ","T");
-										//var dCur = new Date(formatted);
-										//sGoing = sGoing.val.replace(" ","T");
-										//var dGoing = new Date(sGoing);
-										//let dDiff = Math.round((dCur - dGoing)/1000/60);
-										//let val1 = await getStateP(member + ".absent.sum_day");
-										//let val2 = await getStateP(member + ".absent.since");
-										//gthis.setState(member + ".absent", { val: Math.round(val1.val + (dDiff - val2.val)), ack: true });
-										//gthis.setState(member + ".away", { val: dDiff, ack: true });
 									}
 									gthis.setState(member, { val: false, ack: true });
 								}else{ //null value
