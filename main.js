@@ -346,10 +346,10 @@ class FbCheckpresence extends utils.Adapter {
 						}
 					}, function (result) {
 						if (result.error) {
-							gthis.log.info('enable history ' + member + " " + result.error);
+							gthis.log.info('enable history ' + " " + result.error);
 						}
 						if (result.success) {
-							gthis.log.info('enable history ' + member + " " + result.success);
+							//gthis.log.info('enable history ' + " " + result.success);
 						}
 					});
 				}
@@ -387,11 +387,13 @@ class FbCheckpresence extends utils.Adapter {
 							fbcon = true; //connection established
 							gthis.setState("info.lastupdate", { val: formatted_date, ack: true });
 						}
+						
 						let sComming = "";
 						let sGoing = "";
 						let sHistory = "[";
 						let curVal = await getStateP(member);
-
+						
+						//Calculation of '.since'
 						let d1 = new Date(curVal.lc)
 						let diff = Math.round((dnow - d1)/1000/60);
 						if (curVal.val == true){
@@ -404,49 +406,57 @@ class FbCheckpresence extends utils.Adapter {
 						}
 
 						//get history data
-						let present = Math.round((dnow - midnight)/1000/60);
+						let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
 						let absent = 0;
+						/*//last change to true was yesterday
 						if (curVal.val == true && curVal.lc < midnight.getTime()){
 							absent = 0;
 							present = Math.round((dnow - midnight)/1000/60);
 						}
+						//last change to false was yesterday
 						if (curVal.val == false && curVal.lc < midnight.getTime()){
 							absent = Math.round((dnow - midnight)/1000/60);
 							present = 0;
-						}
+						}*/
 
 						var end = new Date().getTime();
-						let start = (end-midnight.getTime());
+						let start = midnight.getTime();
+						gthis.log.info("start: " + start);
 						let lastVal = false;
 						let dPoint = await getObjectP('fb-checkpresence.0.' + member);
 						//gthis.log.info(JSON.stringify(dPoint));
 						if (dPoint.common.custom['history.0'].enabled == true){
 							try {
+								let memb = member;
 								gthis.sendTo('history.0', 'getHistory', {
-									id: 'fb-checkpresence.0.' + member,
+									id: 'fb-checkpresence.0.' + memb,
 									options:{
 									end:        end,
 									start:      start, //end - 86400000, //1 day
 									aggregate: 'onchange'}
-								}, function (result) {
-									if (result == null) {
-										gthis.log.info('list history ' + member + " " + result.error);
+								}, function (result1) {
+									if (result1 == null) {
+										gthis.log.info('list history ' + memb + " " + result1.error);
 									}else{
+										let cnt = result1.result.length;
+										if (cnt == 0) cnt += 1;
+										//gthis.log.info("Cnt " + memb + ": " + cnt);
 										gthis.sendTo('history.0', 'getHistory', {
-											id: 'fb-checkpresence.0.' + member,
+											id: 'fb-checkpresence.0.' + memb,
 											options: {
 												end:        end,
-												count:		result.result.length + 1,
+												count:		cnt,
 												aggregate: 'onchange'
 											}
 										}, function (result) {
 											if (result == null) {
-												gthis.log.info('list history ' + member + " " + result.error);
+												gthis.log.info('list history ' + memb + " " + result.error);
 											}else{
+												//gthis.log.info("Cnt2 " + memb + ": " + result.result.length);
 												for (var i = 0; i < result.result.length; i++) {
 													if (result.result[i].val != null ){
 														//Json History aufbauen
-														gthis.log.info("History " + member + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
+														gthis.log.info("History " + memb + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
 														sHistory += '{"'  + "Active" + '"' + ":";
 														sHistory += '"'  + result.result[i].val + '"' + ",";
 														sHistory += '"'  + "Date" + '"' + ":";
