@@ -499,6 +499,7 @@ class FbCheckpresence extends utils.Adapter {
 													}
 												}
 												if (bfirstFalse == true){
+													bfirstFalse = false;
 													absent += Math.round((dnow - firstFalse.getTime())/1000/60);
 													gthis.log.info(memb + " present 4: " + present + "  absent: " + absent)
 												}
