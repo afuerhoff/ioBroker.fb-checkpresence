@@ -14,9 +14,10 @@ const schedule = require('node-schedule');
 var parser = require('cron-parser');
 var util = require('util');
 
+// Global
 var gthis; //Global verfügbar machen
 
-// HTML Tabelle
+// Create HTML table row
 function CreateHTMLRow (sUser, sStatus, sComming, sGoing) {
 	var sHTML = "";
 	sHTML += "<tr>";
@@ -29,7 +30,7 @@ function CreateHTMLRow (sUser, sStatus, sComming, sGoing) {
 	return sHTML;
 }
 
-// JSON Tabelle
+// Create JSON table row
 function CreateRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, sComming, sHeadGoing, sGoing) {
 	var sJson = "{";
 	sJson += '"'  + sHeadUser + '":';
@@ -43,7 +44,7 @@ function CreateRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, sCommin
 	return sJson;
 }
 
-// Nullen voranstellen
+// Put zeros in front
 function aLZ(n){
   if(n <= 9){
     return "0" + n;
@@ -51,7 +52,7 @@ function aLZ(n){
   return n
 }
 
-// Fritzbox abfragen
+// Query Fritzbox
 function userAction(sIP, sUri, sService, sAction, sParameter, sVal) {
     var uri = "http://" + sIP + ":49000";
     const urn = "urn:dslforum-org:service:";
@@ -118,6 +119,8 @@ class FbCheckpresence extends utils.Adapter {
 		let interval = parser.parseExpression(sCron);
 
         this.log.info('start fb-checkpresence: ip-address: ' + this.config.ipaddress + ' polling interval: ' + this.config.interval + " (" + sCron + ")");
+		
+		//Promisify some async functions
 		const getStateP = util.promisify(gthis.getState);
 		const getObjectP = util.promisify(gthis.getObject);
 		const getHistoryP = util.promisify(gthis.getHistory);
@@ -136,7 +139,7 @@ class FbCheckpresence extends utils.Adapter {
 			For every state in the system there has to be also an object of type state
 			Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 			*/
-			//Übergeordnete Objekte anlegen
+			//Create higher-level objects
 			await this.setObjectNotExists("info.connection", {
 				type: "state",
 				common: {
@@ -207,7 +210,7 @@ class FbCheckpresence extends utils.Adapter {
 				native: {},
 			});
 			
-			//Objekte für Familienmitglieder anlegen
+			//Create objects for family members
 			for (var k = 0; k < this.config.familymembers.length; k++) {
 				var device = this.config.familymembers[k];
 				var member = device.familymember;
@@ -333,7 +336,7 @@ class FbCheckpresence extends utils.Adapter {
 					});
 					if (await getStateP(member + ".present.sum_day") == null) gthis.setState(member + ".present.sum_day", "-", true);
 					
-					//History einschalten
+					//Enable history
 					gthis.sendTo('history.0', 'enableHistory', {
 						id: 'fb-checkpresence.0.' + member,
 						options: {
@@ -363,15 +366,15 @@ class FbCheckpresence extends utils.Adapter {
 			let midnight = new Date();
 			midnight.setHours(0,0,0);
 			let dnow = new Date();
-			//let present = dnow.getTime() - midnight.getTime();
 			let firstFalse = midnight;
 			let bfirstFalse = false;
 			pres = false;
 			let jsontab = "[";
 			let sHTML = "<table class='mdui-table' ><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody>";
 			let fbcon = false; // connection to fritzbox
+
 			for (var k = 0; k < gthis.config.familymembers.length; k++) {
-				var device = gthis.config.familymembers[k]; //Zeile aus der Tabelle Familymembers
+				var device = gthis.config.familymembers[k]; //Row from family members table
 				var member = device.familymember; 
 				var mac = device.macaddress;
 				var enabled = device.enabled;
@@ -379,7 +382,7 @@ class FbCheckpresence extends utils.Adapter {
 				let formatted_date = current_datetime.getFullYear() + "-" + aLZ(current_datetime.getMonth() + 1) + "-" + aLZ(current_datetime.getDate()) + " " + aLZ(current_datetime.getHours()) + ":" + aLZ(current_datetime.getMinutes()) + ":" + aLZ(current_datetime.getSeconds());
 				var bActive = false; 
 				
-				if (enabled == true){ //in configuration settings
+				if (enabled == true){ //Enabled in configuration settings
 					try { //get fritzbox data
 						var user = await userAction(sIpfritz, "/upnp/control/hosts", "Hosts:1", "GetSpecificHostEntry", "NewMACAddress", mac);
 						var n = user.search("NewActive>1</NewActive");
@@ -409,20 +412,9 @@ class FbCheckpresence extends utils.Adapter {
 						let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
 						let absent = 0;
 						gthis.log.info(member + " present 1: " + present + "  absent: " + absent)
-						/*//last change to true was yesterday
-						if (curVal.val == true && curVal.lc < midnight.getTime()){
-							absent = 0;
-							present = Math.round((dnow - midnight)/1000/60);
-						}
-						//last change to false was yesterday
-						if (curVal.val == false && curVal.lc < midnight.getTime()){
-							absent = Math.round((dnow - midnight)/1000/60);
-							present = 0;
-						}*/
 
 						var end = new Date().getTime();
 						let start = midnight.getTime();
-						//gthis.log.info("start: " + start);
 						let lastVal = null;
 						let lastValCheck = false;
 						let dPoint = await getObjectP('fb-checkpresence.0.' + member);
@@ -434,7 +426,7 @@ class FbCheckpresence extends utils.Adapter {
 									id: 'fb-checkpresence.0.' + memb,
 									options:{
 									end:        end,
-									start:      start, //end - 86400000, //1 day
+									start:      start,
 									aggregate: 'onchange'}
 								}, function (result1) {
 									if (result1 == null) {
@@ -442,7 +434,6 @@ class FbCheckpresence extends utils.Adapter {
 									}else{
 										let cnt = result1.result.length;
 										if (cnt == 0) cnt += 1;
-										//gthis.log.info("Cnt " + memb + ": " + cnt);
 										gthis.sendTo('history.0', 'getHistory', {
 											id: 'fb-checkpresence.0.' + memb,
 											options: {
@@ -454,11 +445,9 @@ class FbCheckpresence extends utils.Adapter {
 											if (result == null) {
 												gthis.log.info('list history ' + memb + " " + result.error);
 											}else{
-												//gthis.log.info("Cnt2 " + memb + ": " + result.result.length);
 												for (var i = 0; i < result.result.length; i++) {
 													if (result.result[i].val != null ){
-														//Json History aufbauen
-														//gthis.log.info("History " + memb + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
+														//Create json history
 														sHistory += '{"'  + "Active" + '"' + ":";
 														sHistory += '"'  + result.result[i].val + '"' + ",";
 														sHistory += '"'  + "Date" + '"' + ":";
@@ -469,13 +458,13 @@ class FbCheckpresence extends utils.Adapter {
 														
 														let hTime = new Date(result.result[i].ts);
 														if (hTime >= midnight.getTime()){
-															gthis.log.info(memb + " present 1a: " + present + "  absent: " + absent)
+															//gthis.log.info(memb + " present 1a: " + present + "  absent: " + absent)
 															if (lastVal == null){
 																
 															}else{
 																if (lastVal == false && lastValCheck == true){
 																	absent = Math.round((hTime - midnight.getTime())/1000/60);
-																	gthis.log.info(memb + " present 2: " + present + "  absent: " + absent)
+																	//gthis.log.info(memb + " present 2: " + present + "  absent: " + absent)
 																}
 																if (result.result[i].val == false){
 																	if (bfirstFalse == false){
@@ -487,24 +476,24 @@ class FbCheckpresence extends utils.Adapter {
 																	if (bfirstFalse == true){
 																		bfirstFalse = false;
 																		absent += Math.round((hTime - firstFalse.getTime())/1000/60);
-																		gthis.log.info(memb + " present 3: " + present + "  absent: " + absent)
+																		//gthis.log.info(memb + " present 3: " + present + "  absent: " + absent)
 																	}
 																}
 															}
 														}else{
 															lastVal = result.result[i].val;
 															lastValCheck = true;
-															gthis.log.info(memb + " lastVal: " + lastVal );
+															//gthis.log.info(memb + " lastVal: " + lastVal );
 														}	
 													}
 												}
 												if (bfirstFalse == true){
 													bfirstFalse = false;
 													absent += Math.round((dnow - firstFalse.getTime())/1000/60);
-													gthis.log.info(memb + " present 4: " + present + "  absent: " + absent)
+													//gthis.log.info(memb + " present 4: " + present + "  absent: " + absent)
 												}
 												present -= absent;
-												gthis.log.info(memb + " present 5: " + present + "  absent: " + absent)
+												//gthis.log.info(memb + " present 5: " + present + "  absent: " + absent)
 												
 												gthis.setState(memb + ".present.sum_day", { val: present, ack: true });
 												gthis.setState(memb + ".absent.sum_day", { val: absent, ack: true });
