@@ -408,6 +408,7 @@ class FbCheckpresence extends utils.Adapter {
 						//get history data
 						let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
 						let absent = 0;
+						gthis.log.info(member + " present 1: " + present + "  absent: " + absent)
 						/*//last change to true was yesterday
 						if (curVal.val == true && curVal.lc < midnight.getTime()){
 							absent = 0;
@@ -421,8 +422,9 @@ class FbCheckpresence extends utils.Adapter {
 
 						var end = new Date().getTime();
 						let start = midnight.getTime();
-						gthis.log.info("start: " + start);
-						let lastVal = false;
+						//gthis.log.info("start: " + start);
+						let lastVal = null;
+						let lastValCheck = false;
 						let dPoint = await getObjectP('fb-checkpresence.0.' + member);
 						//gthis.log.info(JSON.stringify(dPoint));
 						if (dPoint.common.custom['history.0'].enabled == true){
@@ -456,7 +458,7 @@ class FbCheckpresence extends utils.Adapter {
 												for (var i = 0; i < result.result.length; i++) {
 													if (result.result[i].val != null ){
 														//Json History aufbauen
-														gthis.log.info("History " + memb + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
+														//gthis.log.info("History " + memb + ": " + result.result[i].val + ' ' + new Date(result.result[i].ts).toString());
 														sHistory += '{"'  + "Active" + '"' + ":";
 														sHistory += '"'  + result.result[i].val + '"' + ",";
 														sHistory += '"'  + "Date" + '"' + ":";
@@ -467,40 +469,47 @@ class FbCheckpresence extends utils.Adapter {
 														
 														let hTime = new Date(result.result[i].ts);
 														if (hTime >= midnight.getTime()){
+															gthis.log.info(memb + " present 1a: " + present + "  absent: " + absent)
 															if (lastVal == null){
 																
 															}else{
-																if (lastVal == false){
+																if (lastVal == false && lastValCheck == true){
 																	absent = Math.round((hTime - midnight.getTime())/1000/60);
-																	if (result.result[i].val == false){
-																		if (bfirstFalse == false){
-																			firstFalse = new Date(result.result[i].ts);
-																			bfirstFalse = true;
-																		}
+																	gthis.log.info(memb + " present 2: " + present + "  absent: " + absent)
+																}
+																if (result.result[i].val == false){
+																	if (bfirstFalse == false){
+																		firstFalse = new Date(result.result[i].ts);
+																		bfirstFalse = true;
 																	}
 																}
 																if (result.result[i].val == true){
 																	if (bfirstFalse == true){
 																		bfirstFalse = false;
 																		absent += Math.round((hTime - firstFalse.getTime())/1000/60);
+																		gthis.log.info(memb + " present 3: " + present + "  absent: " + absent)
 																	}
 																}
 															}
 														}else{
 															lastVal = result.result[i].val;
+															lastValCheck = true;
+															gthis.log.info(memb + " lastVal: " + lastVal );
 														}	
 													}
 												}
 												if (bfirstFalse == true){
 													absent += Math.round((dnow - firstFalse.getTime())/1000/60);
+													gthis.log.info(memb + " present 4: " + present + "  absent: " + absent)
 												}
 												present -= absent;
-
-												gthis.setState(member + ".present.sum_day", { val: (present), ack: true });
-												gthis.setState(member + ".absent.sum_day", { val: absent, ack: true });
+												gthis.log.info(memb + " present 5: " + present + "  absent: " + absent)
+												
+												gthis.setState(memb + ".present.sum_day", { val: present, ack: true });
+												gthis.setState(memb + ".absent.sum_day", { val: absent, ack: true });
 
 												sHistory += ']';
-												gthis.setState(member + ".history", { val: sHistory, ack: true });
+												gthis.setState(memb + ".history", { val: sHistory, ack: true });
 											}
 										});
 									}
