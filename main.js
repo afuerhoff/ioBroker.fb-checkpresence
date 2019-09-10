@@ -86,10 +86,6 @@ function aLZ(n){
 
 // Query Fritzbox
 function soapAction(sIP, sUri, sService, sAction, sParameter, sVal) {
-    const sUsername = 'soap';
-    const spassword = 'Bbaifl&X0';
-    const auth = 'Basic ' + new Buffer(sUsername + ':' + spassword).toString('base64');
-
     const uri = 'http://' + sIP + ':49000';
     const urn = 'urn:dslforum-org:service:';
     //const urn = "urn:schemas-upnp-org:service:";
@@ -102,7 +98,6 @@ function soapAction(sIP, sUri, sService, sAction, sParameter, sVal) {
     const url = {
         uri: uri + sUri,
         headers: {
-            'Authorization' : auth,
             'Content-Type': 'text/xml',
             'charset': 'utf-8',
             'SOAPAction': urn + sService + '#' + sAction
@@ -356,41 +351,6 @@ async function checkPresence(gthis, ip, selHistory){
     const getStateP = util.promisify(gthis.getState);
     const getObjectP = util.promisify(gthis.getObject);
     //const getHistoryP = util.promisify(gthis.getHistory);
-
-/*    const fb = new Soap.Soap(gthis);
-    fb.initDevice(ip, 49000, function (err, device) {
-		if (err || !device) return (callback(err || '!device'));
-        if (!err) {
-            //gthis.log.info('Dev: ' + JSON.stringify(device.meta));
-            device.startEncryptedCommunication(function (err, sslDev) {
- 				if (err || !sslDev) return callback(err);
-                if (!err) {
-                    sslDev.login('soap', ['Bbaifl&X0']);
-                    let wanip = sslDev.services['urn:dslforum-org:service:Hosts:1'];
-                    wanip.actions.GetHostNumberOfEntries(function (err, result) {
-                        gthis.log.warn('Result: ' + JSON.stringify(result));	
-                    });
-                    wanip = sslDev.services['urn:dslforum-org:service:Hosts:1'];
-                    wanip.actions.GetSpecificHostEntry({NewMACAddress: '4C:66:41:A5:46:C2'}, function (err, result) {
-                        gthis.log.warn('Result: ' + JSON.stringify(result));	
-                    });
-                    wanip = sslDev.services['urn:dslforum-org:service:Hosts:1'];
-                    wanip.actions['X_AVM-DE_GetHostListPath'](async function (err, result) { //[] um den Bindestrich zu umgehen
-                        //gthis.log.warn('Result: ' + JSON.stringify(result));
-						const url = 'http://' + sslDev.meta.host + ':' + sslDev.meta.port + result['NewX_AVM-DE_HostListPath'];
-						const devList = await sslDev.getDeviceList(url);
-						gthis.log.warn('Devlist: ' + JSON.stringify(devList));
-						gthis.log.warn('Item: ' + devList['List']['Item'][1]['IPAddress']);
-                    });
-					
-                }else{
-                    gthis.log.error('Error: ' + err);
-                }
-            });             
-        }else{
-            gthis.log.info('Error: ' + err);                    
-        }
-    });*/
     
     const dateformat = gthis.config.dateformat;
 
