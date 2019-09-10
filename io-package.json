@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -14,6 +14,18 @@
                 "es": "Versión inicial",
                 "pl": "Pierwsze wydanie",
                 "zh-cn": "首次出版"
+            },
+            "0.0.2": {
+                "en": "optimized features",
+                "de": "optimierte Funktionen",
+                "ru": "оптимизированные функции",
+                "pt": "recursos otimizados",
+                "nl": "geoptimaliseerde functies",
+                "fr": "fonctionnalités optimisées",
+                "it": "caratteristiche ottimizzate",
+                "es": "características optimizadas",
+                "pl": "zoptymalizowane funkcje",
+                "zh-cn": "优化功能"
             }
         },
         "title": "Fritzbox CheckPresence",
@@ -49,7 +61,8 @@
             "presence",
             "family",
             "tr064",
-            "fritz.box"
+            "fritz.box",
+			"fritzbox"
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",
@@ -73,7 +86,9 @@
     "native": {
         "devices": [],
         "ipaddress": "192.168.178.1",
-        "interval": 1
+        "interval": 1,
+        "history": "",
+        "dateformat": "yyyy.mm.dd hh:MM:ss"
     },
     "objects": [],
     "instanceObjects": [

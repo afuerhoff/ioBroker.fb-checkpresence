@@ -20,10 +20,19 @@ You must fill in the name of the family member and the mac-address of the used d
 The comment is optional and you can enable or disable the family member. 
 The datapoint is based on the member name.
 
-## Changelog
+## Fritzbox conditions
+
+By default, the TR-064 interface is not activated. However, this can easily be changed via the 
+FritzBox web interface. To do this log in into your FritzBox and ensure that the expert view is activated. 
+Then you will find below "Home Network »Home Network Overview» Network Settings" the point 
+"Allow access for applications". There you have to activate the checkbox and then restart the FritzBox once.
+
+## Changelog 
 
 ### 0.0.1
 * (Achim Fürhoff) initial release
+### 0.0.2
+* (Achim Fürhoff) optimized features
 
 ## License
 MIT License
