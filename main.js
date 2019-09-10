@@ -14,7 +14,7 @@ const schedule = require('node-schedule');
 //const parser = require('cron-parser');
 const util = require('util');
 const dateFormat = require('dateformat');
-//const Soap = require('./lib/fbuser');
+//const Soap = require('./lib/fbsoap');
 
 // Global
 let gthis; //Global verfügbar machen
@@ -85,11 +85,7 @@ function aLZ(n){
 }
 
 // Query Fritzbox
-function userAction(sIP, sUri, sService, sAction, sParameter, sVal) {
-    const sUsername = 'user';
-    const spassword = 'pwd';
-    const auth = 'Basic ' + new Buffer(sUsername + ':' + spassword).toString('base64');
-
+function soapAction(sIP, sUri, sService, sAction, sParameter, sVal) {
     const uri = 'http://' + sIP + ':49000';
     const urn = 'urn:dslforum-org:service:';
     //const urn = "urn:schemas-upnp-org:service:";
@@ -102,7 +98,6 @@ function userAction(sIP, sUri, sService, sAction, sParameter, sVal) {
     const url = {
         uri: uri + sUri,
         headers: {
-            'Authorization' : auth,
             'Content-Type': 'text/xml',
             'charset': 'utf-8',
             'SOAPAction': urn + sService + '#' + sAction
@@ -110,7 +105,7 @@ function userAction(sIP, sUri, sService, sAction, sParameter, sVal) {
         method: 'POST',
         body: 
             '<?xml version="1.0" encoding="utf-8"?>' +
-            '<s:Envelope s:encodingStyle="http://schemas.xmluser.org/user/encoding/" xmlns:s="http://schemas.xmluser.org/user/envelope/">' +
+            '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">' +
                 '<s:Body>' +
                     '<u:' + sAction + ' xmlns:u="' + urn + sService + sPar +
                 '</s:Body>' +
@@ -356,41 +351,6 @@ async function checkPresence(gthis, ip, selHistory){
     const getStateP = util.promisify(gthis.getState);
     const getObjectP = util.promisify(gthis.getObject);
     //const getHistoryP = util.promisify(gthis.getHistory);
-
-/*    const fb = new Soap.Soap(gthis);
-    fb.initDevice(ip, 49000, function (err, device) {
-		if (err || !device) return (callback(err || '!device'));
-        if (!err) {
-            //gthis.log.info('Dev: ' + JSON.stringify(device.meta));
-            device.startEncryptedCommunication(function (err, sslDev) {
- 				if (err || !sslDev) return callback(err);
-                if (!err) {
-                    sslDev.login('user', ['pwd']);
-                    let wanip = sslDev.services['urn:dslforum-org:service:Hosts:1'];
-                    wanip.actions.GetHostNumberOfEntries(function (err, result) {
-                        gthis.log.warn('Result: ' + JSON.stringify(result));	
-                    });
-                    wanip = sslDev.services['urn:dslforum-org:service:Hosts:1'];
-                    wanip.actions.GetSpecificHostEntry({NewMACAddress: '4C:66:41:A5:46:C2'}, function (err, result) {
-                        gthis.log.warn('Result: ' + JSON.stringify(result));	
-                    });
-                    wanip = sslDev.services['urn:dslforum-org:service:Hosts:1'];
-                    wanip.actions['X_AVM-DE_GetHostListPath'](async function (err, result) { //[] um den Bindestrich zu umgehen
-                        //gthis.log.warn('Result: ' + JSON.stringify(result));
-						const url = 'http://' + sslDev.meta.host + ':' + sslDev.meta.port + result['NewX_AVM-DE_HostListPath'];
-						const devList = await sslDev.getDeviceList(url);
-						gthis.log.warn('Devlist: ' + JSON.stringify(devList));
-						gthis.log.warn('Item: ' + devList['List']['Item'][1]['IPAddress']);
-                    });
-					
-                }else{
-                    gthis.log.error('Error: ' + err);
-                }
-            });             
-        }else{
-            gthis.log.info('Error: ' + err);                    
-        }
-    });*/
     
     const dateformat = gthis.config.dateformat;
 
@@ -407,12 +367,12 @@ async function checkPresence(gthis, ip, selHistory){
                 
         if (enabled == true){ //Enabled in configuration settings
             try { //get fritzbox data
-                const user = await userAction(ip, '/upnp/control/hosts', 'Hosts:1', 'GetSpecificHostEntry', 'NewMACAddress', mac);
-                //var user1 = await userAction(ip, "upnp/control/wlanconfig1", "WLANConfiguration:1", "X_AVM-DE_GetWLANDeviceListPath", "", "");
-                //gthis.log.info("user1: " + user1);
+                const soap = await soapAction(ip, '/upnp/control/hosts', 'Hosts:1', 'GetSpecificHostEntry', 'NewMACAddress', mac);
+                //var soap1 = await soapAction(ip, "upnp/control/wlanconfig1", "WLANConfiguration:1", "X_AVM-DE_GetWLANDeviceListPath", "", "");
+                //gthis.log.info("soap1: " + soap1);
                 
-                const n = user.search('NewActive>1</NewActive');
-                if (user != null){ 
+                const n = soap.search('NewActive>1</NewActive');
+                if (soap != null){ 
                     fbcon = true; //connection established
                     gthis.setState('info.lastupdate', { val: formatted_date, ack: true });
                 }
@@ -542,7 +502,7 @@ async function checkPresence(gthis, ip, selHistory){
                 if (n >= 0){ //member = true
                     bMemberActive = true;
                     presence = true;
-                    gthis.log.info(member + ' (true): ' + user);
+                    gthis.log.info(member + ' (true): ' + soap);
                     if (curVal.val != null){
                         if (curVal.val == false){ //signal changing to true
                             //gthis.log.info(member + ".comming: " + fdate);
@@ -553,7 +513,7 @@ async function checkPresence(gthis, ip, selHistory){
                         gthis.log.error('object ' + member + ' is deleted!');
                     }
                 }else{ //member = false
-                    gthis.log.info(member + ' (false): ' + user);
+                    gthis.log.info(member + ' (false): ' + soap);
                     if (curVal != null){
                         if (curVal.val == true){ //signal changing to false
                             //gthis.log.info(member + ".going: " + fdate);
