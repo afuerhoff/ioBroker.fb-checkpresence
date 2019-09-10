@@ -58,7 +58,7 @@
 			}
 			values2table('values', familymembers, onChange);
 
-            /*$('.value').each(function () {
+            $('.value').each(function () {
                 var $key = $(this);
                 var id = $key.attr('id');
                 if ($key.attr('type') === 'checkbox') {
@@ -73,7 +73,7 @@
                         .on('keyup', () => onChange())
                         ;
                 }
-            });*/
+            });
             onChange(false);
             // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
             if (M) M.updateTextFields();
@@ -127,9 +127,29 @@
 				</div>
 				<div class="col s2 input-field tooltip">
 					<input type="number" class="value" min="1" max="59" id="interval" />
-					<label for="interval" class="translate">polling interval</label>
-					<span class="tooltiptext translate">Please enter the polling interval</span>
+					<label for="interval" class="translate">polling interval [minutes]</label>
+					<span class="tooltiptext translate">Please enter the polling interval in minutes</span>
 				</div>
+			</div>
+			<div class="row">
+			    <div class="input-field col s2 value">
+					<select class="value" id="history">
+						<!--option value="" disabled selected class="translate">Choose your option</option-->
+						<option value="" class="translate">disabled</option>
+						<option value="history.0" class="translate">History</option>
+						<option value="sql.0" class="translate">SQL</option>
+					</select>
+					<label class="translate">Select history adapter</label>
+				</div>				
+				<div class="col s3 input-field tooltip">	
+					<input type="text" class="value" id="dateformat"/>
+					<label for="ipaddress" class="translate">Date format</label>
+					<span class="tooltiptext translate">Please enter the date format string</span>
+				</div>
+				<!--div class="col s3 input-field">	
+					<input type="checkbox" class="value" id="debug" />
+					<label for="debug" class="translate">Show additional debug info</label>
+				</div-->
 			</div>
 		</div>
 
