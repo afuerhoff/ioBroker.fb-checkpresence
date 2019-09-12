@@ -22,10 +22,12 @@ The datapoint is based on the member name.
 
 ## Fritzbox conditions
 
+The used TR-064 interface to the fritzbox is described here: https://avm.de/service/schnittstellen/
 By default, the TR-064 interface is not activated. However, this can easily be changed via the 
 FritzBox web interface. To do this log in into your FritzBox and ensure that the expert view is activated. 
 Then you will find below "Home Network »Home Network Overview» Network Settings" the point 
 "Allow access for applications". There you have to activate the checkbox and then restart the FritzBox once.
+<img src="doc/access_settings_network.JPG"/>
 
 ## Changelog 
 
