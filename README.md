@@ -37,6 +37,8 @@ Then you will find below "Home Network »Home Network Overview» Network Setting
 * (Achim Fürhoff) optimized features
 ### 0.0.3
 * (Achim Fürhoff) guest feature added
+### 0.0.4
+* (Achim Fürhoff) calculation error resolved
 
 ## License
 MIT License

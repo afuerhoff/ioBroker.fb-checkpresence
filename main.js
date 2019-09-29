@@ -98,15 +98,13 @@ function createJSONGuestRow(hostName, ipAddress, macAddress) {
 }
 
 async function checkPresence(gthis, cfg){
-    const midnight = new Date();
-    midnight.setHours(0,0,0);
-    const dnow = new Date();
-    let firstFalse = midnight;
-    let bfirstFalse = false;
-
     //Promisify some async functions
     const getStateP = util.promisify(gthis.getState);
     const getObjectP = util.promisify(gthis.getObject);
+
+    const midnight = new Date();
+    midnight.setHours(0,0,0);
+    const dnow = new Date();
 
 	let devInfo = {
 		host: cfg.ip,
@@ -277,6 +275,8 @@ async function checkPresence(gthis, cfg){
                                         }else{
 											let htmlHistory = HTML_HISTORY;
 							                let jsonHistory = '[';
+										    let bfirstFalse = false;
+										    let firstFalse = midnight;
                                             for (let i = 0; i < result.result.length; i++) {
                                                 if (result.result[i].val != null ){
                                                     const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);

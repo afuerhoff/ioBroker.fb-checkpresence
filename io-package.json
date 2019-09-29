@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -38,7 +38,19 @@
 				"es": "función de invitado agregada",
 				"pl": "dodano funkcję gościa",
 				"zh-cn": "访客功能已添加"
-			  }			
+			},
+			"0.0.4": {
+				"en": "calculation error resolved",
+				"de": "Rechenfehler behoben",
+				"ru": "ошибка расчета устранена",
+				"pt": "erro de cálculo resolvido",
+				"nl": "berekeningsfout opgelost",
+				"fr": "erreur de calcul résolue",
+				"it": "errore di calcolo risolto",
+				"es": "error de cálculo resuelto",
+				"pl": "błąd obliczeniowy rozwiązany",
+				"zh-cn": "计算错误已解决"
+			}			
         },
         "title": "Fritzbox CheckPresence",
         "titleLang": {
