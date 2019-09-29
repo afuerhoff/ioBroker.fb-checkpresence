@@ -8,409 +8,250 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 
-// Load your modules here, e.g.:
+// load your modules here, e.g.:
 const request = require('request');
 const schedule = require('node-schedule');
-//const parser = require('cron-parser');
 const util = require('util');
 const dateFormat = require('dateformat');
-//const Soap = require('./lib/fbsoap');
+//own libraries
+const fb = require('./lib/fb');
+const obj = require('./lib/objects');
 
 // Global
 let gthis; //Global verfügbar machen
 
-const html = '<table class="mdui-table"><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody>';
-const html_history  = '<table class="mdui-table"><thead><tr><th>Status</th><th>Date</th></tr></thead><tbody>';
-const html_end = '</body></table>';
-
-// Debug Infos
-/*function showdebug(sText) {
-    if (debug == true) gthis.log.info(sText);
-}*/
+const HTML = '<table class="mdui-table"><thead><tr><th>Name</th><th>Status</th><th>Kommt</th><th>Geht</th></tr></thead><tbody>';
+const HTML_HISTORY  = '<table class="mdui-table"><thead><tr><th>Status</th><th>Date</th></tr></thead><tbody>';
+const HTML_END = '</body></table>';
+const HTML_GUEST  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>IPAddress</th><th>MACAddress</th></tr></thead><tbody>';
 
 // Create HTML table row
-function CreateHTMLRow (sUser, sStatus, sComming, sGoing) {
-    let sHTML = '';
-    sHTML += '<tr>';
-    sHTML += '<td>' + sUser + '</td>';
-    sHTML += '<td>' + (sStatus ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>') + '</td>';
-    sHTML += '<td>' + sComming + '</td>';
-    sHTML += '<td>' + sGoing + '</td>';
-    sHTML += '</tr>';
+function createHTMLRow (cfg, sUser, sStatus, comming, going) {
+    let html = '';
+    html += '<tr>';
+    html += '<td>' + sUser + '</td>';
+    html += '<td>' + (sStatus ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>') + '</td>';
+    html += '<td>' + dateFormat(comming, cfg.dateFormat) + '</td>';
+    html += '<td>' + dateFormat(going, cfg.dateFormat) + '</td>';
+    html += '</tr>';
 
-    return sHTML;
+    return html;
 }
 
 // Create HTML history table row
-function CreateHTMLHistoryRow (sStatus, sDate) {
-    let sHTML = '';
-    sHTML += '<tr>';
-    sHTML += '<td>' + (sStatus ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>') + '</td>';
-    sHTML += '<td>' + sDate + '</td>';
-    sHTML += '</tr>';   
+function createHTMLHistoryRow (cfg, sStatus, sDate) {
+    let html = '';
+    html += '<tr>';
+    html += '<td>' + (sStatus ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>') + '</td>';
+    html += '<td>' + dateFormat(sDate, cfg.dateFormat) + '</td>';
+    html += '</tr>';   
 
-    return sHTML;
+    return html;
+}
+
+// Create HTML guest row
+function createHTMLGuestRow (hostName, ipAddress, macAddress) {
+    let html = '';
+    html += '<tr>';
+    html += '<td>' + hostName + '</td>';
+    html += '<td>' + ipAddress + '</td>';
+    html += '<td>' + macAddress + '</td>';
+    html += '</tr>';   
+
+    return html;
 }
 
 // Create JSON table row
-function CreateJSONRow(sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, sComming, sHeadGoing, sGoing) {
-    let sJson = '{';
-    sJson += '"'  + sHeadUser + '":';
-    sJson += '"'  + sUser + '"' + ',';
-    sJson += '"'  + sHeadStatus + '":';
-    sJson += '"'  + sStatus + '"' + ',';
-    sJson += '"'  + sHeadComming + '":';
-    sJson += '"'  + sComming + '"' + ',';
-    sJson += '"'  + sHeadGoing + '":';
-    sJson += '"'  + sGoing + '"' + '}';
-    return sJson;
+function createJSONRow(cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, comming, sHeadGoing, going) {
+    let json = '{';
+    json += '"'  + sHeadUser + '":';
+    json += '"'  + sUser + '"' + ',';
+    json += '"'  + sHeadStatus + '":';
+    json += '"'  + sStatus + '"' + ',';
+    json += '"'  + sHeadComming + '":';
+    json += '"'  + dateFormat(comming, cfg.dateFormat) + '"' + ',';
+    json += '"'  + sHeadGoing + '":';
+    json += '"'  + dateFormat(going, cfg.dateFormat) + '"' + '}';
+    return json;
 }
 
 // Create JSON history table row
-function CreateJSONHistoryRow(sHeadStatus, sStatus, sHeadDate, sDate) {
-    let sJson = '{';
-    sJson += '"'  + sHeadStatus + '"' + ':';
-    sJson += '"'  + sStatus + '"' + ',';
-    sJson += '"'  + sHeadDate + '"' + ':';
-    sJson += '"'  + sDate + '"' + '}';
-    return sJson;
+function createJSONHistoryRow(cfg, sHeadStatus, sStatus, sHeadDate, sDate) {
+    let json = '{';
+    json += '"'  + sHeadStatus + '"' + ':';
+    json += '"'  + sStatus + '"' + ',';
+    json += '"'  + sHeadDate + '"' + ':';
+    json += '"'  + dateFormat(sDate, cfg.dateFormat) + '"' + '}';
+    return json;
 }
 
-// Put zeros in front
-function aLZ(n){
-    if(n <= 9){
-        return '0' + n;
-    }
-    return n;
+// Create JSON history table row
+function createJSONGuestRow(hostName, ipAddress, macAddress) {
+    let json = '{';
+    json += '"'  + 'Hostname' + '":';
+    json += '"'  + hostName + '"' + ',';
+    json += '"'  + 'IP-Address' + '":';
+    json += '"'  + ipAddress + '"' + ',';
+    json += '"'  + 'MAC-Address' + '":';
+    json += '"'  + macAddress + '"}';
+    return json;
 }
 
-// Query Fritzbox
-function soapAction(sIP, sUri, sService, sAction, sParameter, sVal) {
-    const uri = 'http://' + sIP + ':49000';
-    const urn = 'urn:dslforum-org:service:';
-    //const urn = "urn:schemas-upnp-org:service:";
-    let sPar = '';
-    if (sParameter != ''){
-        sPar = '" >' + '<' + sParameter + '>' + sVal + '</' + sParameter + '>' + '</u:' + sAction + '>';
-    }else{
-        sPar = '"/>';
-    }
-    const url = {
-        uri: uri + sUri,
-        headers: {
-            'Content-Type': 'text/xml',
-            'charset': 'utf-8',
-            'SOAPAction': urn + sService + '#' + sAction
-        },
-        method: 'POST',
-        body: 
-            '<?xml version="1.0" encoding="utf-8"?>' +
-            '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">' +
-                '<s:Body>' +
-                    '<u:' + sAction + ' xmlns:u="' + urn + sService + sPar +
-                '</s:Body>' +
-            '</s:Envelope>' 
-    };
-    return new Promise((resolve, reject) => {
-        request(url, (error, response, body) => {
-            if (error) reject(error);
-            if (!error && response.statusCode != 200) {
-                reject('Invalid status code <' + response.statusCode + '>');
-            }
-            resolve(body);
-        });
-    });
-}
-
-async function createGlobalObjects(gthis) {
-    //Create higher-level objects
-    
-    //Promisify some async functions
-    const getStateP = util.promisify(gthis.getState);
-
-    await gthis.setObjectNotExists('info.connection', {
-        type: 'state',
-        common: {
-            name: 'Fritzbox connection state',
-            type: 'boolean',
-            role: 'indicator',
-            def: false,
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    // Reset connection state at start
-    gthis.setState('info.connection', false, true);
-
-    await gthis.setObjectNotExists('presence', {
-        type: 'state',
-        common: {
-            name: 'someone from the family is present',
-            type: 'boolean',
-            role: 'indicator',
-            def: false,
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP('presence') == null) gthis.setState('presence', false, true);
-
-    await gthis.setObjectNotExists('json', {
-        type: 'state',
-        common: {
-            name: 'JSON table',
-            type: 'string',
-            role: 'json',
-            def: '[]',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP('json') == null) gthis.setState('json', '[]', true);
-
-    await gthis.setObjectNotExists('html', {
-        type: 'state',
-        common: {
-            name: 'HTML table',
-            type: 'string',
-            role: 'html',
-            def: html + html_end,
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP('html') == null) gthis.setState('html', html + html_end, true);
-    
-    await gthis.setObjectNotExists('info.lastupdate', {
-        type: 'state',
-        common: {
-            name: 'last connection',
-            type: 'string',
-            role: 'date',
-            def: '',
-            read: true,
-            write: false,
-        },
-        native: {},
-    }); 
-}
-
-async function createMemberObjects(gthis, member){
-    //Promisify some async functions
-    const getStateP = util.promisify(gthis.getState);
-
-    await gthis.setObjectNotExists(member, {
-        type: 'state',
-        common: {
-            name: 'family member',
-            type: 'boolean',
-            role: 'indicator',
-            def: false,
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member) == null) gthis.setState(member, false, true);
-
-    await gthis.setObjectNotExists(member + '.history', {
-        type: 'state',
-        common: {
-            name: 'history of the day as json table',
-            type: 'string',
-            role: 'json',
-            def: '[]',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.history') == null) gthis.setState(member + '.history', '[]', true);
-
-    await gthis.setObjectNotExists(member + '.historyHtml', {
-        type: 'state',
-        common: {
-            name: 'history of the day as html table',
-            type: 'string',
-            role: 'html',
-            def: html_history + html_end,
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.historyHtml') == null) gthis.setState(member + '.historyHtml', html_history + html_end, true);
-    
-    await gthis.setObjectNotExists(member + '.going', {
-        type: 'state',
-        common: {
-            name: 'time when you leaving the home',
-            type: 'string',
-            role: 'date',
-            unit: '',
-            def: '-',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.going') == null) gthis.setState(member + '.going', '-', true);
-    
-    await gthis.setObjectNotExists(member + '.comming', {
-        type: 'state',
-        common: {
-            name: 'time when you arriving at home',
-            type: 'string',
-            role: 'date',
-            unit: '',
-            def: '-',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.comming') == null) gthis.setState(member + '.comming', '-', true);
-    
-    await gthis.setObjectNotExists(member + '.absent.since', {
-        type: 'state',
-        common: {
-            name: 'absent since',
-            type: 'string',
-            role: 'value',
-            unit: 'min.',
-            def: '-',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.absent.since') == null) gthis.setState(member + '.absent.since', '-', true);
-
-    await gthis.setObjectNotExists(member + '.present.since', {
-        type: 'state',
-        common: {
-            name: 'present since',
-            type: 'string',
-            role: 'value',
-            unit: 'min.',
-            def: '-',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.present.since') == null) gthis.setState(member + '.present.since', '-', true);
-
-    await gthis.setObjectNotExists(member + '.absent.sum_day', {
-        type: 'state',
-        common: {
-            name: 'how long absent per day',
-            type: 'string',
-            role: 'value',
-            unit: 'min.',
-            def: '-',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.absent.sum_day') == null) gthis.setState(member + '.absent.sum_day', '-', true);
-    
-    await gthis.setObjectNotExists(member + '.present.sum_day', {
-        type: 'state',
-        common: {
-            name: 'how long present per day',
-            type: 'string',
-            role: 'value',
-            unit: 'min.',
-            def: '-',
-            read: true,
-            write: false,
-        },
-        native: {},
-    });
-    if (await getStateP(member + '.present.sum_day') == null) gthis.setState(member + '.present.sum_day', '-', true);
-}
-
-async function checkPresence(gthis, ip, selHistory){
-    let presence = false;
+async function checkPresence(gthis, cfg){
     const midnight = new Date();
     midnight.setHours(0,0,0);
     const dnow = new Date();
     let firstFalse = midnight;
     let bfirstFalse = false;
-    let jsontab = '[';
-    let sHTML = html;
-    let fbcon = false; // connection to fritzbox
 
     //Promisify some async functions
     const getStateP = util.promisify(gthis.getState);
     const getObjectP = util.promisify(gthis.getObject);
-    //const getHistoryP = util.promisify(gthis.getHistory);
-    
-    const dateformat = gthis.config.dateformat;
+
+	let devInfo = {
+		host: cfg.ip,
+		port: '49000',
+		sslPort: null,
+		uid: cfg.uid,
+		pwd: cfg.pwd
+	}
+	let Fb = new fb.Fb(devInfo, gthis);
+	
+	const getHostNo = await Fb.soapAction(Fb, '/upnp/control/hosts', 'urn:dslforum-org:service:Hosts:1', 'GetHostNumberOfEntries', null);
+	const hostNo = getHostNo['NewHostNumberOfEntries'];
+	gthis.log.debug('hostNo: ' + hostNo);
+	gthis.setState('devices', { val: hostNo, ack: true });
+	gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
+	gthis.setState('info.lastUpdate', { val: dnow, ack: true });
+
+	//get device list
+	const hostPath = await Fb.soapAction(Fb, '/upnp/control/hosts', 'urn:dslforum-org:service:Hosts:1', 'X_AVM-DE_GetHostListPath', null);
+	const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
+	gthis.log.debug('url: ' + url);
+	let deviceList = await Fb.getDeviceList(url);
+	const items = deviceList['List']['Item'];
+	
+	//analyse guests
+	let guestCnt = 0;
+	let activeCnt = 0;
+	let htmlRow = HTML_GUEST;
+	let jsonRow = '[';
+	for (let i = 0; i < hostNo; i++) {
+		if (items[i]['Active'] == 1){
+			activeCnt += 1;
+		}
+		if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){
+			htmlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+			jsonRow += createJSONGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+			gthis.log.debug('Item: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
+			guestCnt += 1;
+		}
+	}
+	htmlRow += HTML_END;
+	jsonRow += ']';
+	
+	gthis.setState('guest.listHtml', { val: htmlRow, ack: true });
+	gthis.setState('guest.listJson', { val: jsonRow, ack: true });
+	gthis.setState('guest.count', { val: guestCnt, ack: true });
+	gthis.setState('activeDevices', { val: activeCnt, ack: true });
+	if (guestCnt > 0) {
+		gthis.setState('guest', { val: true, ack: true });
+	}else {
+		gthis.setState('guest', { val: false, ack: true });
+	}
 
     // functions for family members
-    for (let k = 0; k < gthis.config.familymembers.length; k++) {
-        const device = gthis.config.familymembers[k]; //Row from family members table
-        const member = device.familymember; 
-        const mac = device.macaddress;
-        const enabled = device.enabled;
-        const formatted_date = dnow.getFullYear() + '-' + aLZ(dnow.getMonth() + 1) + '-' + aLZ(dnow.getDate()) + ' ' + aLZ(dnow.getHours()) + ':' + aLZ(dnow.getMinutes()) + ':' + aLZ(dnow.getSeconds());
-        const fdate = dateFormat(dnow, dateformat);
-        let bMemberActive = false; 
-        let sHTMLhistory = html_history;
+    let jsonTab = '[';
+    let htmlTab = HTML;
+    let presence = false;
+    for (let k = 0; k < cfg.members.length; k++) {
+        const memberRow = cfg.members[k]; //Row from family members table
+        const member = memberRow.familymember; 
                 
-        if (enabled == true){ //Enabled in configuration settings
+        if (memberRow.enabled == true){ //member enabled in configuration settings
             try { //get fritzbox data
-                const soap = await soapAction(ip, '/upnp/control/hosts', 'Hosts:1', 'GetSpecificHostEntry', 'NewMACAddress', mac);
-                //var soap1 = await soapAction(ip, "upnp/control/wlanconfig1", "WLANConfiguration:1", "X_AVM-DE_GetWLANDeviceListPath", "", "");
-                //gthis.log.info("soap1: " + soap1);
-                
-                const n = soap.search('NewActive>1</NewActive');
-                if (soap != null){ 
-                    fbcon = true; //connection established
-                    gthis.setState('info.lastupdate', { val: formatted_date, ack: true });
-                }
-                
-                let sComming = '';
-                let sGoing = '';
-                let sJSONhistory = '[';
-                let curVal = await getStateP(member);
-                
-                //Calculation of '.since'
-                const d1 = new Date(curVal.lc);
-                const diff = Math.round((dnow - d1)/1000/60);
-                if (curVal.val == true){
-                    gthis.setState(member + '.present.since', { val: diff, ack: true });
-                    gthis.setState(member + '.absent.since', { val: 0, ack: true });
-                }
-                if (curVal.val == false){
-                    gthis.setState(member + '.absent.since', { val: diff, ack: true });
-                    gthis.setState(member + '.present.since', { val: 0, ack: true });
+				const hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', 'urn:dslforum-org:service:Hosts:1', 'GetSpecificHostEntry', [[1, "NewMACAddress", memberRow.macaddress]]);
+				let newActive = hostEntry['NewActive'];
+
+				let memberActive = false; 
+				let comming = null;
+				let going = null;
+				let curVal = await getStateP(member); //actual member state
+                if (curVal.val != null){
+					//calculation of '.since'
+					const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
+					if (curVal.val == true){
+						gthis.setState(member + '.present.since', { val: diff, ack: true });
+						gthis.setState(member + '.absent.since', { val: 0, ack: true });
+					}
+					if (curVal.val == false){
+						gthis.setState(member + '.absent.since', { val: diff, ack: true });
+						gthis.setState(member + '.present.since', { val: 0, ack: true });
+					}
+
+					//analyse member presence
+					if (newActive == 1){ //member = true
+						memberActive = true;
+						presence = true;
+						if (curVal.val == false){ //signal changing to true
+							gthis.log.debug('newActive ' + member + ' ' + newActive);
+							gthis.setState(member, { val: true, ack: true });
+							gthis.setState(member + '.comming', { val: dnow, ack: true });
+							comming = dnow;
+						}
+					}else{ //member = false
+						if (curVal.val == true){ //signal changing to false
+							gthis.log.debug('newActive ' + member + ' ' + newActive);
+							gthis.setState(member, { val: false, ack: true });
+							gthis.setState(member + '.going', { val: dnow, ack: true });
+							going = dnow;
+						}
+					}
+
+				}else{
+					gthis.log.error('error: content of object ' + member + ' is wrong!');                               
+				}
+				
+				if (comming == null) { //if now change was occurs
+					if (curVal.val == true){
+						comming = new Date(curVal.lc);
+						let val = await getStateP(member + '.comming');
+						if (new Date(val.val) == 'Invalid Date'){
+							gthis.setState(member + '.comming', { val: comming, ack: true });
+						}
+						
+					}
+				}
+				if (going == null) { //if now change was occurs
+					if (curVal.val == false){
+						going = new Date(curVal.lc);
+						let val = await getStateP(member + '.going');
+						if (new Date(val.val) == 'Invalid Date'){
+							gthis.setState(member + '.comming', { val: going, ack: true });
+						}
+					}
+				}
+                jsonTab += createJSONRow(cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
+                htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
+                if (k < cfg.members.length-1){
+                    jsonTab += ',';
                 }
 
                 //get history data
                 let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
                 let absent = 0;
-                //gthis.log.info(member + " present 1: " + present + "  absent: " + absent)
 
                 const end = new Date().getTime();
                 const start = midnight.getTime();
                 let lastVal = null;
                 let lastValCheck = false;
                 const dPoint = await getObjectP('fb-checkpresence.0.' + member);
-                //gthis.log.info(JSON.stringify(dPoint));
 
                 const memb = member;
-                if (selHistory != ''){
-                    if (dPoint.common.custom[selHistory].enabled == true){
+                if (cfg.history != ''){
+                    if (dPoint.common.custom[cfg.history].enabled == true){
                         try {
-                            gthis.sendTo(selHistory, 'getHistory', {
+                            gthis.sendTo(cfg.history, 'getHistory', {
                                 id: 'fb-checkpresence.0.' + memb,
                                 options:{
                                     end:        end,
@@ -423,7 +264,7 @@ async function checkPresence(gthis, ip, selHistory){
                                 }else{
                                     let cnt = result1.result.length;
                                     if (cnt == 0) cnt += 1;
-                                    gthis.sendTo(selHistory, 'getHistory', {
+                                    gthis.sendTo(cfg.history, 'getHistory', {
                                         id: 'fb-checkpresence.0.' + memb,
                                         options: {
                                             end:        end,
@@ -434,13 +275,15 @@ async function checkPresence(gthis, ip, selHistory){
                                         if (result == null) {
                                             gthis.log.info('list history ' + memb + ' ' + result.error);
                                         }else{
+											let htmlHistory = HTML_HISTORY;
+							                let jsonHistory = '[';
                                             for (let i = 0; i < result.result.length; i++) {
                                                 if (result.result[i].val != null ){
-                                                    const hdate = dateFormat(new Date(result.result[i].ts), dateformat);
-                                                    sHTMLhistory += CreateHTMLHistoryRow(result.result[i].val, hdate);
-                                                    sJSONhistory += CreateJSONHistoryRow('Active', result.result[i].val, 'Date', hdate);
+                                                    const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
+                                                    htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
+                                                    jsonHistory += createJSONHistoryRow(cfg, 'Active', result.result[i].val, 'Date', hdate);
                                                     if (i < result.result.length-1){
-                                                        sJSONhistory += ',';
+                                                        jsonHistory += ',';
                                                     }
                                                     const hTime = new Date(result.result[i].ts);
                                                     if (hTime >= midnight.getTime()){
@@ -478,10 +321,10 @@ async function checkPresence(gthis, ip, selHistory){
                                             gthis.setState(memb + '.present.sum_day', { val: present, ack: true });
                                             gthis.setState(memb + '.absent.sum_day', { val: absent, ack: true });
 
-                                            sJSONhistory += ']';
-                                            sHTMLhistory += html_end;
-                                            gthis.setState(memb + '.history', { val: sJSONhistory, ack: true });
-                                            gthis.setState(memb + '.historyHtml', { val: sHTMLhistory, ack: true });
+                                            jsonHistory += ']';
+                                            htmlHistory += HTML_END;
+                                            gthis.setState(memb + '.history', { val: jsonHistory, ack: true });
+                                            gthis.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
                                         }
                                     });
                                 }
@@ -498,41 +341,7 @@ async function checkPresence(gthis, ip, selHistory){
                     gthis.setState(memb + '.present.sum_day', { val: -1, ack: true });
                     gthis.setState(memb + '.absent.sum_day', { val: -1, ack: true });
                 }
-                //analyse fritzbox response 
-                if (n >= 0){ //member = true
-                    bMemberActive = true;
-                    presence = true;
-                    gthis.log.info(member + ' (true): ' + soap);
-                    if (curVal.val != null){
-                        if (curVal.val == false){ //signal changing to true
-                            //gthis.log.info(member + ".comming: " + fdate);
-                            gthis.setState(member + '.comming', { val: fdate, ack: true });
-                        }
-                        gthis.setState(member, { val: true, ack: true });
-                    }else{ //null value
-                        gthis.log.error('object ' + member + ' is deleted!');
-                    }
-                }else{ //member = false
-                    gthis.log.info(member + ' (false): ' + soap);
-                    if (curVal != null){
-                        if (curVal.val == true){ //signal changing to false
-                            //gthis.log.info(member + ".going: " + fdate);
-                            gthis.setState(member + '.going', { val: fdate, ack: true });
-                        }
-                        gthis.setState(member, { val: false, ack: true });
-                    }else{ //null value
-                        gthis.log.error('object ' + member + ' is deleted!');                               
-                    }
-                }
-                curVal = await getStateP(member + '.comming');
-                sComming = curVal.val;
-                curVal = await getStateP(member + '.going');
-                sGoing = curVal.val;
-                jsontab += CreateJSONRow('Name', member, 'Active', bMemberActive, 'Kommt', sComming, 'Geht', sGoing);
-                sHTML += CreateHTMLRow(member, bMemberActive, sComming, sGoing);
-                if (k < gthis.config.familymembers.length-1){
-                    jsontab += ',';
-                }
+                
             } catch (error) {
                 gthis.setState('info.connection', { val: false, ack: true });
                 gthis.log.error('ERROR:' + error);
@@ -540,17 +349,41 @@ async function checkPresence(gthis, ip, selHistory){
         }//enabled in configuration settings
         
     }// for end
-    gthis.setState('info.connection', { val: fbcon, ack: true }); //Fritzbox connection established
-    jsontab += ']';
-    sHTML += html_end;  
-    gthis.setState('json', { val: jsontab, ack: true });
-    gthis.setState('html', { val: sHTML, ack: true });
+    jsonTab += ']';
+    htmlTab += HTML_END;  
+    gthis.setState('json', { val: jsonTab, ack: true });
+    gthis.setState('html', { val: htmlTab, ack: true });
     
     //one ore more family members are presence
     if (presence == true){
         gthis.setState('presence', { val: true, ack: true });
     }else{
         gthis.setState('presence', { val: false, ack: true });
+    }
+}
+
+function enableHistory(cfg, member) {
+    if (cfg.history != ''){
+        gthis.sendTo(cfg.history, 'enableHistory', {
+            id: 'fb-checkpresence.0.' + member,
+            options: {
+                changesOnly:  true,
+                debounce:     0,
+                retention:    31536000,
+                maxLength:    10,
+                changesMinDelta: 0,
+                aliasId: ''
+            }
+        }, function (result) {
+            if (result.error) {
+                gthis.log.info('enable history ' + '' + result.error);
+            }
+            if (result.success) {
+                //gthis.log.info('enable history ' + " " + result.success);
+            }
+        });
+    }else{
+        gthis.log.info('History disabled');
     }
 }
 
@@ -580,25 +413,27 @@ class FbCheckpresence extends utils.Adapter {
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-        const cron = '*/' + this.config.interval + ' * * * *';
-        //const interval = parser.parseExpression(cron);
-        this.log.info('start fb-checkpresence: ip-address: ' + this.config.ipaddress + ' polling interval: ' + this.config.interval + ' (' + cron + ')');
+        const cfg = {
+            ip: this.config.ipaddress,
+            port: '49000',
+            iv: this.config.interval,
+            history: this.config.history,
+            dateFormat: this.config.dateformat,
+            uid: this.config.username,
+            pwd: this.config.password,
+            members: this.config.familymembers
+        };
+		
+        const cron = '*/' + cfg.iv + ' * * * *';
+        this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' (' + cron + ')');
         
-        //Promisify some async functions
-        //const getStateP = util.promisify(gthis.getState);
-        //const getObjectP = util.promisify(gthis.getObject);
-        //const getHistoryP = util.promisify(gthis.getHistory);
-
         /*
         For every state in the system there has to be also an object of type state
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
         
-        const ipFritz = this.config.ipaddress;
-        const selHistory = this.config.history;
-        
-        if (!this.config.familymembers) {
+        if (!cfg.members) {
             this.log.info('no family members defined -> nothing to do');
             return;
         }else{
@@ -606,47 +441,25 @@ class FbCheckpresence extends utils.Adapter {
             For every state in the system there has to be also an object of type state
             Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
             */
-            createGlobalObjects(this);
+            obj.createGlobalObjects(this, HTML+HTML_END, HTML_GUEST+HTML_END);
             
             //Create objects for family members
-            for (let k = 0; k < this.config.familymembers.length; k++) {
-                const device = this.config.familymembers[k];
-                const member = device.familymember;
+            for (let k = 0; k < cfg.members.length; k++) {
+                const memberRow = cfg.members[k];
+                const member = memberRow.familymember;
             
-                if (device.enabled == true){
-                    createMemberObjects(this, member);
-                    //Enable history
-                    if (selHistory != ''){
-                        gthis.sendTo(selHistory, 'enableHistory', {
-                            id: 'fb-checkpresence.0.' + member,
-                            options: {
-                                changesOnly:  true,
-                                debounce:     0,
-                                retention:    31536000,
-                                maxLength:    10,
-                                changesMinDelta: 0,
-                                aliasId: ''
-                            }
-                        }, function (result) {
-                            if (result.error) {
-                                gthis.log.info('enable history ' + '' + result.error);
-                            }
-                            if (result.success) {
-                                //gthis.log.info('enable history ' + " " + result.success);
-                            }
-                        });
-                    }else{
-                        gthis.log.info('History disabled');
-                    }
+                if (memberRow.enabled == true){
+                    obj.createMemberObjects(this, member, HTML_HISTORY + HTML_END);
+                    enableHistory(cfg, member);
                 }
             }
         }           
         // in this template all states changes inside the adapters namespace are subscribed
         this.subscribeStates('*');  
 
-        checkPresence(gthis, ipFritz, selHistory); // Main function
+        await checkPresence(gthis, cfg); // Main function
         schedule.scheduleJob(cron, async function(){ // scheduler based on interval
-            checkPresence(gthis, ipFritz, selHistory);
+            await checkPresence(gthis, cfg);
         });//schedule end 
     }//onReady
 

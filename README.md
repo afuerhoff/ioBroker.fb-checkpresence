@@ -35,6 +35,8 @@ Then you will find below "Home Network »Home Network Overview» Network Setting
 * (Achim Fürhoff) initial release
 ### 0.0.2
 * (Achim Fürhoff) optimized features
+### 0.0.3
+* (Achim Fürhoff) guest feature added
 
 ## License
 MIT License

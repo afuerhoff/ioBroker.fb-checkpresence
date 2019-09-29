@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -26,7 +26,19 @@
                 "es": "características optimizadas",
                 "pl": "zoptymalizowane funkcje",
                 "zh-cn": "优化功能"
-            }
+            },
+			"0.0.3": {
+				"en": "guest feature added",
+				"de": "Gast-Feature hinzugefügt",
+				"ru": "добавлена функция гостя",
+				"pt": "recurso convidado adicionado",
+				"nl": "gastfunctie toegevoegd",
+				"fr": "fonctionnalité invité ajoutée",
+				"it": "funzione ospite aggiunta",
+				"es": "función de invitado agregada",
+				"pl": "dodano funkcję gościa",
+				"zh-cn": "访客功能已添加"
+			  }			
         },
         "title": "Fritzbox CheckPresence",
         "titleLang": {
@@ -62,7 +74,7 @@
             "family",
             "tr064",
             "fritz.box",
-			"fritzbox"
+            "fritzbox"
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",
@@ -88,7 +100,9 @@
         "ipaddress": "192.168.178.1",
         "interval": 1,
         "history": "",
-        "dateformat": "yyyy.mm.dd hh:MM:ss"
+        "dateformat": "yyyy.mm.dd hh:MM:ss",
+        "username": "",
+        "password": ""
     },
     "objects": [],
     "instanceObjects": [
