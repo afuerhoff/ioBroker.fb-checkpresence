@@ -1,207 +1,399 @@
+<!DOCTYPE html>
 <html>
+	<head>
+		<title>fb-checkpresence</title>
+		<!-- Load ioBroker scripts and styles-->
+		<link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+		<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-<head>
-    <!-- Load ioBroker scripts and styles-->
-    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
-    <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+		<script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 
-    <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="../../js/translate.js"></script>
+		<script type="text/javascript" src="../../lib/js/materialize.js"></script>
+		<script type="text/javascript" src="../../js/adapter-settings.js"></script>
 
-    <script type="text/javascript" src="../../js/translate.js"></script>
-    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
-    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+		<!-- Load our own files -->
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="words.js"></script>
 
-    <!-- Load our own files -->
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <script type="text/javascript" src="words.js"></script>
+		<script type="text/javascript">
+			var familymembers = [];
+			var secret;
+			var active = false;
+			//var g_onChange;
+			if (typeof _ !== 'function') _ = translateWord;
 
-    <script type="text/javascript">
-		var familymembers = [];
+			function encrypt(key, value) {
+				var result = '';
+				for (var i = 0; i < value.length; ++i) {
+					result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+				}
+				return result;
+			}
 
-		function setValue(id, value, onChange) {
-			var $value = $('#' + id + '.value');
-			if ($value.attr('type') === 'checkbox') {
-				$value.prop('checked', value).change(function() {
-					onChange();
-				});
-			} else {
-				$value.val(value).change(function() {
-					onChange();
-				}).keyup(function() {
-					// Check that only numbers entered
-					if ($(this).hasClass('number')) {
-						var val = $(this).val();
-						if (val) {
-							var newVal = '';
-							for (var i = 0; i < val.length; i++) {
-								if (val[i] >= '0' && val[i] <= '9') {
-									newVal += val[i];
-								}
-							}
-							if (val != newVal) $(this).val(newVal);
-						}
+			function decrypt(key, value) {
+				var result = '';
+				for (var i = 0; i < value.length; ++i) {
+					result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+				}
+				return result;
+			}	
+
+			function myFunction() {
+				// Declare variables
+				var input, filter, table, tr, td, i, txtValue;
+				input = document.getElementById("myInput");
+				filter = input.value.toUpperCase();
+				table = document.getElementById("myTable");
+				tr = table.getElementsByTagName("tr");
+
+				// Loop through all table rows, and hide those who don't match the search query
+				for (i = 0; i < tr.length; i++) {
+					td = tr[i].getElementsByTagName("td")[0];
+					if (td) {
+					txtValue = td.textContent || td.innerText;
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
 					}
-					onChange();
+					}
+				}
+			}
+
+			function setValue(id, value, onChange) {
+				var $value = $('#' + id + '.value');
+				if ($value.attr('type') === 'checkbox') {
+					$value.prop('checked', value).change(function() {
+						onChange();
+					});
+				} else {
+					var val = $value.data('crypt') && value ? decrypt(secret, value) : value;
+					$value.val(val).change(function() {
+						onChange();
+					}).keyup(function() {
+						// Check that only numbers entered
+						if ($(this).hasClass('number')) {
+							var val = $(this).val();
+							if (val) {
+								var newVal = '';
+								for (var i = 0; i < val.length; i++) {
+									if (val[i] >= '0' && val[i] <= '9') {
+										newVal += val[i];
+									}
+								}
+								if (val != newVal) $(this).val(newVal);
+							}
+						}
+						onChange();
+					});
+				}
+			}
+
+			// This will be called by the admin adapter when the settings page loads
+			function load(settings, onChange) {
+				socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
+                	active =  (state && state.val);
+					if (!active) {
+						var content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + _('You have to start your ioBroker.' + adapter + ' adapter before you can use this function!') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
+						$('.modal').append(content);
+						$('.modal').modal();
+						return;
+					}
+
+					let g_onChange = onChange;
+					sendTo(adapter + '.' + instance, 'discovery', { onlyActive: true, reread: false }, function (result) {
+						try {
+							var arr = JSON.parse(result);
+							if (arr.error) {
+								var content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + arr.error.message + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
+								$('.modal').append(content);
+								$('.modal').modal();
+								return;
+							}
+							var dlg;
+							if (!arr.length) {
+								var content = '<div class="modal-content"><h4>' + _('Add a familymember') + '</h4><p>' + _('Cannot find any device') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
+								$('.modal').append(content);
+								$('.modal').modal();
+								return;
+							} else {
+								
+								dlg='<div class="input-field col s4">' + 
+									'<i id="icon" class="material-icons prefix">search</i>' + 
+									'<input type="text" id="myInput" onkeyup="myFunction()" placeholder="' + _('Search for device') + '..">' + 
+									'</div>' +
+									'<label><input type="checkbox" id="insertIP"/><span>' + _('Ip-address instead of mac-address') + '</span></label>' +
+									'<div col s6><table class="highlight" id="myTable">' + 
+									'<thead><tr><th class="left-align">' + 'Hostname' + '</th><th class="center-alighn">' + _('IP address') + '</th><th class="center-align">' + _('MAC address') + '</th></tr></thead>' +
+									'<body>'
+								arr.forEach(function (element) { 
+									dlg += '<tr class="add-device" ' +
+										'data-macaddress="' + (element.mac || '') + '" ' +
+										'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
+										'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
+										'<td>' + element.name + '</td>' +
+										'<td class="center">' + element.ip + '</td>' +
+										'<td class="center">' + element.mac + '</td>' +
+										'</tr>';
+								});
+								dlg += '</body></table></div>';
+								var content = '<div class="modal-content translate"><h5>' + _('Add a familymember') + '</h5><p>' + dlg + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">' + _('Close') + '</a></div>';
+								$('.modal').append(content);
+								$('.modal').modal();
+							}
+							$('.add-device').click(function () {
+								var insertIP = $('#insertIP');
+								if ($(insertIP).prop( "checked" )) {
+									var mac = $(this).data('ip');
+								}else{
+									var mac = $(this).data('macaddress');
+								}
+								var enabled = true;
+								var familymember = $(this).data('familymember');
+								var comment = ''; //$(this).data('comment');
+								devices = table2values('values');
+								devices.push({macaddress: mac, enabled: enabled, familymember: familymember, comment: comment});
+								values2table('values', devices, g_onChange);
+								g_onChange(true);
+							});
+						} catch (e) {
+							var content = '<div class="modal-content"><h4>Error</h4><p>Cannot find any device</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
+							$('.modal').append(content);
+							$('.modal').modal();
+						}
+
+					});
+            	});
+
+
+				// example: select elements with id=key and class=value and insert value
+				if (!settings) return;
+				socket.emit('getObject', 'system.config', function (err, obj) {
+					secret = (obj.native ? obj.native.secret : '') || 'SdoeQ85NTrg1B0FtEyzf';
+					familymembers = settings.familymembers || [];
+					values2table('values', familymembers, onChange);
+					for (var key in settings) {
+						//if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
+					}
+					$('.value').each(function () { 
+						var $key = $(this);
+						var id = $key.attr('id');
+						if ($key.attr('type') === 'checkbox') {
+							// do not call onChange direct, because onChange could expect some arguments
+							$key.prop('checked', settings[id])
+								.on('change', () => onChange())
+								;
+						} else {
+							let val;
+							if ($key.data('crypt') =="1"){
+								val = decrypt(secret, settings[id]) ;
+							} else{
+								val = settings[id];
+							}
+							//alert("Error1 " + val);
+
+							$key.val(val) //settings[id]
+								.on('change', () => onChange())
+								.on('keyup', () => onChange())
+								;
+						}
+					});
+					onChange(false);
+					// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
+					M.updateTextFields();
+					$('select').select();
 				});
 			}
-		}
 
-        // This will be called by the admin adapter when the settings page loads
-        function load(settings, onChange) {
-            // example: select elements with id=key and class=value and insert value
-            if (!settings) return;
+			// This will be called by the admin adapter when the user presses the save button
+			function save(callback) {
+				// example: select elements with class=value and build settings object
+				var obj = {};
 
-			familymembers = settings.familymembers || [];
-			for (var key in settings) {
-				if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
+				$('.value').each(function () {
+					var $this = $(this);
+					switch ($this.attr('type')) {
+						case 'checkbox':
+							obj[$this.attr('id')] = $this.prop('checked');
+							break;
+						case 'number':	
+							obj[$this.attr('id')] = parseInt($this.val(), 10);
+							break;
+						default:
+							obj[$this.attr('id')] = $this.data('crypt') && $this.val() ? encrypt(secret, $this.val()) : $this.val();
+							break;					
+					}
+				});
+				// Get table
+				obj.familymembers = table2values('values');
+				callback(obj);
 			}
-			values2table('values', familymembers, onChange);
 
-            $('.value').each(function () {
-                var $key = $(this);
-                var id = $key.attr('id');
-                if ($key.attr('type') === 'checkbox') {
-                    // do not call onChange direct, because onChange could expect some arguments
-                    $key.prop('checked', settings[id])
-                        .on('change', () => onChange())
-                        ;
-                } else {
-                    // do not call onChange direct, because onChange could expect some arguments
-                    $key.val(settings[id])
-                        .on('change', () => onChange())
-                        .on('keyup', () => onChange())
-                        ;
-                }
-            });
-            onChange(false);
-            // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
-            if (M) M.updateTextFields();
-        }
+		</script>
+		<style>
+			th {
+				background-color: rgb(14, 149, 240);
+				color: white;
+				height: 30px;
+			}
+			tr {
+				height: 20px;
+			}
+			h5 {
+				text-align: left;
+				color: rgb(0, 0, 0);
+			}
+			table.striped > tbody > tr:nth-child(odd) {
+ 				background-color: rgba(103, 214, 214, 0.5);
+			}
+			table.highlight > tbody > tr:hover {
+ 				color: rgba(24, 103, 206, 0.5);
+ 				background-color: rgba(19, 150, 150, 0.5);
+			}
+			tr td {
+   				height: auto !important;
+			}
+			#myInput {
+			width: 92%; /* Full-width */
+			font-size: 16px; /* Increase font-size */
+			padding: 1px 1px 1px 1px; /* Add some padding */
+			border: 1px solid rgb(13, 115, 231); /* Add a grey border */
+			margin-bottom: 1px; /* Add some space below the input */
+			}
 
-        // This will be called by the admin adapter when the user presses the save button
-        function save(callback) {
-            // example: select elements with class=value and build settings object
-            var obj = {};
-            $('.value').each(function () {
-                var $this = $(this);
-                if ($this.attr('type') === 'checkbox') {
-                    obj[$this.attr('id')] = $this.prop('checked');
-                } else {
-                    obj[$this.attr('id')] = $this.val();
-                }
-            });
-			// Get table
-			obj.familymembers = table2values('values');
+			#myTable {
+			border-collapse: collapse; /* Collapse borders */
+			width: 100%; /* Full-width */
+			border: 1px solid rgb(13, 115, 231); /* Add a grey border */
+			font-size: 14px; /* Increase font-size */
+			}
 
-            callback(obj);
-        }
-    </script>
+			#myTable th, #myTable td {
+			text-align: left; /* Left-align text */
+			padding: 6px; /* Add padding */
+			}
 
-</head>
+			#myTable tr {
+			/* Add a bottom border to all table rows */
+			border-bottom: 1px solid #ddd;
+			}
 
-<body>
+			#myTable tr.header, #myTable tr:hover {
+			/* Add a grey background color to the table header and on hover */
+			background-color: #f1f1f1;
+			}
+			#icon {
+			width: 8%;
+			}
+		</style>
+	</head>
 
-	<div class="m adapter-container">
-  
-		<div class="row">
-			<div class="col s12">
+	<body>
+		<div class="m adapter-container">
+			<div id="tabs" style="width: 100%; height: 100%; overflow: hidden;">
+				<!-- define tabs -->
 				<ul class="tabs">
-				  <li class="tab col s3"><a href="#tab-main" class="translate active">Main settings</a></li>
-				  <li class="tab col s3"><a href="#tab-keys" class="translate">Family settings</a></li>
+					<li class="tab col s3"><a href="#tab-main" class="translate active">Main settings</a></li>
+					<li class="tab col s3"><a href="#tab-family" class="translate">Family settings</a></li>
 				</ul>
-			</div>
+				<!-- define elements of the tabs -->
+				<div id="tab-main" class="col s12 page">
+					<div class="row">
+						<div class="input-field col s2">
+							<img src="fb-checkpresence.png" class="logo">
+						</div>
+					</div><!-- End of row -->
+					<div class="row">
+						<div class="col s2 input-field tooltip">	
+							<input type="text" class="value" maxlength="15" id="ipaddress"/>
+							<label for="ipaddress" class="translate">IP Fritzbox</label>
+							<span class="tooltiptext translate">Here you can enter the IP-Address from your Fritzbox</span>
+						</div>
+						<div class="col s2 input-field tooltip">	
+							<input type="text" data-crypt="0" class="value" id="username"/>
+							<label for="username" class="translate">Username</label>
+							<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
+						</div>
+						<div class="input-field col s3 tooltip">
+						<input type="password" data-crypt="1" class="value" id="password">
+						<label for="password">Password</label>
+						<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
+						</div>				
+						<div class="col s2 input-field tooltip">
+							<input type="number" class="value" min="1" max="59" id="interval" />
+							<label for="interval" class="translate">polling interval in minutes</label>
+							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
+						</div>
+					</div><!-- End of row -->
+					<div class="row">
+						<div class="col s2 input-field">
+							<select class="value" id="history">
+								<!--option value="" disabled selected class="translate">Choose your option</option-->
+								<option value="" class="translate">disabled</option>
+								<option value="history.0">History</option>
+								<option value="sql.0">SQL History</option>
+							</select>
+							<label for history class="translate">Select history adapter</label>
+						</div>				
+						<div class="col s3 input-field tooltip">	
+							<input type="text" class="value" id="dateformat"/>
+							<label for="ipaddress" class="translate">Date format</label>
+							<span class="tooltiptext translate">Here you can enter the date format string for the tables</span>
+						</div>
+					</div><!-- End of row -->
+				</div><!-- End of tab main -->
 
-		<div id="tab-main" class="col s12 page">
-			<div class="row">
-			  <div class="input-field col s2">
-				<img src="fb-checkpresence.png" class="logo">
-			  </div>
-			</div>
-			<div class="row">
-				<div class="col s2 input-field tooltip">	
-					<input type="text" class="value" maxLength="15" id="ipaddress"/>
-					<label for="ipaddress" class="translate">IP Fritzbox</label>
-					<!--span class="helper-text" data-error="wrong" data-success="right">Helper text</span-->
-					<span class="tooltiptext translate">Here you can enter the IP-Address from your Fritzbox</span>
-				</div>
-				<div class="col s2 input-field tooltip">	
-					<input type="text" class="value" id="username"/>
-					<label for="username" class="translate">Username</label>
-					<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
-				</div>
-				<div class="input-field col s3 tooltip">
-				  <input id="password" type="password" class="value">
-				  <label for="password">Password</label>
-				  <span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
-				</div>				
-				<div class="col s2 input-field tooltip">
-					<input type="number" class="value" min="1" max="59" id="interval" />
-					<label for="interval" class="translate">polling interval in minutes</label>
-					<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
-				</div>
-			</div>
-			<div class="row">
-			    <div class="input-field col s2 value">
-					<select class="value" id="history">
-						<!--option value="" disabled selected class="translate">Choose your option</option-->
-						<option value="" class="translate">disabled</option>
-						<option value="history.0">History</option>
-						<option value="sql.0">SQL History</option>
-					</select>
-					<label class="translate">Select history adapter</label>
-				</div>				
-				<div class="col s3 input-field tooltip">	
-					<input type="text" class="value" id="dateformat"/>
-					<label for="ipaddress" class="translate">Date format</label>
-					<span class="tooltiptext translate">Here you can enter the date format string for the tables</span>
-				</div>
-				<!--div class="col s3 input-field">	
-					<input type="checkbox" class="value" id="debug" />
-					<label for="debug" class="translate">Show additional debug info</label>
-				</div-->
-			</div>
-		</div>
+				<div id="tab-family" class="col s12 page">
+					<div class="row">
+						<div class="input-field col s6">
+						<img src="fb-checkpresence.png" class="logo">
+						</div>
+					</div><!-- End of row -->
+					<div class="row">
+						<div class="col s12">
+						<p class="translate">Here you can insert name and Mac address or IP address for a family member.</p>
+						<p class="translate">For every enabled table line an object will be created.</p>
+						</div>
+					</div><!-- End of row -->
 
-		<div id="tab-keys" class="col s12 page">
-			<div class="row">
-				<div class="input-field col s6">
-				  <img src="fb-checkpresence.png" class="logo">
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s12">
-				  <p class="translate">Here you can insert a name and a mac address for a family member.</p>
-				  <p class="translate">For every enabled table line an object will be created.</p>
-				</div>
-			</div>
-
-			<div id="values">
-				<div class="row">
-					<div class="col s12">
-						<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+					<div id="values">
+						<div class="row">
+							<div class="col s12">
+								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add from list</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s10">
+								<table class="table-values" style="width: 100%;">
+									<thead>
+										<tr>
+											<th data-name="_index" style="width: 40px" class="translate"></th>
+											<th data-name="familymember" style="width: 140px" data-style="width: 140px" class="translate" for="familymember">Family member</th>
+											<th data-name="macaddress" style="width: 140px" data-style="width: 140px" class="translate" for="macaddress">Mac or IP-Address</th>
+											<th data-name="comment" style="width: 140px" data-style="width: 140px" class="translate" for="comment">Comment</th>
+											<th data-name="enabled"  style="width: 70px" data-style="width: 70px" data-type="checkbox" class="translate">Enabled</th>
+											<th data-buttons="delete" style="width: 40px"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col s10">
-						<table class="table-values" style="width: 100%;">
-							<thead>
-								<tr>
-									<th data-name="_index" style="width: 40px" class="translate"></th>
-									<th data-name="familymember" style="width: 140px" data-style="width: 140px" class="translate" for="familymember">Family member</th>
-									<th data-name="macaddress" style="width: 140px" data-style="width: 140px" class="translate" for="macaddress">Mac-Address</th>
-									<th data-name="comment" style="width: 140px" data-style="width: 140px" class="translate" for="comment">Comment</th>
-									<th data-name="enabled"  style="width: 70px" data-style="width: 70px" data-type="checkbox" class="translate">Enabled</th>
-									<th data-buttons="delete" style="width: 40px"></th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-</body>
-
+				</div><!-- End of tab family -->
+				<!--/div--><!-- End of row -->
+			</div><!-- End of tabs -->
+			<div id="dialog-search" class="modal"></div>
+			<div id="dialog-search1" title="Select a device"></div>
+			<div id="dialog-error" title="Error"></div>
+		</div><!-- End of adapter container -->
+		<script>
+			$(document).ready(function(){
+				//$('.modal').modal();
+		  	})
+		</script>
+	</body>
 </html>

@@ -10,6 +10,11 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/main.js",
             "cwd": "${workspaceFolder}",
+            "smartStep": true,
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**/*.js",
+                "<node_internals>/**/*.js"
+              ],
             "args": [
                 "--debug", "--force", "--trace-warnings"
             ]

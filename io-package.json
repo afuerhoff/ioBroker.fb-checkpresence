@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.0.4",
+        "version": "0.0.5",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -27,30 +27,42 @@
                 "pl": "zoptymalizowane funkcje",
                 "zh-cn": "优化功能"
             },
-			"0.0.3": {
-				"en": "guest feature added",
-				"de": "Gast-Feature hinzugefügt",
-				"ru": "добавлена функция гостя",
-				"pt": "recurso convidado adicionado",
-				"nl": "gastfunctie toegevoegd",
-				"fr": "fonctionnalité invité ajoutée",
-				"it": "funzione ospite aggiunta",
-				"es": "función de invitado agregada",
-				"pl": "dodano funkcję gościa",
-				"zh-cn": "访客功能已添加"
-			},
-			"0.0.4": {
-				"en": "calculation error resolved",
-				"de": "Rechenfehler behoben",
-				"ru": "ошибка расчета устранена",
-				"pt": "erro de cálculo resolvido",
-				"nl": "berekeningsfout opgelost",
-				"fr": "erreur de calcul résolue",
-				"it": "errore di calcolo risolto",
-				"es": "error de cálculo resuelto",
-				"pl": "błąd obliczeniowy rozwiązany",
-				"zh-cn": "计算错误已解决"
-			}			
+            "0.0.3": {
+                "en": "guest feature added",
+                "de": "Gast-Feature hinzugefügt",
+                "ru": "добавлена функция гостя",
+                "pt": "recurso convidado adicionado",
+                "nl": "gastfunctie toegevoegd",
+                "fr": "fonctionnalité invité ajoutée",
+                "it": "funzione ospite aggiunta",
+                "es": "función de invitado agregada",
+                "pl": "dodano funkcję gościa",
+                "zh-cn": "访客功能已添加"
+            },
+            "0.0.4": {
+                "en": "calculation error resolved",
+                "de": "Rechenfehler behoben",
+                "ru": "ошибка расчета устранена",
+                "pt": "erro de cálculo resolvido",
+                "nl": "berekeningsfout opgelost",
+                "fr": "erreur de calcul résolue",
+                "it": "errore di calcolo risolto",
+                "es": "error de cálculo resuelto",
+                "pl": "błąd obliczeniowy rozwiązany",
+                "zh-cn": "计算错误已解决"
+            },
+            "0.0.5": {
+                "en": "configuration optimized",
+                "de": "Konfiguration optimiert",
+                "ru": "оптимизированная конфигурация",
+                "pt": "configuração otimizada",
+                "nl": "configuratie geoptimaliseerd",
+                "fr": "configuration optimisée",
+                "it": "configurazione ottimizzata",
+                "es": "configuración optimizada",
+                "pl": "zoptymalizowana konfiguracja",
+                "zh-cn": "配置优化"
+            }
         },
         "title": "Fritzbox CheckPresence",
         "titleLang": {
@@ -100,6 +112,8 @@
         "type": "infrastructure",
         "compact": true,
         "materialize": true,
+        "messagebox": true,
+        "subscribe": "messagebox",
         "dependencies": [
             {
                 "admin": ">=3.0.0",
@@ -108,7 +122,7 @@
         ]
     },
     "native": {
-        "devices": [],
+        "familymembers": [],
         "ipaddress": "192.168.178.1",
         "interval": 1,
         "history": "",

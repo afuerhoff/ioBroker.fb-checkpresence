@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fb-checkpresence",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
   "author": {
     "name": "Achim Fürhoff",
@@ -9,12 +9,12 @@
   "homepage": "https://github.com/afuerhoff/ioBroker.fb-checkpresence",
   "license": "MIT",
   "keywords": [
-	"ioBroker",
-	"presence",
-	"family",
-	"tr064",
-	"fritz.box",
-	"fritzbox"
+    "ioBroker",
+    "presence",
+    "family",
+    "tr064",
+    "fritz.box",
+    "fritzbox"
   ],
   "repository": {
     "type": "git",
@@ -26,8 +26,8 @@
     "node-schedule": "^1.3.2",
     "util": "^0.12.1",
     "dateformat": "^3.0.3",
-	"xml2js": "^0.4.22",
-	"crypto": "^1.0.1"
+    "xml2js": "^0.4.22",
+    "crypto": "^1.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
