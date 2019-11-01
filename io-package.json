@@ -1,144 +1,156 @@
 {
-    "common": {
-        "name": "fb-checkpresence",
-        "version": "0.0.5",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
-            },
-            "0.0.2": {
-                "en": "optimized features",
-                "de": "optimierte Funktionen",
-                "ru": "оптимизированные функции",
-                "pt": "recursos otimizados",
-                "nl": "geoptimaliseerde functies",
-                "fr": "fonctionnalités optimisées",
-                "it": "caratteristiche ottimizzate",
-                "es": "características optimizadas",
-                "pl": "zoptymalizowane funkcje",
-                "zh-cn": "优化功能"
-            },
-            "0.0.3": {
-                "en": "guest feature added",
-                "de": "Gast-Feature hinzugefügt",
-                "ru": "добавлена функция гостя",
-                "pt": "recurso convidado adicionado",
-                "nl": "gastfunctie toegevoegd",
-                "fr": "fonctionnalité invité ajoutée",
-                "it": "funzione ospite aggiunta",
-                "es": "función de invitado agregada",
-                "pl": "dodano funkcję gościa",
-                "zh-cn": "访客功能已添加"
-            },
-            "0.0.4": {
-                "en": "calculation error resolved",
-                "de": "Rechenfehler behoben",
-                "ru": "ошибка расчета устранена",
-                "pt": "erro de cálculo resolvido",
-                "nl": "berekeningsfout opgelost",
-                "fr": "erreur de calcul résolue",
-                "it": "errore di calcolo risolto",
-                "es": "error de cálculo resuelto",
-                "pl": "błąd obliczeniowy rozwiązany",
-                "zh-cn": "计算错误已解决"
-            },
-            "0.0.5": {
-                "en": "configuration optimized",
-                "de": "Konfiguration optimiert",
-                "ru": "оптимизированная конфигурация",
-                "pt": "configuração otimizada",
-                "nl": "configuratie geoptimaliseerd",
-                "fr": "configuration optimisée",
-                "it": "configurazione ottimizzata",
-                "es": "configuración optimizada",
-                "pl": "zoptymalizowana konfiguracja",
-                "zh-cn": "配置优化"
-            }
-        },
-        "title": "Fritzbox CheckPresence",
-        "titleLang": {
-            "en": "Fritzbox CheckPresence",
-            "de": "Fritzbox CheckPresence",
-            "ru": "Fritzbox CheckPresence",
-            "pt": "Fritzbox CheckPresence",
-            "nl": "Fritzbox CheckPresence",
-            "fr": "Fritzbox CheckPresence",
-            "it": "Fritzbox CheckPresence",
-            "es": "Fritzbox CheckPresence",
-            "pl": "Fritzbox CheckPresence",
-            "zh-cn": "Fritzbox CheckPresence"
-        },
-        "desc": {
-            "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
-            "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
-            "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
-            "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
-            "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
-            "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
-            "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
-            "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
-            "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
-            "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
-        },
-        "authors": [
-            "Achim Fürhoff <achim.fuerhoff@outlook.de>"
-        ],
-        "keywords": [
-            "ioBroker",
-            "presence",
-            "family",
-            "tr064",
-            "fritz.box",
-            "fritzbox"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "fb-checkpresence.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
-        "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "infrastructure",
-        "compact": true,
-        "materialize": true,
-        "messagebox": true,
-        "subscribe": "messagebox",
-        "dependencies": [
-            {
-                "admin": ">=3.0.0",
-                "history": ">=1.8.6"
-            }
-        ]
+  "common": {
+    "name": "fb-checkpresence",
+    "version": "0.0.6",
+    "news": {
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次出版"
+      },
+      "0.0.2": {
+        "en": "optimized features",
+        "de": "optimierte Funktionen",
+        "ru": "оптимизированные функции",
+        "pt": "recursos otimizados",
+        "nl": "geoptimaliseerde functies",
+        "fr": "fonctionnalités optimisées",
+        "it": "caratteristiche ottimizzate",
+        "es": "características optimizadas",
+        "pl": "zoptymalizowane funkcje",
+        "zh-cn": "优化功能"
+      },
+      "0.0.3": {
+        "en": "guest feature added",
+        "de": "Gast-Feature hinzugefügt",
+        "ru": "добавлена функция гостя",
+        "pt": "recurso convidado adicionado",
+        "nl": "gastfunctie toegevoegd",
+        "fr": "fonctionnalité invité ajoutée",
+        "it": "funzione ospite aggiunta",
+        "es": "función de invitado agregada",
+        "pl": "dodano funkcję gościa",
+        "zh-cn": "访客功能已添加"
+      },
+      "0.0.4": {
+        "en": "calculation error resolved",
+        "de": "Rechenfehler behoben",
+        "ru": "ошибка расчета устранена",
+        "pt": "erro de cálculo resolvido",
+        "nl": "berekeningsfout opgelost",
+        "fr": "erreur de calcul résolue",
+        "it": "errore di calcolo risolto",
+        "es": "error de cálculo resuelto",
+        "pl": "błąd obliczeniowy rozwiązany",
+        "zh-cn": "计算错误已解决"
+      },
+      "0.0.5": {
+        "en": "configuration optimized",
+        "de": "Konfiguration optimiert",
+        "ru": "оптимизированная конфигурация",
+        "pt": "configuração otimizada",
+        "nl": "configuratie geoptimaliseerd",
+        "fr": "configuration optimisée",
+        "it": "configurazione ottimizzata",
+        "es": "configuración optimizada",
+        "pl": "zoptymalizowana konfiguracja",
+        "zh-cn": "配置优化"
+      },
+      "0.0.6": {
+        "en": "bug in json and html table resolved",
+        "de": "Fehler in JSON- und HTML-Tabelle behoben",
+        "ru": "исправлена ошибка в json и html таблицах",
+        "pt": "bug na tabela json e html resolvida",
+        "nl": "fout in json en html-tabel opgelost",
+        "fr": "bug dans la table json et html résolu",
+        "it": "bug risolto nella tabella json e html",
+        "es": "error en la tabla json y html resuelto",
+        "pl": "błąd w tabeli json i html rozwiązany",
+        "zh-cn": "json和html表中的错误已解决"
+      }
     },
-    "native": {
-        "familymembers": [],
-        "ipaddress": "192.168.178.1",
-        "interval": 1,
-        "history": "",
-        "dateformat": "yyyy.mm.dd hh:MM:ss",
-        "username": "",
-        "password": ""
+    "title": "Fritzbox CheckPresence",
+    "titleLang": {
+      "en": "Fritzbox CheckPresence",
+      "de": "Fritzbox CheckPresence",
+      "ru": "Fritzbox CheckPresence",
+      "pt": "Fritzbox CheckPresence",
+      "nl": "Fritzbox CheckPresence",
+      "fr": "Fritzbox CheckPresence",
+      "it": "Fritzbox CheckPresence",
+      "es": "Fritzbox CheckPresence",
+      "pl": "Fritzbox CheckPresence",
+      "zh-cn": "Fritzbox CheckPresence"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        }
-    ]
+    "desc": {
+      "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
+      "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
+      "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
+      "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
+      "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
+      "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
+      "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
+      "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
+      "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
+      "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
+    },
+    "authors": [
+      "Achim Fürhoff <achim.fuerhoff@outlook.de>"
+    ],
+    "keywords": [
+      "ioBroker",
+      "presence",
+      "family",
+      "tr064",
+      "fritz.box",
+      "fritzbox"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "fb-checkpresence.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
+    "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "infrastructure",
+    "compact": true,
+    "materialize": true,
+    "messagebox": true,
+    "dependencies": [
+      {
+        "admin": ">=3.0.0",
+        "history": ">=1.8.6"
+      }
+    ],
+    "installedFrom": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/tarball/12d6ec1347269ddf76ded88281412db529e848a5"
+  },
+  "native": {
+    "familymembers": [],
+    "ipaddress": "192.168.178.1",
+    "interval": 1,
+    "history": "",
+    "dateformat": "yyyy.mm.dd hh:MM:ss",
+    "username": "",
+    "password": ""
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    }
+  ]
 }

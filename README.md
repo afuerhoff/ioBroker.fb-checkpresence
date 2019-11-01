@@ -29,6 +29,31 @@ Then you will find below "Home Network »Home Network Overview» Network Setting
 "Allow access for applications". There you have to activate the checkbox and then restart the FritzBox once.
 <img src="doc/access_settings_network.JPG"/>
 
+## Configuration dialog
+
+### Fritzbox IP-address, user and password
+The configuration of ip-address, user and password is necessary to get the device data from the fritzbox. 
+The password is encrypted and wasn't saved in clear text.
+
+### Interval
+The interval can be configured from 1 to 59 minutes. Normally a value of 1 minute is an optimal interval 
+to read the fritzbox data.
+
+### History adapter
+Over the history adapter some values are calculated. You can choose, if the history or the sql adapter is used.
+The history adapter must be installed preliminary. 
+
+### Dateformat
+The date format mask options are described on this web page: https://www.npmjs.com/package/dateformat
+
+### Family members
+Without this configuration, the adapter does nothing. For a configured family member you must enter the Name,
+the max- or ip-address, a comment and if the member is enabled.
+
+## Features
+
+tbd.
+
 ## Changelog 
 
 ### 0.0.1
@@ -41,6 +66,9 @@ Then you will find below "Home Network »Home Network Overview» Network Setting
 * (Achim Fürhoff) calculation error resolved
 ### 0.0.5
 * (Achim Fürhoff) configuration optimized
+### 0.0.6
+* (Achim Fürhoff) bug in json and html table resolved
+ 
 
 ## License
 MIT License
