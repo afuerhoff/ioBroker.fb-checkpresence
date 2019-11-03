@@ -68,6 +68,8 @@ tbd.
 * (Achim Fürhoff) configuration optimized
 ### 0.0.6
 * (Achim Fürhoff) bug in json and html table resolved
+### 0.0.7
+* (Achim Fürhoff) Fix bug invalid date. Add debug information. 
  
 
 ## License

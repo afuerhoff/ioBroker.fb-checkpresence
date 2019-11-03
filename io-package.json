@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "news": {
       "0.0.1": {
         "en": "initial release",
@@ -74,6 +74,18 @@
         "es": "error en la tabla json y html resuelto",
         "pl": "błąd w tabeli json i html rozwiązany",
         "zh-cn": "json和html表中的错误已解决"
+      },
+      "0.0.7": {
+        "en": "invalid date bug resolved. Debug information added. Default values from Date objects changed.",
+        "de": "Fehler mit ungültigem Datum behoben. Debug-Informationen hinzugefügt. Standardwerte von Datumsobjekten geändert.",
+        "ru": "недопустимая ошибка даты устранена. Добавлена отладочная информация. Значения по умолчанию для объектов Date изменены.",
+        "pt": "erro de data inválido resolvido. Informações de depuração adicionadas. Os valores padrão dos objetos Date foram alterados.",
+        "nl": "ongeldige datum bug opgelost. Foutopsporingsinformatie toegevoegd. Standaardwaarden van objecten Date zijn gewijzigd.",
+        "fr": "bug de date invalide résolu. Informations de débogage ajoutées. Les valeurs par défaut des objets Date ont été modifiées.",
+        "it": "bug data non valido risolto. Aggiunte informazioni di debug. Valori predefiniti dagli oggetti Data modificati.",
+        "es": "error de fecha inválido resuelto. Información de depuración añadida. Los valores predeterminados de los objetos de fecha cambiaron.",
+        "pl": "błąd nieprawidłowej daty rozwiązany. Dodano informacje debugowania. Wartości domyślne z obiektów Data uległy zmianie.",
+        "zh-cn": "解决了无效的日期错误。添加了调试信息。 Date对象的默认值已更改。"
       }
     },
     "title": "Fritzbox CheckPresence",
