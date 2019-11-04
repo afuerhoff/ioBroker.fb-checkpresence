@@ -30,6 +30,7 @@ const HTML_GUEST  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>I
 const allDevices = [];
 let jsonTab;
 let htmlTab;
+let scheduledJob;
 
 // Create HTML table row
 function createHTMLRow (cfg, sUser, sStatus, comming, going) {
@@ -540,7 +541,7 @@ class FbCheckpresence extends utils.Adapter {
 
             await checkPresence(gthis, cfg, Fb); // Main function
             gthis.log.debug('checkPresence first run');
-            schedule.scheduleJob(cron, async function(){ // scheduler based on interval
+            scheduledJob = schedule.scheduleJob(cron, async function(){ // scheduler based on interval
                 await checkPresence(gthis, cfg, Fb);
                 gthis.log.debug('checkPresence scheduled');
             });//schedule end 
@@ -556,6 +557,7 @@ class FbCheckpresence extends utils.Adapter {
     onUnload(callback) {
         try {
             this.log.info('cleaned everything up...');
+            scheduledJob.cancel();
             callback();
         } catch (e) {
             callback();
