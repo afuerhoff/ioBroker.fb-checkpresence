@@ -124,7 +124,7 @@ async function getHostNo(gthis, cfg, Fb, dnow){
         gthis.setState('info.lastUpdate', { val: dnow, ack: true });
         return hostNo;
     }  catch (e) {
-        gthis.log.error('Error getHostNo: '+e.message);
+        gthis.log.error('getHostNo: '+e.message);
     }    
 }
 
@@ -134,10 +134,10 @@ async function getDeviceList(gthis, cfg, Fb){
         const hostPath = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetHostListPath', null);
         const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
         const deviceList = await Fb.getDeviceList(url);
-        gthis.log.debug('getDeviceList: ' + deviceList['List']['Item']);
+        gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
         return deviceList['List']['Item'];
     }  catch (e) {
-        gthis.log.error('Error getDeviceList: '+e.message);
+        gthis.log.error('getDeviceList: '+e.message);
     }   
 }
 
@@ -173,7 +173,7 @@ async function getGuests(items, hostNo){
         }
         gthis.log.debug('getGuests: '+ activeCnt);
     }  catch (e) {
-        gthis.log.error('Error getGuests: '+e.message);
+        gthis.log.error('getGuests: '+e.message);
     }    
 }
 
@@ -239,7 +239,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             }
 
         }else{
-            gthis.log.error('Error getActive: content of object ' + member + ' is wrong!');                               
+            gthis.log.error('getActive: content of object ' + member + ' is wrong!');                               
         }
                         
         const comming1 = await getStateP(member + '.comming');
@@ -262,7 +262,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         gthis.log.debug('getActive ' + jsonTab);
         return curVal;
     }  catch (e) {
-        gthis.log.error('Error getActive: '+e.message);
+        gthis.log.error('getActive: '+e.message);
     }    
 }
 
@@ -306,6 +306,7 @@ async function checkPresence(gthis, cfg, Fb){
 
                     const memb = member;
                     if (cfg.history != ''){
+                        gthis.log.debug('history start');
                         if (dPoint.common.custom[cfg.history].enabled == true){
                             try {
                                 gthis.sendTo(cfg.history, 'getHistory', {
@@ -394,7 +395,7 @@ async function checkPresence(gthis, cfg, Fb){
                                 });
                             } catch (ex) {
                                 gthis.setState('info.connection', { val: false, ack: true });
-                                gthis.log.error('Error checkPresence: ' + ex.message);
+                                gthis.log.error('checkPresence: ' + ex.message);
                             }
                         }else{
                             gthis.log.info('History not enabled');
@@ -408,7 +409,7 @@ async function checkPresence(gthis, cfg, Fb){
                     
                 } catch (error) {
                     gthis.setState('info.connection', { val: false, ack: true });
-                    gthis.log.error('Error checkPresence:' + error);
+                    gthis.log.error('checkPresence:' + error);
                 }
             }//enabled in configuration settings
             
@@ -423,7 +424,7 @@ async function checkPresence(gthis, cfg, Fb){
         gthis.setState('presence', { val: presence.one, ack: true });
     }
     catch (error) {
-        gthis.log.error('Error checkPresence: ' + error);
+        gthis.log.error('checkPresence: ' + error);
         gthis.setState('info.connection', { val: false, ack: true });
     }
 }
@@ -442,7 +443,7 @@ function enableHistory(cfg, member) {
             }
         }, function (result) {
             if (result.error) {
-                gthis.log.error('Error enable history: ' + '' + result.error);
+                gthis.log.error('enable history: ' + '' + result.error);
             }
             if (result.success) {
                 //gthis.log.info('enable history ' + " " + result.success);
@@ -504,6 +505,10 @@ class FbCheckpresence extends utils.Adapter {
             
             const cron = '*/' + cfg.iv + ' * * * *';
             this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' (' + cron + ')');
+            this.log.debug('configuration user: ' + this.config.username);
+            this.log.debug('configuration history: ' + this.config.history);
+            this.log.debug('configuration dateformat: ' + this.config.dateformat);
+            this.log.debug('configuration familymembers: ' + JSON.stringify(this.config.familymembers));
             
             const devInfo = {
                 host: this.config.ipaddress,
@@ -512,7 +517,7 @@ class FbCheckpresence extends utils.Adapter {
                 uid: this.config.username,
                 pwd: this.config.password
             };
-            const Fb = new fb.Fb(devInfo, gthis);
+            const Fb = new fb.Fb(devInfo, this);
             //const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
             //Fb._sslPort = parseInt(result['NewSecurityPort']);
             //gthis.log.debug('sslPort ' + Fb._sslPort);
@@ -540,13 +545,13 @@ class FbCheckpresence extends utils.Adapter {
             this.subscribeStates('*');  
 
             await checkPresence(gthis, cfg, Fb); // Main function
-            gthis.log.debug('checkPresence first run');
+            this.log.debug('checkPresence first run');
             scheduledJob = schedule.scheduleJob(cron, async function(){ // scheduler based on interval
                 await checkPresence(gthis, cfg, Fb);
                 gthis.log.debug('checkPresence scheduled');
             });//schedule end 
         } catch (e) {
-            gthis.log.error('Error onReady: ' + e.message);
+            this.log.error('onReady: ' + e.message);
         }
     }//onReady
 
@@ -656,7 +661,7 @@ class FbCheckpresence extends utils.Adapter {
                 return true;    
             }
         } catch (e) {
-            gthis.log.error('Error onMessage: '+e.message);
+            gthis.log.error('onMessage: '+e.message);
         }
     }
 

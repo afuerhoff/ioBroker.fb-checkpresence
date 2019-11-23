@@ -16,3 +16,5 @@ scripts/upload.sh
 scripts/gulp.sh
 .vscode/tasks.json
 iob_npm.done
+package-lock.json
+.vscode

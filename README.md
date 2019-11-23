@@ -22,7 +22,14 @@ The datapoint is based on the member name.
 
 ## Fritzbox conditions
 
-The used TR-064 interface to the fritzbox is described here: https://avm.de/service/schnittstellen/
+The used TR-064 interface to the fritzbox is described here: https://avm.de/service/schnittstellen/.
+Following TR-064 functions are used:
+* GetSpecificHostEntry 
+* X_AVM-DE_GetSpecificHostEntryByIP (supported from 2016-05-18) -> is used to read the status of a member via the IP address
+* GetHostNumberOfEntries
+* X_AVM-DE_GetHostListPath (support from 2017-01-09) -> is used for member configuration
+* GetSecurityPort
+
 By default, the TR-064 interface is not activated. However, this can easily be changed via the 
 FritzBox web interface. To do this log in into your FritzBox and ensure that the expert view is activated. 
 Then you will find below "Home Network »Home Network Overview» Network Settings" the point 
@@ -40,7 +47,7 @@ The interval can be configured from 1 to 59 minutes. Normally a value of 1 minut
 to read the fritzbox data.
 
 ### History adapter
-Over the history adapter some values are calculated. You can choose, if the history or the sql adapter is used.
+Over the history adapter some values are calculated. You can choose, if the history,  the sql or the influxdb adapter is used.
 The history adapter must be installed preliminary. 
 
 ### Dateformat
@@ -48,7 +55,7 @@ The date format mask options are described on this web page: https://www.npmjs.c
 
 ### Family members
 Without this configuration, the adapter does nothing. For a configured family member you must enter the Name,
-the max- or ip-address, a comment and if the member is enabled.
+the mac- or ip-address, a comment and if the member is enabled.
 
 ## Features
 
@@ -69,8 +76,10 @@ tbd.
 ### 0.0.6
 * (Achim Fürhoff) bug in json and html table resolved
 ### 0.0.7
-* (Achim Fürhoff) Fix bug invalid date. Add debug information. 
- 
+* (Achim Fürhoff) Fix bug invalid date. Add debug information.
+### 0.1.0
+* (Achim Fürhoff) Influxdb added, debug information added
+
 
 ## License
 MIT License
