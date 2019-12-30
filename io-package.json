@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -98,6 +98,18 @@
                 "es": "Influxdb agregado, información de depuración agregada",
                 "pl": "Dodano Influxdb, dodano informacje debugowania",
                 "zh-cn": "添加了Influxdb，添加了调试信息"
+            },
+            "0.2.0": {
+                "en": "debug and error information optimized, crypto dependency removed, service check and blacklist added",
+                "de": "Debug- und Fehlerinformationen optimiert, Kryptoabhängigkeit entfernt, Service-Check und Blacklist hinzugefügt",
+                "ru": "оптимизирована информация об отладке и ошибках, удалена крипто-зависимость, добавлена проверка сервиса и черный список",
+                "pt": "informações de depuração e erro otimizadas, dependência de criptografia removida, verificação de serviço e lista negra adicionada",
+                "nl": "foutopsporing en foutinformatie geoptimaliseerd, crypto-afhankelijkheid verwijderd, servicecontrole en zwarte lijst toegevoegd",
+                "fr": "informations de débogage et d'erreur optimisées, suppression de la dépendance cryptographique, vérification du service et liste noire ajoutées",
+                "it": "informazioni di debug ed errori ottimizzate, dipendenza da crittografia rimossa, controllo del servizio e lista nera aggiunti",
+                "es": "información de error y depuración optimizada, dependencia de criptografía eliminada, verificación de servicio y lista negra añadida",
+                "pl": "zoptymalizowano informacje o debugowaniu i błędach, usunięto zależność kryptograficzną, dodano kontrolę usługi i czarną listę",
+                "zh-cn": "优化了调试和错误信息，删除了加密依赖性，添加了服务检查和黑名单"
             }
         },
         "title": "Fritzbox CheckPresence",
@@ -155,10 +167,11 @@
                 "history": ">=1.8.6"
             }
         ],
-        "installedFrom": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/tarball/12d6ec1347269ddf76ded88281412db529e848a5"
+        "installedFrom": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/tarball/5f6fdf1c9a30949bec9d9031662848ab34ad5d0b"
     },
     "native": {
         "familymembers": [],
+        "whitelist": [],
         "ipaddress": "192.168.178.1",
         "interval": 1,
         "history": "",

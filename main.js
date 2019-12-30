@@ -1,6 +1,4 @@
 'use strict';
-//ToDo: https://github.com/jens-maus/hm_pdetect
-//ToDo: Und/oder ggf. ne Art Whitellist mit bekannten Geräten... Wenn eine unbekannte MAC/IP in der BOX auftaucht den "Gastdatenpunkt" auf true stellen. Allerdings sollten dann die üblichen Netzwerkverdächtigen wie Drucker, TV etc. nicht triggern
 /*
  * Created with @iobroker/create-adapter vunknown
  */
@@ -26,11 +24,30 @@ const HTML = '<table class="mdui-table"><thead><tr><th>Name</th><th>Status</th><
 const HTML_HISTORY  = '<table class="mdui-table"><thead><tr><th>Status</th><th>Date</th></tr></thead><tbody>';
 const HTML_END = '</body></table>';
 const HTML_GUEST  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>IPAddress</th><th>MACAddress</th></tr></thead><tbody>';
+const TR064_DEVINFO = '/deviceinfoSCPD.xml';
+const TR064_HOSTS = '/hostsSCPD.xml';
+
+let GETENTRIES = false;
+let GETPATH = false;
+let GETBYMAC = false;
+let GETBYIP = false;
+let GETPORT = false;
 
 const allDevices = [];
 let jsonTab;
 let htmlTab;
 let scheduledJob;
+let errorCnt = 0;
+const errorCntMax = 10;
+
+function showError(errorMsg) {
+    if (errorCnt < errorCntMax) {
+        errorCnt+=1;
+        gthis.log.error(errorMsg);
+    } else {
+        gthis.log.debug('maximum error count reached! Error messages are suppressed');
+    }
+}
 
 // Create HTML table row
 function createHTMLRow (cfg, sUser, sStatus, comming, going) {
@@ -124,7 +141,8 @@ async function getHostNo(gthis, cfg, Fb, dnow){
         gthis.setState('info.lastUpdate', { val: dnow, ack: true });
         return hostNo;
     }  catch (e) {
-        gthis.log.error('getHostNo: '+e.message);
+        showError('getHostNo: '+e.message);
+        //gthis.log.error('getHostNo: '+e.message);
     }    
 }
 
@@ -135,45 +153,74 @@ async function getDeviceList(gthis, cfg, Fb){
         const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
         const deviceList = await Fb.getDeviceList(url);
         gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
+        errorCnt = 0;
         return deviceList['List']['Item'];
     }  catch (e) {
-        gthis.log.error('getDeviceList: '+e.message);
+        showError('getDeviceList: '+e.message);
+        //gthis.log.error('getDeviceList: '+e.message);
     }   
 }
 
-async function getGuests(items, hostNo){
+async function getGuests(items, hostNo, cfg){
     try {
         //analyse guests
         let guestCnt = 0;
         let activeCnt = 0;
+        let unknownCnt = 0;
         let htmlRow = HTML_GUEST;
+        let htmlBlRow = HTML_GUEST;
         let jsonRow = '[';
+        let jsonBlRow = '[';
         for (let i = 0; i < hostNo; i++) {
-            if (items[i]['Active'] == 1){
+            if (items[i]['Active'] == 1){ // active devices
                 activeCnt += 1;
             }
-            if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){
+            if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){ //active guests
                 htmlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                 jsonRow += createJSONGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                 gthis.log.debug('getGuests: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
                 guestCnt += 1;
             }
+            let foundwl = false;
+            for(let w = 0; w < cfg.wl.length; w++) {
+                if (cfg.wl[w].white_macaddress == items[i]['MACAddress']){
+                    foundwl = true;
+                    break;
+                }
+            }
+            if (foundwl == false){
+                unknownCnt += 1;
+                htmlBlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+                jsonBlRow += createJSONGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+            } 
         }
         htmlRow += HTML_END;
         jsonRow += ']';
+        htmlBlRow += HTML_END;
+        jsonBlRow += ']';
         
         gthis.setState('guest.listHtml', { val: htmlRow, ack: true });
         gthis.setState('guest.listJson', { val: jsonRow, ack: true });
         gthis.setState('guest.count', { val: guestCnt, ack: true });
         gthis.setState('activeDevices', { val: activeCnt, ack: true });
+        gthis.setState('blacklist.count', { val: unknownCnt, ack: true });
+        gthis.setState('blacklist.listHtml', { val: htmlBlRow, ack: true });
+        gthis.setState('blacklist.listJson', { val: jsonBlRow, ack: true });
+
         if (guestCnt > 0) {
             gthis.setState('guest', { val: true, ack: true });
         }else {
             gthis.setState('guest', { val: false, ack: true });
         }
-        gthis.log.debug('getGuests: '+ activeCnt);
+        gthis.log.debug('getGuests active: '+ activeCnt);
+        if (unknownCnt > 0) {
+            gthis.setState('blacklist', { val: true, ack: true });
+        }else {
+            gthis.setState('blacklist', { val: false, ack: true });
+        }
+        gthis.log.debug('getGuests unknown: '+ unknownCnt);
     }  catch (e) {
-        gthis.log.error('getGuests: '+e.message);
+        showError('getGuests: '+ e.message);
     }    
 }
 
@@ -239,7 +286,8 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             }
 
         }else{
-            gthis.log.error('getActive: content of object ' + member + ' is wrong!');                               
+            showError('getActive: content of object ' + member + ' is wrong!'); 
+            //gthis.log.error('getActive: content of object ' + member + ' is wrong!');                               
         }
                         
         const comming1 = await getStateP(member + '.comming');
@@ -262,7 +310,8 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         gthis.log.debug('getActive ' + jsonTab);
         return curVal;
     }  catch (e) {
-        gthis.log.error('getActive: '+e.message);
+        showError('getActive: '+e.message);
+        //gthis.log.error('getActive: '+e.message);
     }    
 }
 
@@ -274,9 +323,11 @@ async function checkPresence(gthis, cfg, Fb){
         midnight.setHours(0,0,0);
         const dnow = new Date();
 
-        const hostNo = await getHostNo(gthis, cfg, Fb, dnow);
-        const items = await getDeviceList(gthis, cfg, Fb);
-        getGuests(items, hostNo);
+        if (GETENTRIES == true && GETPATH == true){
+            const hostNo = await getHostNo(gthis, cfg, Fb, dnow);
+            const items = await getDeviceList(gthis, cfg, Fb);
+            getGuests(items, hostNo, cfg);
+        }
 
         // functions for family members
         jsonTab = '[';
@@ -290,7 +341,7 @@ async function checkPresence(gthis, cfg, Fb){
             const memberRow = cfg.members[k]; //Row from family members table
             const member = memberRow.familymember; 
                     
-            if (memberRow.enabled == true){ //member enabled in configuration settings
+            if (memberRow.enabled == true && GETBYMAC == true && GETBYIP == true){ //member enabled in configuration settings
                 try { //get fritzbox data
                     const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb);
 
@@ -395,7 +446,8 @@ async function checkPresence(gthis, cfg, Fb){
                                 });
                             } catch (ex) {
                                 gthis.setState('info.connection', { val: false, ack: true });
-                                gthis.log.error('checkPresence: ' + ex.message);
+                                showError('checkPresence: ' + ex.message);
+                                //gthis.log.error('checkPresence: ' + ex.message);
                             }
                         }else{
                             gthis.log.info('History not enabled');
@@ -409,7 +461,8 @@ async function checkPresence(gthis, cfg, Fb){
                     
                 } catch (error) {
                     gthis.setState('info.connection', { val: false, ack: true });
-                    gthis.log.error('checkPresence:' + error);
+                    showError('checkPresence: ' + error);
+                    //gthis.log.error('checkPresence:' + error);
                 }
             }//enabled in configuration settings
             
@@ -424,7 +477,8 @@ async function checkPresence(gthis, cfg, Fb){
         gthis.setState('presence', { val: presence.one, ack: true });
     }
     catch (error) {
-        gthis.log.error('checkPresence: ' + error);
+        showError('checkPresence: ' + error);
+        //gthis.log.error('checkPresence: ' + error);
         gthis.setState('info.connection', { val: false, ack: true });
     }
 }
@@ -443,7 +497,8 @@ function enableHistory(cfg, member) {
             }
         }, function (result) {
             if (result.error) {
-                gthis.log.error('enable history: ' + '' + result.error);
+                showError('enable history: ' + '' + result.error);
+                //gthis.log.error('enable history: ' + '' + result.error);
             }
             if (result.success) {
                 //gthis.log.info('enable history ' + " " + result.success);
@@ -500,7 +555,8 @@ class FbCheckpresence extends utils.Adapter {
                 dateFormat: this.config.dateformat,
                 uid: this.config.username,
                 pwd: this.config.password,
-                members: this.config.familymembers
+                members: this.config.familymembers,
+                wl: this.config.whitelist
             };
             
             const cron = '*/' + cfg.iv + ' * * * *';
@@ -518,9 +574,17 @@ class FbCheckpresence extends utils.Adapter {
                 pwd: this.config.password
             };
             const Fb = new fb.Fb(devInfo, this);
-            //const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
-            //Fb._sslPort = parseInt(result['NewSecurityPort']);
-            //gthis.log.debug('sslPort ' + Fb._sslPort);
+
+            //check if the functions are supported by avm
+            GETENTRIES = await Fb.chkService(TR064_HOSTS, 'GetHostNumberOfEntries');
+            GETPATH = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetHostListPath');
+            GETBYMAC = await Fb.chkService(TR064_HOSTS, 'GetSpecificHostEntry');
+            GETBYIP = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetSpecificHostEntryByIP');
+            GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
+
+            const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
+            Fb._sslPort = parseInt(result['NewSecurityPort']);
+            gthis.log.debug('sslPort ' + Fb._sslPort);
 
             //Create global objects
             obj.createGlobalObjects(this, HTML+HTML_END, HTML_GUEST+HTML_END);
@@ -551,7 +615,7 @@ class FbCheckpresence extends utils.Adapter {
                 gthis.log.debug('checkPresence scheduled');
             });//schedule end 
         } catch (e) {
-            this.log.error('onReady: ' + e.message);
+            showError('onReady: ' + e.message);
         }
     }//onReady
 
@@ -637,8 +701,13 @@ class FbCheckpresence extends utils.Adapter {
                         };
                         const Fb = new fb.Fb(devInfo, this);
 
-                        const hostNo =  await getHostNo(this, null, Fb, new Date());
-                        const items =  await getDeviceList(this, null, Fb);
+                        let hostNo = 0;
+                        let items;
+                        if (GETENTRIES == true && GETPATH == true){
+                            hostNo =  await getHostNo(this, null, Fb, new Date());
+                            items =  await getDeviceList(this, null, Fb);
+                        }
+                        
                         //gthis.log.info('items ' + JSON.stringify(items));
                         for (let i = 0; i < hostNo; i++) {
                             const active = items[i]['Active'];
@@ -661,7 +730,8 @@ class FbCheckpresence extends utils.Adapter {
                 return true;    
             }
         } catch (e) {
-            gthis.log.error('onMessage: '+e.message);
+            showError('onMessage: '+e.message);
+            //gthis.log.error('onMessage: '+e.message);
         }
     }
 

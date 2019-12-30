@@ -43,23 +43,38 @@ The configuration of ip-address, user and password is necessary to get the devic
 The password is encrypted and wasn't saved in clear text.
 
 ### Interval
-The interval can be configured from 1 to 59 minutes. Normally a value of 1 minute is an optimal interval 
+The interval can be configured from 1 to 59 minutes. Normally a value of 1 to 5 minutes is an optimal interval 
 to read the fritzbox data.
 
 ### History adapter
-Over the history adapter some values are calculated. You can choose, if the history,  the sql or the influxdb adapter is used.
-The history adapter must be installed preliminary. 
+Over the history adapter some values are calculated. You can choose, if the history,  the sql or the influxdb adapter is used for this calculations. The history adapter must be installed preliminary. 
 
 ### Dateformat
-The date format mask options are described on this web page: https://www.npmjs.com/package/dateformat
+The date format mask options are described on this web page: https://www.npmjs.com/package/dateformat.
+The format mask is used for formatting the html and json table objects. 
 
-### Family members
-Without this configuration, the adapter does nothing. For a configured family member you must enter the Name,
-the mac- or ip-address, a comment and if the member is enabled.
+### Family member settings
+For a configured family member you must enter the Name, the mac- or ip-address, a comment and if the member is enabled for calculating. For every member the adapter creates data objects and checks if the member is present or absent. 
+
+### Whitelist settings
+In the white list you can insert every known device. Any unknown devices are listed in the blacklist object. 
 
 ## Features
 
-tbd.
+### AVM support check
+The function checks the availability of used fritzbox features. The availability is logged as info.
+
+### Get guests
+In this function is checked if any user is logged in as guest. Also if any device is not in the white list listed.
+
+### Get Active
+For every family member the presence, the comming and going dates and several other infos are calculated and saved in the member object. 
+
+### Host number, active devices
+The amount of devices and how many are active are get from the fritzbox.
+
+### ...
+
 
 ## Changelog 
 
@@ -79,7 +94,10 @@ tbd.
 * (Achim Fürhoff) Fix bug invalid date. Add debug information.
 ### 0.1.0
 * (Achim Fürhoff) Influxdb added, debug information added
-
+### 0.2.0
+* (Achim Fürhoff) debug and error information optimized, crypto dependency removed, service check and blacklist added   
+ 
+ 
 
 ## License
 MIT License

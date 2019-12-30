@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fb-checkpresence",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
   "author": {
     "name": "Achim Fürhoff",
@@ -26,8 +26,7 @@
     "node-schedule": "^1.3.2",
     "util": "^0.12.1",
     "dateformat": "^3.0.3",
-    "xml2js": "^0.4.22",
-    "crypto": "^1.0.1"
+    "xml2js": "^0.4.22"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -47,7 +46,8 @@
     "proxyquire": "^2.1.0",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
-    "tslint": "^5.18.0"
+    "tslint": "^5.18.0",
+    "typescript": ">= 3.2.0-dev"
   },
   "main": "main.js",
   "scripts": {

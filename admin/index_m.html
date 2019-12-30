@@ -1,11 +1,9 @@
-<!DOCTYPE html>
 <html>
 	<head>
-		<title>fb-checkpresence</title>
 		<!-- Load ioBroker scripts and styles-->
 		<link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
 		<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<!--link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"-->
 
 		<script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
 		<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
@@ -20,6 +18,7 @@
 
 		<script type="text/javascript">
 			var familymembers = [];
+			var whitelist = [];
 			var secret;
 			var active = false;
 			//var g_onChange;
@@ -41,12 +40,12 @@
 				return result;
 			}	
 
-			function myFunction() {
+			function devSearchFam() {
 				// Declare variables
 				var input, filter, table, tr, td, i, txtValue;
-				input = document.getElementById("myInput");
+				input = document.getElementById("searchFam");
 				filter = input.value.toUpperCase();
-				table = document.getElementById("myTable");
+				table = document.getElementById("tabFam");
 				tr = table.getElementsByTagName("tr");
 
 				// Loop through all table rows, and hide those who don't match the search query
@@ -59,6 +58,28 @@
 					} else {
 						tr[i].style.display = "none";
 					}
+					}
+				}
+			}
+
+			function devSearchWL() {
+				// Declare variables
+				var input, filter, table, tr, td, i, txtValue;
+				input = document.getElementById("searchWL");
+				filter = input.value.toUpperCase();
+				table = document.getElementById('tabWL');
+				tr = table.getElementsByTagName("tr");
+
+				// Loop through all table rows, and hide those who don't match the search query
+				for (i = 0; i < tr.length; i++) {
+					td = tr[i].getElementsByTagName("td")[1];
+					if (td) {
+						txtValue = td.textContent || td.innerText;
+						if (txtValue.toUpperCase().indexOf(filter) > -1) {
+							tr[i].style.display = "";
+						} else {
+							tr[i].style.display = "none";
+						}
 					}
 				}
 			}
@@ -114,36 +135,124 @@
 								return;
 							}
 							var dlg;
+							var dlg1;
 							if (!arr.length) {
 								var content = '<div class="modal-content"><h4>' + _('Add a familymember') + '</h4><p>' + _('Cannot find any device') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
 								$('.modal').append(content);
 								$('.modal').modal();
 								return;
 							} else {
-								
-								dlg='<div class="input-field col s4">' + 
-									'<i id="icon" class="material-icons prefix">search</i>' + 
-									'<input type="text" id="myInput" onkeyup="myFunction()" placeholder="' + _('Search for device') + '..">' + 
+								dlg=
+									'<div class="input-field col s12">' + 
+										'<i id="icon" class="material-icons prefix">search</i>' + 
+										'<input id="searchFam" class="validate" type="text" onkeyup="devSearchFam()">'  + 
+										'<label for="searchFam">' + _('Search for device') + '..' + '</label>' +
 									'</div>' +
-									'<label><input type="checkbox" id="insertIP"/><span>' + _('Ip-address instead of mac-address') + '</span></label>' +
-									'<div col s6><table class="highlight" id="myTable">' + 
-									'<thead><tr><th class="left-align">' + 'Hostname' + '</th><th class="center-alighn">' + _('IP address') + '</th><th class="center-align">' + _('MAC address') + '</th></tr></thead>' +
-									'<body>'
-								arr.forEach(function (element) { 
-									dlg += '<tr class="add-device" ' +
-										'data-macaddress="' + (element.mac || '') + '" ' +
-										'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
-										'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
-										'<td>' + element.name + '</td>' +
-										'<td class="center">' + element.ip + '</td>' +
-										'<td class="center">' + element.mac + '</td>' +
+									'<div col s12>' + 
+										'<table class="responsive-table highlight" id="tabFam">' + 
+											'<thead>' + 
+												'<tr class="grey darken-3 white-text">' + 
+													'<th class="left-align">' + 'Hostname' + '</th>' + 
+													'<th class="center-align">' + _('MAC address') + '</th>' + 
+													'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="insertIP" /><span class="white-text" style="font-size: 13px">' + _('IP address') + '</span></th>' +
+												'</tr>' + 
+											'</thead>' +
+											'<tbody>'
+								dlg1=
+									'<div class="input-field col s12">' + 
+										'<i id="icon" class="material-icons prefix">search</i>' + 
+										'<input id="searchWL" class="validate" type="text" onkeyup="devSearchWL()">'  + 
+										'<label for="searchWL">' + _('Search for device') + '..' + '</label>' +
+									'</div>' +
+									'<div class="col s12">' + 
+										'<table class="responsive-table striped" id="tabWL">' + 
+											'<thead>' + 
+												'<tr class="grey darken-3 white-text">' + 
+													'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all()"/><span></span></label></th>' + 
+													'<th class="left-align">' + 'Hostname' + '</th>' + 
+													'<th class="center-align">' + _('MAC address') + '</th>' + 
+												'</tr>' + 
+											'</thead>' +
+											'<tbody>'
+								let cnt = 0;
+								wl = settings.whitelist || [];
+								arr.forEach(function (element) {
+									let chkVal = '';
+									cnt += 1;
+									for(i=0; i < wl.length; i++){
+										if (element.mac == wl[i].white_macaddress){
+											chkVal = 'checked';
+											break;
+										}
+									}
+									dlg += 
+										'<tr class="add-device" ' +
+											'data-macaddress="' + (element.mac || '') + '" ' +
+											'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
+											'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
+											'<td>' + element.name + '</td>' +
+											'<td class="center">' + element.ip + '</td>' +
+											'<td class="center">' + element.mac + '</td>' +
+										'</tr>';
+									dlg1 += 
+										'<tr ' +
+											'data-white_macaddress="' + (element.mac || '') + '" ' +
+											'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
+											'<td class="valign-wrapper"><label><input class="filled-in" type="checkbox"' + chkVal + ' /><span></span></label></td>' +
+											'<td>' + element.name + '</td>' +
+											'<td class="center">' + element.mac + '</td>' +
 										'</tr>';
 								});
-								dlg += '</body></table></div>';
-								var content = '<div class="modal-content translate"><h5>' + _('Add a familymember') + '</h5><p>' + dlg + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">' + _('Close') + '</a></div>';
-								$('.modal').append(content);
-								$('.modal').modal();
+								dlg += '</tbody></table></div>';
+								var content = 
+									'<div class="modal-content translate">' + 
+										'<h5 class="blue">' + _('Add family member') + '</h5>' + 
+										'<p>' + dlg + '</p>' + 
+									'</div>' + 
+									'<div class="modal-footer blue lighten-2">' + 
+										'<a href="#!" class="modal-action modal-close btn-default waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</a>' + 
+									'</div>';
+								dlg1 += '</tbody></table></div>';
+								var content1 = 
+									'<div class="modal-content col s12 translate">' + 
+										'<h5 class="blue" style="margin-top:20px">' + _('Add a device') + '</h5>' + 
+										'<p>' + dlg1 + '</p>' + 
+									'</div>' + 
+									'<div class="modal-footer blue lighten-2">' + 
+										'<button type="button" class="modal-action modal-close waves-effect waves-light btn-flat" id="save1"><i class="material-icons left">save</i>' + _('Add') + '</button>' + 
+										'<button type="button" class="modal-close btn-default offset-s2 waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</button>' + 
+									'</div>';
+								$('#dialog-search').append(content);
+								$('#dialog-search').modal();
+								$('#dialog-search1').append(content1);
+								$('#dialog-search1').modal({dismissible: false,});
 							}
+							$('#save1').click(function () {
+								// Loop through all checkboxes, and add all devices with selected checkboxes
+								whitelist = []; //clear whitelist
+								$("#tabWL input[type=checkbox]:checked").each(function () {
+									let row = $(this).closest("tr")[0];
+									var mac = $(row).data('white_macaddress');
+									var device = $(row).data('white_device');
+									if (device != null){
+										whitelist.push({white_macaddress: mac, white_device: device});
+										values2table('whitevalues', whitelist, g_onChange);
+										g_onChange(true);
+									}
+								});
+							});
+							$('#select-all').click(function(event) {   
+								if(this.checked) {
+									// Iterate each checkbox
+									$(':checkbox').each(function() {
+										this.checked = true;                        
+									});
+								} else {
+									$(':checkbox').each(function() {
+										this.checked = false;                       
+									});
+								}
+							});
 							$('.add-device').click(function () {
 								var insertIP = $('#insertIP');
 								if ($(insertIP).prop( "checked" )) {
@@ -164,20 +273,20 @@
 							$('.modal').append(content);
 							$('.modal').modal();
 						}
-
 					});
             	});
-
 
 				// example: select elements with id=key and class=value and insert value
 				if (!settings) return;
 				socket.emit('getObject', 'system.config', function (err, obj) {
 					secret = (obj.native ? obj.native.secret : '') || 'SdoeQ85NTrg1B0FtEyzf';
 					familymembers = settings.familymembers || [];
+					whitelist = settings.whitelist || [];
 					values2table('values', familymembers, onChange);
-					for (var key in settings) {
+					values2table('whitevalues', whitelist, onChange);
+					//for (var key in settings) {
 						//if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
-					}
+					//}
 					$('.value').each(function () { 
 						var $key = $(this);
 						var id = $key.attr('id');
@@ -229,80 +338,35 @@
 				});
 				// Get table
 				obj.familymembers = table2values('values');
+				obj.whitelist = table2values('whitevalues');
 				callback(obj);
 			}
-
 		</script>
 		<style>
-			th {
-				background-color: rgb(14, 149, 240);
-				color: white;
-				height: 30px;
-			}
-			tr {
-				height: 20px;
-			}
-			h5 {
-				text-align: left;
-				color: rgb(0, 0, 0);
-			}
-			table.striped > tbody > tr:nth-child(odd) {
- 				background-color: rgba(103, 214, 214, 0.5);
-			}
-			table.highlight > tbody > tr:hover {
- 				color: rgba(24, 103, 206, 0.5);
- 				background-color: rgba(19, 150, 150, 0.5);
-			}
-			tr td {
-   				height: auto !important;
-			}
-			#myInput {
-			width: 92%; /* Full-width */
-			font-size: 16px; /* Increase font-size */
-			padding: 1px 1px 1px 1px; /* Add some padding */
-			border: 1px solid rgb(13, 115, 231); /* Add a grey border */
-			margin-bottom: 1px; /* Add some space below the input */
-			}
-
-			#myTable {
-			border-collapse: collapse; /* Collapse borders */
-			width: 100%; /* Full-width */
-			border: 1px solid rgb(13, 115, 231); /* Add a grey border */
-			font-size: 14px; /* Increase font-size */
-			}
-
-			#myTable th, #myTable td {
-			text-align: left; /* Left-align text */
-			padding: 6px; /* Add padding */
-			}
-
-			#myTable tr {
-			/* Add a bottom border to all table rows */
-			border-bottom: 1px solid #ddd;
-			}
-
-			#myTable tr.header, #myTable tr:hover {
-			/* Add a grey background color to the table header and on hover */
-			background-color: #f1f1f1;
-			}
-			#icon {
-			width: 8%;
-			}
+			h5 {padding: 10px}
+			table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
+			#searchFam, #searchWL {font-size: 12px;padding: 0px;margin: 0px 0px 0px 40px;}
+			#tabFam, #tabWL {font-size: 13px;}
+			#tabFam th, #tabFam td {text-align: left;padding: 3px;}
+			#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
 		</style>
 	</head>
 
 	<body>
 		<div class="m adapter-container">
-			<div id="tabs" style="width: 100%; height: 100%; overflow: hidden;">
-				<!-- define tabs -->
-				<ul class="tabs">
-					<li class="tab col s3"><a href="#tab-main" class="translate active">Main settings</a></li>
-					<li class="tab col s3"><a href="#tab-family" class="translate">Family settings</a></li>
-				</ul>
+			<div class="row">
+				<div class="col s12"> <!--id="tabs" style="width: 100%; height: 100%; overflow: hidden;"-->
+					<!-- define tabs -->
+					<ul class="tabs">
+						<li class="tab col s3"><a href="#tab-main" class="translate active">Main settings</a></li>
+						<li class="tab col s3"><a href="#tab-family" class="translate">Family settings</a></li>
+						<li class="tab col s3"><a href="#tab-whitelist" class="translate">White list settings</a></li>
+					</ul>
+				</div>
 				<!-- define elements of the tabs -->
 				<div id="tab-main" class="col s12 page">
 					<div class="row">
-						<div class="input-field col s2">
+						<div class="col s6 m4 l2">
 							<img src="fb-checkpresence.png" class="logo">
 						</div>
 					</div><!-- End of row -->
@@ -349,14 +413,10 @@
 
 				<div id="tab-family" class="col s12 page">
 					<div class="row">
-						<div class="input-field col s6">
-						<img src="fb-checkpresence.png" class="logo">
-						</div>
-					</div><!-- End of row -->
-					<div class="row">
-						<div class="col s12">
-						<p class="translate">Here you can insert name and Mac address or IP address for a family member.</p>
-						<p class="translate">For every enabled table line an object will be created.</p>
+						<div class="col s12 m8 l8">
+							<img src="fb-checkpresence.png" class="logo">
+							<p class="translate">Here you can insert name and Mac address or IP address for a family member.</p>
+							<p class="translate">For every enabled table line an object will be created.</p>
 						</div>
 					</div><!-- End of row -->
 
@@ -364,20 +424,20 @@
 						<div class="row">
 							<div class="col s12">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add from list</a>
+								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add family member</a>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col s10">
+							<div class="col s11">
 								<table class="table-values" style="width: 100%;">
 									<thead>
 										<tr>
-											<th data-name="_index" style="width: 40px" class="translate"></th>
-											<th data-name="familymember" style="width: 140px" data-style="width: 140px" class="translate" for="familymember">Family member</th>
-											<th data-name="macaddress" style="width: 140px" data-style="width: 140px" class="translate" for="macaddress">Mac or IP-Address</th>
-											<th data-name="comment" style="width: 140px" data-style="width: 140px" class="translate" for="comment">Comment</th>
-											<th data-name="enabled"  style="width: 70px" data-style="width: 70px" data-type="checkbox" class="translate">Enabled</th>
-											<th data-buttons="delete" style="width: 40px"></th>
+											<th data-name="_index" style="width: 5%" class="center-align translate"></th>
+											<th data-name="familymember" style="width: 25%" class="translate" for="familymember">Family member</th>
+											<th data-name="macaddress" style="width: 25%" class="translate" for="macaddress">Mac or IP-Address</th>
+											<th data-name="comment" style="width: 30%" class="translate" for="comment">Comment</th>
+											<th data-name="enabled"  style="width: 10%" data-type="checkbox" class="translate">Enabled</th>
+											<th data-buttons="delete" style="width: 5%"></th>
 										</tr>
 									</thead>
 								</table>
@@ -385,15 +445,42 @@
 						</div>
 					</div>
 				</div><!-- End of tab family -->
-			</div><!-- End of tabs -->
-			<div id="dialog-search" class="modal"></div>
-			<div id="dialog-search1" title="Select a device"></div>
-			<div id="dialog-error" title="Error"></div>
+
+				<div id="tab-whitelist" class="col s12 page">
+					<div class="row">
+						<div class="col s12 m12 l12">
+							<img src="fb-checkpresence.png" class="logo">
+							<p class="translate">Here you can insert known devices in the whitelist.</p>
+							<p class="translate">For every unknown device you get a warning in the blacklist object.</p>
+						</div>
+					</div><!-- End of row -->
+					<div id="whitevalues">
+						<div class="row">
+							<div class="col s12">
+								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search1">Add a device</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s11">
+								<table class="table-values" style="width: 100%;">
+									<thead>
+										<tr>
+											<th data-name="_index" style="width: 5%" class="translate"></th>
+											<th data-name="white_device" style="width: 50%" class="translate" for="white_device">Device</th>
+											<th data-name="white_macaddress" style="width: 40%" class="translate" for="white_macaddress">Mac-Address</th>
+											<th data-buttons="delete" style="width: 5%"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!-- End of tab white list -->
+
+				<div id="dialog-search" class="modal modal-fixed-footer grey lighten-2"></div>
+				<div id="dialog-search1" class="modal modal-fixed-footer grey lighten-2"></div>
+			</div>
 		</div><!-- End of adapter container -->
-		<script>
-			$(document).ready(function(){
-				//$('.modal').modal();
-		  	})
-		</script>
 	</body>
 </html>
