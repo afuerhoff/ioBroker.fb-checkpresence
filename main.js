@@ -183,7 +183,7 @@ async function getGuests(items, hostNo, cfg){
             }
             let foundwl = false;
             for(let w = 0; w < cfg.wl.length; w++) {
-                if (cfg.wl[w].white_macaddress == items[i]['MACAddress']){
+                if (cfg.wl[w].white_macaddress == items[i]['MACAddress'] && items[i]['X_AVM-DE_Guest'] == 0){
                     foundwl = true;
                     break;
                 }
