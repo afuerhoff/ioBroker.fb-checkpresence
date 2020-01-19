@@ -346,23 +346,23 @@ async function checkPresence(gthis, cfg, Fb){
                                     options:{
                                         end:        end,
                                         start:      start,
-                                        ignoreNull: true,
-                                        aggregate: 'onchange'
+                                        //ignoreNull: true,
+                                        aggregate: 'none'
                                     }
                                 }, function (result1) {
                                     if (result1 == null) {
                                         gthis.log.info('list history ' + memb + ' ' + result1.error);
                                     }else{
-                                        let cnt = result1.result.length + 1;
+                                        const cnt = result1.result.length;
                                         gthis.log.debug('history length: ' + cnt);
                                         //if (cnt == 0) cnt += 1;
                                         gthis.sendTo(cfg.history, 'getHistory', {
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
                                                 end:        end,
-                                                count:      cnt,
+                                                count:      cnt+1,
                                                 ignoreNull: true,
-                                                aggregate: 'onchange'
+                                                aggregate: 'none'
                                             }
                                         }, function (result) {
                                             if (result == null) {
