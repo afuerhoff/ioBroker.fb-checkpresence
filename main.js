@@ -380,6 +380,7 @@ async function checkPresence(gthis, cfg, Fb){
                                                             jsonHistory += ',';
                                                         }
                                                         const hTime = new Date(result.result[i].ts);
+                                                        gthis.log.debug('history: ' + result.result[i].val + ' time: ' + hTime);
                                                         if (hTime >= midnight.getTime()){
                                                             if (lastVal == null){
                                                                 //if no lastVal exists
