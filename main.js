@@ -346,7 +346,6 @@ async function checkPresence(gthis, cfg, Fb){
                                     options:{
                                         end:        end,
                                         start:      start,
-                                        //ignoreNull: true,
                                         aggregate: 'none'
                                     }
                                 }, function (result1) {
@@ -360,8 +359,7 @@ async function checkPresence(gthis, cfg, Fb){
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
                                                 end:        end,
-                                                count:      cnt+1,
-                                                ignoreNull: true,
+                                                count:      cnt+10,
                                                 aggregate: 'none'
                                             }
                                         }, function (result) {
@@ -372,8 +370,16 @@ async function checkPresence(gthis, cfg, Fb){
                                                 let jsonHistory = '[';
                                                 let bfirstFalse = false;
                                                 let firstFalse = midnight;
-                                                gthis.log.debug('history length: ' + result.result.length);
-                                                for (let i = 0; i < result.result.length; i++) {
+                                                let cnt2 = 0;
+                                                gthis.log.debug('history2 length: ' + result.result.length);
+                                                for (let i = result.result.length-1-cnt; i >= 0; i--) {
+                                                    gthis.log.debug('history2: ' + result.result[i].val +  ' time: ' + new Date(result.result[i].ts));
+                                                    if (result.result[i].val != null){
+                                                        cnt2 = i;
+                                                        break;
+                                                    }
+                                                }
+                                                for (let i = cnt2; i < result.result.length; i++) {
                                                     if (result.result[i].val != null ){
                                                         const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
                                                         htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
