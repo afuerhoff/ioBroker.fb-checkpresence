@@ -353,8 +353,9 @@ async function checkPresence(gthis, cfg, Fb){
                                     if (result1 == null) {
                                         gthis.log.info('list history ' + memb + ' ' + result1.error);
                                     }else{
-                                        let cnt = result1.result.length;
-                                        if (cnt == 0) cnt += 1;
+                                        let cnt = result1.result.length + 1;
+                                        gthis.log.debug('history length: ' + cnt);
+                                        //if (cnt == 0) cnt += 1;
                                         gthis.sendTo(cfg.history, 'getHistory', {
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
@@ -371,6 +372,7 @@ async function checkPresence(gthis, cfg, Fb){
                                                 let jsonHistory = '[';
                                                 let bfirstFalse = false;
                                                 let firstFalse = midnight;
+                                                gthis.log.debug('history length: ' + result.result.length);
                                                 for (let i = 0; i < result.result.length; i++) {
                                                     if (result.result[i].val != null ){
                                                         const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
