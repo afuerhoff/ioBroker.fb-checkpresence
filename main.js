@@ -27,7 +27,6 @@ const HTML_GUEST  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>I
 const TR064_DEVINFO = '/deviceinfoSCPD.xml';
 const TR064_HOSTS = '/hostsSCPD.xml';
 
-let GETENTRIES = false;
 let GETPATH = false;
 let GETBYMAC = false;
 let GETBYIP = false;
@@ -130,22 +129,6 @@ function decrypt(key, value) {
     return result;
 }
 
-async function getHostNo(gthis, cfg, Fb, dnow){
-    try {
-        //get hostNo
-        const getHostNo = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetHostNumberOfEntries', null);
-        const hostNo = getHostNo['NewHostNumberOfEntries'];
-        gthis.log.debug('getHostNo: ' + hostNo);
-        gthis.setState('devices', { val: hostNo, ack: true });
-        gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
-        gthis.setState('info.lastUpdate', { val: dnow, ack: true });
-        return hostNo;
-    }  catch (e) {
-        showError('getHostNo: '+e.message);
-        //gthis.log.error('getHostNo: '+e.message);
-    }    
-}
-
 async function getDeviceList(gthis, cfg, Fb){
     try {
         //get device list
@@ -153,15 +136,17 @@ async function getDeviceList(gthis, cfg, Fb){
         const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
         const deviceList = await Fb.getDeviceList(url);
         gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
+        gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
+        gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
+        gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
         errorCnt = 0;
         return deviceList['List']['Item'];
     }  catch (e) {
         showError('getDeviceList: '+e.message);
-        //gthis.log.error('getDeviceList: '+e.message);
     }   
 }
 
-async function getGuests(items, hostNo, cfg){
+async function getGuests(items, cfg){
     try {
         //analyse guests
         let guestCnt = 0;
@@ -171,7 +156,7 @@ async function getGuests(items, hostNo, cfg){
         let htmlBlRow = HTML_GUEST;
         let jsonRow = '[';
         let jsonBlRow = '[';
-        for (let i = 0; i < hostNo; i++) {
+        for (let i = 0; i < items.length; i++) {
             if (items[i]['Active'] == 1){ // active devices
                 activeCnt += 1;
             }
@@ -183,12 +168,12 @@ async function getGuests(items, hostNo, cfg){
             }
             let foundwl = false;
             for(let w = 0; w < cfg.wl.length; w++) {
-                if (cfg.wl[w].white_macaddress == items[i]['MACAddress'] && items[i]['X_AVM-DE_Guest'] == 0){
+                if (cfg.wl[w].white_macaddress == items[i]['MACAddress']){
                     foundwl = true;
                     break;
                 }
             }
-            if (foundwl == false){
+            if (foundwl == false && items[i]['X_AVM-DE_Guest'] == 0){ //&& items[i]['Active'] == 1
                 unknownCnt += 1;
                 htmlBlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                 jsonBlRow += createJSONGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
@@ -239,7 +224,6 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         }
         const newActive = hostEntry['NewActive'];
         gthis.log.debug('getActive ' + member + ' ' + newActive);
-        //gthis.log.info('getActive ' + member + ' ' + JSON.stringify(hostEntry));
 
         let memberActive = false; 
         let comming = null;
@@ -287,7 +271,6 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
 
         }else{
             showError('getActive: content of object ' + member + ' is wrong!'); 
-            //gthis.log.error('getActive: content of object ' + member + ' is wrong!');                               
         }
                         
         const comming1 = await getStateP(member + '.comming');
@@ -311,7 +294,6 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         return curVal;
     }  catch (e) {
         showError('getActive: '+e.message);
-        //gthis.log.error('getActive: '+e.message);
     }    
 }
 
@@ -323,10 +305,9 @@ async function checkPresence(gthis, cfg, Fb){
         midnight.setHours(0,0,0);
         const dnow = new Date();
 
-        if (GETENTRIES == true && GETPATH == true){
-            const hostNo = await getHostNo(gthis, cfg, Fb, dnow);
+        if (GETPATH == true){
             const items = await getDeviceList(gthis, cfg, Fb);
-            getGuests(items, hostNo, cfg);
+            getGuests(items, cfg);
         }
 
         // functions for family members
@@ -365,6 +346,7 @@ async function checkPresence(gthis, cfg, Fb){
                                     options:{
                                         end:        end,
                                         start:      start,
+                                        ignoreNull: true,
                                         aggregate: 'onchange'
                                     }
                                 }, function (result1) {
@@ -378,6 +360,7 @@ async function checkPresence(gthis, cfg, Fb){
                                             options: {
                                                 end:        end,
                                                 count:      cnt,
+                                                ignoreNull: true,
                                                 aggregate: 'onchange'
                                             }
                                         }, function (result) {
@@ -447,7 +430,6 @@ async function checkPresence(gthis, cfg, Fb){
                             } catch (ex) {
                                 gthis.setState('info.connection', { val: false, ack: true });
                                 showError('checkPresence: ' + ex.message);
-                                //gthis.log.error('checkPresence: ' + ex.message);
                             }
                         }else{
                             gthis.log.info('History not enabled');
@@ -462,7 +444,6 @@ async function checkPresence(gthis, cfg, Fb){
                 } catch (error) {
                     gthis.setState('info.connection', { val: false, ack: true });
                     showError('checkPresence: ' + error);
-                    //gthis.log.error('checkPresence:' + error);
                 }
             }//enabled in configuration settings
             
@@ -478,7 +459,6 @@ async function checkPresence(gthis, cfg, Fb){
     }
     catch (error) {
         showError('checkPresence: ' + error);
-        //gthis.log.error('checkPresence: ' + error);
         gthis.setState('info.connection', { val: false, ack: true });
     }
 }
@@ -498,7 +478,6 @@ function enableHistory(cfg, member) {
         }, function (result) {
             if (result.error) {
                 showError('enable history: ' + '' + result.error);
-                //gthis.log.error('enable history: ' + '' + result.error);
             }
             if (result.success) {
                 //gthis.log.info('enable history ' + " " + result.success);
@@ -540,7 +519,6 @@ class FbCheckpresence extends utils.Adapter {
             const getForeignObjectP = util.promisify(this.getForeignObject);
 
             const sysobj =  await getForeignObjectP('system.config');
-            //this.config.info('test ' + obj);
             if (sysobj && sysobj.native && sysobj.native.secret) {
                 gthis.config.password = decrypt(sysobj.native.secret, this.config.password);
             } else {
@@ -576,15 +554,16 @@ class FbCheckpresence extends utils.Adapter {
             const Fb = new fb.Fb(devInfo, this);
 
             //check if the functions are supported by avm
-            GETENTRIES = await Fb.chkService(TR064_HOSTS, 'GetHostNumberOfEntries');
             GETPATH = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetHostListPath');
             GETBYMAC = await Fb.chkService(TR064_HOSTS, 'GetSpecificHostEntry');
             GETBYIP = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetSpecificHostEntryByIP');
             GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
 
             const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
-            Fb._sslPort = parseInt(result['NewSecurityPort']);
-            gthis.log.debug('sslPort ' + Fb._sslPort);
+            if (GETPORT == true){
+                Fb._sslPort = parseInt(result['NewSecurityPort']);
+                gthis.log.debug('sslPort ' + Fb._sslPort);
+            }
 
             //Create global objects
             obj.createGlobalObjects(this, HTML+HTML_END, HTML_GUEST+HTML_END);
@@ -701,15 +680,12 @@ class FbCheckpresence extends utils.Adapter {
                         };
                         const Fb = new fb.Fb(devInfo, this);
 
-                        let hostNo = 0;
                         let items;
-                        if (GETENTRIES == true && GETPATH == true){
-                            hostNo =  await getHostNo(this, null, Fb, new Date());
+                        if (GETPATH == true){
                             items =  await getDeviceList(this, null, Fb);
                         }
                         
-                        //gthis.log.info('items ' + JSON.stringify(items));
-                        for (let i = 0; i < hostNo; i++) {
+                        for (let i = 0; i < items.length; i++) {
                             const active = items[i]['Active'];
                             if (!onlyActive || active) {
                                 allDevices.push ({
@@ -731,7 +707,6 @@ class FbCheckpresence extends utils.Adapter {
             }
         } catch (e) {
             showError('onMessage: '+e.message);
-            //gthis.log.error('onMessage: '+e.message);
         }
     }
 

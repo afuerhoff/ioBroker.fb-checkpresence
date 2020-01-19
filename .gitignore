@@ -18,3 +18,4 @@ scripts/gulp.sh
 iob_npm.done
 package-lock.json
 .vscode
+scripts/update_node.sh
