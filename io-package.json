@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -110,6 +110,18 @@
                 "es": "información de error y depuración optimizada, dependencia de criptografía eliminada, verificación de servicio y lista negra añadida",
                 "pl": "zoptymalizowano informacje o debugowaniu i błędach, usunięto zależność kryptograficzną, dodano kontrolę usługi i czarną listę",
                 "zh-cn": "优化了调试和错误信息，删除了加密依赖性，添加了服务检查和黑名单"
+            },
+            "0.2.1": {
+                "en": "getGuests issue resolved, lastVal function and debug information optimized",
+                "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
+                "ru": "Решена проблема с getGhest, оптимизирована функция lastVal и отладочная информация",
+                "pt": "Problema getGuests resolvido, função lastVal e informações de depuração otimizadas",
+                "nl": "getGuests-probleem opgelost, lastVal-functie en foutopsporingsinformatie geoptimaliseerd",
+                "fr": "Problème getGuests résolu, fonction lastVal et informations de débogage optimisées",
+                "it": "problema getGuests risolto, funzione lastVal e informazioni di debug ottimizzate",
+                "es": "Problema de getGuests resuelto, función lastVal e información de depuración optimizada",
+                "pl": "problem getGuests rozwiązany, funkcja lastVal i zoptymalizowane informacje debugowania",
+                "zh-cn": "解决了getGuests问题，优化了lastVal函数和调试信息"
             }
         },
         "title": "Fritzbox CheckPresence",

@@ -352,14 +352,14 @@ async function checkPresence(gthis, cfg, Fb){
                                     if (result1 == null) {
                                         gthis.log.info('list history ' + memb + ' ' + result1.error);
                                     }else{
-                                        const cnt = result1.result.length;
-                                        gthis.log.debug('history length: ' + cnt);
+                                        const cntActualDay = result1.result.length;
+                                        gthis.log.debug('history cntActualDay: ' + cntActualDay);
                                         //if (cnt == 0) cnt += 1;
                                         gthis.sendTo(cfg.history, 'getHistory', {
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
                                                 end:        end,
-                                                count:      cnt+10,
+                                                count:      cntActualDay + 10,
                                                 aggregate: 'none'
                                             }
                                         }, function (result) {
@@ -370,16 +370,15 @@ async function checkPresence(gthis, cfg, Fb){
                                                 let jsonHistory = '[';
                                                 let bfirstFalse = false;
                                                 let firstFalse = midnight;
-                                                let cnt2 = 0;
-                                                gthis.log.debug('history2 length: ' + result.result.length);
-                                                for (let i = result.result.length-1-cnt; i >= 0; i--) {
-                                                    gthis.log.debug('history2: ' + result.result[i].val +  ' time: ' + new Date(result.result[i].ts));
+                                                let cntLastVal = 0;
+                                                for (let i = result.result.length-1-cntActualDay; i >= 0; i--) {
                                                     if (result.result[i].val != null){
-                                                        cnt2 = i;
+                                                        cntLastVal = i;
+                                                        gthis.log.debug('history cntLastVal: ' + cntLastVal + ' lastVal: ' + result.result[i].val + ' ' + new Date(result.result[i].ts));
                                                         break;
                                                     }
                                                 }
-                                                for (let i = cnt2; i < result.result.length; i++) {
+                                                for (let i = cntLastVal; i < result.result.length; i++) {
                                                     if (result.result[i].val != null ){
                                                         const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
                                                         htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);

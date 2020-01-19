@@ -64,8 +64,9 @@ In the white list you can insert every known device. Any unknown devices are lis
 ### AVM support check
 The function checks the availability of used fritzbox features. The availability is logged as info.
 
-### Get guests
-In this function is checked if any user is logged in as guest. Also if any device is not in the white list listed.
+### Get guests, blacklist
+In this function is checked if any user is logged in as guest. Also is checked if any device is not in the white list listed.
+This devices are added to the blacklist.
 
 ### Get Active
 For every family member the presence, the comming and going dates and several other infos are calculated and saved in the member object. 
@@ -73,8 +74,44 @@ For every family member the presence, the comming and going dates and several ot
 ### Host number, active devices
 The amount of devices and how many are active are get from the fritzbox.
 
-### ...
+## Objects
 
+### Object presenceAll
+If all family members are present then the object is true.
+
+### Object presence
+If one family member ist present then the object is true.
+
+### Object devices
+These are all listed devices in the fritzbox
+
+### Object activeDevices
+These are the amount of all active devices in the fritzbox
+
+### Object html, json
+These objects are tables (json and html) with the comming and going information of all family members in it.
+
+### Object info
+Here are informations listed about the last update and the connection status from the adapter.
+
+### Object guest
+Here are informations listed about the amount of active guests and table objects with the device information in it.
+
+### Object blacklist
+Here are informations listed about the amount of unknown devices and table objects with the unknown device information in it.
+
+### Object member
+#### Object member.present
+Here you will find information about the presence of a member on the current day and how long the member has been the status true since the last change. 
+ 
+#### Object member.absent
+Here you will find information about the absence of a member on the current day and how long the member has been the status false since the last change.
+
+### Object member.comming, member.going
+Here you will find information when the family member arrives or leaving home.
+
+### Object member.history, member.historyHtml
+Here you will find information about the history of the current day. 
 
 ## Changelog 
 
@@ -96,7 +133,8 @@ The amount of devices and how many are active are get from the fritzbox.
 * (Achim Fürhoff) Influxdb added, debug information added
 ### 0.2.0
 * (Achim Fürhoff) debug and error information optimized, crypto dependency removed, service check and blacklist added   
- 
+### 0.2.1
+* (Achim Fürhoff) getGuests issue resolved, lastVal function and debug information optimized   
  
 
 ## License
