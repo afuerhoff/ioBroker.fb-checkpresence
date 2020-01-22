@@ -3,101 +3,17 @@
         "name": "fb-checkpresence",
         "version": "0.2.1",
         "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
-            },
-            "0.0.2": {
-                "en": "optimized features",
-                "de": "optimierte Funktionen",
-                "ru": "оптимизированные функции",
-                "pt": "recursos otimizados",
-                "nl": "geoptimaliseerde functies",
-                "fr": "fonctionnalités optimisées",
-                "it": "caratteristiche ottimizzate",
-                "es": "características optimizadas",
-                "pl": "zoptymalizowane funkcje",
-                "zh-cn": "优化功能"
-            },
-            "0.0.3": {
-                "en": "guest feature added",
-                "de": "Gast-Feature hinzugefügt",
-                "ru": "добавлена функция гостя",
-                "pt": "recurso convidado adicionado",
-                "nl": "gastfunctie toegevoegd",
-                "fr": "fonctionnalité invité ajoutée",
-                "it": "funzione ospite aggiunta",
-                "es": "función de invitado agregada",
-                "pl": "dodano funkcję gościa",
-                "zh-cn": "访客功能已添加"
-            },
-            "0.0.4": {
-                "en": "calculation error resolved",
-                "de": "Rechenfehler behoben",
-                "ru": "ошибка расчета устранена",
-                "pt": "erro de cálculo resolvido",
-                "nl": "berekeningsfout opgelost",
-                "fr": "erreur de calcul résolue",
-                "it": "errore di calcolo risolto",
-                "es": "error de cálculo resuelto",
-                "pl": "błąd obliczeniowy rozwiązany",
-                "zh-cn": "计算错误已解决"
-            },
-            "0.0.5": {
-                "en": "configuration optimized",
-                "de": "Konfiguration optimiert",
-                "ru": "оптимизированная конфигурация",
-                "pt": "configuração otimizada",
-                "nl": "configuratie geoptimaliseerd",
-                "fr": "configuration optimisée",
-                "it": "configurazione ottimizzata",
-                "es": "configuración optimizada",
-                "pl": "zoptymalizowana konfiguracja",
-                "zh-cn": "配置优化"
-            },
-            "0.0.6": {
-                "en": "bug in json and html table resolved",
-                "de": "Fehler in JSON- und HTML-Tabelle behoben",
-                "ru": "исправлена ошибка в json и html таблицах",
-                "pt": "bug na tabela json e html resolvida",
-                "nl": "fout in json en html-tabel opgelost",
-                "fr": "bug dans la table json et html résolu",
-                "it": "bug risolto nella tabella json e html",
-                "es": "error en la tabla json y html resuelto",
-                "pl": "błąd w tabeli json i html rozwiązany",
-                "zh-cn": "json和html表中的错误已解决"
-            },
-            "0.0.7": {
-                "en": "invalid date bug resolved. Debug information added. Default values from Date objects changed.",
-                "de": "Fehler mit ungültigem Datum behoben. Debug-Informationen hinzugefügt. Standardwerte von Datumsobjekten geändert.",
-                "ru": "недопустимая ошибка даты устранена. Добавлена отладочная информация. Значения по умолчанию для объектов Date изменены.",
-                "pt": "erro de data inválido resolvido. Informações de depuração adicionadas. Os valores padrão dos objetos Date foram alterados.",
-                "nl": "ongeldige datum bug opgelost. Foutopsporingsinformatie toegevoegd. Standaardwaarden van objecten Date zijn gewijzigd.",
-                "fr": "bug de date invalide résolu. Informations de débogage ajoutées. Les valeurs par défaut des objets Date ont été modifiées.",
-                "it": "bug data non valido risolto. Aggiunte informazioni di debug. Valori predefiniti dagli oggetti Data modificati.",
-                "es": "error de fecha inválido resuelto. Información de depuración añadida. Los valores predeterminados de los objetos de fecha cambiaron.",
-                "pl": "błąd nieprawidłowej daty rozwiązany. Dodano informacje debugowania. Wartości domyślne z obiektów Data uległy zmianie.",
-                "zh-cn": "解决了无效的日期错误。添加了调试信息。 Date对象的默认值已更改。"
-            },
-            "0.1.0": {
-                "en": "Influxdb added, debug information added",
-                "de": "Influxdb hinzugefügt, Debug-Informationen hinzugefügt",
-                "ru": "Добавлен Influxdb, добавлена отладочная информация",
-                "pt": "Influxdb adicionado, informações de depuração adicionadas",
-                "nl": "Influxdb toegevoegd, foutopsporingsinformatie toegevoegd",
-                "fr": "Influxdb ajouté, informations de débogage ajoutées",
-                "it": "Influxdb aggiunto, informazioni di debug aggiunte",
-                "es": "Influxdb agregado, información de depuración agregada",
-                "pl": "Dodano Influxdb, dodano informacje debugowania",
-                "zh-cn": "添加了Influxdb，添加了调试信息"
+            "0.2.1": {
+                "en": "getGuests issue resolved, lastVal function and debug information optimized",
+                "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
+                "ru": "Решена проблема с getGhest, оптимизирована функция lastVal и отладочная информация",
+                "pt": "Problema getGuests resolvido, função lastVal e informações de depuração otimizadas",
+                "nl": "getGuests-probleem opgelost, lastVal-functie en foutopsporingsinformatie geoptimaliseerd",
+                "fr": "Problème getGuests résolu, fonction lastVal et informations de débogage optimisées",
+                "it": "problema getGuests risolto, funzione lastVal e informazioni di debug ottimizzate",
+                "es": "Problema de getGuests resuelto, función lastVal e información de depuración optimizada",
+                "pl": "problem getGuests rozwiązany, funkcja lastVal i zoptymalizowane informacje debugowania",
+                "zh-cn": "解决了getGuests问题，优化了lastVal函数和调试信息"
             },
             "0.2.0": {
                 "en": "debug and error information optimized, crypto dependency removed, service check and blacklist added",
@@ -111,17 +27,101 @@
                 "pl": "zoptymalizowano informacje o debugowaniu i błędach, usunięto zależność kryptograficzną, dodano kontrolę usługi i czarną listę",
                 "zh-cn": "优化了调试和错误信息，删除了加密依赖性，添加了服务检查和黑名单"
             },
-            "0.2.1": {
-                "en": "getGuests issue resolved, lastVal function and debug information optimized",
-                "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
-                "ru": "Решена проблема с getGhest, оптимизирована функция lastVal и отладочная информация",
-                "pt": "Problema getGuests resolvido, função lastVal e informações de depuração otimizadas",
-                "nl": "getGuests-probleem opgelost, lastVal-functie en foutopsporingsinformatie geoptimaliseerd",
-                "fr": "Problème getGuests résolu, fonction lastVal et informations de débogage optimisées",
-                "it": "problema getGuests risolto, funzione lastVal e informazioni di debug ottimizzate",
-                "es": "Problema de getGuests resuelto, función lastVal e información de depuración optimizada",
-                "pl": "problem getGuests rozwiązany, funkcja lastVal i zoptymalizowane informacje debugowania",
-                "zh-cn": "解决了getGuests问题，优化了lastVal函数和调试信息"
+            "0.1.0": {
+                "en": "Influxdb added, debug information added",
+                "de": "Influxdb hinzugefügt, Debug-Informationen hinzugefügt",
+                "ru": "Добавлен Influxdb, добавлена отладочная информация",
+                "pt": "Influxdb adicionado, informações de depuração adicionadas",
+                "nl": "Influxdb toegevoegd, foutopsporingsinformatie toegevoegd",
+                "fr": "Influxdb ajouté, informations de débogage ajoutées",
+                "it": "Influxdb aggiunto, informazioni di debug aggiunte",
+                "es": "Influxdb agregado, información de depuración agregada",
+                "pl": "Dodano Influxdb, dodano informacje debugowania",
+                "zh-cn": "添加了Influxdb，添加了调试信息"
+            },
+            "0.0.7": {
+                "en": "invalid date bug resolved. Debug information added. Default values from Date objects changed.",
+                "de": "Fehler mit ungültigem Datum behoben. Debug-Informationen hinzugefügt. Standardwerte von Datumsobjekten geändert.",
+                "ru": "недопустимая ошибка даты устранена. Добавлена отладочная информация. Значения по умолчанию для объектов Date изменены.",
+                "pt": "erro de data inválido resolvido. Informações de depuração adicionadas. Os valores padrão dos objetos Date foram alterados.",
+                "nl": "ongeldige datum bug opgelost. Foutopsporingsinformatie toegevoegd. Standaardwaarden van objecten Date zijn gewijzigd.",
+                "fr": "bug de date invalide résolu. Informations de débogage ajoutées. Les valeurs par défaut des objets Date ont été modifiées.",
+                "it": "bug data non valido risolto. Aggiunte informazioni di debug. Valori predefiniti dagli oggetti Data modificati.",
+                "es": "error de fecha inválido resuelto. Información de depuración añadida. Los valores predeterminados de los objetos de fecha cambiaron.",
+                "pl": "błąd nieprawidłowej daty rozwiązany. Dodano informacje debugowania. Wartości domyślne z obiektów Data uległy zmianie.",
+                "zh-cn": "解决了无效的日期错误。添加了调试信息。 Date对象的默认值已更改。"
+            },
+            "0.0.6": {
+                "en": "bug in json and html table resolved",
+                "de": "Fehler in JSON- und HTML-Tabelle behoben",
+                "ru": "исправлена ошибка в json и html таблицах",
+                "pt": "bug na tabela json e html resolvida",
+                "nl": "fout in json en html-tabel opgelost",
+                "fr": "bug dans la table json et html résolu",
+                "it": "bug risolto nella tabella json e html",
+                "es": "error en la tabla json y html resuelto",
+                "pl": "błąd w tabeli json i html rozwiązany",
+                "zh-cn": "json和html表中的错误已解决"
+            },
+            "0.0.5": {
+                "en": "configuration optimized",
+                "de": "Konfiguration optimiert",
+                "ru": "оптимизированная конфигурация",
+                "pt": "configuração otimizada",
+                "nl": "configuratie geoptimaliseerd",
+                "fr": "configuration optimisée",
+                "it": "configurazione ottimizzata",
+                "es": "configuración optimizada",
+                "pl": "zoptymalizowana konfiguracja",
+                "zh-cn": "配置优化"
+            },
+            "0.0.4": {
+                "en": "calculation error resolved",
+                "de": "Rechenfehler behoben",
+                "ru": "ошибка расчета устранена",
+                "pt": "erro de cálculo resolvido",
+                "nl": "berekeningsfout opgelost",
+                "fr": "erreur de calcul résolue",
+                "it": "errore di calcolo risolto",
+                "es": "error de cálculo resuelto",
+                "pl": "błąd obliczeniowy rozwiązany",
+                "zh-cn": "计算错误已解决"
+            },
+            "0.0.3": {
+                "en": "guest feature added",
+                "de": "Gast-Feature hinzugefügt",
+                "ru": "добавлена функция гостя",
+                "pt": "recurso convidado adicionado",
+                "nl": "gastfunctie toegevoegd",
+                "fr": "fonctionnalité invité ajoutée",
+                "it": "funzione ospite aggiunta",
+                "es": "función de invitado agregada",
+                "pl": "dodano funkcję gościa",
+                "zh-cn": "访客功能已添加"
+            },
+            "0.0.2": {
+                "en": "optimized features",
+                "de": "optimierte Funktionen",
+                "ru": "оптимизированные функции",
+                "pt": "recursos otimizados",
+                "nl": "geoptimaliseerde functies",
+                "fr": "fonctionnalités optimisées",
+                "it": "caratteristiche ottimizzate",
+                "es": "características optimizadas",
+                "pl": "zoptymalizowane funkcje",
+                "zh-cn": "优化功能"
+            },
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
             }
         },
         "title": "Fritzbox CheckPresence",
@@ -175,11 +175,9 @@
         "messagebox": true,
         "dependencies": [
             {
-                "admin": ">=3.0.0",
-                "history": ">=1.8.6"
+                "admin": ">=3.0.0"
             }
-        ],
-        "installedFrom": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/tarball/5f6fdf1c9a30949bec9d9031662848ab34ad5d0b"
+        ]
     },
     "native": {
         "familymembers": [],
