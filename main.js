@@ -9,7 +9,7 @@ const utils = require('@iobroker/adapter-core');
 //const adapter = utils.adapter('fb-checkpresence');
 
 // load your modules here, e.g.:
-const schedule = require('node-schedule');
+//const schedule = require('node-schedule');
 const util = require('util');
 const dateFormat = require('dateformat');
 //own libraries
@@ -507,8 +507,8 @@ class FbCheckpresence extends utils.Adapter {
             name: 'fb-checkpresence',
         });
         this.on('ready', this.onReady);
-        this.on('objectChange', this.onObjectChange);
-        this.on('stateChange', this.onStateChange);
+        //this.on('objectChange', this.onObjectChange);
+        //this.on('stateChange', this.onStateChange);
         this.on('message', this.onMessage);
         this.on('unload', this.onUnload);
         gthis = this;
@@ -545,8 +545,9 @@ class FbCheckpresence extends utils.Adapter {
                 wl: this.config.whitelist
             };
             
-            const cron = '*/' + cfg.iv + ' * * * *';
-            this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' (' + cron + ')');
+            //const cron = '*/' + cfg.iv + ' * * * *';
+            const cron = cfg.iv * 60000;
+            this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' Min.');
             this.log.debug('configuration user: ' + this.config.username);
             this.log.debug('configuration history: ' + this.config.history);
             this.log.debug('configuration dateformat: ' + this.config.dateformat);
@@ -597,10 +598,14 @@ class FbCheckpresence extends utils.Adapter {
 
             await checkPresence(gthis, cfg, Fb); // Main function
             this.log.debug('checkPresence first run');
-            scheduledJob = schedule.scheduleJob(cron, async function(){ // scheduler based on interval
+            scheduledJob = setInterval(async function(){
                 await checkPresence(gthis, cfg, Fb);
                 gthis.log.debug('checkPresence scheduled');
-            });//schedule end 
+            }, cron);
+            /*scheduledJob = schedule.scheduleJob(cron, async function(){ // scheduler based on interval
+                await checkPresence(gthis, cfg, Fb);
+                gthis.log.debug('checkPresence scheduled');
+            });//schedule end*/ 
         } catch (e) {
             showError('onReady: ' + e.message);
         }
@@ -613,7 +618,8 @@ class FbCheckpresence extends utils.Adapter {
     onUnload(callback) {
         try {
             this.log.info('cleaned everything up...');
-            scheduledJob.cancel();
+            clearInterval(scheduledJob);
+            //scheduledJob.cancel();
             callback();
         } catch (e) {
             callback();
@@ -625,7 +631,7 @@ class FbCheckpresence extends utils.Adapter {
      * @param {string} id
      * @param {ioBroker.Object | null | undefined} obj
      */
-    onObjectChange(id, obj) {
+    /*onObjectChange(id, obj) {
         if (obj) {
             // The object was changed
             this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
@@ -633,14 +639,14 @@ class FbCheckpresence extends utils.Adapter {
             // The object was deleted
             this.log.debug(`object ${id} deleted`);
         }
-    }
+    }*/
 
     /**
      * Is called if a subscribed state changes
      * @param {string} id
      * @param {ioBroker.State | null | undefined} state
      */
-    onStateChange(id, state) {
+    /*onStateChange(id, state) {
         if (state) {
             // The state was changed
             this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -648,7 +654,7 @@ class FbCheckpresence extends utils.Adapter {
             // The state was deleted
             this.log.debug(`state ${id} deleted`);
         }
-    }
+    }*/
 
     /**
      * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
