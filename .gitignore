@@ -12,10 +12,15 @@ Thumbs.db
 admin/i18n/flat.txt
 admin/i18n/*/flat.txt
 admin/i18n/*
+
+scripts
 scripts/upload.sh
 scripts/gulp.sh
+scripts/update_node.sh
+
+.vscode
 .vscode/tasks.json
+.vscode/launch.json
+
 iob_npm.done
 package-lock.json
-.vscode
-scripts/update_node.sh
