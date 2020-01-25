@@ -145,8 +145,11 @@ Here you will find information about the history of the current day.
 * (Achim Fürhoff) debug and error information optimized, crypto dependency removed, service check and blacklist added   
 ### 0.2.1
 * (Achim Fürhoff) getGuests issue resolved, lastVal function and debug information optimized   
+### 0.2.2
+* (Achim Fürhoff) outdated packages updated, documentation changed, 
+  history dependency removed, onstate/objectChange removed, scheduler library removed,
+  two fixes from publish review
  
-
 ## License
 MIT License
 

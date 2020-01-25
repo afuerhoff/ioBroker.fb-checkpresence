@@ -3,6 +3,18 @@
         "name": "fb-checkpresence",
         "version": "0.2.1",
         "news": {
+            "0.2.2": {
+                "en": "outdated packages updated, documentation changed, dependency history removed, onstate/objectChange removed, scheduler library removed, ...",
+                "de": "veraltete Pakete aktualisiert, Dokumentation geändert, Abhängigkeitsverlauf entfernt, onstate / objectChange entfernt, Scheduler-Bibliothek entfernt, ...",
+                "ru": "обновлены устаревшие пакеты, изменена документация, удалена история зависимостей, удалено onstate / objectChange, удалена библиотека планировщика, ...",
+                "pt": "pacotes desatualizados atualizados, documentação alterada, histórico de dependências removido, onstate / objectChange removido, biblioteca do agendador removida, ...",
+                "nl": "verouderde pakketten bijgewerkt, documentatie gewijzigd, afhankelijkheidshistorie verwijderd, status / objectVeranderen verwijderd, plannerbibliotheek verwijderd, ...",
+                "fr": "paquets obsolètes mis à jour, documentation modifiée, historique des dépendances supprimé, onstate / objectChange supprimé, bibliothèque de planificateur supprimée, ...",
+                "it": "pacchetti obsoleti aggiornati, documentazione modificata, cronologia delle dipendenze rimossa, onstate / objectChange rimosso, libreria scheduler rimossa, ...",
+                "es": "paquetes obsoletos actualizados, documentación modificada, historial de dependencias eliminado, onstate / objectChange eliminado, biblioteca del planificador eliminada, ...",
+                "pl": "zaktualizowano nieaktualne pakiety, zmieniono dokumentację, usunięto historię zależności, usunięto onstate / objectChange, usunięto bibliotekę harmonogramu, ...",
+                "zh-cn": "更新了过时的程序包，更改了文档，删除了依赖关系历史记录，删除了onstate / objectChange，删除了调度程序库，..."
+              },
             "0.2.1": {
                 "en": "getGuests issue resolved, lastVal function and debug information optimized",
                 "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
