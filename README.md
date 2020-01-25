@@ -20,7 +20,18 @@ You must fill in the name of the family member and the mac-address (or ip-addres
 The comment is optional and you can enable or disable the family member. 
 The datapoint is based on the member name.
 
-## Fritzbox conditions
+### Adapter pre conditions
+For the correct function you have to install a history adapter. You can choose
+one of the following adapters:
+* History
+* SQL
+* InfluxDB 
+
+## Used device
+For this adapter the AVM Fritzbox is used. Here you can find informations about
+the Fritzbox https://avm.de/produkte/fritzbox/.
+
+### Fritzbox conditions
 
 The used TR-064 interface to the fritzbox is described here: https://avm.de/service/schnittstellen/.
 Following TR-064 functions are used:
@@ -100,11 +111,10 @@ Here are informations listed about the amount of active guests and table objects
 ### Object blacklist
 Here are informations listed about the amount of unknown devices and table objects with the unknown device information in it.
 
-### Object member
-#### Object member.present
+### Object member.present
 Here you will find information about the presence of a member on the current day and how long the member has been the status true since the last change. 
  
-#### Object member.absent
+### Object member.absent
 Here you will find information about the absence of a member on the current day and how long the member has been the status false since the last change.
 
 ### Object member.comming, member.going
