@@ -359,7 +359,6 @@ async function checkPresence(gthis, cfg, Fb){
                                     }else{
                                         const cntActualDay = result1.result.length;
                                         gthis.log.debug('history cntActualDay: ' + cntActualDay);
-                                        //if (cnt == 0) cnt += 1;
                                         gthis.sendTo(cfg.history, 'getHistory', {
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
@@ -386,10 +385,10 @@ async function checkPresence(gthis, cfg, Fb){
                                                 let cnt = 0;
                                                 for (let i = cntLastVal; i < result.result.length; i++) {
                                                     if (result.result[i].val != null ){
-                                                        cnt += 0;
                                                         const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
                                                         htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
                                                         jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
+                                                        cnt += 1;
                                                         const hTime = new Date(result.result[i].ts);
                                                         gthis.log.debug('history: ' + result.result[i].val + ' time: ' + hTime);
                                                         if (hTime >= midnight.getTime()){
