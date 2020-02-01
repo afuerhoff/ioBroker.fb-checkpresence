@@ -85,7 +85,7 @@ function createHTMLGuestRow (hostName, ipAddress, macAddress) {
 }
 
 // Create JSON table row
-function createJSONRow(cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, comming, sHeadGoing, going) {
+function createJSONRow(cnt, maxcnt, cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, comming, sHeadGoing, going) {
     let json = '{';
     json += '"'  + sHeadUser + '":';
     json += '"'  + sUser + '"' + ',';
@@ -95,13 +95,18 @@ function createJSONRow(cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming
     json += '"'  + dateFormat(comming, cfg.dateFormat) + '"' + ',';
     json += '"'  + sHeadGoing + '":';
     json += '"'  + dateFormat(going, cfg.dateFormat) + '"' + '}';
-
+    if (cnt < maxcnt-1){
+        json += ',';
+    }
     return json;
 }
 
 // Create JSON history table row
-function createJSONHistoryRow(cfg, sHeadStatus, sStatus, sHeadDate, sDate) {
+function createJSONHistoryRow(cnt, cfg, sHeadStatus, sStatus, sHeadDate, sDate) {
     let json = '{';
+    if (cnt != 0){
+        json = ',{';
+    }
     json += '"'  + sHeadStatus + '"' + ':';
     json += '"'  + sStatus + '"' + ',';
     json += '"'  + sHeadDate + '"' + ':';
@@ -110,8 +115,11 @@ function createJSONHistoryRow(cfg, sHeadStatus, sStatus, sHeadDate, sDate) {
 }
 
 // Create JSON history table row
-function createJSONGuestRow(hostName, ipAddress, macAddress) {
+function createJSONGuestRow(cnt, hostName, ipAddress, macAddress) {
     let json = '{';
+    if (cnt != 0){
+        json = ',{';
+    }
     json += '"'  + 'Hostname' + '":';
     json += '"'  + hostName + '"' + ',';
     json += '"'  + 'IP-Address' + '":';
@@ -162,7 +170,7 @@ async function getGuests(items, cfg){
             }
             if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){ //active guests
                 htmlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
-                jsonRow += createJSONGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+                jsonRow += createJSONGuestRow(guestCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                 gthis.log.debug('getGuests: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
                 guestCnt += 1;
             }
@@ -174,9 +182,9 @@ async function getGuests(items, cfg){
                 }
             }
             if (foundwl == false && items[i]['X_AVM-DE_Guest'] == 0){ //&& items[i]['Active'] == 1
-                unknownCnt += 1;
                 htmlBlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
-                jsonBlRow += createJSONGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+                jsonBlRow += createJSONGuestRow(unknownCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
+                unknownCnt += 1;
             } 
         }
         htmlRow += HTML_END;
@@ -285,11 +293,8 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             going = new Date(curVal.lc);
             gthis.setState(member + '.going', { val: going, ack: true });
         }
-        jsonTab += createJSONRow(cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
+        jsonTab += createJSONRow(index, cfg.members.length, cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
         htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
-        if (index < cfg.members.length-1){
-            jsonTab += ',';
-        }
         gthis.log.debug('getActive ' + jsonTab);
         return curVal;
     }  catch (e) {
@@ -378,14 +383,13 @@ async function checkPresence(gthis, cfg, Fb){
                                                         break;
                                                     }
                                                 }
+                                                let cnt = 0;
                                                 for (let i = cntLastVal; i < result.result.length; i++) {
                                                     if (result.result[i].val != null ){
+                                                        cnt += 0;
                                                         const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
                                                         htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
-                                                        jsonHistory += createJSONHistoryRow(cfg, 'Active', result.result[i].val, 'Date', hdate);
-                                                        if (i < result.result.length-1){
-                                                            jsonHistory += ',';
-                                                        }
+                                                        jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
                                                         const hTime = new Date(result.result[i].ts);
                                                         gthis.log.debug('history: ' + result.result[i].val + ' time: ' + hTime);
                                                         if (hTime >= midnight.getTime()){
