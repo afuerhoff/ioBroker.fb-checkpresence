@@ -3,6 +3,7 @@
     ioBroker.fb-checkpresence
 </h1>
 
+![Number of Installations](http://iobroker.live/badges/fb-checkpresence-installed.svg) ![Number of Installations](http://iobroker.live/badges/fb-checkpresence-stable.svg)
 [![NPM version](http://img.shields.io/npm/v/iobroker.fb-checkpresence.svg)](https://www.npmjs.com/package/iobroker.fb-checkpresence)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fb-checkpresence.svg)](https://www.npmjs.com/package/iobroker.fb-checkpresence)
 [![Dependency Status](https://img.shields.io/david/afuerhoff/iobroker.fb-checkpresence.svg)](https://david-dm.org/afuerhoff/iobroker.fb-checkpresence)
@@ -69,6 +70,7 @@ For a configured family member you must enter the Name, the mac- or ip-address, 
 
 ### Whitelist settings
 In the white list you can insert every known device. Any unknown devices are listed in the blacklist object. 
+If you check the checkbox in the headline of the table all devices are selected. 
 
 ## Features
 
