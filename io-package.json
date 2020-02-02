@@ -182,6 +182,8 @@
         "loglevel": "info",
         "mode": "daemon",
         "type": "infrastructure",
+        "connectionType": "local",
+        "dataSource": "poll",
         "compact": true,
         "materialize": true,
         "messagebox": true,
@@ -194,7 +196,7 @@
     "native": {
         "familymembers": [],
         "whitelist": [],
-        "ipaddress": "192.168.178.1",
+        "ipaddress": "192.168.xxx.xxx",
         "interval": 1,
         "history": "",
         "dateformat": "yyyy.mm.dd hh:MM:ss",
