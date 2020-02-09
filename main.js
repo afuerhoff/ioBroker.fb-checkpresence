@@ -269,6 +269,7 @@ async function getDeviceInfo(items, cfg){
         gthis.setState('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
         gthis.setState('fb-devices.html', { val: htmlFbDevices, ack: true });
         gthis.setState('fb-devices.active', { val: activeCnt, ack: true });
+        gthis.setState('fb-devices.inactive', { val: inactiveCnt, ack: true });
 
         gthis.setState('guest.listHtml', { val: htmlRow, ack: true });
         gthis.setState('guest.listJson', { val: jsonRow, ack: true });
