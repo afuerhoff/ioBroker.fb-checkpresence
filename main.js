@@ -193,6 +193,7 @@ async function getDeviceInfo(items, cfg){
         //analyse guests
         let guestCnt = 0;
         let activeCnt = 0;
+        let inactiveCnt = 0;
         let blCnt = 0;
         let wlCnt = 0;
         let htmlRow = HTML_GUEST;
@@ -202,6 +203,8 @@ async function getDeviceInfo(items, cfg){
         let jsonBlRow = '[';
         let jsonWlRow = '[';
         let jsonFbDevices = '[';
+        let jsonFbDevActive = '[';
+        let jsonFbDevInactive = '[';
         for (let i = 0; i < items.length; i++) {
             await obj.createFbDeviceObjects(gthis, items[i]['HostName']);
             let deviceType = '-';
@@ -209,7 +212,11 @@ async function getDeviceInfo(items, cfg){
                 deviceType = 'guest';
             }
             if (items[i]['Active'] == 1){ // active devices
+                jsonFbDevActive += createJSONFbDeviceRow(activeCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
                 activeCnt += 1;
+            }else{
+                jsonFbDevInactive += createJSONFbDeviceRow(inactiveCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
+                inactiveCnt += 1;
             }
             if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){ //active guests
                 htmlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
@@ -253,9 +260,13 @@ async function getDeviceInfo(items, cfg){
         htmlBlRow += HTML_END;
         htmlFbDevices += HTML_END;
         jsonFbDevices += ']';
+        jsonFbDevActive += ']';
+        jsonFbDevInactive += ']';
         
         gthis.setState('fb-devices.count', { val: items.length, ack: true });
         gthis.setState('fb-devices.json', { val: jsonFbDevices, ack: true });
+        gthis.setState('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
+        gthis.setState('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
         gthis.setState('fb-devices.html', { val: htmlFbDevices, ack: true });
         gthis.setState('fb-devices.active', { val: activeCnt, ack: true });
 
