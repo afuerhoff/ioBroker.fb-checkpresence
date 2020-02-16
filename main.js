@@ -205,8 +205,31 @@ async function getDeviceInfo(items, cfg){
         let jsonFbDevices = '[';
         let jsonFbDevActive = '[';
         let jsonFbDevInactive = '[';
+
+        // Get all IDs of this adapter
+        /*gthis.getStates('fb-devices.*.*', function (err, states) {
+            const toDelete = [];
+            for (const id in states) {
+                //gthis.log.info('name ' + id);
+                let found = false;
+                for (let i = 0; i < items.length; i++) {
+                    if (id.includes(items[i]['HostName'])) {
+                        found = true;
+                    }
+                }
+                if (found == false){
+                    toDelete.push(id);
+                }
+            }
+            //gthis.log.info('obj ' + toDelete);
+
+            // gently delete all unknown states
+            obj.deleteStates(gthis, toDelete, function() {
+                gthis.log.debug('fb-device object deletion finished');
+            });
+        });*/
+
         for (let i = 0; i < items.length; i++) {
-            await obj.createFbDeviceObjects(gthis, items[i]['HostName']);
             let deviceType = '-';
             if (items[i]['X_AVM-DE_Guest'] == 1){
                 deviceType = 'guest';
@@ -289,16 +312,18 @@ async function getDeviceInfo(items, cfg){
         }else {
             gthis.setState('guest', { val: false, ack: true });
         }
-        gthis.log.debug('getDeviceInfo active: '+ activeCnt);
+        gthis.log.debug('getDeviceInfo activeCnt: '+ activeCnt);
         if (blCnt > 0) {
             gthis.setState('blacklist', { val: true, ack: true });
         }else {
             gthis.setState('blacklist', { val: false, ack: true });
         }
-        gthis.log.debug('getDeviceInfo unknown: '+ blCnt);
+        gthis.log.debug('getDeviceInfo blCnt: '+ blCnt);
+        //return true;
     }  catch (e) {
         showError('getDeviceInfo: '+ e);
         gthis.setState('info.connection', { val: false, ack: true });
+        //return false;
     }    
 }
 
@@ -403,10 +428,6 @@ async function checkPresence(gthis, cfg, Fb){
         const midnight = new Date();
         midnight.setHours(0,0,0);
         const dnow = new Date();
-        if (GETPATH == true){
-            const items = await getDeviceList(gthis, cfg, Fb);
-            getDeviceInfo(items, cfg);
-        }
 
         // functions for family members
         jsonTab = '[';
@@ -437,45 +458,48 @@ async function checkPresence(gthis, cfg, Fb){
 
                     const memb = member;
                     if (cfg.history != ''){
-                        //gthis.log.debug('history start');
-                        if (dPoint.common.custom[cfg.history].enabled == true){
+                        //gthis.log.info('history start' + JSON.stringify(dPoint.common));
+                        if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
                             try {
                                 gthis.sendTo(cfg.history, 'getHistory', {
                                     id: 'fb-checkpresence.0.' + memb,
                                     options:{
                                         end:        end,
                                         start:      start,
-                                        aggregate: 'none'
+                                        ignoreNull: true,
+                                        aggregate: 'minmax'
                                     }
                                 }, function (result1) {
                                     if (result1 == null) {
-                                        gthis.log.info('list history ' + memb + ' ' + result1.error);
+                                        gthis.log.warn('can not read history from ' + memb + ' ' + result1.error);
                                     }else{
                                         const cntActualDay = result1.result.length;
-                                        //gthis.log.debug('history cntActualDay: ' + cntActualDay);
+                                        gthis.log.debug('history cntActualDay: ' + cntActualDay);
                                         gthis.sendTo(cfg.history, 'getHistory', {
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
                                                 end:        end,
-                                                count:      cntActualDay + 10,
-                                                aggregate: 'none'
+                                                count:      cntActualDay + 1,
+                                                ignoreNull: true,
+                                                aggregate: 'minmax'
                                             }
                                         }, function (result) {
                                             if (result == null) {
-                                                gthis.log.info('list history ' + memb + ' ' + result.error);
+                                                gthis.log.warn('can not read history from ' + memb + ' ' + result.error);
                                             }else{
                                                 let htmlHistory = HTML_HISTORY;
                                                 let jsonHistory = '[';
                                                 let bfirstFalse = false;
                                                 let firstFalse = midnight;
-                                                let cntLastVal = 0;
-                                                for (let i = result.result.length-1-cntActualDay; i >= 0; i--) {
+                                                const cntLastVal = 0;
+                                                gthis.log.debug('history ' + memb + ' cntActualDay: ' + cntActualDay + ' cntHistory: ' + result.result.length);
+                                                /*for (let i = result.result.length-1-cntActualDay; i >= 0; i--) { //find lastVal
                                                     if (result.result[i].val != null){
                                                         cntLastVal = i;
-                                                        //gthis.log.debug('history cntLastVal: ' + cntLastVal + ' lastVal: ' + result.result[i].val + ' ' + new Date(result.result[i].ts));
+                                                        gthis.log.debug('history ' + memb + ' lastVal: ' + result.result[i].val + ' ' + new Date(result.result[i].ts));
                                                         break;
                                                     }
-                                                }
+                                                }*/
                                                 let cnt = 0;
                                                 for (let i = cntLastVal; i < result.result.length; i++) {
                                                     if (result.result[i].val != null ){
@@ -484,7 +508,7 @@ async function checkPresence(gthis, cfg, Fb){
                                                         jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
                                                         cnt += 1;
                                                         const hTime = new Date(result.result[i].ts);
-                                                        //gthis.log.debug('history: ' + result.result[i].val + ' time: ' + hTime);
+                                                        gthis.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
                                                         if (hTime >= midnight.getTime()){
                                                             if (lastVal == null){
                                                                 //if no lastVal exists
@@ -537,7 +561,7 @@ async function checkPresence(gthis, cfg, Fb){
                                 showError('checkPresence: ' + ex.message);
                             }
                         }else{
-                            gthis.log.info('History not enabled');
+                            gthis.log.info('History from ' + memb + ' not enabled');
                         }
                     }else{//history enabled
                         gthis.setState(memb + '.history', { val: 'disabled', ack: true });
@@ -569,7 +593,11 @@ async function checkPresence(gthis, cfg, Fb){
 }
 
 function enableHistory(cfg, member) {
-    if (cfg.history != ''){
+    let alias = '';
+    gthis.sendTo(cfg.history, 'getEnabledDPs', {}, function (result) {
+        if (result['fb-checkpresence.0.' + member] != undefined && result['fb-checkpresence.0.' + member].aliasId != undefined){
+            alias = result['fb-checkpresence.0.' + member].aliasId;
+        }
         gthis.sendTo(cfg.history, 'enableHistory', {
             id: 'fb-checkpresence.0.' + member,
             options: {
@@ -578,19 +606,17 @@ function enableHistory(cfg, member) {
                 retention:    31536000,
                 maxLength:    10,
                 changesMinDelta: 0,
-                aliasId: ''
+                aliasId: alias
             }
-        }, function (result) {
-            if (result.error) {
-                showError('enable history: ' + '' + result.error);
+        }, function (result2) {
+            if (result2.error) {
+                showError('enableHistory.3 ' + member + ' ' + result2.error);
             }
-            if (result.success) {
-                //gthis.log.info('enable history ' + " " + result.success);
+            if (result2.success) {
+                gthis.log.debug('enableHistory.2 ' + member + ' ' + result2.success);
             }
         });
-    }else{
-        gthis.log.info('History disabled');
-    }
+    });
 }
 
 class FbCheckpresence extends utils.Adapter {
@@ -672,9 +698,18 @@ class FbCheckpresence extends utils.Adapter {
             obj.createGlobalObjects(this, HTML+HTML_END, HTML_GUEST+HTML_END);
             this.log.debug('createGlobalObjects');
 
+            //create Fb devices
+            const enabledFbDevices = true;
+            if (GETPATH == true && enabledFbDevices == true){
+                const items = await getDeviceList(gthis, cfg, Fb);
+                for (let i = 0; i < items.length; i++) {
+                    obj.createFbDeviceObjects(gthis, items[i]['HostName']);
+                }
+            }
+            this.log.debug('createFbDeviceObjects');
+
             if (!cfg.members) {
-                this.log.info('no family members defined -> nothing to do');
-                return;
+                this.log.info('no family members defined -> some functions are disabled');
             }else{
                 //Create objects for family members
                 for (let k = 0; k < cfg.members.length; k++) {
@@ -683,15 +718,26 @@ class FbCheckpresence extends utils.Adapter {
                     if (memberRow.enabled == true){
                         obj.createMemberObjects(this, member, HTML_HISTORY + HTML_END);
                         this.log.debug('createMemberObjects ' + member);
-                        enableHistory(cfg, member);
+                        if (cfg.history != ''){
+                            enableHistory(cfg, member);
+                        }else{
+                            gthis.log.info('History function disabled');
+                        }
                     }
                 }
             }           
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates('*');  
 
+            //Get device info
+            if (GETPATH == true){
+                const items = await getDeviceList(gthis, cfg, Fb);
+                getDeviceInfo(items, cfg);
+            }
+
             await checkPresence(gthis, cfg, Fb); // Main function
             this.log.debug('checkPresence first run');
+
             scheduledJob = setInterval(async function(){
                 await checkPresence(gthis, cfg, Fb);
                 gthis.log.debug('checkPresence scheduled');
