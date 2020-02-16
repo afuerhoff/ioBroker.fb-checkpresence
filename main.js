@@ -467,7 +467,7 @@ async function checkPresence(gthis, cfg, Fb){
                                         end:        end,
                                         start:      start,
                                         ignoreNull: true,
-                                        aggregate: 'minmax'
+                                        aggregate: 'onchange'
                                     }
                                 }, function (result1) {
                                     if (result1 == null) {
@@ -479,9 +479,9 @@ async function checkPresence(gthis, cfg, Fb){
                                             id: 'fb-checkpresence.0.' + memb,
                                             options: {
                                                 end:        end,
-                                                count:      cntActualDay + 1,
+                                                count:      cntActualDay+1,
                                                 ignoreNull: true,
-                                                aggregate: 'minmax'
+                                                aggregate: 'onchange'
                                             }
                                         }, function (result) {
                                             if (result == null) {
