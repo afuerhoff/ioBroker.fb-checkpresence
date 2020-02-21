@@ -199,7 +199,7 @@
         "ipaddress": "fritz.box",
         "interval": 1,
         "history": "",
-        "dateformat": "yyyy.mm.dd hh:MM:ss",
+        "dateformat": "yyyy.mm.dd HH:MM:ss",
         "username": "",
         "password": ""
     },
