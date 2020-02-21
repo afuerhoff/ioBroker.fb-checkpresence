@@ -185,6 +185,7 @@ async function getDeviceList(gthis, cfg, Fb){
     }  catch (e) {
         showError('getDeviceList: '+ e);
         gthis.setState('info.connection', { val: false, ack: true });
+        return null;
     }   
 }
 
@@ -319,11 +320,11 @@ async function getDeviceInfo(items, cfg){
             gthis.setState('blacklist', { val: false, ack: true });
         }
         gthis.log.debug('getDeviceInfo blCnt: '+ blCnt);
-        //return true;
+        return true;
     }  catch (e) {
         showError('getDeviceInfo: '+ e);
         gthis.setState('info.connection', { val: false, ack: true });
-        //return false;
+        return false;
     }    
 }
 
@@ -418,6 +419,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     }  catch (e) {
         showError('getActive: ' + e);
         gthis.setState('info.connection', { val: false, ack: true });
+        return null;
     }    
 }
 
@@ -445,7 +447,9 @@ async function checkPresence(gthis, cfg, Fb){
                 //gthis.log.debug('testaf');
                 try { //get fritzbox data
                     const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb);
-
+                    if (curVal == null){
+                        return false;
+                    }
                     //get history data
                     let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
                     let absent = 0;
@@ -491,17 +495,22 @@ async function checkPresence(gthis, cfg, Fb){
                                                 let jsonHistory = '[';
                                                 let bfirstFalse = false;
                                                 let firstFalse = midnight;
-                                                const cntLastVal = 0;
                                                 gthis.log.debug('history ' + memb + ' cntActualDay: ' + cntActualDay + ' cntHistory: ' + result.result.length);
-                                                /*for (let i = result.result.length-1-cntActualDay; i >= 0; i--) { //find lastVal
-                                                    if (result.result[i].val != null){
-                                                        cntLastVal = i;
-                                                        gthis.log.debug('history ' + memb + ' lastVal: ' + result.result[i].val + ' ' + new Date(result.result[i].ts));
-                                                        break;
-                                                    }
-                                                }*/
                                                 let cnt = 0;
-                                                for (let i = cntLastVal; i < result.result.length; i++) {
+                                                
+                                                let i = 0;
+                                                //for (let i = cntLastVal; i < result.result.length; i++) {
+                                                for (let iv = 0; iv < result.result.length; iv++) {
+                                                    if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
+                                                        i = iv;
+                                                    }else{
+                                                        i = result.result.length - iv - 1;
+                                                    }
+                                                    /*if (cfg.history == 'influxdb.0'){
+                                                        i = result.result.length - iv - 1;
+                                                    }else{
+                                                        i = iv;
+                                                    }*/
                                                     if (result.result[i].val != null ){
                                                         const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
                                                         htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
@@ -534,6 +543,7 @@ async function checkPresence(gthis, cfg, Fb){
                                                                 }
                                                             }
                                                         }else{
+                                                            gthis.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
                                                             lastVal = result.result[i].val;
                                                             lastValCheck = true;
                                                         }   
@@ -585,10 +595,12 @@ async function checkPresence(gthis, cfg, Fb){
     
         gthis.setState('presenceAll', { val: presence.all, ack: true });
         gthis.setState('presence', { val: presence.one, ack: true });
+        return true;
     }
     catch (error) {
         showError('checkPresence: ' + error);
         gthis.setState('info.connection', { val: false, ack: true });
+        return false;
     }
 }
 
@@ -702,6 +714,9 @@ class FbCheckpresence extends utils.Adapter {
             const enabledFbDevices = true;
             if (GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
+                if (items == null){
+                    return;
+                }
                 for (let i = 0; i < items.length; i++) {
                     obj.createFbDeviceObjects(gthis, items[i]['HostName']);
                 }
@@ -732,6 +747,9 @@ class FbCheckpresence extends utils.Adapter {
             //Get device info
             if (GETPATH == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
+                if (items == null){
+                    return;
+                }
                 getDeviceInfo(items, cfg);
             }
 
@@ -754,6 +772,7 @@ class FbCheckpresence extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            gthis.setState('info.connection', { val: false, ack: true });
             this.log.info('cleaned everything up...');
             clearInterval(scheduledJob);
             //scheduledJob.cancel();
@@ -835,7 +854,9 @@ class FbCheckpresence extends utils.Adapter {
                         let items;
                         if (GETPATH == true){
                             items =  await getDeviceList(this, null, Fb);
-                        
+                            if (items == null){
+                                return;
+                            }
                             for (let i = 0; i < items.length; i++) {
                                 const active = items[i]['Active'];
                                 if (!onlyActive || active) {
