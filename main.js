@@ -757,6 +757,14 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('checkPresence first run');
 
             scheduledJob = setInterval(async function(){
+                //Get device info
+                if (GETPATH == true){
+                    const items = await getDeviceList(gthis, cfg, Fb);
+                    if (items == null){
+                        return;
+                    }
+                    getDeviceInfo(items, cfg);
+                }
                 await checkPresence(gthis, cfg, Fb);
                 gthis.log.debug('checkPresence scheduled');
             }, cron);
