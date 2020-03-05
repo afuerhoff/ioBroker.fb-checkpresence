@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.2.2",
+        "version": "0.3.0",
         "news": {
+            "0.3.0": {
+                "en": "Documentation optimized\\nlastVal and json table error fixed\\nconnection type added\\ndefault value ipaddress and dateformat changed\\nnew feature fb-devices added\\nerror messages optimized\\n getDeviceInfo failure fixed",
+                "de": "Dokumentation optimiert \\ nlastVal- und json-Tabellenfehler behoben \\ nVerbindungstyp hinzugefügt \\ nStandardwert IP-Adresse und Datumsformat geändert \\ nNeue Funktion fb-Geräte hinzugefügt \\ Fehlermeldungen optimiert \\ n Fehler bei getDeviceInfo behoben",
+                "ru": "Оптимизирована документация \\ nlastVal и исправлена ошибка в таблице json \\ n Добавлен тип соединения \\ nЗначение по умолчанию ipaddress и dateformat изменено \\ n Добавлена новая функция fb-устройств \\ Оптимизированы сообщения об ошибках \\ n Исправлена ошибка getDeviceInfo",
+                "pt": "Documentação otimizada \\ nlastVal e erro da tabela json corrigida \\ tipo de conexão adicionado \\ n valor padrão endereço de ip e formato de data alterados \\ novo novo recurso fb-devices added \\ mensagens de erro otimizadas \\ n falha de getDeviceInfo corrigida",
+                "nl": "Documentatie geoptimaliseerd \\ nlastVal en json table error fixed \\ nverbindingstype toegevoegd \\ ndefault waarde ipadres en dateformaat gewijzigd \\ nnieuwe functie fb-apparaten toegevoegd \\ nfoutmeldingen geoptimaliseerd \\ n getDeviceInfo fout opgelost",
+                "fr": "Documentation optimisée \\ nlastVal et erreur de table json corrigée \\ ntype de connexion ajouté \\ n valeur par défaut ipaddress et dateformat modifiés \\ nnouvelle fonctionnalité fb-devices ajoutés \\ nmessages d'erreur optimisés \\ n échec de getDeviceInfo corrigé",
+                "it": "Documentazione ottimizzata \\ nlastVal errore della tabella json e riparata \\ tipo di connessione aggiunto \\ valore predefinito ipaddress e dataformat modificati \\ nuova funzionalità fb-devices aggiunti \\ messaggi nerror ottimizzati \\ n errore getDeviceInfo fisso",
+                "es": "Documentación optimizada \\ nlastVal y error de tabla json corregido \\ n tipo de conexión agregado \\ n valor predeterminado ipaddress y fechaformat cambiado \\ nnueva característica fb-devices agregados \\ nerror mensajes optimizados \\ n getDeviceInfo fallo corregido",
+                "pl": "Zoptymalizowana dokumentacja \\ n Błąd tabeli Vlast i Json naprawiony \\ n Dodano typ połączenia \\ n Wartość domyślna ipaddress i dataformat zmieniono \\ nnowa funkcja Dodano urządzenia fb \\ n Zoptymalizowano komunikaty o błędach \\ n naprawiono błąd getDeviceInfo",
+                "zh-cn": "文档已优化\\ nlastVal和json表错误已修复\\ n已添加连接类型\\ n默认值ipaddress和dateformat已更改\\ n已添加新功能fb设备\\ n已优化错误消息\\ n已修复getDeviceInfo故障"
+            },
             "0.2.2": {
                 "en": "outdated packages updated, documentation changed, dependency history removed, onstate/objectChange removed, scheduler library removed, ...",
                 "de": "veraltete Pakete aktualisiert, Dokumentation geändert, Abhängigkeitsverlauf entfernt, onstate / objectChange entfernt, Scheduler-Bibliothek entfernt, ...",
