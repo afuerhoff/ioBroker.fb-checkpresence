@@ -176,13 +176,17 @@ async function getDeviceList(gthis, cfg, Fb){
         const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
         //gthis.log.debug('getDeviceList url: ' + JSON.stringify(hostPath));
         const deviceList = await Fb.getDeviceList(url);
-        gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
-        gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
-        gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
-        gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
-        errorCnt = 0;
-        return deviceList['List']['Item'];
-    }  catch (e) {
+        if (deviceList != null){
+            gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
+            gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
+            gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
+            gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
+            errorCnt = 0;
+            return deviceList['List']['Item'];
+        }else{
+            return null;
+        }
+    } catch (e) {
         showError('getDeviceList: '+ e);
         gthis.setState('info.connection', { val: false, ack: true });
         return null;
@@ -701,7 +705,7 @@ class FbCheckpresence extends utils.Adapter {
             //gthis.log.info('GETPATH ' + GETPATH);
 
             const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
-            if (GETPORT == true){
+            if (GETPORT != null && GETPORT == true){
                 Fb._sslPort = parseInt(result['NewSecurityPort']);
                 gthis.log.debug('sslPort ' + Fb._sslPort);
             }
@@ -712,7 +716,7 @@ class FbCheckpresence extends utils.Adapter {
 
             //create Fb devices
             const enabledFbDevices = true;
-            if (GETPATH == true && enabledFbDevices == true){
+            if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
                 if (items == null){
                     return;
@@ -745,7 +749,7 @@ class FbCheckpresence extends utils.Adapter {
             this.subscribeStates('*');  
 
             //Get device info
-            if (GETPATH == true){
+            if (GETPATH != null && GETPATH == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
                 if (items == null){
                     return;
@@ -758,7 +762,7 @@ class FbCheckpresence extends utils.Adapter {
 
             scheduledJob = setInterval(async function(){
                 //Get device info
-                if (GETPATH == true){
+                if (GETPATH != null && GETPATH == true){
                     const items = await getDeviceList(gthis, cfg, Fb);
                     if (items == null){
                         return;
