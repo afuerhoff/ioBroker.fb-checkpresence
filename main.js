@@ -187,6 +187,8 @@ async function getDeviceList(gthis, cfg, Fb){
             }else{
                 return null;
             }
+        }else{
+            return null;
         }
     } catch (e) {
         showError('getDeviceList: '+ e);
@@ -341,7 +343,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
         const member = memberRow.familymember; 
-
+        
         if (memberRow.macaddress.match(re) && memberRow.macaddress.match(re) == memberRow.macaddress){
             hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
         }else{
@@ -423,6 +425,8 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
             gthis.log.debug('getActive ' + jsonTab);
             return curVal;
+        }else{
+            return null;
         }
     }  catch (e) {
         showError('getActive: ' + e);
