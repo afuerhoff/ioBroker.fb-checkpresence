@@ -173,18 +173,20 @@ async function getDeviceList(gthis, cfg, Fb){
     try {
         //get device list
         const hostPath = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetHostListPath', null);
-        const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
-        //gthis.log.debug('getDeviceList url: ' + JSON.stringify(hostPath));
-        const deviceList = await Fb.getDeviceList(url);
-        if (deviceList != null){
-            gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
-            gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
-            gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
-            gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
-            errorCnt = 0;
-            return deviceList['List']['Item'];
-        }else{
-            return null;
+        if (hostPath != false){
+            const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
+            //gthis.log.debug('getDeviceList url: ' + JSON.stringify(hostPath));
+            const deviceList = await Fb.getDeviceList(url);
+            if (deviceList != null){
+                gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
+                gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
+                gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
+                gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
+                errorCnt = 0;
+                return deviceList['List']['Item'];
+            }else{
+                return null;
+            }
         }
     } catch (e) {
         showError('getDeviceList: '+ e);
@@ -345,81 +347,83 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         }else{
             hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.macaddress]]);
         }
-        const newActive = hostEntry['NewActive'];
-        gthis.log.debug('getActive ' + member + ' ' + newActive);
+        if (hostEntry != false){
+            const newActive = hostEntry['NewActive'];
+            gthis.log.debug('getActive ' + member + ' ' + newActive);
 
-        let memberActive = false; 
-        let comming = null;
-        let going = null;
-        const curVal = await getStateP(member); //actual member state
-        const curValNew = await getStateP(member + '.presence'); //actual member state
-        if (curVal.val != curValNew.val) { //Workaround for new object
-            gthis.setState(member + '.presence', { val: curVal.val, ack: true });
-        }
-        if (curVal.val != null){
-            //calculation of '.since'
-            const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
-            if (curVal.val == true){
-                gthis.setState(member + '.present.since', { val: diff, ack: true });
-                gthis.setState(member + '.absent.since', { val: 0, ack: true });
+            let memberActive = false; 
+            let comming = null;
+            let going = null;
+            const curVal = await getStateP(member); //actual member state
+            const curValNew = await getStateP(member + '.presence'); //actual member state
+            if (curVal.val != curValNew.val) { //Workaround for new object
+                gthis.setState(member + '.presence', { val: curVal.val, ack: true });
             }
-            if (curVal.val == false){
-                gthis.setState(member + '.absent.since', { val: diff, ack: true });
-                gthis.setState(member + '.present.since', { val: 0, ack: true });
-            }
+            if (curVal.val != null){
+                //calculation of '.since'
+                const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
+                if (curVal.val == true){
+                    gthis.setState(member + '.present.since', { val: diff, ack: true });
+                    gthis.setState(member + '.absent.since', { val: 0, ack: true });
+                }
+                if (curVal.val == false){
+                    gthis.setState(member + '.absent.since', { val: diff, ack: true });
+                    gthis.setState(member + '.present.since', { val: 0, ack: true });
+                }
 
-            //analyse member presence
-            if (newActive == 1){ //member = true
-                memberActive = true;
-                presence.one = true;
-                if (curVal.val == false){ //signal changing to true
-                    gthis.log.debug('newActive ' + member + ' ' + newActive);
-                    gthis.setState(member, { val: true, ack: true });
-                    gthis.setState(member + '.presence', { val: true, ack: true });
-                    gthis.setState(member + '.comming', { val: dnow, ack: true });
-                    comming = dnow;
+                //analyse member presence
+                if (newActive == 1){ //member = true
+                    memberActive = true;
+                    presence.one = true;
+                    if (curVal.val == false){ //signal changing to true
+                        gthis.log.debug('newActive ' + member + ' ' + newActive);
+                        gthis.setState(member, { val: true, ack: true });
+                        gthis.setState(member + '.presence', { val: true, ack: true });
+                        gthis.setState(member + '.comming', { val: dnow, ack: true });
+                        comming = dnow;
+                    }
+                    if (curVal.val == null){
+                        gthis.log.warn('Member value is null! Value set to true');
+                        gthis.setState(member, { val: true, ack: true });
+                        gthis.setState(member + '.presence', { val: true, ack: true });
+                    }
+                }else{ //member = false
+                    presence.all = false;
+                    if (curVal.val == true){ //signal changing to false
+                        gthis.log.debug('newActive ' + member + ' ' + newActive);
+                        gthis.setState(member, { val: false, ack: true });
+                        gthis.setState(member + '.presence', { val: false, ack: true });
+                        gthis.setState(member + '.going', { val: dnow, ack: true });
+                        going = dnow;
+                    }
+                    if (curVal.val == null){
+                        gthis.log.warn('Member value is null! Value set to false');
+                        gthis.setState(member, { val: false, ack: true });
+                        gthis.setState(member + '.presence', { val: false, ack: true });
+                    }
                 }
-                if (curVal.val == null){
-                    gthis.log.warn('Member value is null! Value set to true');
-                    gthis.setState(member, { val: true, ack: true });
-                    gthis.setState(member + '.presence', { val: true, ack: true });
-                }
-            }else{ //member = false
-                presence.all = false;
-                if (curVal.val == true){ //signal changing to false
-                    gthis.log.debug('newActive ' + member + ' ' + newActive);
-                    gthis.setState(member, { val: false, ack: true });
-                    gthis.setState(member + '.presence', { val: false, ack: true });
-                    gthis.setState(member + '.going', { val: dnow, ack: true });
-                    going = dnow;
-                }
-                if (curVal.val == null){
-                    gthis.log.warn('Member value is null! Value set to false');
-                    gthis.setState(member, { val: false, ack: true });
-                    gthis.setState(member + '.presence', { val: false, ack: true });
-                }
-            }
 
-        }else{
-            showError('getActive: content of object ' + member + ' is wrong!'); 
+            }else{
+                showError('getActive: content of object ' + member + ' is wrong!'); 
+            }
+                            
+            const comming1 = await getStateP(member + '.comming');
+            comming = comming1.val;
+            const going1 = await getStateP(member + '.going');
+            going = going1.val;
+            if (comming1.val == null) {
+                comming = new Date(curVal.lc);
+                gthis.setState(member + '.comming', { val: comming, ack: true });
+            }
+            if (going1.val == null) {
+                going = new Date(curVal.lc);
+                gthis.setState(member + '.going', { val: going, ack: true });
+            }
+            jsonTab += createJSONRow(index, cfg.members.length, cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
+            htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
+            gthis.log.debug('getActive ' + jsonTab);
+            return curVal;
         }
-                        
-        const comming1 = await getStateP(member + '.comming');
-        comming = comming1.val;
-        const going1 = await getStateP(member + '.going');
-        going = going1.val;
-        if (comming1.val == null) {
-            comming = new Date(curVal.lc);
-            gthis.setState(member + '.comming', { val: comming, ack: true });
-        }
-        if (going1.val == null) {
-            going = new Date(curVal.lc);
-            gthis.setState(member + '.going', { val: going, ack: true });
-        }
-        jsonTab += createJSONRow(index, cfg.members.length, cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
-        htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
-        gthis.log.debug('getActive ' + jsonTab);
-        return curVal;
     }  catch (e) {
         showError('getActive: ' + e);
         gthis.setState('info.connection', { val: false, ack: true });
@@ -704,10 +708,12 @@ class FbCheckpresence extends utils.Adapter {
             GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
             //gthis.log.info('GETPATH ' + GETPATH);
 
-            const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
             if (GETPORT != null && GETPORT == true){
-                Fb._sslPort = parseInt(result['NewSecurityPort']);
-                gthis.log.debug('sslPort ' + Fb._sslPort);
+                const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
+                if (result != false){
+                    Fb._sslPort = parseInt(result['NewSecurityPort']);
+                    gthis.log.debug('sslPort ' + Fb._sslPort);
+                }
             }
 
             //Create global objects
