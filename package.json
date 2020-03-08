@@ -24,7 +24,6 @@
     "@iobroker/adapter-core": "^2.1.0",
     "axios": "^0.19.2",
     "dateformat": "^3.0.3",
-    "https": "^1.0.0",
     "util": "^0.12.1",
     "xml2js": "^0.4.23"
   },
