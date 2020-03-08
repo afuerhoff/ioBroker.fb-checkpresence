@@ -667,13 +667,22 @@ class FbCheckpresence extends utils.Adapter {
     async onReady() {
         try {
             // Initialize your adapter here
-            const getForeignObjectP = util.promisify(this.getForeignObject);
+            //const getForeignObjectP = util.promisify(this.getForeignObject);
 
-            const sysobj =  await getForeignObjectP('system.config');
+            const sysobj =  await this.getForeignObjectAsync('system.config');
             if (sysobj && sysobj.native && sysobj.native.secret) {
                 gthis.config.password = decrypt(sysobj.native.secret, this.config.password);
             } else {
                 gthis.config.password = decrypt('SdoeQ85NTrg1B0FtEyzf', this.config.password);
+            }
+
+            //if interval <= 0 than set to 1 
+            if (this.config.interval <= 0) {
+                const adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
+                adapterObj.native.interval = 1;
+                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                this.config.interval = 1;
+                this.log.warn('interval is less than 1. Set to 1 Min.');
             }
 
             const cfg = {
@@ -728,14 +737,19 @@ class FbCheckpresence extends utils.Adapter {
             const enabledFbDevices = true;
             if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
-                if (items == null){
-                    return;
-                }
-                for (let i = 0; i < items.length; i++) {
-                    obj.createFbDeviceObjects(gthis, items[i]['HostName']);
+                if (items != null){
+                    for (let i = 0; i < items.length; i++) {
+                        obj.createFbDeviceObjects(gthis, items[i]['HostName']);
+                    }
+                    this.log.debug('Fritzbox device objects succesfully created');
+                }else{
+                    this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox!");
+                    const obj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                    obj.common.enabled = false;  // Adapter ausschalten
+                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, obj);
+                    return null;
                 }
             }
-            this.log.debug('createFbDeviceObjects');
 
             if (!cfg.members) {
                 this.log.info('no family members defined -> some functions are disabled');
