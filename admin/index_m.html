@@ -19,6 +19,9 @@
 		<script type="text/javascript">
 			var familymembers = [];
 			var whitelist = [];
+			let arr;
+			let dlgMembers;
+			let dlgWl;
 			var secret;
 			var active = false;
 			//var g_onChange;
@@ -127,22 +130,22 @@
 					let g_onChange = onChange;
 					sendTo(adapter + '.' + instance, 'discovery', { onlyActive: true, reread: false }, function (result) {
 						try {
-							var arr = JSON.parse(result);
+							arr = JSON.parse(result);
 							if (arr.error) {
-								var content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + arr.error.message + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
+								let content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + arr.error.message + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
 								$('.modal').append(content);
 								$('.modal').modal();
 								return;
 							}
-							var dlg;
-							var dlg1;
+							let bodyMembers = '';
+							let bodyWl = '';
 							if (!arr.length) {
-								var content = '<div class="modal-content"><h4>' + _('Add a familymember') + '</h4><p>' + _('Cannot find any device') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
+								let content = '<div class="modal-content"><h4>' + _('Add a familymember') + '</h4><p>' + _('Cannot find any device') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
 								$('.modal').append(content);
 								$('.modal').modal();
 								return;
 							} else {
-								dlg=
+								dlgMembers=
 									'<div class="input-field col s12">' + 
 										'<i id="icon" class="material-icons prefix">search</i>' + 
 										'<input id="searchFam" class="validate" type="text" onkeyup="devSearchFam()">'  + 
@@ -152,13 +155,14 @@
 										'<table class="responsive-table highlight" id="tabFam">' + 
 											'<thead>' + 
 												'<tr class="grey darken-3 white-text">' + 
+													'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all()"/><span></span></label></th>' + 
 													'<th class="left-align">' + 'Hostname' + '</th>' + 
 													'<th class="center-align">' + _('MAC address') + '</th>' + 
 													'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="insertIP" /><span class="white-text" style="font-size: 13px">' + _('IP address') + '</span></th>' +
 												'</tr>' + 
 											'</thead>' +
 											'<tbody>'
-								dlg1=
+								dlgWl=
 									'<div class="input-field col s12">' + 
 										'<i id="icon" class="material-icons prefix">search</i>' + 
 										'<input id="searchWL" class="validate" type="text" onkeyup="devSearchWL()">'  + 
@@ -174,27 +178,37 @@
 												'</tr>' + 
 											'</thead>' +
 											'<tbody>'
-								let cnt = 0;
-								wl = settings.whitelist || [];
+								//let cnt = 0;
+								let wl = settings.whitelist || [];
+								familymembers = settings.familymembers || [];
+								let membersTable = table2values('values');
 								arr.forEach(function (element) {
 									let chkVal = '';
-									cnt += 1;
+									//cnt += 1;
 									for(i=0; i < wl.length; i++){
 										if (element.mac == wl[i].white_macaddress){
 											chkVal = 'checked';
 											break;
 										}
 									}
-									dlg += 
-										'<tr class="add-device" ' +
-											'data-macaddress="' + (element.mac || '') + '" ' +
-											'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
-											'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
-											'<td>' + element.name + '</td>' +
-											'<td class="center">' + element.ip + '</td>' +
-											'<td class="center">' + element.mac + '</td>' +
-										'</tr>';
-									dlg1 += 
+									let chkVal2 = false;
+									for(i=0; i < membersTable.length; i++){
+										if (element.mac == membersTable[i].macaddress){
+											chkVal2 = 'checked';
+											break;
+										}
+									}
+									bodyMembers += 
+									'<tr class="add-device" ' +
+										'data-macaddress="' + (element.mac || '') + '" ' +
+										'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
+										'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
+										'<td class="valign-wrapper"><label><input class="filled-in" type="checkbox"' + chkVal2 + ' /><span></span></label></td>' +
+										'<td>' + element.name + '</td>' +
+										'<td class="center">' + element.mac + '</td>' +
+										'<td class="center">' + element.ip + '</td>' +
+									'</tr>';
+									bodyWl += 
 										'<tr ' +
 											'data-white_macaddress="' + (element.mac || '') + '" ' +
 											'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
@@ -203,28 +217,30 @@
 											'<td class="center">' + element.mac + '</td>' +
 										'</tr>';
 								});
-								dlg += '</tbody></table></div>';
-								var content = 
+								bodyMembers += '</tbody></table></div>';
+								var contentMembers = 
 									'<div class="modal-content translate">' + 
 										'<h5 class="blue">' + _('Add family member') + '</h5>' + 
-										'<p>' + dlg + '</p>' + 
+										'<p>' + dlgMembers + bodyMembers + '</p>' + 
 									'</div>' + 
 									'<div class="modal-footer blue lighten-2">' + 
-										'<a href="#!" class="modal-action modal-close btn-default waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</a>' + 
+										'<!--a href="#!" class="modal-action modal-close btn-default waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</a-->' + 
+										'<button type="button" class="modal-action modal-close waves-effect waves-light btn-flat" id="save"><i class="material-icons left">save</i>' + _('Add') + '</button>' + 
+										'<button type="button" class="modal-close btn-default offset-s2 waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</button>' + 
 									'</div>';
-								dlg1 += '</tbody></table></div>';
-								var content1 = 
+								bodyWl += '</tbody></table></div>';
+								var contentWl = 
 									'<div class="modal-content col s12 translate">' + 
 										'<h5 class="blue" style="margin-top:20px">' + _('Add a device') + '</h5>' + 
-										'<p>' + dlg1 + '</p>' + 
+										'<p>' + dlgWl + bodyWl + '</p>' + 
 									'</div>' + 
 									'<div class="modal-footer blue lighten-2">' + 
 										'<button type="button" class="modal-action modal-close waves-effect waves-light btn-flat" id="save1"><i class="material-icons left">save</i>' + _('Add') + '</button>' + 
 										'<button type="button" class="modal-close btn-default offset-s2 waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</button>' + 
 									'</div>';
-								$('#dialog-search').append(content);
+								$('#dialog-search').append(contentMembers);
 								$('#dialog-search').modal();
-								$('#dialog-search1').append(content1);
+								$('#dialog-search1').append(contentWl);
 								$('#dialog-search1').modal({dismissible: false,});
 							}
 							$('#save1').click(function () {
@@ -241,6 +257,37 @@
 									}
 								});
 							});
+							$('#save').click(function () {
+								// Loop through all checkboxes, and add all devices with selected checkboxes
+								devices = []; //clear whitelist
+								//familymembers = settings.familymembers || [];
+								familymembers = table2values('values') || [];
+								let insertIP = $('#insertIP');
+								$("#tabFam input[type=checkbox]:checked").each(function () {
+									let row = $(this).closest("tr")[0];
+									if ($(insertIP).prop( 'checked' )) {
+										var mac = $(row).data('ip');
+									}else{
+										var mac = $(row).data('macaddress');
+									}
+									var device = $(row).data('familymember');
+									if (device != undefined){
+										let comment = device;
+										var enabled = true;
+										for (let i=0; i<familymembers.length; i++){
+											if (familymembers[i].macaddress == mac){
+												device = familymembers[i].familymember;
+												enabled = familymembers[i].enabled;
+												comment = familymembers[i].comment;
+												break;
+											}
+										}
+										devices.push({macaddress: mac, enabled: enabled, familymember: device, comment: comment});
+									}
+								});
+								values2table('values', devices, g_onChange);
+								g_onChange(true);
+							});
 							$('#select-all').click(function(event) {   
 								if(this.checked) {
 									// Iterate each checkbox
@@ -252,21 +299,6 @@
 										this.checked = false;                       
 									});
 								}
-							});
-							$('.add-device').click(function () {
-								var insertIP = $('#insertIP');
-								if ($(insertIP).prop( "checked" )) {
-									var mac = $(this).data('ip');
-								}else{
-									var mac = $(this).data('macaddress');
-								}
-								var enabled = true;
-								var familymember = $(this).data('familymember');
-								var comment = ''; //$(this).data('comment');
-								devices = table2values('values');
-								devices.push({macaddress: mac, enabled: enabled, familymember: familymember, comment: comment});
-								values2table('values', devices, g_onChange);
-								g_onChange(true);
 							});
 						} catch (e) {
 							var content = '<div class="modal-content"><h4>Error</h4><p>Cannot find any device</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
@@ -315,6 +347,13 @@
 					M.updateTextFields();
 					$('select').select();
 				});
+			}
+
+			function addRow(){
+				alert('test');
+			}
+			function delRow(){
+				alert('test2');
 			}
 
 			// This will be called by the admin adapter when the user presses the save button
@@ -423,7 +462,7 @@
 					<div id="values">
 						<div class="row">
 							<div class="col s12">
-								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<a class="btn-floating waves-effect waves-light table-button-add" onclick="addRow()"><i class="material-icons">add</i></a>
 								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add family member</a>
 							</div>
 						</div>
