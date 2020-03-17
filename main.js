@@ -470,7 +470,9 @@ async function checkPresence(gthis, cfg, Fb){
                     const start = midnight.getTime();
                     let lastVal = null;
                     let lastValCheck = false;
-                    const dPoint = await getObjectP('fb-checkpresence.0.' + member);
+                    //const dPoint = await getObjectP('fb-checkpresence.0.' + member);
+                    //gthis.log.info(`${gthis.namespace}` + '.' + member);
+                    const dPoint = await getObjectP(`${gthis.namespace}` + '.' + member);
 
                     const memb = member;
                     if (cfg.history != ''){
@@ -478,7 +480,8 @@ async function checkPresence(gthis, cfg, Fb){
                         if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
                             try {
                                 gthis.sendTo(cfg.history, 'getHistory', {
-                                    id: 'fb-checkpresence.0.' + memb,
+                                    id: `${gthis.namespace}` + '.' + memb,
+                                    //id: 'fb-checkpresence.0.' + memb,
                                     options:{
                                         end:        end,
                                         start:      start,
@@ -492,7 +495,7 @@ async function checkPresence(gthis, cfg, Fb){
                                         const cntActualDay = result1.result.length;
                                         gthis.log.debug('history cntActualDay: ' + cntActualDay);
                                         gthis.sendTo(cfg.history, 'getHistory', {
-                                            id: 'fb-checkpresence.0.' + memb,
+                                            id: `${gthis.namespace}` + '.' + memb,
                                             options: {
                                                 end:        end,
                                                 count:      cntActualDay+1,
@@ -619,11 +622,11 @@ async function checkPresence(gthis, cfg, Fb){
 function enableHistory(cfg, member) {
     let alias = '';
     gthis.sendTo(cfg.history, 'getEnabledDPs', {}, function (result) {
-        if (result['fb-checkpresence.0.' + member] != undefined && result['fb-checkpresence.0.' + member].aliasId != undefined){
-            alias = result['fb-checkpresence.0.' + member].aliasId;
+        if (result[`${gthis.namespace}` + '.' + member] != undefined && result[`${gthis.namespace}` + '.' + member].aliasId != undefined){
+            alias = result[`${gthis.namespace}` + '.' + member].aliasId;
         }
         gthis.sendTo(cfg.history, 'enableHistory', {
-            id: 'fb-checkpresence.0.' + member,
+            id: `${gthis.namespace}` + '.' + member,
             options: {
                 changesOnly:  true,
                 debounce:     0,
