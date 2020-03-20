@@ -8,7 +8,7 @@
 const utils = require('@iobroker/adapter-core');
 
 // load your modules here, e.g.:
-const util = require('util');
+//const util = require('util');
 const dateFormat = require('dateformat');
 //own libraries
 const fb = require('./lib/fb');
@@ -339,7 +339,7 @@ async function getDeviceInfo(items, cfg){
 async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     try {
         //Promisify some async functions
-        const getStateP = util.promisify(gthis.getState);
+        //const getStateP = util.promisify(gthis.getState);
         const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
         const member = memberRow.familymember; 
@@ -356,8 +356,8 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             let memberActive = false; 
             let comming = null;
             let going = null;
-            const curVal = await getStateP(member); //actual member state
-            const curValNew = await getStateP(member + '.presence'); //actual member state
+            const curVal = await gthis.getStateAsync(member); //actual member state
+            const curValNew = await gthis.getStateAsync(member + '.presence'); //actual member state
             if (curVal.val != curValNew.val) { //Workaround for new object
                 gthis.setState(member + '.presence', { val: curVal.val, ack: true });
             }
@@ -409,9 +409,9 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
                 showError('getActive: content of object ' + member + ' is wrong!'); 
             }
                             
-            const comming1 = await getStateP(member + '.comming');
+            const comming1 = await gthis.getStateAsync(member + '.comming');
             comming = comming1.val;
-            const going1 = await getStateP(member + '.going');
+            const going1 = await gthis.getStateAsync(member + '.going');
             going = going1.val;
             if (comming1.val == null) {
                 comming = new Date(curVal.lc);
@@ -437,7 +437,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
 
 async function checkPresence(gthis, cfg, Fb){
     try {
-        const getObjectP = util.promisify(gthis.getObject);
+        //const getObjectP = util.promisify(gthis.getObject);
 
         const midnight = new Date();
         midnight.setHours(0,0,0);
@@ -472,7 +472,8 @@ async function checkPresence(gthis, cfg, Fb){
                     let lastValCheck = false;
                     //const dPoint = await getObjectP('fb-checkpresence.0.' + member);
                     //gthis.log.info(`${gthis.namespace}` + '.' + member);
-                    const dPoint = await getObjectP(`${gthis.namespace}` + '.' + member);
+                    //const dPoint = await getObjectP(`${gthis.namespace}` + '.' + member);
+                    const dPoint = await gthis.getObjectAsync(`${gthis.namespace}` + '.' + member);
 
                     const memb = member;
                     if (cfg.history != ''){
