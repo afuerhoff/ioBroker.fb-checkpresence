@@ -347,7 +347,12 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         if (memberRow.macaddress.match(re) && memberRow.macaddress.match(re) == memberRow.macaddress){
             hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
         }else{
-            hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.macaddress]]);
+            if (GETBYIP == true){
+                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.macaddress]]);
+            }else{
+                gthis.log.warn('The configured ip-address ' + memberRow.macaddress + ' from ' + member + ' is not supported. Please insert a mac-address');
+                hostEntry = false;
+            }
         }
         if (hostEntry != false){
             const newActive = hostEntry['NewActive'];
@@ -455,8 +460,7 @@ async function checkPresence(gthis, cfg, Fb){
             const memberRow = cfg.members[k]; //Row from family members table
             const member = memberRow.familymember; 
 
-            if (memberRow.enabled == true && GETBYMAC == true && GETBYIP == true){ //member enabled in configuration settings
-                //gthis.log.debug('testaf');
+            if (memberRow.enabled == true && GETBYMAC == true){ //member enabled in configuration settings
                 try { //get fritzbox data
                     const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb);
                     if (curVal == null){
@@ -724,7 +728,7 @@ class FbCheckpresence extends utils.Adapter {
             GETBYIP = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetSpecificHostEntryByIP');
             GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
             //gthis.log.info('GETPATH ' + GETPATH);
-
+            
             if (GETPORT != null && GETPORT == true){
                 const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
                 if (result != false){
