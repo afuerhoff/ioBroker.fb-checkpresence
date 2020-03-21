@@ -382,6 +382,11 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
                 if (newActive == 1){ //member = true
                     memberActive = true;
                     presence.one = true;
+                    if (presence.oneNames == '') {
+                        presence.oneNames += member;
+                    }else{
+                        presence.oneNames += ', ' + member;
+                    }
                     if (curVal.val == false){ //signal changing to true
                         gthis.log.debug('newActive ' + member + ' ' + newActive);
                         gthis.setState(member, { val: true, ack: true });
@@ -396,6 +401,11 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
                     }
                 }else{ //member = false
                     presence.all = false;
+                    if (presence.allNames == '') {
+                        presence.allNames += member;
+                    }else{
+                        presence.allNames += ', ' + member;
+                    }
                     if (curVal.val == true){ //signal changing to false
                         gthis.log.debug('newActive ' + member + ' ' + newActive);
                         gthis.setState(member, { val: false, ack: true });
@@ -453,7 +463,9 @@ async function checkPresence(gthis, cfg, Fb){
         htmlTab = HTML;
         const presence = {
             all: true,
-            one: false
+            one: false,
+            oneNames: '',
+            allNames: ''
         };
         
         for (let k = 0; k < cfg.members.length; k++) {
@@ -615,6 +627,8 @@ async function checkPresence(gthis, cfg, Fb){
     
         gthis.setState('presenceAll', { val: presence.all, ack: true });
         gthis.setState('presence', { val: presence.one, ack: true });
+        gthis.setState('absentMembers', { val: presence.allNames, ack: true });
+        gthis.setState('presentMembers', { val: presence.oneNames, ack: true });
         return true;
     }
     catch (error) {
