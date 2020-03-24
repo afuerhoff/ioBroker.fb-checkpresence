@@ -118,6 +118,15 @@
 
 			// This will be called by the admin adapter when the settings page loads
 			function load(settings, onChange) {
+				if (!settings) return;
+				$('.hideOnLoad').hide();
+				$('.showOnLoad').show();
+				familymembers = settings.familymembers || [];
+				whitelist = settings.whitelist || [];
+				values2table('values', familymembers, onChange, tableOnReady);
+				values2table('whitevalues', whitelist, onChange);
+
+				// if adapter is alive
 				socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
                 	active =  (state && state.val);
 					if (!active) {
@@ -177,23 +186,23 @@
 													'<th class="center-align">' + _('MAC address') + '</th>' + 
 												'</tr>' + 
 											'</thead>' +
-											'<tbody>'
+											'<tbody onload="loadFM()">'
 								//let cnt = 0;
-								let wl = settings.whitelist || [];
-								familymembers = settings.familymembers || [];
-								let membersTable = table2values('values');
+								//let wl = settings.whitelist || [];
+								//familymembers = settings.familymembers || [];
+								//let membersTable = table2values('values');
 								arr.forEach(function (element) {
 									let chkVal = '';
 									//cnt += 1;
-									for(i=0; i < wl.length; i++){
-										if (element.mac == wl[i].white_macaddress){
+									for(i=0; i < whitelist.length; i++){
+										if (element.mac == whitelist[i].white_macaddress){
 											chkVal = 'checked';
 											break;
 										}
 									}
 									let chkVal2 = false;
-									for(i=0; i < membersTable.length; i++){
-										if (element.mac == membersTable[i].macaddress){
+									for(i=0; i < familymembers.length; i++){
+										if (element.mac == familymembers[i].macaddress){
 											chkVal2 = 'checked';
 											break;
 										}
@@ -203,7 +212,7 @@
 										'data-macaddress="' + (element.mac || '') + '" ' +
 										'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
 										'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
-										'<td class="valign-wrapper"><label><input class="filled-in" type="checkbox"' + chkVal2 + ' /><span></span></label></td>' +
+										'<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkdevices"' + chkVal2 + ' /><span></span></label></td>' +
 										'<td>' + element.name + '</td>' +
 										'<td class="center">' + element.mac + '</td>' +
 										'<td class="center">' + element.ip + '</td>' +
@@ -243,6 +252,7 @@
 								$('#dialog-search1').append(contentWl);
 								$('#dialog-search1').modal({dismissible: false,});
 							}
+
 							$('#save1').click(function () {
 								// Loop through all checkboxes, and add all devices with selected checkboxes
 								whitelist = []; //clear whitelist
@@ -285,7 +295,7 @@
 										devices.push({macaddress: mac, enabled: enabled, familymember: device, comment: comment});
 									}
 								});
-								values2table('values', devices, g_onChange);
+								values2table('values', devices, g_onChange, tableOnReady);
 								g_onChange(true);
 							});
 							$('#select-all').click(function(event) {   
@@ -309,13 +319,8 @@
             	});
 
 				// example: select elements with id=key and class=value and insert value
-				if (!settings) return;
 				socket.emit('getObject', 'system.config', function (err, obj) {
 					secret = (obj.native ? obj.native.secret : '') || 'SdoeQ85NTrg1B0FtEyzf';
-					familymembers = settings.familymembers || [];
-					whitelist = settings.whitelist || [];
-					values2table('values', familymembers, onChange);
-					values2table('whitevalues', whitelist, onChange);
 					//for (var key in settings) {
 						//if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
 					//}
@@ -344,17 +349,35 @@
 					});
 					onChange(false);
 					// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
-					M.updateTextFields();
+					if (M) M.updateTextFields();
 					$('select').select();
 				});
 			}
 
-			function addRow(){
-				alert('test');
+			function tableOnReady() {
+				$('#values .table-values .values-buttons[data-command="delete"]').on('click', function () {
+					let id = $(this).data('index');
+					let mac = $('#values .values-input[data-name="macaddress"][data-index="' + id + '"]').val();
+					$("#tabFam input[type=checkbox]:checked").each(function () {
+						let row = $(this).closest("tr")[0];
+						var dlgMac = $(row).data('macaddress');
+						if (mac == dlgMac){
+							$(this).prop('checked', false);
+						}
+					});
+				});
 			}
-			function delRow(){
-				alert('test2');
-			}
+
+			/*function addDlg(){
+				var checkboxes = document.getElementsByName("chkdevices");  
+				var numberOfCheckedItems = 0;
+				for(var i = 0; i < checkboxes.length; i++)  
+				{  
+					if(checkboxes[i].checked)  
+						numberOfCheckedItems++;  
+				}  
+				alert("Cnt " + numberOfCheckedItems);  
+			}*/
 
 			// This will be called by the admin adapter when the user presses the save button
 			function save(callback) {
@@ -402,124 +425,127 @@
 						<li class="tab col s3"><a href="#tab-whitelist" class="translate">White list settings</a></li>
 					</ul>
 				</div>
-				<!-- define elements of the tabs -->
-				<div id="tab-main" class="col s12 page">
-					<div class="row">
-						<div class="col s6 m4 l2">
-							<img src="fb-checkpresence.png" class="logo">
-						</div>
-					</div><!-- End of row -->
-					<div class="row">
-						<div class="col s2 input-field tooltip">	
-							<input type="text" class="value" maxlength="15" id="ipaddress"/>
-							<label for="ipaddress" class="translate">IP Fritzbox</label>
-							<span class="tooltiptext translate">Here you can enter the IP-Address from your Fritzbox</span>
-						</div>
-						<div class="col s2 input-field tooltip">	
-							<input type="text" data-crypt="0" class="value" id="username"/>
-							<label for="username" class="translate">Username</label>
-							<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
-						</div>
-						<div class="input-field col s3 tooltip">
-						<input type="password" data-crypt="1" class="value" id="password">
-						<label for="password">Password</label>
-						<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
-						</div>				
-						<div class="col s2 input-field tooltip">
-							<input type="number" class="value" min="1" max="59" id="interval" />
-							<label for="interval" class="translate">polling interval in minutes</label>
-							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
-						</div>
-					</div><!-- End of row -->
-					<div class="row">
-						<div class="col s2 input-field">
-							<select class="value" id="history">
-								<!--option value="" disabled selected class="translate">Choose your option</option-->
-								<option value="" class="translate">disabled</option>
-								<option value="history.0">History</option>
-								<option value="sql.0">SQL History</option>
-								<option value="influxdb.0">InfluxDB</option>
-							</select>
-							<label for history class="translate">Select history adapter</label>
-						</div>				
-						<div class="col s3 input-field tooltip">	
-							<input type="text" class="value" id="dateformat"/>
-							<label for="ipaddress" class="translate">Date format</label>
-							<span class="tooltiptext translate">Here you can enter the date format string for the tables</span>
-						</div>
-					</div><!-- End of row -->
-				</div><!-- End of tab main -->
-
-				<div id="tab-family" class="col s12 page">
-					<div class="row">
-						<div class="col s12 m8 l8">
-							<img src="fb-checkpresence.png" class="logo">
-							<p class="translate">Here you can insert name and Mac address or IP address for a family member.</p>
-							<p class="translate">For every enabled table line an object will be created.</p>
-						</div>
-					</div><!-- End of row -->
-
-					<div id="values">
+				<div class="row">
+					<!-- define elements of the tabs -->
+					<div id="tab-main" class="col s12 page">
 						<div class="row">
-							<div class="col s12">
-								<a class="btn-floating waves-effect waves-light table-button-add" onclick="addRow()"><i class="material-icons">add</i></a>
-								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add family member</a>
+							<div class="col s6 m4 l2">
+								<img src="fb-checkpresence.png" class="logo">
+							</div>
+						</div><!-- End of row -->
+						<div class="row">
+							<div class="col s2 input-field tooltip">	
+								<input type="text" class="value" maxlength="15" id="ipaddress"/>
+								<label for="ipaddress" class="translate">IP Fritzbox</label>
+								<span class="tooltiptext translate">Here you can enter the IP-Address from your Fritzbox</span>
+							</div>
+							<div class="col s2 input-field tooltip">	
+								<input type="text" data-crypt="0" class="value" id="username"/>
+								<label for="username" class="translate">Username</label>
+								<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
+							</div>
+							<div class="input-field col s3 tooltip">
+							<input type="password" data-crypt="1" class="value" id="password">
+							<label for="password">Password</label>
+							<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
+							</div>				
+							<div class="col s2 input-field tooltip">
+								<input type="number" class="value" min="1" max="59" id="interval" />
+								<label for="interval" class="translate">polling interval in minutes</label>
+								<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
+							</div>
+						</div><!-- End of row -->
+						<div class="row">
+							<div class="col s2 input-field">
+								<select class="value" id="history">
+									<!--option value="" disabled selected class="translate">Choose your option</option-->
+									<option value="" class="translate">disabled</option>
+									<option value="history.0">History</option>
+									<option value="sql.0">SQL History</option>
+									<option value="influxdb.0">InfluxDB</option>
+								</select>
+								<label for history class="translate">Select history adapter</label>
+							</div>				
+							<div class="col s3 input-field tooltip">	
+								<input type="text" class="value" id="dateformat"/>
+								<label for="ipaddress" class="translate">Date format</label>
+								<span class="tooltiptext translate">Here you can enter the date format string for the tables</span>
+							</div>
+						</div><!-- End of row -->
+					</div><!-- End of tab main -->
+
+					<div id="tab-family" class="col s12 page">
+						<div class="row">
+							<div class="col s12 m8 l8">
+								<img src="fb-checkpresence.png" class="logo">
+								<p class="translate">Here you can insert name and Mac address or IP address for a family member.</p>
+								<p class="translate">For every enabled table line an object will be created.</p>
+							</div>
+						</div><!-- End of row -->
+						<div class="row">
+							<div class="row">
+								<div class="col s12">
+									<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+									<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add family member</a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s11" id="values">
+									<table class="table-values" style="width: 100%;">
+										<thead>
+											<tr>
+												<th data-name="_index" style="width: 5%" class="center-align translate"></th>
+												<th data-name="familymember" style="width: 25%" class="translate" for="familymember">Family member</th>
+												<th data-name="macaddress" style="width: 25%" class="translate" for="macaddress">Mac or IP-Address</th>
+												<th data-name="comment" style="width: 30%" class="translate" for="comment">Comment</th>
+												<th data-name="enabled"  style="width: 10%" data-type="checkbox" class="translate">Enabled</th>
+												<th data-buttons="delete up down" style="width: 5%"></th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+
+						</div>
+					</div><!-- End of tab family -->
+
+					<div id="tab-whitelist" class="col s12 page">
+						<div class="row">
+							<div class="col s12 m12 l12">
+								<img src="fb-checkpresence.png" class="logo">
+								<p class="translate">Here you can insert known devices in the whitelist.</p>
+								<p class="translate">For every unknown device you get a warning in the blacklist object.</p>
+							</div>
+						</div><!-- End of row -->
+						<div id="whitevalues">
+							<div class="row">
+								<div class="col s12">
+									<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+									<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search1">Add a device</a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s11">
+									<table class="table-values" style="width: 100%;">
+										<thead>
+											<tr>
+												<th data-name="_index" style="width: 5%" class="translate"></th>
+												<th data-name="white_device" style="width: 50%" class="translate" for="white_device">Device</th>
+												<th data-name="white_macaddress" style="width: 40%" class="translate" for="white_macaddress">Mac-Address</th>
+												<th data-buttons="delete" style="width: 5%"></th>
+											</tr>
+										</thead>
+									</table>
+								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col s11">
-								<table class="table-values" style="width: 100%;">
-									<thead>
-										<tr>
-											<th data-name="_index" style="width: 5%" class="center-align translate"></th>
-											<th data-name="familymember" style="width: 25%" class="translate" for="familymember">Family member</th>
-											<th data-name="macaddress" style="width: 25%" class="translate" for="macaddress">Mac or IP-Address</th>
-											<th data-name="comment" style="width: 30%" class="translate" for="comment">Comment</th>
-											<th data-name="enabled"  style="width: 10%" data-type="checkbox" class="translate">Enabled</th>
-											<th data-buttons="delete" style="width: 5%"></th>
-										</tr>
-									</thead>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div><!-- End of tab family -->
-
-				<div id="tab-whitelist" class="col s12 page">
-					<div class="row">
-						<div class="col s12 m12 l12">
-							<img src="fb-checkpresence.png" class="logo">
-							<p class="translate">Here you can insert known devices in the whitelist.</p>
-							<p class="translate">For every unknown device you get a warning in the blacklist object.</p>
-						</div>
-					</div><!-- End of row -->
-					<div id="whitevalues">
-						<div class="row">
-							<div class="col s12">
-								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search1">Add a device</a>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col s11">
-								<table class="table-values" style="width: 100%;">
-									<thead>
-										<tr>
-											<th data-name="_index" style="width: 5%" class="translate"></th>
-											<th data-name="white_device" style="width: 50%" class="translate" for="white_device">Device</th>
-											<th data-name="white_macaddress" style="width: 40%" class="translate" for="white_macaddress">Mac-Address</th>
-											<th data-buttons="delete" style="width: 5%"></th>
-										</tr>
-									</thead>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div><!-- End of tab white list -->
-
-				<div id="dialog-search" class="modal modal-fixed-footer grey lighten-2"></div>
-				<div id="dialog-search1" class="modal modal-fixed-footer grey lighten-2"></div>
+					</div><!-- End of tab white list -->
+				</div>
 			</div>
 		</div><!-- End of adapter container -->
+		<div class="m material-dialogs">
+			<div id="dialog-search" class="modal modal-fixed-footer grey lighten-2"></div>
+			<div id="dialog-search1" class="modal modal-fixed-footer grey lighten-2"></div>
+		</div>
 	</body>
 </html>
