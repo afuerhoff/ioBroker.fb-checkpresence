@@ -281,6 +281,7 @@ async function getDeviceInfo(items, cfg){
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.ipaddress', { val: items[i]['IPAddress'], ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.active', { val: items[i]['Active'], ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.interfacetype', { val: items[i]['InterfaceType'], ack: true });
+            gthis.setState('fb-devices.' + items[i]['HostName'] + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.guest', { val: items[i]['X_AVM-DE_Guest'], ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.whitelist', { val: foundwl, ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.blacklist', { val: ! (foundwl && items[i]['X_AVM-DE_Guest']), ack: true });
@@ -340,11 +341,11 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     try {
         //Promisify some async functions
         //const getStateP = util.promisify(gthis.getState);
-        const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
+        //const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
         const member = memberRow.familymember; 
         
-        if (memberRow.macaddress.match(re) && memberRow.macaddress.match(re) == memberRow.macaddress){
+        if (memberRow.useip == false){
             hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
         }else{
             if (GETBYIP == true){

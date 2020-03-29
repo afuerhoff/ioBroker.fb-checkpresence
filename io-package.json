@@ -26,7 +26,7 @@
                 "es": "paquetes obsoletos actualizados, documentación modificada, historial de dependencias eliminado, onstate / objectChange eliminado, biblioteca del planificador eliminada, ...",
                 "pl": "zaktualizowano nieaktualne pakiety, zmieniono dokumentację, usunięto historię zależności, usunięto onstate / objectChange, usunięto bibliotekę harmonogramu, ...",
                 "zh-cn": "更新了过时的程序包，更改了文档，删除了依赖关系历史记录，删除了onstate / objectChange，删除了调度程序库，..."
-              },
+            },
             "0.2.1": {
                 "en": "getGuests issue resolved, lastVal function and debug information optimized",
                 "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
