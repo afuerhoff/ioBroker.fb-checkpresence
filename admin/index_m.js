@@ -249,8 +249,9 @@ function load(settings, onChange) {
                         if (device != undefined){
                             let comment = device;
                             let enabled = true;
+                            let useip = false;
                             for (let i=0; i<familymembers.length; i++){
-                                const useip = familymembers[i].useip;
+                                useip = familymembers[i].useip;
                                 if(useip == false){
                                     if (familymembers[i].macaddress == mac){
                                         device = familymembers[i].familymember;
