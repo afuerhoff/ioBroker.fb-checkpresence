@@ -15,333 +15,8 @@
 		<!-- Load our own files -->
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script type="text/javascript" src="words.js"></script>
+		<script type="text/javascript" src="index_m.js"></script>
 
-		<script type="text/javascript">
-			var familymembers = [];
-			var whitelist = [];
-			var secret;
-			var active = false;
-			//var g_onChange;
-			if (typeof _ !== 'function') _ = translateWord;
-
-			function encrypt(key, value) {
-				var result = '';
-				for (var i = 0; i < value.length; ++i) {
-					result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-				}
-				return result;
-			}
-
-			function decrypt(key, value) {
-				var result = '';
-				for (var i = 0; i < value.length; ++i) {
-					result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-				}
-				return result;
-			}	
-
-			function devSearchFam() {
-				// Declare variables
-				var input, filter, table, tr, td, i, txtValue;
-				input = document.getElementById("searchFam");
-				filter = input.value.toUpperCase();
-				table = document.getElementById("tabFam");
-				tr = table.getElementsByTagName("tr");
-
-				// Loop through all table rows, and hide those who don't match the search query
-				for (i = 0; i < tr.length; i++) {
-					td = tr[i].getElementsByTagName("td")[0];
-					if (td) {
-					txtValue = td.textContent || td.innerText;
-					if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						tr[i].style.display = "";
-					} else {
-						tr[i].style.display = "none";
-					}
-					}
-				}
-			}
-
-			function devSearchWL() {
-				// Declare variables
-				var input, filter, table, tr, td, i, txtValue;
-				input = document.getElementById("searchWL");
-				filter = input.value.toUpperCase();
-				table = document.getElementById('tabWL');
-				tr = table.getElementsByTagName("tr");
-
-				// Loop through all table rows, and hide those who don't match the search query
-				for (i = 0; i < tr.length; i++) {
-					td = tr[i].getElementsByTagName("td")[1];
-					if (td) {
-						txtValue = td.textContent || td.innerText;
-						if (txtValue.toUpperCase().indexOf(filter) > -1) {
-							tr[i].style.display = "";
-						} else {
-							tr[i].style.display = "none";
-						}
-					}
-				}
-			}
-
-			function setValue(id, value, onChange) {
-				var $value = $('#' + id + '.value');
-				if ($value.attr('type') === 'checkbox') {
-					$value.prop('checked', value).change(function() {
-						onChange();
-					});
-				} else {
-					var val = $value.data('crypt') && value ? decrypt(secret, value) : value;
-					$value.val(val).change(function() {
-						onChange();
-					}).keyup(function() {
-						// Check that only numbers entered
-						if ($(this).hasClass('number')) {
-							var val = $(this).val();
-							if (val) {
-								var newVal = '';
-								for (var i = 0; i < val.length; i++) {
-									if (val[i] >= '0' && val[i] <= '9') {
-										newVal += val[i];
-									}
-								}
-								if (val != newVal) $(this).val(newVal);
-							}
-						}
-						onChange();
-					});
-				}
-			}
-
-			// This will be called by the admin adapter when the settings page loads
-			function load(settings, onChange) {
-				socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
-                	active =  (state && state.val);
-					if (!active) {
-						var content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + _('You have to start your ioBroker.' + adapter + ' adapter before you can use this function!') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-						$('.modal').append(content);
-						$('.modal').modal();
-						return;
-					}
-
-					let g_onChange = onChange;
-					sendTo(adapter + '.' + instance, 'discovery', { onlyActive: true, reread: false }, function (result) {
-						try {
-							var arr = JSON.parse(result);
-							if (arr.error) {
-								var content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + arr.error.message + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-								$('.modal').append(content);
-								$('.modal').modal();
-								return;
-							}
-							var dlg;
-							var dlg1;
-							if (!arr.length) {
-								var content = '<div class="modal-content"><h4>' + _('Add a familymember') + '</h4><p>' + _('Cannot find any device') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-								$('.modal').append(content);
-								$('.modal').modal();
-								return;
-							} else {
-								dlg=
-									'<div class="input-field col s12">' + 
-										'<i id="icon" class="material-icons prefix">search</i>' + 
-										'<input id="searchFam" class="validate" type="text" onkeyup="devSearchFam()">'  + 
-										'<label for="searchFam">' + _('Search for device') + '..' + '</label>' +
-									'</div>' +
-									'<div col s12>' + 
-										'<table class="responsive-table highlight" id="tabFam">' + 
-											'<thead>' + 
-												'<tr class="grey darken-3 white-text">' + 
-													'<th class="left-align">' + 'Hostname' + '</th>' + 
-													'<th class="center-align">' + _('MAC address') + '</th>' + 
-													'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="insertIP" /><span class="white-text" style="font-size: 13px">' + _('IP address') + '</span></th>' +
-												'</tr>' + 
-											'</thead>' +
-											'<tbody>'
-								dlg1=
-									'<div class="input-field col s12">' + 
-										'<i id="icon" class="material-icons prefix">search</i>' + 
-										'<input id="searchWL" class="validate" type="text" onkeyup="devSearchWL()">'  + 
-										'<label for="searchWL">' + _('Search for device') + '..' + '</label>' +
-									'</div>' +
-									'<div class="col s12">' + 
-										'<table class="responsive-table striped" id="tabWL">' + 
-											'<thead>' + 
-												'<tr class="grey darken-3 white-text">' + 
-													'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all()"/><span></span></label></th>' + 
-													'<th class="left-align">' + 'Hostname' + '</th>' + 
-													'<th class="center-align">' + _('MAC address') + '</th>' + 
-												'</tr>' + 
-											'</thead>' +
-											'<tbody>'
-								let cnt = 0;
-								wl = settings.whitelist || [];
-								arr.forEach(function (element) {
-									let chkVal = '';
-									cnt += 1;
-									for(i=0; i < wl.length; i++){
-										if (element.mac == wl[i].white_macaddress){
-											chkVal = 'checked';
-											break;
-										}
-									}
-									dlg += 
-										'<tr class="add-device" ' +
-											'data-macaddress="' + (element.mac || '') + '" ' +
-											'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
-											'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
-											'<td>' + element.name + '</td>' +
-											'<td class="center">' + element.ip + '</td>' +
-											'<td class="center">' + element.mac + '</td>' +
-										'</tr>';
-									dlg1 += 
-										'<tr ' +
-											'data-white_macaddress="' + (element.mac || '') + '" ' +
-											'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
-											'<td class="valign-wrapper"><label><input class="filled-in" type="checkbox"' + chkVal + ' /><span></span></label></td>' +
-											'<td>' + element.name + '</td>' +
-											'<td class="center">' + element.mac + '</td>' +
-										'</tr>';
-								});
-								dlg += '</tbody></table></div>';
-								var content = 
-									'<div class="modal-content translate">' + 
-										'<h5 class="blue">' + _('Add family member') + '</h5>' + 
-										'<p>' + dlg + '</p>' + 
-									'</div>' + 
-									'<div class="modal-footer blue lighten-2">' + 
-										'<a href="#!" class="modal-action modal-close btn-default waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</a>' + 
-									'</div>';
-								dlg1 += '</tbody></table></div>';
-								var content1 = 
-									'<div class="modal-content col s12 translate">' + 
-										'<h5 class="blue" style="margin-top:20px">' + _('Add a device') + '</h5>' + 
-										'<p>' + dlg1 + '</p>' + 
-									'</div>' + 
-									'<div class="modal-footer blue lighten-2">' + 
-										'<button type="button" class="modal-action modal-close waves-effect waves-light btn-flat" id="save1"><i class="material-icons left">save</i>' + _('Add') + '</button>' + 
-										'<button type="button" class="modal-close btn-default offset-s2 waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</button>' + 
-									'</div>';
-								$('#dialog-search').append(content);
-								$('#dialog-search').modal();
-								$('#dialog-search1').append(content1);
-								$('#dialog-search1').modal({dismissible: false,});
-							}
-							$('#save1').click(function () {
-								// Loop through all checkboxes, and add all devices with selected checkboxes
-								whitelist = []; //clear whitelist
-								$("#tabWL input[type=checkbox]:checked").each(function () {
-									let row = $(this).closest("tr")[0];
-									var mac = $(row).data('white_macaddress');
-									var device = $(row).data('white_device');
-									if (device != null){
-										whitelist.push({white_macaddress: mac, white_device: device});
-										values2table('whitevalues', whitelist, g_onChange);
-										g_onChange(true);
-									}
-								});
-							});
-							$('#select-all').click(function(event) {   
-								if(this.checked) {
-									// Iterate each checkbox
-									$(':checkbox').each(function() {
-										this.checked = true;                        
-									});
-								} else {
-									$(':checkbox').each(function() {
-										this.checked = false;                       
-									});
-								}
-							});
-							$('.add-device').click(function () {
-								var insertIP = $('#insertIP');
-								if ($(insertIP).prop( "checked" )) {
-									var mac = $(this).data('ip');
-								}else{
-									var mac = $(this).data('macaddress');
-								}
-								var enabled = true;
-								var familymember = $(this).data('familymember');
-								var comment = ''; //$(this).data('comment');
-								devices = table2values('values');
-								devices.push({macaddress: mac, enabled: enabled, familymember: familymember, comment: comment});
-								values2table('values', devices, g_onChange);
-								g_onChange(true);
-							});
-						} catch (e) {
-							var content = '<div class="modal-content"><h4>Error</h4><p>Cannot find any device</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-							$('.modal').append(content);
-							$('.modal').modal();
-						}
-					});
-            	});
-
-				// example: select elements with id=key and class=value and insert value
-				if (!settings) return;
-				socket.emit('getObject', 'system.config', function (err, obj) {
-					secret = (obj.native ? obj.native.secret : '') || 'SdoeQ85NTrg1B0FtEyzf';
-					familymembers = settings.familymembers || [];
-					whitelist = settings.whitelist || [];
-					values2table('values', familymembers, onChange);
-					values2table('whitevalues', whitelist, onChange);
-					//for (var key in settings) {
-						//if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
-					//}
-					$('.value').each(function () { 
-						var $key = $(this);
-						var id = $key.attr('id');
-						if ($key.attr('type') === 'checkbox') {
-							// do not call onChange direct, because onChange could expect some arguments
-							$key.prop('checked', settings[id])
-								.on('change', () => onChange())
-								;
-						} else {
-							let val;
-							if ($key.data('crypt') =="1"){
-								val = decrypt(secret, settings[id]) ;
-							} else{
-								val = settings[id];
-							}
-							//alert("Error1 " + val);
-
-							$key.val(val) //settings[id]
-								.on('change', () => onChange())
-								.on('keyup', () => onChange())
-								;
-						}
-					});
-					onChange(false);
-					// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
-					M.updateTextFields();
-					$('select').select();
-				});
-			}
-
-			// This will be called by the admin adapter when the user presses the save button
-			function save(callback) {
-				// example: select elements with class=value and build settings object
-				var obj = {};
-
-				$('.value').each(function () {
-					var $this = $(this);
-					switch ($this.attr('type')) {
-						case 'checkbox':
-							obj[$this.attr('id')] = $this.prop('checked');
-							break;
-						case 'number':	
-							obj[$this.attr('id')] = parseInt($this.val(), 10);
-							break;
-						default:
-							obj[$this.attr('id')] = $this.data('crypt') && $this.val() ? encrypt(secret, $this.val()) : $this.val();
-							break;					
-					}
-				});
-				// Get table
-				obj.familymembers = table2values('values');
-				obj.whitelist = table2values('whitevalues');
-				callback(obj);
-			}
-		</script>
 		<style>
 			h5 {padding: 10px}
 			table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
@@ -350,6 +25,11 @@
 			#tabFam th, #tabFam td {text-align: left;padding: 3px;}
 			#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
 		</style>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				document.getElementById("buttonadd").addEventListener("click", beforeOpen);
+			});
+		</script>
 	</head>
 
 	<body>
@@ -424,7 +104,9 @@
 						<div class="row">
 							<div class="col s12">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search">Add family member</a>
+								<button id="buttonadd" class="btn waves-effect waves-light modal-trigger translate">Add family member</button>
+								<!--a class="btn waves-effect waves-light modal-trigger translate" href="#dlgFam" >Add family member</a-->
+								<!--href="#dlgFam"  onclick="addDlg()"-->
 							</div>
 						</div>
 						<div class="row">
@@ -434,7 +116,9 @@
 										<tr>
 											<th data-name="_index" style="width: 5%" class="center-align translate"></th>
 											<th data-name="familymember" style="width: 25%" class="translate" for="familymember">Family member</th>
-											<th data-name="macaddress" style="width: 25%" class="translate" for="macaddress">Mac or IP-Address</th>
+											<th data-name="macaddress" style="width: 17%" class="translate" for="macaddress">Mac-Address</th>
+											<th data-name="ipaddress" style="width: 15%" class="translate" for="ipaddress">IP-Address</th>
+											<th data-name="useip"  style="width: 7%" data-type="checkbox" class="translate">Use IP</th>
 											<th data-name="comment" style="width: 30%" class="translate" for="comment">Comment</th>
 											<th data-name="enabled"  style="width: 10%" data-type="checkbox" class="translate">Enabled</th>
 											<th data-buttons="delete" style="width: 5%"></th>
@@ -458,7 +142,7 @@
 						<div class="row">
 							<div class="col s12">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<a class="btn waves-effect waves-light modal-trigger translate" href="#dialog-search1">Add a device</a>
+								<a class="btn waves-effect waves-light modal-trigger translate" href="#dlgWL">Add a device</a>
 							</div>
 						</div>
 						<div class="row">
@@ -478,8 +162,8 @@
 					</div>
 				</div><!-- End of tab white list -->
 
-				<div id="dialog-search" class="modal modal-fixed-footer grey lighten-2"></div>
-				<div id="dialog-search1" class="modal modal-fixed-footer grey lighten-2"></div>
+				<div id="dlgFam" class="modal modal-fixed-footer grey lighten-2"></div>
+				<div id="dlgWL" class="modal modal-fixed-footer grey lighten-2"></div>
 			</div>
 		</div><!-- End of adapter container -->
 	</body>

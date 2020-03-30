@@ -1,19 +1,31 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "0.3.0",
+        "version": "1.0.0",
         "news": {
+            "1.0.0":{
+                "en": "Configuration dialog optimized\nfbdevice speed added\npresent-, absentMembers inserted\nIp address handling optimized\\niobroker functions changed to async\\ninstance.0 dependency fixed\\ndepricated request changed to axios",
+                "de": "Konfigurationsdialog optimiert \nFbGerätegeschwindigkeit hinzugefügt \npresent-, abwesendMitglieder eingefügt \nIp-Adressverarbeitung optimiert \niobroker-Funktionen geändert in asynchrone \ninstanz.0 Abhängigkeit behoben \ndeprizierte Anforderung geändert in Axios",
+                "ru": "Оптимизировано диалоговое окно конфигурации \nfbdevice скорость добавлена \npresent-, absentMembers вставлено \nИз оптимизирована обработка адресов \nИзменено, функции niobroker заменены на асинхронную \ninstance.0 фиксированную зависимость \nПодходящий запрос изменен на axios",
+                "pt": "Caixa de diálogo de configuração otimizada \nf Velocidade do dispositivo adicionada \n presente-, ausenteMembers inseridos \nIp manipulação de endereços funções otimizadas \niobroker alteradas para async \ninstance.0 dependência corrigida \n solicitação solicitada alterada para axios",
+                "nl": "Configuratiedialoog geoptimaliseerd \nfbdapparaat snelheid toegevoegd \npresent-, absentMembers ingevoegd \nIp adresafhandeling geoptimaliseerd \niobroker-functies gewijzigd in asynchroon \ninstantie. 0 afhankelijkheid opgelost \ndepricated verzoek gewijzigd in axios",
+                "fr": "Boîte de dialogue de configuration optimisée \nfbd vitesse du périphérique ajoutée \npresent-, absentMembers insérés \nIp adresse de gestion optimisée \\ les fonctions de niobroker ont été remplacées par async \ninstance.0 dépendance corrigée \nla demande spécifique a été remplacée par axios",
+                "it": "Finestra di dialogo di configurazione ottimizzata \nfbdevice velocità aggiunta \npresent-, absentMembers inseriti \nIp gestione degli indirizzi IP funzioni ottimizzate \niobroker modificate in asincrono \ninstance.0 dipendenza fissa \\ richiesta non modificata modificata in axios",
+                "es": "Diálogo de configuración optimizado \nfb velocidad del dispositivo agregada \npresent-, absentMembers insertó \nEl manejo de la dirección IP optimizado \niobroker las funciones cambiaron a async \ninstance.0 dependencia fija \ndepricated la solicitud cambió a axios",
+                "pl": "Zoptymalizowane okno dialogowe konfiguracji \nfbdodano prędkość urządzenia \np .-, nieobecny Wstawiono członków \nZoptymalizowano obsługę adresów \\ funkcje niobrokera zmieniono na async \ninstance.0 naprawiono zależność \ndopracowane żądanie zmieniono na axios",
+                "zh-cn": "优化配置对话框\\添加nfb设备速度\n现在-，缺席成员插入\nIP地址处理优化\niobroker功能更改为异步\ninstance.0依赖已修复\ndeplicated请求更改为axios"
+            },
             "0.3.0": {
                 "en": "Documentation optimized\\nlastVal and json table error fixed\\nconnection type added\\ndefault value ipaddress and dateformat changed\\nnew feature fb-devices added\\nerror messages optimized\\n getDeviceInfo failure fixed",
-                "de": "Dokumentation optimiert \\ nlastVal- und json-Tabellenfehler behoben \\ nVerbindungstyp hinzugefügt \\ nStandardwert IP-Adresse und Datumsformat geändert \\ nNeue Funktion fb-Geräte hinzugefügt \\ Fehlermeldungen optimiert \\ n Fehler bei getDeviceInfo behoben",
-                "ru": "Оптимизирована документация \\ nlastVal и исправлена ошибка в таблице json \\ n Добавлен тип соединения \\ nЗначение по умолчанию ipaddress и dateformat изменено \\ n Добавлена новая функция fb-устройств \\ Оптимизированы сообщения об ошибках \\ n Исправлена ошибка getDeviceInfo",
-                "pt": "Documentação otimizada \\ nlastVal e erro da tabela json corrigida \\ tipo de conexão adicionado \\ n valor padrão endereço de ip e formato de data alterados \\ novo novo recurso fb-devices added \\ mensagens de erro otimizadas \\ n falha de getDeviceInfo corrigida",
-                "nl": "Documentatie geoptimaliseerd \\ nlastVal en json table error fixed \\ nverbindingstype toegevoegd \\ ndefault waarde ipadres en dateformaat gewijzigd \\ nnieuwe functie fb-apparaten toegevoegd \\ nfoutmeldingen geoptimaliseerd \\ n getDeviceInfo fout opgelost",
-                "fr": "Documentation optimisée \\ nlastVal et erreur de table json corrigée \\ ntype de connexion ajouté \\ n valeur par défaut ipaddress et dateformat modifiés \\ nnouvelle fonctionnalité fb-devices ajoutés \\ nmessages d'erreur optimisés \\ n échec de getDeviceInfo corrigé",
-                "it": "Documentazione ottimizzata \\ nlastVal errore della tabella json e riparata \\ tipo di connessione aggiunto \\ valore predefinito ipaddress e dataformat modificati \\ nuova funzionalità fb-devices aggiunti \\ messaggi nerror ottimizzati \\ n errore getDeviceInfo fisso",
-                "es": "Documentación optimizada \\ nlastVal y error de tabla json corregido \\ n tipo de conexión agregado \\ n valor predeterminado ipaddress y fechaformat cambiado \\ nnueva característica fb-devices agregados \\ nerror mensajes optimizados \\ n getDeviceInfo fallo corregido",
-                "pl": "Zoptymalizowana dokumentacja \\ n Błąd tabeli Vlast i Json naprawiony \\ n Dodano typ połączenia \\ n Wartość domyślna ipaddress i dataformat zmieniono \\ nnowa funkcja Dodano urządzenia fb \\ n Zoptymalizowano komunikaty o błędach \\ n naprawiono błąd getDeviceInfo",
-                "zh-cn": "文档已优化\\ nlastVal和json表错误已修复\\ n已添加连接类型\\ n默认值ipaddress和dateformat已更改\\ n已添加新功能fb设备\\ n已优化错误消息\\ n已修复getDeviceInfo故障"
+                "de": "Dokumentation optimiert \nlastVal- und json-Tabellenfehler behoben \nVerbindungstyp hinzugefügt \nStandardwert IP-Adresse und Datumsformat geändert \nNeue Funktion fb-Geräte hinzugefügt \\ Fehlermeldungen optimiert \n Fehler bei getDeviceInfo behoben",
+                "ru": "Оптимизирована документация \nlastVal и исправлена ошибка в таблице json \n Добавлен тип соединения \nЗначение по умолчанию ipaddress и dateformat изменено \n Добавлена новая функция fb-устройств \\ Оптимизированы сообщения об ошибках \n Исправлена ошибка getDeviceInfo",
+                "pt": "Documentação otimizada \nlastVal e erro da tabela json corrigida \\ tipo de conexão adicionado \n valor padrão endereço de ip e formato de data alterados \novo novo recurso fb-devices added \\ mensagens de erro otimizadas \n falha de getDeviceInfo corrigida",
+                "nl": "Documentatie geoptimaliseerd \nlastVal en json table error fixed \nverbindingstype toegevoegd \ndefault waarde ipadres en dateformaat gewijzigd \nnieuwe functie fb-apparaten toegevoegd \nfoutmeldingen geoptimaliseerd \n getDeviceInfo fout opgelost",
+                "fr": "Documentation optimisée \nlastVal et erreur de table json corrigée \ntype de connexion ajouté \n valeur par défaut ipaddress et dateformat modifiés \nnouvelle fonctionnalité fb-devices ajoutés \nmessages d'erreur optimisés \n échec de getDeviceInfo corrigé",
+                "it": "Documentazione ottimizzata \nlastVal errore della tabella json e riparata \\ tipo di connessione aggiunto \\ valore predefinito ipaddress e dataformat modificati \nuova funzionalità fb-devices aggiunti \\ messaggi nerror ottimizzati \n errore getDeviceInfo fisso",
+                "es": "Documentación optimizada \nlastVal y error de tabla json corregido \n tipo de conexión agregado \n valor predeterminado ipaddress y fechaformat cambiado \nnueva característica fb-devices agregados \nerror mensajes optimizados \n getDeviceInfo fallo corregido",
+                "pl": "Zoptymalizowana dokumentacja \n Błąd tabeli Vlast i Json naprawiony \n Dodano typ połączenia \n Wartość domyślna ipaddress i dataformat zmieniono \nnowa funkcja Dodano urządzenia fb \n Zoptymalizowano komunikaty o błędach \n naprawiono błąd getDeviceInfo",
+                "zh-cn": "文档已优化\nlastVal和json表错误已修复\n已添加连接类型\n默认值ipaddress和dateformat已更改\n已添加新功能fb设备\n已优化错误消息\n已修复getDeviceInfo故障"
             },
             "0.2.2": {
                 "en": "outdated packages updated, documentation changed, dependency history removed, onstate/objectChange removed, scheduler library removed, ...",
@@ -26,7 +38,7 @@
                 "es": "paquetes obsoletos actualizados, documentación modificada, historial de dependencias eliminado, onstate / objectChange eliminado, biblioteca del planificador eliminada, ...",
                 "pl": "zaktualizowano nieaktualne pakiety, zmieniono dokumentację, usunięto historię zależności, usunięto onstate / objectChange, usunięto bibliotekę harmonogramu, ...",
                 "zh-cn": "更新了过时的程序包，更改了文档，删除了依赖关系历史记录，删除了onstate / objectChange，删除了调度程序库，..."
-              },
+            },
             "0.2.1": {
                 "en": "getGuests issue resolved, lastVal function and debug information optimized",
                 "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
