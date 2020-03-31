@@ -345,13 +345,14 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         let hostEntry = null;
         const member = memberRow.familymember; 
         
-        if (memberRow.useip == false){
+        if (!memberRow.useip && memberRow.useip == false){
             hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
         }else{
-            if (GETBYIP == true){
-                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.macaddress]]);
+            if (GETBYIP == true && memberRow.ipaddress != ''){
+                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
             }else{
-                gthis.log.warn('The configured ip-address ' + memberRow.macaddress + ' from ' + member + ' is not supported. Please insert a mac-address');
+                if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
+                if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
                 hostEntry = false;
             }
         }
