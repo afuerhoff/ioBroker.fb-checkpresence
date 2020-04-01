@@ -44,6 +44,7 @@ function showError(errorMsg) {
         gthis.log.error(errorMsg);
     } else {
         gthis.log.debug('maximum error count reached! Error messages are suppressed');
+        //gthis.setState('info.connection', { val: false, ack: true });
     }
 }
 
@@ -344,16 +345,20 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         //const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
         const member = memberRow.familymember; 
-        
-        if (!memberRow.useip && memberRow.useip == false){
-            hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
+        if (memberRow.useip == undefined || memberRow.ipaddress == undefined){
+            hostEntry = false;
+            gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
         }else{
-            if (GETBYIP == true && memberRow.ipaddress != ''){
-                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
+            if (memberRow.useip && memberRow.useip == false){
+                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
             }else{
-                if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
-                if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
-                hostEntry = false;
+                if (GETBYIP == true && !memberRow.ipaddress && memberRow.ipaddress != ''){
+                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
+                }else{
+                    if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
+                    if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
+                    hostEntry = false;
+                }
             }
         }
         if (hostEntry != false){
