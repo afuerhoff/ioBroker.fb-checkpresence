@@ -286,6 +286,12 @@ async function getDeviceInfo(items, cfg){
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.guest', { val: items[i]['X_AVM-DE_Guest'], ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.whitelist', { val: foundwl, ack: true });
             gthis.setState('fb-devices.' + items[i]['HostName'] + '.blacklist', { val: ! (foundwl && items[i]['X_AVM-DE_Guest']), ack: true });
+            for (let k=0; k<cfg.members.length; k++){
+                if (cfg.members[k].macaddress == items[i]['MACAddress']){
+                    gthis.setState(cfg.members[k].familymember + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
+                    break;
+                }
+            }
         }
         jsonRow += ']';
         jsonBlRow += ']';
@@ -349,10 +355,10 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             hostEntry = false;
             gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
         }else{
-            if (memberRow.useip && memberRow.useip == false){
+            if (memberRow.useip == false){
                 hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
-            }else{
-                if (GETBYIP == true && !memberRow.ipaddress && memberRow.ipaddress != ''){
+            }else{ //true
+                if (GETBYIP == true && memberRow.ipaddress != ''){
                     hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
                 }else{
                     if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
