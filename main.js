@@ -720,6 +720,16 @@ class FbCheckpresence extends utils.Adapter {
                 this.log.warn('interval is less than 1. Set to 1 Min.');
             }
 
+            //create new configuration items 
+            for(let i=0;i<this.config.familymembers.length;i++){
+                if (this.config.familymembers[i].useip == undefined) {
+                    const adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
+                    adapterObj.native.familymembers[i].useip = false;
+                    adapterObj.native.familymembers[i].ipaddress = '';
+                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                }
+            }
+
             const cfg = {
                 ip: this.config.ipaddress,
                 port: '49000',
