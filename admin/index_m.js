@@ -81,6 +81,66 @@ function search(event) {
     }
 }*/
 
+async function getHistoryInstances(settings){
+    let histArr =[];
+    histArr = await getHistoryAdapter(histArr);
+    histArr = await getSqlAdapter(histArr);
+    histArr = await getInfluxdbAdapter(histArr);
+    let selectElement = document.getElementById('history');
+    const cnfHistory = settings.history;
+    let option = document.createElement('option');
+    option.text = 'disabled';
+    option.value = '';
+    selectElement.options[0] = option;
+    for (let i = 0; i < histArr.length; i++) {
+        option = document.createElement('option');
+        const  str = histArr[i].name.replace('system.adapter.', '');
+        option.text = str;
+        option.value = str;
+        selectElement.options[i+1] = option;
+        if (cnfHistory == str){
+            selectElement.selectedIndex = i+1;
+        }
+    }
+    $('select').select();
+}
+
+function getHistoryAdapter (hist) {
+    return new Promise((resolve, reject) => {
+        getAdapterInstances('history', function (arr) {
+            //let hist=[];
+            for (let i = 0; i < arr.length; i++) {
+                hist.push({'name' : arr[i]._id});
+            }
+            resolve(hist);
+        });
+    });
+}
+function getSqlAdapter (hist) {
+    return new Promise((resolve, reject) => {
+        getAdapterInstances('sql', function (arr) {
+            //let hist=[];
+            for (let i = 0; i < arr.length; i++) {
+                hist.push({'name' : arr[i]._id});
+            }
+            resolve(hist);
+        });
+    });
+}
+function getInfluxdbAdapter (hist) {
+    return new Promise((resolve, reject) => {
+        getAdapterInstances('influxdb', function (arr) {
+            //let hist=[];
+            for (let i = 0; i < arr.length; i++) {
+                hist.push({'name' : arr[i]._id});
+            }
+            resolve(hist);
+        });
+    });
+}
+/*
+*/
+
 // This will be called by the admin adapter when the settings page loads
 function load(settings, onChange) {
     if (!settings) return;
@@ -90,7 +150,9 @@ function load(settings, onChange) {
     whitelist = settings.whitelist || [];
     values2table('values', familymembers, onChange, tableOnReady);
     values2table('whitevalues', whitelist, onChange);
-
+    
+    getHistoryInstances(settings);
+    
     // if adapter is alive
     socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
         active =  (state && state.val);
