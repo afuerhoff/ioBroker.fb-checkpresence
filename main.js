@@ -829,7 +829,16 @@ class FbCheckpresence extends utils.Adapter {
             await checkPresence(gthis, cfg, Fb); // Main function
             this.log.debug('checkPresence first run');
 
+            //get uuid for transaction
+            const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
+            const uuid = sSid['NewUUID'].replace('uuid:', '');
+            gthis.log.info('checkPresence ' + uuid);
+
             scheduledJob = setInterval(async function(){
+                //start transaction
+                const startTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationStarted', [[1, 'NewSessionID', uuid]]);
+                gthis.log.info('checkPresence ' + JSON.stringify(startTransaction));
+ 
                 //Get device info
                 if (GETPATH != null && GETPATH == true){
                     const items = await getDeviceList(gthis, cfg, Fb);
@@ -839,6 +848,10 @@ class FbCheckpresence extends utils.Adapter {
                     getDeviceInfo(items, cfg);
                 }
                 await checkPresence(gthis, cfg, Fb);
+                
+                //stop transaction
+                const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
+                gthis.log.debug('checkPresence ' + JSON.stringify(stopTransaction));
                 gthis.log.debug('checkPresence scheduled');
             }, cron);
         } catch (error) {
