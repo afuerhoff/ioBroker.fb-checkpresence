@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
+            "1.0.1": {
+                "en": "error handling optimized\nhistory selection optimized\nre-synchronisation fb-devices implemented",
+                "de": "Fehlerbehandlung optimiert\nVerlaufsauswahl optimiert\nRe-Synchronisation fb-Geräte implementiert",
+                "ru": "оптимизирована обработка ошибок\nоптимизирован выбор истории\nреализована повторная синхронизация fb-устройств",
+                "pt": "tratamento de erros otimizado\nseleção de histórico otimizado\nre-sincronização dispositivos fb implementados",
+                "nl": "foutafhandeling geoptimaliseerd\ngeschiedenis selectie geoptimaliseerd\nhersynchronisatie fb-devices geïmplementeerd",
+                "fr": "gestion des erreurs optimisée\nsélection de l'historique optimisée\nresynchronisation fb-devices implémentés",
+                "it": "gestione errori ottimizzata\nselezione cronologia ottimizzata\nrisincronizzazione dispositivi fb implementati",
+                "es": "manejo de errores optimizado\nselección de historial optimizado\n re-sincronización dispositivos fb implementados",
+                "pl": "obsługa błędów zoptymalizowany\n wybór historii zoptymalizowany\n re-synchronizacja zaimplementowane urządzenia fb",
+                "zh-cn": "错误处理已优化\n历史选择已优化\n重新同步已实现fb设备"
+            },                        
             "1.0.0": {
                 "en": "Configuration dialog optimized\nfbdevice speed added\npresent-, absentMembers inserted\nIp address handling optimized\\niobroker functions changed to async\\ninstance.0 dependency fixed\\ndepricated request changed to axios",
                 "de": "Konfigurationsdialog optimiert \nFbGerätegeschwindigkeit hinzugefügt \npresent-, abwesendMitglieder eingefügt \nIp-Adressverarbeitung optimiert \niobroker-Funktionen geändert in asynchrone \ninstanz.0 Abhängigkeit behoben \ndeprizierte Anforderung geändert in Axios",
