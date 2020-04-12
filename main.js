@@ -216,29 +216,6 @@ async function getDeviceInfo(items, cfg){
         let jsonFbDevActive = '[';
         let jsonFbDevInactive = '[';
 
-        // Get all IDs of this adapter
-        /*gthis.getStates('fb-devices.*.*', function (err, states) {
-            const toDelete = [];
-            for (const id in states) {
-                //gthis.log.info('name ' + id);
-                let found = false;
-                for (let i = 0; i < items.length; i++) {
-                    if (id.includes(items[i]['HostName'])) {
-                        found = true;
-                    }
-                }
-                if (found == false){
-                    toDelete.push(id);
-                }
-            }
-            //gthis.log.info('obj ' + toDelete);
-
-            // gently delete all unknown states
-            obj.deleteStates(gthis, toDelete, function() {
-                gthis.log.debug('fb-device object deletion finished');
-            });
-        });*/
-
         for (let i = 0; i < items.length; i++) {
             let deviceType = '-';
             if (items[i]['X_AVM-DE_Guest'] == 1){
@@ -344,10 +321,48 @@ async function getDeviceInfo(items, cfg){
     }    
 }
 
+async function resyncFbObjects(items){
+
+    // Get all fb-device objects of this adapter
+    if (gthis.config.syncfbdevices == true){
+        gthis.getDevices(async function (err, devices) {
+            try {
+                for (const id in devices) {
+                    if (devices[id] != undefined && devices[id].common != undefined){
+                        const dName = devices[id].common.name;
+                        let found = false;
+                        if (dName.includes('fb-devices')){
+                            for(let i=0;i<items.length;i++){
+                                if (dName.includes(items[i]['HostName'])) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found == false && !dName.includes('whitelist')){
+                                gthis.log.info('object to delete <' + dName + '>');
+                                gthis.delObject(devices[id]._id, function(err){
+                                    if (err) {
+                                        gthis.log.error('cannot delete device : ' + id + ' Error: ' + err);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                gthis.log.error(error);
+            }
+            gthis.log.debug('fb-devices synchronized');
+            const adapterObj = await gthis.getForeignObjectAsync(`system.adapter.${gthis.namespace}`);
+            adapterObj.native.syncfbdevices = false;
+            gthis.config.syncfbdevices = false;
+            await gthis.setForeignObjectAsync(`system.adapter.${gthis.namespace}`, adapterObj);
+        }); 
+    }
+}
+
 async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     try {
-        //Promisify some async functions
-        //const getStateP = util.promisify(gthis.getState);
         //const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
         const member = memberRow.familymember; 
@@ -678,6 +693,13 @@ function enableHistory(cfg, member) {
     });
 }
 
+Array.prototype.indexOfObject = function (property, value, ind=-1) {
+    for (let i = 0, len = this.length; i < len; i++) {
+        if (i != ind && this[i][property] === value) return i;
+    }
+    return -1;
+};
+
 class FbCheckpresence extends utils.Adapter {
 
     /**
@@ -745,9 +767,9 @@ class FbCheckpresence extends utils.Adapter {
             //const cron = '*/' + cfg.iv + ' * * * *';
             const cron = cfg.iv * 60000;
             this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' Min.');
-            this.log.debug('configuration user: ' + this.config.username);
-            this.log.debug('configuration history: ' + this.config.history);
-            this.log.debug('configuration dateformat: ' + this.config.dateformat);
+            this.log.debug('configuration user: <' + this.config.username + '>');
+            this.log.debug('configuration history: <' + this.config.history + '>');
+            this.log.debug('configuration dateformat: <' + this.config.dateformat + '>');
             this.log.debug('configuration familymembers: ' + JSON.stringify(this.config.familymembers));
             
             const devInfo = {
@@ -779,11 +801,14 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('createGlobalObjects');
 
             //create Fb devices
-            const enabledFbDevices = true;
+            const enabledFbDevices = gthis.config.fbdevices;
+            gthis.log.debug('fbdevices ' + enabledFbDevices);
             if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
                 if (items != null){
                     for (let i = 0; i < items.length; i++) {
+                        const n = items.indexOfObject('HostName', items[i]['HostName'], i);
+                        if (n != -1 ) gthis.log.warn('dublicate fritzbox device item. Please correct the hostname in the fritzbox settings for the device -> ' + items[i]['HostName'] + ' ' + items[i]['MACAddress']);
                         obj.createFbDeviceObjects(gthis, items[i]['HostName']);
                     }
                     this.log.debug('Fritzbox device objects succesfully created');
@@ -794,6 +819,7 @@ class FbCheckpresence extends utils.Adapter {
                     await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, obj);
                     return null;
                 }
+                resyncFbObjects(items);
             }
 
             if (!cfg.members) {
@@ -832,12 +858,11 @@ class FbCheckpresence extends utils.Adapter {
             //get uuid for transaction
             const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
             const uuid = sSid['NewUUID'].replace('uuid:', '');
-            gthis.log.info('checkPresence ' + uuid);
 
             scheduledJob = setInterval(async function(){
                 //start transaction
                 const startTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationStarted', [[1, 'NewSessionID', uuid]]);
-                gthis.log.info('checkPresence ' + JSON.stringify(startTransaction));
+                gthis.log.debug('checkPresence start transaction -> ' + JSON.stringify(startTransaction));
  
                 //Get device info
                 if (GETPATH != null && GETPATH == true){
@@ -851,8 +876,8 @@ class FbCheckpresence extends utils.Adapter {
                 
                 //stop transaction
                 const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
-                gthis.log.debug('checkPresence ' + JSON.stringify(stopTransaction));
-                gthis.log.debug('checkPresence scheduled');
+                //gthis.log.debug('checkPresence ' + JSON.stringify(stopTransaction));
+                gthis.log.debug('checkPresence stop transaction-> ' + JSON.stringify(stopTransaction));
             }, cron);
         } catch (error) {
             gthis.setState('info.connection', { val: false, ack: true });

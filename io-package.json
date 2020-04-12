@@ -3,7 +3,7 @@
         "name": "fb-checkpresence",
         "version": "1.0.0",
         "news": {
-            "1.0.0":{
+            "1.0.0": {
                 "en": "Configuration dialog optimized\nfbdevice speed added\npresent-, absentMembers inserted\nIp address handling optimized\\niobroker functions changed to async\\ninstance.0 dependency fixed\\ndepricated request changed to axios",
                 "de": "Konfigurationsdialog optimiert \nFbGerätegeschwindigkeit hinzugefügt \npresent-, abwesendMitglieder eingefügt \nIp-Adressverarbeitung optimiert \niobroker-Funktionen geändert in asynchrone \ninstanz.0 Abhängigkeit behoben \ndeprizierte Anforderung geändert in Axios",
                 "ru": "Оптимизировано диалоговое окно конфигурации \nfbdevice скорость добавлена \npresent-, absentMembers вставлено \nИз оптимизирована обработка адресов \nИзменено, функции niobroker заменены на асинхронную \ninstance.0 фиксированную зависимость \nПодходящий запрос изменен на axios",
@@ -224,6 +224,8 @@
         "interval": 1,
         "history": "",
         "dateformat": "yyyy.mm.dd HH:MM:ss",
+        "fbdevices": true,
+        "syncfbdevices": false,
         "username": "",
         "password": ""
     },
