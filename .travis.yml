@@ -27,3 +27,6 @@ before_script:
 script:
   - 'npm run test:package'
   - 'npm run test:iobroker'
+  - 'npm run test:unit'
+  - 'export DEBUG=testing:*'
+  - 'npm run test:integration' 

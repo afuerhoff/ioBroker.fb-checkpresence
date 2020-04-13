@@ -27,6 +27,7 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
+    "@iobroker/testing": "^2.1.0",
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.0",
     "@types/gulp": "^4.0.6",
@@ -51,6 +52,8 @@
     "test:js": "mocha --opts test/mocha.custom.opts",
     "test:package": "mocha test/testPackageFiles.js --exit",
     "test:iobroker": "mocha test/testStartup.js --exit",
+    "test:unit": "mocha test/unit.js --exit",
+    "test:integration": "mocha test/integration.js --exit",
     "test": "npm run test:js && npm run test:package",
     "lint": "npm run lint:ts \"src/**/*.ts\"",
     "lint:ts": "tslint"
