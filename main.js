@@ -844,7 +844,7 @@ class FbCheckpresence extends utils.Adapter {
             this.subscribeStates('*');  
 
             //Get device info
-            if (GETPATH != null && GETPATH == true){
+            if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
                 if (items == null){
                     return;
@@ -865,7 +865,7 @@ class FbCheckpresence extends utils.Adapter {
                 gthis.log.debug('checkPresence start transaction -> ' + JSON.stringify(startTransaction));
  
                 //Get device info
-                if (GETPATH != null && GETPATH == true){
+                if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                     const items = await getDeviceList(gthis, cfg, Fb);
                     if (items == null){
                         return;
