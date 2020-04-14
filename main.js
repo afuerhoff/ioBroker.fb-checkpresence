@@ -383,6 +383,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             }
         }
         if (hostEntry != false){
+            gthis.setState('info.connection', { val: true, ack: true });
             const newActive = hostEntry['NewActive'];
             gthis.log.debug('getActive ' + member + ' ' + newActive);
 
