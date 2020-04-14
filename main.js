@@ -803,7 +803,7 @@ class FbCheckpresence extends utils.Adapter {
 
             //create Fb devices
             const enabledFbDevices = gthis.config.fbdevices;
-            gthis.log.debug('fbdevices ' + enabledFbDevices);
+            gthis.log.debug('function fb-devices ' + enabledFbDevices);
             if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
                 if (items != null){
@@ -842,43 +842,41 @@ class FbCheckpresence extends utils.Adapter {
                 }
             }           
             // in this template all states changes inside the adapters namespace are subscribed
-            this.subscribeStates('*');  
+            //this.subscribeStates('*');  
 
             //Get device info
             if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                 const items = await getDeviceList(gthis, cfg, Fb);
-                if (items == null){
-                    return;
+                if (items != null){
+                    getDeviceInfo(items, cfg);
                 }
-                getDeviceInfo(items, cfg);
             }
 
             await checkPresence(gthis, cfg, Fb); // Main function
             this.log.debug('checkPresence first run');
 
             //get uuid for transaction
-            const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
-            const uuid = sSid['NewUUID'].replace('uuid:', '');
+            //const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
+            //const uuid = sSid['NewUUID'].replace('uuid:', '');
 
             scheduledJob = setInterval(async function(){
                 //start transaction
-                const startTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationStarted', [[1, 'NewSessionID', uuid]]);
-                gthis.log.debug('checkPresence start transaction -> ' + JSON.stringify(startTransaction));
+                //const startTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationStarted', [[1, 'NewSessionID', uuid]]);
+                //gthis.log.debug('checkPresence start transaction -> ' + JSON.stringify(startTransaction));
  
                 //Get device info
                 if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
                     const items = await getDeviceList(gthis, cfg, Fb);
-                    if (items == null){
-                        return;
+                    if (items != null){
+                        getDeviceInfo(items, cfg);
                     }
-                    getDeviceInfo(items, cfg);
                 }
                 await checkPresence(gthis, cfg, Fb);
                 
                 //stop transaction
-                const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
+                //const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
                 //gthis.log.debug('checkPresence ' + JSON.stringify(stopTransaction));
-                gthis.log.debug('checkPresence stop transaction-> ' + JSON.stringify(stopTransaction));
+                gthis.log.debug('checkPresence scheduled');
             }, cron);
         } catch (error) {
             gthis.setState('info.connection', { val: false, ack: true });
