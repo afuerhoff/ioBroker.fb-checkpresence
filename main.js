@@ -174,9 +174,8 @@ async function getDeviceList(gthis, cfg, Fb){
     try {
         //get device list
         const hostPath = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetHostListPath', null);
-        if (hostPath != false){
-            const url = 'http://' + Fb.host + ':' + Fb.port + hostPath['NewX_AVM-DE_HostListPath'];
-            //gthis.log.debug('getDeviceList url: ' + JSON.stringify(hostPath));
+        if (hostPath.result != false){
+            const url = 'http://' + Fb.host + ':' + Fb.port + hostPath.resultData['NewX_AVM-DE_HostListPath'];
             const deviceList = await Fb.getDeviceList(url);
             if (deviceList != null){
                 gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
@@ -189,6 +188,7 @@ async function getDeviceList(gthis, cfg, Fb){
                 return null;
             }
         }else{
+            //gthis.log.error('can not read hostListPath!');
             return null;
         }
     } catch (e) {
@@ -367,7 +367,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
         let hostEntry = null;
         const member = memberRow.familymember; 
         if (memberRow.useip == undefined || memberRow.ipaddress == undefined){
-            hostEntry = false;
+            hostEntry.result = false;
             gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
         }else{
             if (memberRow.useip == false){
@@ -382,9 +382,9 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
                 }
             }
         }
-        if (hostEntry != false){
+        if (hostEntry != null && hostEntry.result != false){
             gthis.setState('info.connection', { val: true, ack: true });
-            const newActive = hostEntry['NewActive'];
+            const newActive = hostEntry.resultData['NewActive'];
             gthis.log.debug('getActive ' + member + ' ' + newActive);
 
             let memberActive = false; 
@@ -392,6 +392,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             let going = null;
             const curVal = await gthis.getStateAsync(member); //actual member state
             const curValNew = await gthis.getStateAsync(member + '.presence'); //actual member state
+            if (curVal == null || curValNew == null) return null;
             if (curVal.val != curValNew.val) { //Workaround for new object
                 gthis.setState(member + '.presence', { val: curVal.val, ack: true });
             }
@@ -470,6 +471,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             gthis.log.debug('getActive ' + jsonTab);
             return curVal;
         }else{
+            gthis.log.error('can not read hostEntry! <' + 'status=' + hostEntry.status + ' errNo=' + hostEntry.errNo + ' ' + hostEntry.errorMsg + '>');
             return null;
         }
     }  catch (e) {
@@ -790,10 +792,13 @@ class FbCheckpresence extends utils.Adapter {
             //gthis.log.info('GETPATH ' + GETPATH);
             
             if (GETPORT != null && GETPORT == true){
-                const result = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
-                if (result != false){
-                    Fb._sslPort = parseInt(result['NewSecurityPort']);
+                const port = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
+                if (port.result != false){
+                    Fb._sslPort = parseInt(port.resultData['NewSecurityPort']);
                     gthis.log.debug('sslPort ' + Fb._sslPort);
+                }else{
+                    gthis.log.error('can not read security port! <' + 'status=' + port.status + ' errNo=' + port.errNo + ' ' + port.errorMsg + '>');
+                    //gthis.log.error('can not read security port! <' + port.errorMsg + '>');
                 }
             }
 
@@ -809,7 +814,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (items != null){
                     for (let i = 0; i < items.length; i++) {
                         const n = items.indexOfObject('HostName', items[i]['HostName'], i);
-                        if (n != -1 ) gthis.log.warn('dublicate fritzbox device item. Please correct the hostname in the fritzbox settings for the device -> ' + items[i]['HostName'] + ' ' + items[i]['MACAddress']);
+                        if (n != -1 ) gthis.log.warn('duplicate fritzbox device item. Please correct the hostname in the fritzbox settings for the device -> ' + items[i]['HostName'] + ' ' + items[i]['MACAddress']);
                         obj.createFbDeviceObjects(gthis, items[i]['HostName']);
                     }
                     this.log.debug('Fritzbox device objects succesfully created');
@@ -843,6 +848,10 @@ class FbCheckpresence extends utils.Adapter {
             }           
             // in this template all states changes inside the adapters namespace are subscribed
             //this.subscribeStates('*');  
+
+            //Get info
+            const extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
+            gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
 
             //Get device info
             if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
