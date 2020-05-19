@@ -369,20 +369,46 @@ async function resyncFbObjects(items){
     }
 }
 
-async function getActive(index, cfg, memberRow, dnow, presence, Fb){
+async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
     try {
         //const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
         const member = memberRow.familymember; 
+        const mac = memberRow.macaddress; 
+        const ip = memberRow.ipaddress; 
         if (memberRow.useip == undefined || memberRow.ipaddress == undefined){
-            hostEntry.result = false;
+            hostEntry = false;
             gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
         }else{
             if (memberRow.useip == false){
-                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
+                let found = false;
+                for (let i=0;i<fbdevices.length;i++){
+                    if (mac == fbdevices[i]['MACAddress']){
+                        found = true;
+                        break;
+                    }
+                }
+                if (found == false){
+                    gthis.log.warn('macaddress ' + mac + ' from member ' + member + ' not found in fritzbox');
+                    hostEntry = false;
+                }else{
+                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
+                }
             }else{ //true
                 if (GETBYIP == true && memberRow.ipaddress != ''){
-                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
+                    let found = false;
+                    for (let i=0;i<fbdevices.length;i++){
+                        if (ip == fbdevices[i]['IPAddress']){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found == false){
+                        gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ' not found in fritzbox');
+                        hostEntry = false;
+                    }else{
+                        hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
+                    }
                 }else{
                     if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
                     if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
@@ -390,10 +416,9 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
                 }
             }
         }
-        if (hostEntry != null && hostEntry.result != false){
+        if (hostEntry != null && hostEntry != false){
             gthis.setState('info.connection', { val: true, ack: true });
             const newActive = hostEntry.resultData['NewActive'];
-            //gthis.log.debug('getActive ' + member + ' ' + newActive);
 
             let memberActive = false; 
             let comming = null;
@@ -479,7 +504,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
             gthis.log.debug('getActive ' + jsonTab);
             return curVal;
         }else{
-            gthis.log.error('can not read hostEntry! <' + 'status=' + hostEntry.status + ' errNo=' + hostEntry.errNo + ' ' + hostEntry.errorMsg + '>');
+            //gthis.log.error('can not read hostEntry! <' + 'status=' + hostEntry.status + ' errNo=' + hostEntry.errNo + ' ' + hostEntry.errorMsg + '>');
             return null;
         }
     }  catch (e) {
@@ -489,10 +514,8 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     }    
 }
 
-async function checkPresence(gthis, cfg, Fb){
+async function checkPresence(gthis, cfg, Fb, fbdevices){
     try {
-        //const getObjectP = util.promisify(gthis.getObject);
-
         const midnight = new Date();
         midnight.setHours(0,0,0);
         const dnow = new Date();
@@ -513,138 +536,136 @@ async function checkPresence(gthis, cfg, Fb){
 
             if (memberRow.enabled == true && GETBYMAC == true){ //member enabled in configuration settings
                 try { //get fritzbox data
-                    const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb);
-                    if (curVal == null){
-                        return false;
-                    }
-                    //get history data
-                    let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
-                    let absent = 0;
+                    const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb, fbdevices);
+                    if (curVal != null){
+                        //get history data
+                        let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
+                        let absent = 0;
 
-                    const end = new Date().getTime();
-                    const start = midnight.getTime();
-                    let lastVal = null;
-                    let lastValCheck = false;
-                    //const dPoint = await getObjectP('fb-checkpresence.0.' + member);
-                    //gthis.log.info(`${gthis.namespace}` + '.' + member);
-                    //const dPoint = await getObjectP(`${gthis.namespace}` + '.' + member);
-                    const dPoint = await gthis.getObjectAsync(`${gthis.namespace}` + '.' + member);
+                        const end = new Date().getTime();
+                        const start = midnight.getTime();
+                        let lastVal = null;
+                        let lastValCheck = false;
+                        //const dPoint = await getObjectP('fb-checkpresence.0.' + member);
+                        //gthis.log.info(`${gthis.namespace}` + '.' + member);
+                        //const dPoint = await getObjectP(`${gthis.namespace}` + '.' + member);
+                        const dPoint = await gthis.getObjectAsync(`${gthis.namespace}` + '.' + member);
 
-                    const memb = member;
-                    if (cfg.history != ''){
-                        //gthis.log.info('history start' + JSON.stringify(dPoint.common));
-                        if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
-                            try {
-                                gthis.sendTo(cfg.history, 'getHistory', {
-                                    id: `${gthis.namespace}` + '.' + memb,
-                                    //id: 'fb-checkpresence.0.' + memb,
-                                    options:{
-                                        end:        end,
-                                        start:      start,
-                                        ignoreNull: true,
-                                        aggregate: 'onchange'
-                                    }
-                                }, function (result1) {
-                                    if (result1 == null) {
-                                        gthis.log.warn('can not read history from ' + memb + ' ' + result1.error);
-                                    }else{
-                                        const cntActualDay = result1.result.length;
-                                        gthis.log.debug('history cntActualDay: ' + cntActualDay);
-                                        gthis.sendTo(cfg.history, 'getHistory', {
-                                            id: `${gthis.namespace}` + '.' + memb,
-                                            options: {
-                                                end:        end,
-                                                count:      cntActualDay+1,
-                                                ignoreNull: true,
-                                                aggregate: 'onchange'
-                                            }
-                                        }, function (result) {
-                                            if (result == null) {
-                                                gthis.log.warn('can not read history from ' + memb + ' ' + result.error);
-                                            }else{
-                                                let htmlHistory = HTML_HISTORY;
-                                                let jsonHistory = '[';
-                                                let bfirstFalse = false;
-                                                let firstFalse = midnight;
-                                                gthis.log.debug('history ' + memb + ' cntActualDay: ' + cntActualDay + ' cntHistory: ' + result.result.length);
-                                                let cnt = 0;
-                                                
-                                                let i = 0;
-                                                for (let iv = 0; iv < result.result.length; iv++) {
-                                                    if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
-                                                        i = iv;
-                                                    }else{
-                                                        i = result.result.length - iv - 1;
-                                                    }
-                                                    if (result.result[i].val != null ){
-                                                        const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
-                                                        htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
-                                                        jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
-                                                        cnt += 1;
-                                                        const hTime = new Date(result.result[i].ts);
-                                                        //gthis.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
-                                                        if (hTime >= midnight.getTime()){
-                                                            if (lastVal == null){
-                                                                //if no lastVal exists
-                                                                lastVal = curVal.val; 
-                                                                lastValCheck = true;
-                                                                gthis.log.info(memb + ': No history before this day is available (lastVal = null)');
-                                                            }else{
-                                                                if (lastVal == false && lastValCheck == true){
-                                                                    absent = Math.round((hTime - midnight.getTime())/1000/60);
-                                                                    lastValCheck = false;
-                                                                }
-                                                                if (result.result[i].val == false){
-                                                                    if (bfirstFalse == false){
-                                                                        firstFalse = new Date(result.result[i].ts);
-                                                                        bfirstFalse = true;
-                                                                    }
-                                                                }
-                                                                if (result.result[i].val == true){
-                                                                    if (bfirstFalse == true){
-                                                                        bfirstFalse = false;
-                                                                        absent += Math.round((hTime - firstFalse.getTime())/1000/60);
-                                                                    }
-                                                                }
-                                                            }
+                        const memb = member;
+                        if (cfg.history != ''){
+                            //gthis.log.info('history start' + JSON.stringify(dPoint.common));
+                            if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
+                                try {
+                                    gthis.sendTo(cfg.history, 'getHistory', {
+                                        id: `${gthis.namespace}` + '.' + memb,
+                                        //id: 'fb-checkpresence.0.' + memb,
+                                        options:{
+                                            end:        end,
+                                            start:      start,
+                                            ignoreNull: true,
+                                            aggregate: 'onchange'
+                                        }
+                                    }, function (result1) {
+                                        if (result1 == null) {
+                                            gthis.log.warn('can not read history from ' + memb + ' ' + result1.error);
+                                        }else{
+                                            const cntActualDay = result1.result.length;
+                                            gthis.log.debug('history cntActualDay: ' + cntActualDay);
+                                            gthis.sendTo(cfg.history, 'getHistory', {
+                                                id: `${gthis.namespace}` + '.' + memb,
+                                                options: {
+                                                    end:        end,
+                                                    count:      cntActualDay+1,
+                                                    ignoreNull: true,
+                                                    aggregate: 'onchange'
+                                                }
+                                            }, function (result) {
+                                                if (result == null) {
+                                                    gthis.log.warn('can not read history from ' + memb + ' ' + result.error);
+                                                }else{
+                                                    let htmlHistory = HTML_HISTORY;
+                                                    let jsonHistory = '[';
+                                                    let bfirstFalse = false;
+                                                    let firstFalse = midnight;
+                                                    gthis.log.debug('history ' + memb + ' cntActualDay: ' + cntActualDay + ' cntHistory: ' + result.result.length);
+                                                    let cnt = 0;
+                                                    
+                                                    let i = 0;
+                                                    for (let iv = 0; iv < result.result.length; iv++) {
+                                                        if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
+                                                            i = iv;
                                                         }else{
-                                                            gthis.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
-                                                            lastVal = result.result[i].val;
-                                                            lastValCheck = true;
-                                                        }   
+                                                            i = result.result.length - iv - 1;
+                                                        }
+                                                        if (result.result[i].val != null ){
+                                                            const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
+                                                            htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
+                                                            jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
+                                                            cnt += 1;
+                                                            const hTime = new Date(result.result[i].ts);
+                                                            //gthis.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                                            if (hTime >= midnight.getTime()){
+                                                                if (lastVal == null){
+                                                                    //if no lastVal exists
+                                                                    lastVal = curVal.val; 
+                                                                    lastValCheck = true;
+                                                                    gthis.log.info(memb + ': No history before this day is available (lastVal = null)');
+                                                                }else{
+                                                                    if (lastVal == false && lastValCheck == true){
+                                                                        absent = Math.round((hTime - midnight.getTime())/1000/60);
+                                                                        lastValCheck = false;
+                                                                    }
+                                                                    if (result.result[i].val == false){
+                                                                        if (bfirstFalse == false){
+                                                                            firstFalse = new Date(result.result[i].ts);
+                                                                            bfirstFalse = true;
+                                                                        }
+                                                                    }
+                                                                    if (result.result[i].val == true){
+                                                                        if (bfirstFalse == true){
+                                                                            bfirstFalse = false;
+                                                                            absent += Math.round((hTime - firstFalse.getTime())/1000/60);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }else{
+                                                                gthis.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                                                lastVal = result.result[i].val;
+                                                                lastValCheck = true;
+                                                            }   
+                                                        }
                                                     }
-                                                }
-                                                if (bfirstFalse == true){
-                                                    bfirstFalse = false;
-                                                    absent += Math.round((dnow - firstFalse.getTime())/1000/60);
-                                                }
-                                                present -= absent;
-                                                
-                                                gthis.setState(memb + '.present.sum_day', { val: present, ack: true });
-                                                gthis.setState(memb + '.absent.sum_day', { val: absent, ack: true });
+                                                    if (bfirstFalse == true){
+                                                        bfirstFalse = false;
+                                                        absent += Math.round((dnow - firstFalse.getTime())/1000/60);
+                                                    }
+                                                    present -= absent;
+                                                    
+                                                    gthis.setState(memb + '.present.sum_day', { val: present, ack: true });
+                                                    gthis.setState(memb + '.absent.sum_day', { val: absent, ack: true });
 
-                                                jsonHistory += ']';
-                                                htmlHistory += HTML_END;
-                                                gthis.setState(memb + '.history', { val: jsonHistory, ack: true });
-                                                gthis.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
-                                            }
-                                        });
-                                    }
-                                });
-                            } catch (ex) {
-                                gthis.setState('info.connection', { val: false, ack: true });
-                                showError('checkPresence: ' + ex.message);
+                                                    jsonHistory += ']';
+                                                    htmlHistory += HTML_END;
+                                                    gthis.setState(memb + '.history', { val: jsonHistory, ack: true });
+                                                    gthis.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
+                                                }
+                                            });
+                                        }
+                                    });
+                                } catch (ex) {
+                                    gthis.setState('info.connection', { val: false, ack: true });
+                                    showError('checkPresence: ' + ex.message);
+                                }
+                            }else{
+                                gthis.log.info('History from ' + memb + ' not enabled');
                             }
-                        }else{
-                            gthis.log.info('History from ' + memb + ' not enabled');
+                        }else{//history enabled
+                            gthis.setState(memb + '.history', { val: 'disabled', ack: true });
+                            gthis.setState(memb + '.historyHtml', { val: 'disabled', ack: true });
+                            gthis.setState(memb + '.present.sum_day', { val: -1, ack: true });
+                            gthis.setState(memb + '.absent.sum_day', { val: -1, ack: true });
                         }
-                    }else{//history enabled
-                        gthis.setState(memb + '.history', { val: 'disabled', ack: true });
-                        gthis.setState(memb + '.historyHtml', { val: 'disabled', ack: true });
-                        gthis.setState(memb + '.present.sum_day', { val: -1, ack: true });
-                        gthis.setState(memb + '.absent.sum_day', { val: -1, ack: true });
                     }
-                    
                 } catch (error) {
                     gthis.setState('info.connection', { val: false, ack: true });
                     showError('checkPresence: ' + error);
@@ -852,14 +873,15 @@ class FbCheckpresence extends utils.Adapter {
             //this.subscribeStates('*');  
 
             //Get device info
+            let items = null;
             if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
-                const items = await getDeviceList(gthis, cfg, Fb);
+                items = await getDeviceList(gthis, cfg, Fb);
                 if (items != null){
                     getDeviceInfo(items, cfg);
                 }
             }
 
-            await checkPresence(gthis, cfg, Fb); // Main function
+            await checkPresence(gthis, cfg, Fb, items); // Main function
             this.log.debug('checkPresence first run');
 
             //get uuid for transaction
@@ -877,13 +899,14 @@ class FbCheckpresence extends utils.Adapter {
                 if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
 
                 //Get device info
+                let items = null;
                 if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
-                    const items = await getDeviceList(gthis, cfg, Fb);
+                    items = await getDeviceList(gthis, cfg, Fb);
                     if (items != null){
                         getDeviceInfo(items, cfg);
                     }
                 }
-                await checkPresence(gthis, cfg, Fb);
+                await checkPresence(gthis, cfg, Fb, items);
                 
                 //stop transaction
                 //const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
