@@ -348,11 +348,23 @@ async function resyncFbObjects(items){
                             }
                             if (found == false && !dName.includes('whitelist')){
                                 gthis.log.info('object to delete <' + dName + '>');
-                                gthis.delObject(devices[id]._id, function(err){
+                                gthis.getStates(dName + '.*', async function (err, states) {
+                                    for (const idS in states) {
+                                        gthis.log.info(JSON.stringify(idS));
+                                        gthis.delObject(idS, function(err){
+                                            gthis.delState(idS, function(err){
+                                                if (err) {
+                                                    gthis.log.error('cannot delete state : ' + idS + ' Error: ' + err);
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                                /*gthis.delObject(devices[id]._id, function(err){
                                     if (err) {
                                         gthis.log.error('cannot delete device : ' + id + ' Error: ' + err);
                                     }
-                                });
+                                });*/
                             }
                         }
                     }
