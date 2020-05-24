@@ -13,6 +13,7 @@ const dateFormat = require('dateformat');
 //own libraries
 const fb = require('./lib/fb');
 const obj = require('./lib/objects');
+let Fb = null;
 
 // Global
 let gthis; //Global verfügbar machen
@@ -180,8 +181,7 @@ async function getDeviceList(gthis, cfg, Fb){
             if (deviceList != null){
                 gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
                 gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
-                gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
-                gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
+                //gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
                 errorCnt = 0;
                 return deviceList['List']['Item'];
             }else{
@@ -193,7 +193,7 @@ async function getDeviceList(gthis, cfg, Fb){
         }
     } catch (e) {
         showError('getDeviceList: '+ e);
-        gthis.setState('info.connection', { val: false, ack: true });
+        //gthis.setState('info.connection', { val: false, ack: true });
         return null;
     }   
 }
@@ -324,60 +324,63 @@ async function getDeviceInfo(items, cfg){
         return true;
     }  catch (e) {
         showError('getDeviceInfo: '+ e);
-        gthis.setState('info.connection', { val: false, ack: true });
+        //gthis.setState('info.connection', { val: false, ack: true });
         return false;
     }    
 }
 
 async function resyncFbObjects(items){
-
-    // Get all fb-device objects of this adapter
-    if (gthis.config.syncfbdevices == true){
-        gthis.getDevices(async function (err, devices) {
-            try {
-                for (const id in devices) {
-                    if (devices[id] != undefined && devices[id].common != undefined){
-                        const dName = devices[id].common.name;
-                        let found = false;
-                        if (dName.includes('fb-devices')){
-                            for(let i=0;i<items.length;i++){
-                                if (dName.includes(items[i]['HostName'])) {
-                                    found = true;
-                                    break;
+    try {
+        // Get all fb-device objects of this adapter
+        if (gthis.config.syncfbdevices == true){
+            gthis.getDevices(async function (err, devices) {
+                try {
+                    for (const id in devices) {
+                        if (devices[id] != undefined && devices[id].common != undefined){
+                            const dName = devices[id].common.name;
+                            let found = false;
+                            if (dName.includes('fb-devices')){
+                                for(let i=0;i<items.length;i++){
+                                    if (dName.includes(items[i]['HostName'])) {
+                                        found = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (found == false && !dName.includes('whitelist')){
-                                gthis.log.info('object to delete <' + dName + '>');
-                                gthis.getStates(dName + '.*', async function (err, states) {
-                                    for (const idS in states) {
-                                        gthis.log.info(JSON.stringify(idS));
-                                        gthis.delObject(idS, function(err){
-                                            gthis.delState(idS, function(err){
-                                                if (err) {
-                                                    gthis.log.error('cannot delete state : ' + idS + ' Error: ' + err);
-                                                }
+                                if (found == false && !dName.includes('whitelist')){
+                                    gthis.log.info('object to delete <' + dName + '>');
+                                    gthis.getStates(dName + '.*', async function (err, states) {
+                                        for (const idS in states) {
+                                            gthis.log.info(JSON.stringify(idS));
+                                            gthis.delObject(idS, function(err){
+                                                gthis.delState(idS, function(err){
+                                                    if (err) {
+                                                        gthis.log.error('cannot delete state : ' + idS + ' Error: ' + err);
+                                                    }
+                                                });
                                             });
-                                        });
-                                    }
-                                });
-                                /*gthis.delObject(devices[id]._id, function(err){
-                                    if (err) {
-                                        gthis.log.error('cannot delete device : ' + id + ' Error: ' + err);
-                                    }
-                                });*/
+                                        }
+                                    });
+                                    gthis.delObject(devices[id]._id, function(err){
+                                        if (err) {
+                                            gthis.log.error('cannot delete device : ' + id + ' Error: ' + err);
+                                        }
+                                    });
+                                }
                             }
                         }
                     }
+                } catch (error) {
+                    gthis.log.error(error);
                 }
-            } catch (error) {
-                gthis.log.error(error);
-            }
-            gthis.log.debug('fb-devices synchronized');
-            const adapterObj = await gthis.getForeignObjectAsync(`system.adapter.${gthis.namespace}`);
-            adapterObj.native.syncfbdevices = false;
-            gthis.config.syncfbdevices = false;
-            await gthis.setForeignObjectAsync(`system.adapter.${gthis.namespace}`, adapterObj);
-        }); 
+                gthis.log.debug('fb-devices synchronized');
+                const adapterObj = await gthis.getForeignObjectAsync(`system.adapter.${gthis.namespace}`);
+                adapterObj.native.syncfbdevices = false;
+                gthis.config.syncfbdevices = false;
+                await gthis.setForeignObjectAsync(`system.adapter.${gthis.namespace}`, adapterObj);
+            }); 
+        }
+    } catch (error) {
+        gthis.log.error(error);
     }
 }
 
@@ -429,7 +432,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
             }
         }
         if (hostEntry != null && hostEntry != false){
-            gthis.setState('info.connection', { val: true, ack: true });
+            //gthis.setState('info.connection', { val: true, ack: true });
             const newActive = hostEntry.resultData['NewActive'];
 
             let memberActive = false; 
@@ -521,7 +524,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
         }
     }  catch (e) {
         showError('getActive: ' + e);
-        gthis.setState('info.connection', { val: false, ack: true });
+        //gthis.setState('info.connection', { val: false, ack: true });
         return null;
     }    
 }
@@ -542,6 +545,21 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
             allNames: ''
         };
         
+        //connection check
+        const info = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetInfo', null);
+        if (info.status == 200){
+            gthis.setState('info.connection', { val: true, ack: true });
+            gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
+        }else{
+            gthis.setState('info.connection', { val: false, ack: true });
+        }
+        //gthis.log.info('' + JSON.stringify(info.status));
+
+        //Get extIp
+        const extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
+        const extIpOld = gthis.getStateAsync('info.extIp');
+        if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
+
         for (let k = 0; k < cfg.members.length; k++) {
             const memberRow = cfg.members[k]; //Row from family members table
             const member = memberRow.familymember; 
@@ -665,7 +683,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
                                         }
                                     });
                                 } catch (ex) {
-                                    gthis.setState('info.connection', { val: false, ack: true });
+                                    //gthis.setState('info.connection', { val: false, ack: true });
                                     showError('checkPresence: ' + ex.message);
                                 }
                             }else{
@@ -679,7 +697,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
                         }
                     }
                 } catch (error) {
-                    gthis.setState('info.connection', { val: false, ack: true });
+                    //gthis.setState('info.connection', { val: false, ack: true });
                     showError('checkPresence: ' + error);
                 }
             }//enabled in configuration settings
@@ -699,7 +717,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
     }
     catch (error) {
         showError('checkPresence: ' + error);
-        gthis.setState('info.connection', { val: false, ack: true });
+        //gthis.setState('info.connection', { val: false, ack: true });
         return false;
     }
 }
@@ -748,11 +766,11 @@ class FbCheckpresence extends utils.Adapter {
             ...options,
             name: 'fb-checkpresence',
         });
-        this.on('ready', this.onReady);
+        this.on('ready', this.onReady.bind(this));
         //this.on('objectChange', this.onObjectChange);
         //this.on('stateChange', this.onStateChange);
-        this.on('message', this.onMessage);
-        this.on('unload', this.onUnload);
+        this.on('message', this.onMessage.bind(this));
+        this.on('unload', this.onUnload.bind(this));
         gthis = this;
     }
 
@@ -764,18 +782,21 @@ class FbCheckpresence extends utils.Adapter {
             // Initialize your adapter here
             //const getForeignObjectP = util.promisify(this.getForeignObject);
 
-            const sysobj =  await this.getForeignObjectAsync('system.config');
-            if (sysobj && sysobj.native && sysobj.native.secret) {
-                gthis.config.password = decrypt(sysobj.native.secret, this.config.password);
+            const sysObj =  await this.getForeignObjectAsync('system.config');
+            let adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
+            let adapterObjChanged = false;
+   
+            if (sysObj && sysObj.native && sysObj.native.secret) {
+                gthis.config.password = decrypt(sysObj.native.secret, this.config.password);
             } else {
                 gthis.config.password = decrypt('SdoeQ85NTrg1B0FtEyzf', this.config.password);
             }
 
             //if interval <= 0 than set to 1 
             if (this.config.interval <= 0) {
-                const adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
                 adapterObj.native.interval = 1;
-                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                adapterObjChanged = true;
+                //await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
                 this.config.interval = 1;
                 this.log.warn('interval is less than 1. Set to 1 Min.');
             }
@@ -783,11 +804,15 @@ class FbCheckpresence extends utils.Adapter {
             //create new configuration items 
             for(let i=0;i<this.config.familymembers.length;i++){
                 if (this.config.familymembers[i].useip == undefined) {
-                    const adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
                     adapterObj.native.familymembers[i].useip = false;
                     adapterObj.native.familymembers[i].ipaddress = '';
-                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                    adapterObjChanged = true;
+                    //await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
                 }
+            }
+
+            if (adapterObjChanged === true){
+                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
             }
 
             const cfg = {
@@ -817,7 +842,7 @@ class FbCheckpresence extends utils.Adapter {
                 uid: this.config.username,
                 pwd: this.config.password
             };
-            const Fb = new fb.Fb(devInfo, this);
+            Fb = new fb.Fb(devInfo, this);
 
             //check if the functions are supported by avm
             GETPATH = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetHostListPath');
@@ -835,6 +860,10 @@ class FbCheckpresence extends utils.Adapter {
                     gthis.log.error('can not read security port! <' + 'status=' + port.status + ' errNo=' + port.errNo + ' ' + port.errorMsg + '>');
                     //gthis.log.error('can not read security port! <' + port.errorMsg + '>');
                 }
+            }else{
+                adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                adapterObj.common.enabled = false;  // Adapter ausschalten
+                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
             }
 
             //Create global objects
@@ -855,10 +884,10 @@ class FbCheckpresence extends utils.Adapter {
                     this.log.debug('Fritzbox device objects succesfully created');
                 }else{
                     this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox!");
-                    const obj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
-                    obj.common.enabled = false;  // Adapter ausschalten
-                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, obj);
-                    return null;
+                    adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                    adapterObj.common.enabled = false;  // Adapter ausschalten
+                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                    //return null;
                 }
                 resyncFbObjects(items);
             }
@@ -905,11 +934,6 @@ class FbCheckpresence extends utils.Adapter {
                 //const startTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationStarted', [[1, 'NewSessionID', uuid]]);
                 //gthis.log.debug('checkPresence start transaction -> ' + JSON.stringify(startTransaction));
  
-                //Get extIp
-                const extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
-                const extIpOld = gthis.getStateAsync('info.extIp');
-                if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
-
                 //Get device info
                 let items = null;
                 if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
@@ -926,7 +950,7 @@ class FbCheckpresence extends utils.Adapter {
                 gthis.log.debug('checkPresence scheduled');
             }, cron);
         } catch (error) {
-            gthis.setState('info.connection', { val: false, ack: true });
+            //gthis.setState('info.connection', { val: false, ack: true });
             showError('onReady: ' + error);
         }
     }//onReady
@@ -937,10 +961,10 @@ class FbCheckpresence extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            gthis.log.info('cleaned everything up...');
             gthis.setState('info.connection', { val: false, ack: true });
-            this.log.info('cleaned everything up...');
             clearInterval(scheduledJob);
-            //scheduledJob.cancel();
+            //Fb.exitRequest();
             callback();
         } catch (e) {
             callback();
