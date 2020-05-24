@@ -569,7 +569,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
 
         //Get extIp
         if (GETEXTIP != null && GETEXTIP == true){
-            let extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
+            let extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null, true);
             gthis.log.debug(JSON.stringify(extIp));
             if (extIp != 'undefined' && extIp.result != false){
                 const extIpOld = gthis.getStateAsync('info.extIp');
