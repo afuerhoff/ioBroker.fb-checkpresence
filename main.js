@@ -570,11 +570,13 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
         //Get extIp
         if (GETEXTIP != null && GETEXTIP == true){
             let extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
+            gthis.log.debug(JSON.stringify(extIp));
             if (extIp != 'undefined' && extIp.result != false){
                 const extIpOld = gthis.getStateAsync('info.extIp');
                 if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
             }else{
-                extIp = await Fb.soapAction(Fb, '/upnp/control/wanipconn1', 'urn:dslforum-org:service:WANIPConnection:1', 'GetInfo', null, true);
+                extIp = await Fb.soapAction(Fb, '/upnp/control/wanipconnection1', 'urn:dslforum-org:service:WANIPConnection:1', 'GetInfo', null, true);
+                gthis.log.debug(JSON.stringify(extIp));
                 if (extIp != 'undefined' && extIp.result != false){
                     const extIpOld = gthis.getStateAsync('info.extIp');
                     if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
