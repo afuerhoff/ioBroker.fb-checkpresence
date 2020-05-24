@@ -583,7 +583,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
                 }
             }
         }else{
-            gthis.log.warn('Service is not supported! Fritzbox firmware is to old');
+            gthis.log.warn('can not read external ip address');
         }
 
         for (let k = 0; k < cfg.members.length; k++) {
@@ -988,9 +988,9 @@ class FbCheckpresence extends utils.Adapter {
      */
     onUnload(callback) {
         try {
-            gthis.log.info('cleaned everything up...');
             gthis.setState('info.connection', { val: false, ack: true });
             clearInterval(scheduledJob);
+            gthis.log.info('cleaned everything up...');
             //Fb.exitRequest();
             callback();
         } catch (e) {
