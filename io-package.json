@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "news": {
+            "1.0.2":{
+                "en": "error handling optimized; external ip implemented; check if mac or ip are listed in fritzbox",
+                "de": "Fehlerbehandlung optimiert; externe IP implementiert; Überprüfen Sie, ob Mac oder IP in der Fritzbox aufgeführt sind",
+                "ru": "оптимизирована обработка ошибок; реализован внешний ip; проверьте, есть ли mac или ip в списке fritzbox",
+                "pt": "tratamento de erros otimizado; ip externo implementado; verifique se mac ou ip estão listados no fritzbox",
+                "nl": "foutafhandeling geoptimaliseerd; externe ip geïmplementeerd; controleer of mac of ip in fritzbox staan",
+                "fr": "gestion des erreurs optimisée; IP externe implémentée; vérifier si mac ou ip sont listés dans fritzbox",
+                "it": "gestione degli errori ottimizzata; implementato ip esterno; controlla se mac o ip sono elencati in fritzbox",
+                "es": "manejo de errores optimizado; ip externa implementada; compruebe si mac o ip figuran en fritzbox",
+                "pl": "zoptymalizowana obsługa błędów; zewnętrzny ip wdrożony; sprawdź, czy Mac lub IP są wymienione w polu Fritzbox",
+                "zh-cn": "错误处理得到优化；实施外部ip;检查在fritzbox中是否列出了mac或ip"            },
             "1.0.1": {
                 "en": "error handling optimized\nhistory selection optimized\nre-synchronisation fb-devices implemented",
                 "de": "Fehlerbehandlung optimiert\nVerlaufsauswahl optimiert\nRe-Synchronisation fb-Geräte implementiert",
