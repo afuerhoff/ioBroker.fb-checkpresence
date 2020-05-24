@@ -116,6 +116,7 @@ function getHistoryAdapter (hist) {
         });
     });
 }
+
 function getSqlAdapter (hist) {
     return new Promise((resolve, reject) => {
         getAdapterInstances('sql', function (arr) {
@@ -127,6 +128,7 @@ function getSqlAdapter (hist) {
         });
     });
 }
+
 function getInfluxdbAdapter (hist) {
     return new Promise((resolve, reject) => {
         getAdapterInstances('influxdb', function (arr) {
@@ -138,8 +140,6 @@ function getInfluxdbAdapter (hist) {
         });
     });
 }
-/*
-*/
 
 // This will be called by the admin adapter when the settings page loads
 function load(settings, onChange) {
@@ -191,7 +191,7 @@ function load(settings, onChange) {
                             '<table class="responsive-table highlight" id="tabFam">' + 
                                 '<thead>' + 
                                     '<tr class="grey darken-3 white-text">' + 
-                                        '<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all()"/><span></span></label></th>' + 
+                                        '<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all(event)"/><span></span></label></th>' + 
                                         '<th class="left-align">' + 'Hostname' + '</th>' + 
                                         '<th class="center-align">' + _('MAC address') + '</th>' + 
                                         '<th class="center-align">' + _('IP address') + '</th>' + 
@@ -205,16 +205,16 @@ function load(settings, onChange) {
                             '<input id="searchWL" class="validate" type="text" onkeyup="search(event)">'  + 
                             '<label for="searchWL">' + _('Search for device') + '..' + '</label>' +
                         '</div>' +
-                        '<div class="col s12">' + 
+                        '<div col s12>' + 
                             '<table class="responsive-table striped" id="tabWL">' + 
                                 '<thead>' + 
                                     '<tr class="grey darken-3 white-text">' + 
-                                        '<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all()"/><span></span></label></th>' + 
+                                        '<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all2" onclick="select-all(event)"/><span></span></label></th>' + 
                                         '<th class="left-align">' + 'Hostname' + '</th>' + 
                                         '<th class="center-align">' + _('MAC address') + '</th>' + 
                                     '</tr>' + 
                                 '</thead>' +
-                                '<tbody onload="loadFM()">';
+                                '<tbody>';
                     arr.forEach(function (element) {
                         let chkVal = '';
                         for(let i=0; i < whitelist.length; i++){
@@ -242,7 +242,7 @@ function load(settings, onChange) {
                             'data-macaddress="' + (element.mac || '') + '" ' +
                             'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
                             'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
-                            '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkdevices"' + chkVal2 + ' /><span></span></label></td>' +
+                            '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkFM"' + chkVal2 + ' /><span></span></label></td>' +
                             '<td>' + element.name + '</td>' +
                             '<td class="center">' + element.mac + '</td>' +
                             '<td class="center">' + element.ip + '</td>' +
@@ -251,7 +251,7 @@ function load(settings, onChange) {
                             '<tr ' +
                                 'data-white_macaddress="' + (element.mac || '') + '" ' +
                                 'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
-                                '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox"' + chkVal + ' /><span></span></label></td>' +
+                                '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkWL"' + chkVal + ' /><span></span></label></td>' +
                                 '<td>' + element.name + '</td>' +
                                 '<td class="center">' + element.mac + '</td>' +
                             '</tr>';
@@ -336,16 +336,41 @@ function load(settings, onChange) {
                     values2table('values', devices, g_onChange, tableOnReady);
                     g_onChange(true);
                 });
-                $('#select-all').click(function(event) {   
+                $('#select-all').click(function(event) {
                     if(this.checked) {
                         // Iterate each checkbox
-                        $(':checkbox').each(function() {
-                            this.checked = true;                        
-                        });
+                        const checkboxes = document.querySelectorAll('input[name="chkFM"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = true;
+                        }
                     } else {
-                        $(':checkbox').each(function() {
+                        const checkboxes = document.querySelectorAll('input[name="chkFM"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = false;
+                        }
+                        /*$(':checkbox').each(function() {
                             this.checked = false;                       
-                        });
+                        });*/
+                    }
+                });
+                $('#select-all2').click(function(event) {
+                    if(this.checked) {
+                        // Iterate each checkbox
+                        const checkboxes = document.querySelectorAll('input[name="chkWL"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = true;
+                        }
+                        /*$(':checkbox').each(function() {
+                            this.checked = true;                        
+                        });*/
+                    } else {
+                        const checkboxes = document.querySelectorAll('input[name="chkWL"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = false;
+                        }
+                        /*$(':checkbox').each(function() {
+                            this.checked = false;                       
+                        });*/
                     }
                 });
             } catch (e) {
@@ -412,17 +437,6 @@ function beforeOpen(){
     instance.open();
     //instance.destroy();
 }
-
-/*function addDlg(){
-    const checkboxes = document.getElementsByName('chkdevices');  
-    let numberOfCheckedItems = 0;
-    for(let i = 0; i < checkboxes.length; i++)  
-    {  
-        if(checkboxes[i].checked)  
-            numberOfCheckedItems++;  
-    }  
-    alert('Cnt ' + numberOfCheckedItems);
-}*/
 
 function tableOnReady() {
     $('#values .table-values .values-buttons[data-command="delete"]').on('click', function () {

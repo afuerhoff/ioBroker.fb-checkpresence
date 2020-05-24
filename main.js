@@ -26,11 +26,13 @@ const HTML_GUEST  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>I
 const HTML_FB  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>IPAddress</th><th>MACAddress</th><th>Active</th><th>Type</th></tr></thead><tbody>';
 const TR064_DEVINFO = '/deviceinfoSCPD.xml';
 const TR064_HOSTS = '/hostsSCPD.xml';
+const TR06_WANPPPCONN = '/wanpppconnSCPD.xml';
 
 let GETPATH = false;
 let GETBYMAC = false;
 let GETBYIP = false;
 let GETPORT = false;
+let GETEXTIP = false;
 
 let allDevices = [];
 let jsonTab;
@@ -255,9 +257,14 @@ async function getDeviceInfo(items, cfg){
             }
             htmlFbDevices += createHTMLFbDeviceRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
             jsonFbDevices += createJSONFbDeviceRow(i, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.macaddress', { val: items[i]['MACAddress'], ack: true });
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.ipaddress', { val: items[i]['IPAddress'], ack: true });
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.active', { val: items[i]['Active'], ack: true });
+            
+            let hostName = items[i]['HostName'];
+            if (hostName.includes('.')){
+                hostName = hostName.replace('.', '-');
+            }
+            gthis.setState('fb-devices.' + hostName + '.macaddress', { val: items[i]['MACAddress'], ack: true });
+            gthis.setState('fb-devices.' + hostName + '.ipaddress', { val: items[i]['IPAddress'], ack: true });
+            gthis.setState('fb-devices.' + hostName + '.active', { val: items[i]['Active'], ack: true });
             /*const active = await gthis.getStateAsync('fb-devices.' + items[i]['HostName'] + '.active');
             if(active.ts <= Date.now() - 10000 ) {
                 gthis.log.info(items[i]['HostName'] + ' 1 ' + active.val);
@@ -266,11 +273,11 @@ async function getDeviceInfo(items, cfg){
                 if(items[i]['Active'] == true) gthis.setState('fb-devices.' + items[i]['HostName'] + '.active', { val: items[i]['Active'], ack: true });
                 gthis.log.info(items[i]['HostName'] + ' 2 ' + active.val);
             }*/
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.interfacetype', { val: items[i]['InterfaceType'], ack: true });
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.guest', { val: items[i]['X_AVM-DE_Guest'], ack: true });
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.whitelist', { val: foundwl, ack: true });
-            gthis.setState('fb-devices.' + items[i]['HostName'] + '.blacklist', { val: ! (foundwl && items[i]['X_AVM-DE_Guest']), ack: true });
+            gthis.setState('fb-devices.' + hostName + '.interfacetype', { val: items[i]['InterfaceType'], ack: true });
+            gthis.setState('fb-devices.' + hostName + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
+            gthis.setState('fb-devices.' + hostName + '.guest', { val: items[i]['X_AVM-DE_Guest'], ack: true });
+            gthis.setState('fb-devices.' + hostName + '.whitelist', { val: foundwl, ack: true });
+            gthis.setState('fb-devices.' + hostName + '.blacklist', { val: ! (foundwl && items[i]['X_AVM-DE_Guest']), ack: true });
             for (let k=0; k<cfg.members.length; k++){
                 if (cfg.members[k].macaddress == items[i]['MACAddress']){
                     gthis.setState(cfg.members[k].familymember + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
@@ -341,7 +348,11 @@ async function resyncFbObjects(items){
                             let found = false;
                             if (dName.includes('fb-devices')){
                                 for(let i=0;i<items.length;i++){
-                                    if (dName.includes(items[i]['HostName'])) {
+                                    let hostName = items[i]['HostName'];
+                                    if (hostName.includes('.')){
+                                        hostName = hostName.replace('.', '-');
+                                    }
+                                    if (dName.includes(hostName)) {
                                         found = true;
                                         break;
                                     }
@@ -556,9 +567,17 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
         //gthis.log.info('' + JSON.stringify(info.status));
 
         //Get extIp
-        const extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
-        const extIpOld = gthis.getStateAsync('info.extIp');
-        if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
+        if (GETEXTIP != null && GETEXTIP == true){
+            const extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
+            if (extIp != 'undefined'){
+                const extIpOld = gthis.getStateAsync('info.extIp');
+                if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
+            }else{
+                gthis.log.warn('can not read external ip address');
+            }
+        }else{
+            gthis.log.warn('Service is not supported! Fritzbox firmware is to old');
+        }
 
         for (let k = 0; k < cfg.members.length; k++) {
             const memberRow = cfg.members[k]; //Row from family members table
@@ -849,8 +868,8 @@ class FbCheckpresence extends utils.Adapter {
             GETBYMAC = await Fb.chkService(TR064_HOSTS, 'GetSpecificHostEntry');
             GETBYIP = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetSpecificHostEntryByIP');
             GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
-            //gthis.log.info('GETPATH ' + GETPATH);
-            
+            GETEXTIP = await Fb.chkService(TR06_WANPPPCONN, 'GetInfo');
+
             if (GETPORT != null && GETPORT == true){
                 const port = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
                 if (port.result != false){
