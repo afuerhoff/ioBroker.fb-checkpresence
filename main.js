@@ -27,6 +27,7 @@ const HTML_FB  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>IPAd
 const TR064_DEVINFO = '/deviceinfoSCPD.xml';
 const TR064_HOSTS = '/hostsSCPD.xml';
 const TR06_WANPPPCONN = '/wanpppconnSCPD.xml';
+const TR06_WANIPCONN = '/wanipconnSCPD.xml';
 
 let GETPATH = false;
 let GETBYMAC = false;
@@ -568,12 +569,18 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
 
         //Get extIp
         if (GETEXTIP != null && GETEXTIP == true){
-            const extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
-            if (extIp != 'undefined'){
+            let extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null);
+            if (extIp != 'undefined' && extIp.result != false){
                 const extIpOld = gthis.getStateAsync('info.extIp');
                 if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
             }else{
-                gthis.log.warn('can not read external ip address');
+                extIp = await Fb.soapAction(Fb, '/upnp/control/wanipconn1', 'urn:dslforum-org:service:WANIPConnection:1', 'GetInfo', null, true);
+                if (extIp != 'undefined' && extIp.result != false){
+                    const extIpOld = gthis.getStateAsync('info.extIp');
+                    if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
+                }else{
+                    gthis.log.warn('can not read external ip address');
+                }
             }
         }else{
             gthis.log.warn('Service is not supported! Fritzbox firmware is to old');
@@ -869,6 +876,7 @@ class FbCheckpresence extends utils.Adapter {
             GETBYIP = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetSpecificHostEntryByIP');
             GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
             GETEXTIP = await Fb.chkService(TR06_WANPPPCONN, 'GetInfo');
+            if ( GETEXTIP == false) GETEXTIP = await Fb.chkService(TR06_WANIPCONN, 'GetInfo');
 
             if (GETPORT != null && GETPORT == true){
                 const port = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
