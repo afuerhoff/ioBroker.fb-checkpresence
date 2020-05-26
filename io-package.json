@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.0.2",
+        "version": "1.0.3",
         "news": {
+            "1.0.3":{
+                "en": "bugfix checking mac or ip",
+                "de": "Bugfix Überprüfung Mac oder IP",
+                "ru": "проверка исправления Mac или IP",
+                "pt": "correção de bug verificando mac ou ip",
+                "nl": "bugfix bij het controleren van mac of ip",
+                "fr": "correction de bug vérification mac ou ip",
+                "it": "correzione bug mac o ip",
+                "es": "corrección de errores en mac o ip",
+                "pl": "sprawdzanie poprawek mac lub ip",
+                "zh-cn": "Bugfix检查Mac或IP"
+            },
             "1.0.2":{
                 "en": "error handling optimized; external ip implemented; check if mac or ip are listed in fritzbox",
                 "de": "Fehlerbehandlung optimiert; externe IP implementiert; Überprüfen Sie, ob Mac oder IP in der Fritzbox aufgeführt sind",
