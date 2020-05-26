@@ -404,46 +404,40 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
         const mac = memberRow.macaddress; 
         const ip = memberRow.ipaddress; 
         if (memberRow.useip == undefined || memberRow.ipaddress == undefined){
-            hostEntry = false;
+            hostEntry.result = false;
             gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
         }else{
             if (memberRow.useip == false){
-                let found = false;
-                for (let i=0;i<fbdevices.length;i++){
-                    if (mac == fbdevices[i]['MACAddress']){
-                        found = true;
-                        break;
+                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
+                if(hostEntry.result === false){
+                    if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
+                        gthis.log.warn('macaddress ' + mac + ' from member ' + member + ' not found in fritzbox device list');
+                    } else if (hostEntry.errorMsg.errorDescription == 'Invalid Args'){
+                        gthis.log.warn('invalid arguments for macaddress ' + mac + ' from member ' + member);
+                    } else {
+                        gthis.log.warn('macaddress ' + mac + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
                     }
-                }
-                if (found == false){
-                    gthis.log.warn('macaddress ' + mac + ' from member ' + member + ' not found in fritzbox');
-                    hostEntry = false;
-                }else{
-                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
                 }
             }else{ //true
                 if (GETBYIP == true && memberRow.ipaddress != ''){
-                    let found = false;
-                    for (let i=0;i<fbdevices.length;i++){
-                        if (ip == fbdevices[i]['IPAddress']){
-                            found = true;
-                            break;
+                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
+                    if(hostEntry.result === false){
+                        if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
+                            gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ' not found in fritzbox device list');
+                        } else if (hostEntry.errorMsg.errorDescription == 'Invalid Args') {
+                            gthis.log.warn('invalid arguments for ipaddress ' + ip + ' from member ' + member);
+                        } else {
+                            gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
                         }
-                    }
-                    if (found == false){
-                        gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ' not found in fritzbox');
-                        hostEntry = false;
-                    }else{
-                        hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
                     }
                 }else{
                     if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
                     if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
-                    hostEntry = false;
+                    hostEntry.result = false;
                 }
             }
         }
-        if (hostEntry != null && hostEntry != false){
+        if (hostEntry != null && hostEntry.result != false){
             //gthis.setState('info.connection', { val: true, ack: true });
             const newActive = hostEntry.resultData['NewActive'];
 
