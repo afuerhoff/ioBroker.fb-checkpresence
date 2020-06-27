@@ -103,7 +103,8 @@ function createHTMLFbDeviceRow (hostName, ipAddress, macAddress, active, type) {
 }
 
 // Create JSON table row
-function createJSONRow(cnt, maxcnt, cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, comming, sHeadGoing, going) {
+//function createJSONRow(cnt, maxcnt, cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, comming, sHeadGoing, going) {
+function createJSONRow(cfg, sHeadUser, sUser, sHeadStatus, sStatus, sHeadComming, comming, sHeadGoing, going) {
     let json = '{';
     json += '"'  + sHeadUser + '":';
     json += '"'  + sUser + '"' + ',';
@@ -112,10 +113,10 @@ function createJSONRow(cnt, maxcnt, cfg, sHeadUser, sUser, sHeadStatus, sStatus,
     json += '"'  + sHeadComming + '":';
     json += '"'  + dateFormat(comming, cfg.dateFormat) + '"' + ',';
     json += '"'  + sHeadGoing + '":';
-    json += '"'  + dateFormat(going, cfg.dateFormat) + '"' + '}';
-    if (cnt < maxcnt-1){
+    json += '"'  + dateFormat(going, cfg.dateFormat) + '"' + '},';
+    /*if (cnt < maxcnt-1){
         json += ',';
-    }
+    }*/
     return json;
 }
 
@@ -307,6 +308,7 @@ async function getDeviceInfo(items, cfg){
         gthis.setState('guest.listHtml', { val: htmlRow, ack: true });
         gthis.setState('guest.listJson', { val: jsonRow, ack: true });
         gthis.setState('guest.count', { val: guestCnt, ack: true });
+        gthis.setState('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
 
         gthis.setState('activeDevices', { val: activeCnt, ack: true });
 
@@ -403,23 +405,29 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
         const member = memberRow.familymember; 
         const mac = memberRow.macaddress; 
         const ip = memberRow.ipaddress; 
-        if (memberRow.useip == undefined || memberRow.ipaddress == undefined){
-            hostEntry.result = false;
+        if (memberRow.useip == undefined || ip == undefined){
+            hostEntry ={result: false};
             gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
         }else{
             if (memberRow.useip == false){
-                hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
-                if(hostEntry.result === false){
-                    if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
-                        gthis.log.warn('macaddress ' + mac + ' from member ' + member + ' not found in fritzbox device list');
-                    } else if (hostEntry.errorMsg.errorDescription == 'Invalid Args'){
-                        gthis.log.warn('invalid arguments for macaddress ' + mac + ' from member ' + member);
-                    } else {
-                        gthis.log.warn('macaddress ' + mac + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
+                if (mac != ''){
+                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
+                    if(hostEntry.result === false){
+                        if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
+                            gthis.log.warn('macaddress ' + mac + ' from member ' + member + ' not found in fritzbox device list');
+                        } else if (hostEntry.errorMsg.errorDescription == 'Invalid Args'){
+                            gthis.log.warn('invalid arguments for macaddress ' + mac + ' from member ' + member);
+                        } else {
+                            gthis.log.warn('macaddress ' + mac + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
+                        }
+                        hostEntry = {result: true, resultData: {NewActive: 0}};
                     }
+                }else{
+                    gthis.log.warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                    hostEntry ={result: false};
                 }
             }else{ //true
-                if (GETBYIP == true && memberRow.ipaddress != ''){
+                if (GETBYIP == true && ip != ''){
                     hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
                     if(hostEntry.result === false){
                         if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
@@ -429,11 +437,12 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
                         } else {
                             gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
                         }
+                        hostEntry = {result: true, resultData: {NewActive: 0}};
                     }
                 }else{
-                    if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address');
+                    if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
                     if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
-                    hostEntry.result = false;
+                    hostEntry ={result: false};
                 }
             }
         }
@@ -520,7 +529,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
                 going = new Date(curVal.lc);
                 gthis.setState(member + '.going', { val: going, ack: true });
             }
-            jsonTab += createJSONRow(index, cfg.members.length, cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
+            jsonTab += createJSONRow(cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
             htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
             gthis.log.debug('getActive ' + jsonTab);
             return curVal;
@@ -725,6 +734,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
             }//enabled in configuration settings
             
         }// for end
+        jsonTab = jsonTab.substr(0, jsonTab.length-1); //delete last comma
         jsonTab += ']';
         htmlTab += HTML_END;  
 
