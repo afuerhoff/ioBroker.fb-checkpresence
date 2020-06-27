@@ -398,7 +398,7 @@ async function resyncFbObjects(items){
     }
 }
 
-async function getActive(index, cfg, memberRow, dnow, presence, Fb, fbdevices){
+async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     try {
         //const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
         let hostEntry = null;
@@ -597,7 +597,7 @@ async function checkPresence(gthis, cfg, Fb, fbdevices){
 
             if (memberRow.enabled == true && GETBYMAC == true){ //member enabled in configuration settings
                 try { //get fritzbox data
-                    const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb, fbdevices);
+                    const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb);
                     if (curVal != null){
                         //get history data
                         let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
