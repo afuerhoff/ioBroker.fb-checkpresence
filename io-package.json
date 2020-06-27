@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "news": {
+            "1.0.4":{
+                "en": "bugfix json list and guest handling, new object guest.presence",
+                "de": "Bugfix JSON-Liste und Gastbehandlung, neues Objekt guest.presence",
+                "ru": "исправление списка json и обработка гостя, новый объект guest.presence",
+                "pt": "bugfix lista json e manipulação de convidados, novo objeto guest.presence",
+                "nl": "bugfix json lijst en gast afhandeling, nieuw object guest.presence",
+                "fr": "correction de la liste json et gestion des invités, nouvel objet guest.presence",
+                "it": "bugfix json list e gestione guest, nuovo oggetto guest.presence",
+                "es": "lista de errores json y manejo de invitados, nuevo objeto guest.presence",
+                "pl": "naprawiona lista błędów i obsługa gości, nowy obiekt guest.presence",
+                "zh-cn": "错误修正json列表和来宾处理，新对象guest.presence"
+            },
             "1.0.3":{
                 "en": "bugfix checking mac or ip",
                 "de": "Bugfix Überprüfung Mac oder IP",
