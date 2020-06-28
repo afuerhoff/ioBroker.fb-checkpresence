@@ -49,6 +49,8 @@ By default, the TR-064 interface is not activated. However, this can easily be c
 FritzBox web interface. To do this log in into your FritzBox and ensure that the expert view is activated. 
 Then you will find below "Home Network »Home Network Overview» Network Settings" the point 
 "Allow access for applications". There you have to activate the checkbox and then restart the FritzBox once.
+
+Hint: After changing the options, don't forget the restart of the Fritzbox !
 <img src="doc/access_settings_network.JPG"/>
 
 ## Configuration dialog
