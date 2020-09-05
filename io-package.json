@@ -3,7 +3,7 @@
         "name": "fb-checkpresence",
         "version": "1.0.4",
         "news": {
-            "1.0.4":{
+            "1.0.4": {
                 "en": "bugfix json list and guest handling, new object guest.presence",
                 "de": "Bugfix JSON-Liste und Gastbehandlung, neues Objekt guest.presence",
                 "ru": "исправление списка json и обработка гостя, новый объект guest.presence",
@@ -15,7 +15,7 @@
                 "pl": "naprawiona lista błędów i obsługa gości, nowy obiekt guest.presence",
                 "zh-cn": "错误修正json列表和来宾处理，新对象guest.presence"
             },
-            "1.0.3":{
+            "1.0.3": {
                 "en": "bugfix checking mac or ip",
                 "de": "Bugfix Überprüfung Mac oder IP",
                 "ru": "проверка исправления Mac или IP",
@@ -27,7 +27,7 @@
                 "pl": "sprawdzanie poprawek mac lub ip",
                 "zh-cn": "Bugfix检查Mac或IP"
             },
-            "1.0.2":{
+            "1.0.2": {
                 "en": "error handling optimized; external ip implemented; check if mac or ip are listed in fritzbox",
                 "de": "Fehlerbehandlung optimiert; externe IP implementiert; Überprüfen Sie, ob Mac oder IP in der Fritzbox aufgeführt sind",
                 "ru": "оптимизирована обработка ошибок; реализован внешний ip; проверьте, есть ли mac или ip в списке fritzbox",
@@ -37,7 +37,8 @@
                 "it": "gestione degli errori ottimizzata; implementato ip esterno; controlla se mac o ip sono elencati in fritzbox",
                 "es": "manejo de errores optimizado; ip externa implementada; compruebe si mac o ip figuran en fritzbox",
                 "pl": "zoptymalizowana obsługa błędów; zewnętrzny ip wdrożony; sprawdź, czy Mac lub IP są wymienione w polu Fritzbox",
-                "zh-cn": "错误处理得到优化；实施外部ip;检查在fritzbox中是否列出了mac或ip"            },
+                "zh-cn": "错误处理得到优化；实施外部ip;检查在fritzbox中是否列出了mac或ip"
+            },
             "1.0.1": {
                 "en": "error handling optimized\nhistory selection optimized\nre-synchronisation fb-devices implemented",
                 "de": "Fehlerbehandlung optimiert\nVerlaufsauswahl optimiert\nRe-Synchronisation fb-Geräte implementiert",
@@ -49,7 +50,7 @@
                 "es": "manejo de errores optimizado\nselección de historial optimizado\n re-sincronización dispositivos fb implementados",
                 "pl": "obsługa błędów zoptymalizowany\n wybór historii zoptymalizowany\n re-synchronizacja zaimplementowane urządzenia fb",
                 "zh-cn": "错误处理已优化\n历史选择已优化\n重新同步已实现fb设备"
-            },                        
+            },
             "1.0.0": {
                 "en": "Configuration dialog optimized\nfbdevice speed added\npresent-, absentMembers inserted\nIp address handling optimized\\niobroker functions changed to async\\ninstance.0 dependency fixed\\ndepricated request changed to axios",
                 "de": "Konfigurationsdialog optimiert \nFbGerätegeschwindigkeit hinzugefügt \npresent-, abwesendMitglieder eingefügt \nIp-Adressverarbeitung optimiert \niobroker-Funktionen geändert in asynchrone \ninstanz.0 Abhängigkeit behoben \ndeprizierte Anforderung geändert in Axios",
@@ -271,7 +272,8 @@
         "interval": 1,
         "history": "",
         "dateformat": "yyyy.mm.dd HH:MM:ss",
-        "fbdevices": true,
+        "fbdevices": false,
+        "meshinfo": false,
         "syncfbdevices": false,
         "username": "",
         "password": ""

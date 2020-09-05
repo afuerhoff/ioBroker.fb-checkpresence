@@ -417,6 +417,26 @@ function load(settings, onChange) {
     });
 }
 
+$(document).ready(function(){
+    $('#meshinfo').change(function() 
+    {
+        if(this.checked == true)
+        {
+            const x = document.getElementById('fbdevices');
+            x.checked = true;
+        }
+    });   
+    $('#fbdevices').change(function() 
+    {
+        if(this.checked == false)
+        {
+            const x = document.getElementById('meshinfo');
+            x.checked = false;
+        }
+    });   
+    if (M) M.updateTextFields();
+});
+
 function beforeOpen(){
     // check checkboxes
     const fm = table2values('values') || [];
