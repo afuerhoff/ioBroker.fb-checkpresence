@@ -329,7 +329,7 @@ async function getDeviceInfo(items, cfg){
                 let meshdevice = mesh.find(el => el.device_mac_address === items[i]['MACAddress']);
                 if (meshdevice == null) {
                     meshdevice = mesh.find(el => el.device_name === items[i]['HostName']);
-                    gthis.log.info(items[i]['HostName'] + ' meshdevice ' + JSON.stringify(meshdevice));
+                    //gthis.log.info(items[i]['HostName'] + ' meshdevice ' + JSON.stringify(meshdevice));
                 }
                 if (meshdevice != null) {
                     gthis.setState('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
@@ -373,8 +373,8 @@ async function getDeviceInfo(items, cfg){
                                         link += node1['device_name'];
                                         //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_2_uid']) + ' ' + nodelinks['node_interface_2_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
                                     }
-                                    data_rate_rx = nodelinks['cur_data_rate_rx'];
-                                    data_rate_tx = nodelinks['cur_data_rate_tx'];
+                                    data_rate_rx = nodelinks['cur_data_rate_rx'] / 1000;
+                                    data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
                                 }
                                 gthis.setState('fb-devices.' + hostName + '.' + ni + '.link', { val: link, ack: true });
                                 gthis.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
