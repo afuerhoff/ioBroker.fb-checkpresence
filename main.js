@@ -469,9 +469,12 @@ async function resyncFbObjects(items){
                                         for (const idS in states) {
                                             gthis.log.info(JSON.stringify(idS));
                                             gthis.delObject(idS, function(err){
+                                                if (err) {
+                                                    gthis.log.error('cannot delete object: ' + idS + ' Error: ' + err);
+                                                }
                                                 gthis.delState(idS, function(err){
                                                     if (err) {
-                                                        gthis.log.error('cannot delete state : ' + idS + ' Error: ' + err);
+                                                        gthis.log.error('cannot delete state: ' + idS + ' Error: ' + err);
                                                     }
                                                 });
                                             });
@@ -647,7 +650,7 @@ async function getActive(index, cfg, memberRow, dnow, presence, Fb){
     }    
 }
 
-async function checkPresence(gthis, cfg, Fb, fbdevices){
+async function checkPresence(gthis, cfg, Fb){
     try {
         const midnight = new Date();
         midnight.setHours(0,0,0);
@@ -895,6 +898,11 @@ Array.prototype.indexOfObject = function (property, value, ind=-1) {
     return -1;
 };
 
+function _sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+
 class FbCheckpresence extends utils.Adapter {
 
     /**
@@ -1023,8 +1031,8 @@ class FbCheckpresence extends utils.Adapter {
                     for (let i = 0; i < items.length; i++) {
                         //const n = items.indexOfObject('HostName', items[i]['HostName'], i);
                         //if (n != -1 ) gthis.log.warn('duplicate fritzbox device item. Please correct the hostname in the fritzbox settings for the device -> ' + items[i]['HostName'] + ' ' + items[i]['MACAddress']);
-                        obj.createFbDeviceObjects(gthis, items[i]['HostName']);
-                        obj.createMeshObjects(gthis, items[i]['HostName'], 0); //create channel 0 as default interface
+                        await obj.createFbDeviceObjects(gthis, items[i]['HostName']);
+                        await obj.createMeshObjects(gthis, items[i]['HostName'], 0); //create channel 0 as default interface
                     }
                     this.log.debug('Fritzbox device objects succesfully created');
                 }else{
@@ -1034,7 +1042,7 @@ class FbCheckpresence extends utils.Adapter {
                     await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
                     //return null;
                 }
-                resyncFbObjects(items);
+                await resyncFbObjects(items);
             }
 
             if (!cfg.members) {
@@ -1067,7 +1075,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
             }
 
-            await checkPresence(gthis, cfg, Fb, items); // Main function
+            await checkPresence(gthis, cfg, Fb); // Main function
             this.log.debug('checkPresence first run');
 
             //get uuid for transaction
@@ -1087,7 +1095,7 @@ class FbCheckpresence extends utils.Adapter {
                         getDeviceInfo(items, cfg);
                     }
                 }
-                await checkPresence(gthis, cfg, Fb, items);
+                await checkPresence(gthis, cfg, Fb);
                 
                 //stop transaction
                 //const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
@@ -1104,11 +1112,12 @@ class FbCheckpresence extends utils.Adapter {
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      * @param {() => void} callback
      */
-    onUnload(callback) {
+    async onUnload(callback) {
         try {
             gthis.setState('info.connection', { val: false, ack: true });
             clearInterval(scheduledJob);
             gthis.log.info('cleaned everything up...');
+            await _sleep(3000);
             //Fb.exitRequest();
             callback();
         } catch (e) {
