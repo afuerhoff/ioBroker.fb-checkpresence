@@ -251,10 +251,11 @@ async function getDeviceInfo(items, cfg){
         //Get mesh info
         let mesh = null;
         const enabledMeshInfo = gthis.config.meshinfo;
-        gthis.log.debug('function mesh info: ' + enabledMeshInfo);            
+        //gthis.log.info('function mesh info: ' + enabledMeshInfo);            
         if (GETMESHPATH != null && GETMESHPATH == true && enabledMeshInfo == true){
             mesh = await getMeshList(gthis, cfg, Fb);
-            gthis.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true }); //raw data
+            if (mesh != null) gthis.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true }); //raw data
+            //gthis.log.info(' meshdevice ' + JSON.stringify(mesh));
         }
 
         for (let i = 0; i < items.length; i++) {
@@ -326,64 +327,66 @@ async function getDeviceInfo(items, cfg){
 
             //Get mesh info for device
             if (GETMESHPATH != null && GETMESHPATH == true && enabledMeshInfo == true){
-                let meshdevice = mesh.find(el => el.device_mac_address === items[i]['MACAddress']);
-                if (meshdevice == null) {
-                    meshdevice = mesh.find(el => el.device_name === items[i]['HostName']);
-                    //gthis.log.info(items[i]['HostName'] + ' meshdevice ' + JSON.stringify(meshdevice));
-                }
-                if (meshdevice != null) {
-                    gthis.setState('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
-                    //gthis.log.info('Mesh Device: ' + hostName + ' ' + JSON.stringify(meshdevice));
-                    //items[i]
-                    for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) {
-                        const nInterface = meshdevice['node_interfaces'][ni];
-                        let interfaceName = nInterface['name'];
-                        if (interfaceName == '') interfaceName = nInterface['type'];
-                        
-                        await obj.createMeshObjects(gthis, items[i]['HostName'], ni);
-                        const hostname = items[i]['HostName'];
-                        if (hostname.includes('.')){
-                            hostName = hostname.replace('.', '-');
-                        }
+                if (mesh != null){
+                    let meshdevice = mesh.find(el => el.device_mac_address === items[i]['MACAddress']);
+                    if (meshdevice == null) {
+                        meshdevice = mesh.find(el => el.device_name === items[i]['HostName']);
+                        //gthis.log.info(items[i]['HostName'] + ' meshdevice ' + JSON.stringify(meshdevice));
+                    }
+                    if (meshdevice != null) {
+                        gthis.setState('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
+                        //gthis.log.info('Mesh Device: ' + hostName + ' ' + JSON.stringify(meshdevice));
+                        //items[i]
+                        for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) {
+                            const nInterface = meshdevice['node_interfaces'][ni];
+                            let interfaceName = nInterface['name'];
+                            if (interfaceName == '') interfaceName = nInterface['type'];
+                            
+                            await obj.createMeshObjects(gthis, items[i]['HostName'], ni);
+                            const hostname = items[i]['HostName'];
+                            if (hostname.includes('.')){
+                                hostName = hostname.replace('.', '-');
+                            }
 
-                        gthis.setState('fb-devices.' + hostName + '.' + ni + '.name', { val: nInterface['name'], ack: true });
-                        gthis.setState('fb-devices.' + hostName + '.' + ni + '.type', { val: nInterface['type'], ack: true });
-                        //gthis.setState('fb-devices.' + hostName + '.' + ni + '.security', { val: nInterface['security'], ack: true });
-                        
-                        if (nInterface['node_links'].length > 0){ //filter empty interfaces
-                            let link = '';
-                            let data_rate_rx = 0;
-                            let data_rate_tx = 0;
+                            gthis.setState('fb-devices.' + hostName + '.' + ni + '.name', { val: nInterface['name'], ack: true });
+                            gthis.setState('fb-devices.' + hostName + '.' + ni + '.type', { val: nInterface['type'], ack: true });
+                            //gthis.setState('fb-devices.' + hostName + '.' + ni + '.security', { val: nInterface['security'], ack: true });
+                            
+                            if (nInterface['node_links'].length > 0){ //filter empty interfaces
+                                let link = '';
+                                let data_rate_rx = 0;
+                                let data_rate_tx = 0;
 
-                            for (let nl = 0; nl < nInterface['node_links'].length; nl++) {
-                                const nodelinks = nInterface['node_links'][nl]; 
-                                if ( nodelinks['state'] == 'CONNECTED'){
-                                    if (nodelinks['node_1_uid'] != meshdevice['uid']){ //Top connection
-                                        const node1 = mesh.find(el => el.uid === nodelinks['node_1_uid']);
-                                        //gthis.log.info(JSON.stringify(node1));
-                                        //gthis.log.info('mesh ' + node['device_name'] + ' ' + interFace['uid'] + ' ' + interFace['name'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_1_uid']) + ' ' + nodelinks['node_interface_1_uid'] + ' ' + node1['uid'] + ' ' + ' ' + node1['device_name']);
-                                        if (link != '') link += ',';
-                                        link += node1['device_name'];
-                                        //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_1_uid']) + ' ' + nodelinks['node_interface_1_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
+                                for (let nl = 0; nl < nInterface['node_links'].length; nl++) {
+                                    const nodelinks = nInterface['node_links'][nl]; 
+                                    if ( nodelinks['state'] == 'CONNECTED'){
+                                        if (nodelinks['node_1_uid'] != meshdevice['uid']){ //Top connection
+                                            const node1 = mesh.find(el => el.uid === nodelinks['node_1_uid']);
+                                            //gthis.log.info(JSON.stringify(node1));
+                                            //gthis.log.info('mesh ' + node['device_name'] + ' ' + interFace['uid'] + ' ' + interFace['name'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_1_uid']) + ' ' + nodelinks['node_interface_1_uid'] + ' ' + node1['uid'] + ' ' + ' ' + node1['device_name']);
+                                            if (link != '') link += ',';
+                                            link += node1['device_name'];
+                                            //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_1_uid']) + ' ' + nodelinks['node_interface_1_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
+                                        }
+                                        if (nodelinks['node_2_uid'] != meshdevice['uid']){ //Down connection
+                                            const node1 = mesh.find(el => el.uid === nodelinks['node_2_uid']);
+                                            //gthis.log.info(JSON.stringify(node1));
+                                            if (link != '') link += ',';
+                                            link += node1['device_name'];
+                                            //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_2_uid']) + ' ' + nodelinks['node_interface_2_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
+                                        }
+                                        data_rate_rx = nodelinks['cur_data_rate_rx'] / 1000;
+                                        data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
                                     }
-                                    if (nodelinks['node_2_uid'] != meshdevice['uid']){ //Down connection
-                                        const node1 = mesh.find(el => el.uid === nodelinks['node_2_uid']);
-                                        //gthis.log.info(JSON.stringify(node1));
-                                        if (link != '') link += ',';
-                                        link += node1['device_name'];
-                                        //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_2_uid']) + ' ' + nodelinks['node_interface_2_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
-                                    }
-                                    data_rate_rx = nodelinks['cur_data_rate_rx'] / 1000;
-                                    data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
+                                    gthis.setState('fb-devices.' + hostName + '.' + ni + '.link', { val: link, ack: true });
+                                    gthis.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
+                                    gthis.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
                                 }
-                                gthis.setState('fb-devices.' + hostName + '.' + ni + '.link', { val: link, ack: true });
-                                gthis.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
-                                gthis.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
                             }
                         }
+                    }else{
+                        gthis.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
                     }
-                }else{
-                    gthis.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
                 }
             }
 
@@ -915,7 +918,7 @@ class FbCheckpresence extends utils.Adapter {
         });
         this.on('ready', this.onReady.bind(this));
         //this.on('objectChange', this.onObjectChange);
-        //this.on('stateChange', this.onStateChange);
+        this.on('stateChange', this.onStateChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
         gthis = this;
@@ -981,6 +984,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration history: <' + this.config.history + '>');
             this.log.debug('configuration dateformat: <' + this.config.dateformat + '>');
             this.log.debug('configuration familymembers: ' + JSON.stringify(this.config.familymembers));
+            this.log.debug('configuratuion mesh info: ' + this.config.meshinfo);            
             
             const devInfo = {
                 host: this.config.ipaddress,
@@ -1064,7 +1068,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
             }           
             // in this template all states changes inside the adapters namespace are subscribed
-            //this.subscribeStates('*');  
+            this.subscribeStates('guest.wlan');  
 
             //Get device info
             let items = null;
@@ -1145,15 +1149,28 @@ class FbCheckpresence extends utils.Adapter {
      * @param {string} id
      * @param {ioBroker.State | null | undefined} state
      */
-    /*onStateChange(id, state) {
-        if (state) {
+    async onStateChange(id, state) {
+        if (id == `${gthis.namespace}` + '.guest.wlan'){
+            let guestwlan;
+            this.log.info(`state1 ${id} changed: ${state.val} (ack = ${state.ack})`);
+            if (state.val == true){
+                guestwlan = await Fb.soapAction(Fb, '/upnp/control/wlanconfig3', urn + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', 1]]);
+                if (guestwlan['status'] != 200 || guestwlan['result'] == false) this.log.error(JSON.stringify(guestwlan));
+            }else{
+                guestwlan = await Fb.soapAction(Fb, '/upnp/control/wlanconfig3', urn + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', 0]]);
+                if (guestwlan['status'] != 200 || guestwlan['result'] == false) this.log.error(JSON.stringify(guestwlan));
+            }
+        }
+
+        /*if (state) {
             // The state was changed
-            this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            this.log.info(`system.adapter.${this.namespace}`);
+            this.log.info(`state2 ${id} changed: ${state.val} (ack = ${state.ack})`);
         } else {
             // The state was deleted
             this.log.debug(`state ${id} deleted`);
-        }
-    }*/
+        }*/
+    }
 
     /**
      * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
