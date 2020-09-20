@@ -40,6 +40,8 @@ let allDevices = [];
 let jsonTab;
 let htmlTab;
 let scheduledJob;
+let scheduledJobFamily;
+let enabled = true;
 let errorCnt = 0;
 const errorCntMax = 10;
 
@@ -259,6 +261,7 @@ async function getDeviceInfo(items, cfg){
         }
 
         for (let i = 0; i < items.length; i++) {
+            if (enabled == false) break;
             let deviceType = '-';
             if (items[i]['X_AVM-DE_Guest'] == 1){
                 deviceType = 'guest';
@@ -701,6 +704,7 @@ async function checkPresence(gthis, cfg, Fb){
         }
 
         for (let k = 0; k < cfg.members.length; k++) {
+            if (enabled == false) break;
             const memberRow = cfg.members[k]; //Row from family members table
             const member = memberRow.familymember; 
 
@@ -762,6 +766,7 @@ async function checkPresence(gthis, cfg, Fb){
                                                     
                                                     let i = 0;
                                                     for (let iv = 0; iv < result.result.length; iv++) {
+                                                        if (enabled == false) break;
                                                         if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
                                                             i = iv;
                                                         }else{
@@ -901,7 +906,7 @@ Array.prototype.indexOfObject = function (property, value, ind=-1) {
     return -1;
 };
 
-function _sleep(milliseconds) {
+async function _sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
@@ -979,6 +984,7 @@ class FbCheckpresence extends utils.Adapter {
             
             //const cron = '*/' + cfg.iv + ' * * * *';
             const cron = cfg.iv * 60000;
+            const cronFamily = this.config.intervalFamily * 1000;
             this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' Min.');
             this.log.debug('configuration user: <' + this.config.username + '>');
             this.log.debug('configuration history: <' + this.config.history + '>');
@@ -1085,6 +1091,10 @@ class FbCheckpresence extends utils.Adapter {
             //get uuid for transaction
             //const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
             //const uuid = sSid['NewUUID'].replace('uuid:', '');
+            scheduledJobFamily = setInterval(async function(){
+                await checkPresence(gthis, cfg, Fb);
+                gthis.log.debug('checkPresence scheduled');
+            }, cronFamily);
 
             scheduledJob = setInterval(async function(){
                 //start transaction
@@ -1099,12 +1109,11 @@ class FbCheckpresence extends utils.Adapter {
                         getDeviceInfo(items, cfg);
                     }
                 }
-                await checkPresence(gthis, cfg, Fb);
                 
                 //stop transaction
                 //const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
                 //gthis.log.debug('checkPresence ' + JSON.stringify(stopTransaction));
-                gthis.log.debug('checkPresence scheduled');
+                gthis.log.debug('getDeviceInfo scheduled');
             }, cron);
         } catch (error) {
             //gthis.setState('info.connection', { val: false, ack: true });
@@ -1118,11 +1127,13 @@ class FbCheckpresence extends utils.Adapter {
      */
     async onUnload(callback) {
         try {
-            gthis.setState('info.connection', { val: false, ack: true });
+            enabled = false;
             clearInterval(scheduledJob);
-            gthis.log.info('cleaned everything up...');
+            clearInterval(scheduledJobFamily);
+            gthis.log.info('cleaned everything up ...');
             await _sleep(3000);
-            //Fb.exitRequest();
+            gthis.log.info('cleaned everything up 1...');
+            //setTimeout(callback(), 3000);
             callback();
         } catch (e) {
             callback();
