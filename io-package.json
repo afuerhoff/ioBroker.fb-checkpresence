@@ -270,6 +270,7 @@
         "whitelist": [],
         "ipaddress": "fritz.box",
         "interval": 1,
+        "intervalFamily": 60,
         "history": "",
         "dateformat": "yyyy.mm.dd HH:MM:ss",
         "fbdevices": false,
