@@ -131,6 +131,14 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog 
+<!--
+    Placeholder for the next version (at the beginning of the line):
+    ## __WORK IN PROGRESS__
+-->
+
+### __WORK IN PROGRESS__
+* Did some changes
+* Did some more changes
 
 ### 1.0.4 (2020-06-28)
 * (afuerhoff) bugfix json list and guest handling, new object guest.presence
