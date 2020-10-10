@@ -24,6 +24,7 @@
 			#tabFam, #tabWL {font-size: 13px;}
 			#tabFam th, #tabFam td {text-align: left;padding: 3px;}
 			#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
+			input:invalid {border: red solid 3px;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -52,24 +53,25 @@
 					</div><!-- End of row -->
 					<div class="row">
 						<div class="col s2 input-field tooltip">	
-							<input type="text" class="value" maxlength="15" id="ipaddress"/>
+							<input type="text" class="value validate" id="ipaddress" required 
+								pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|([a-zA-Z][\w.-]*)$"/>
 							<label for="ipaddress" class="translate">IP Fritzbox</label>
 							<span class="tooltiptext translate">Here you can enter the IP-Address from your Fritzbox</span>
 						</div>
 						<div class="col s2 input-field tooltip">	
-							<input type="text" data-crypt="0" class="value" id="username"/>
+							<input type="text" data-crypt="0" class="value validate" maxlength="32" id="username" pattern="^[a-zA-Z][a-zA-Z0-9-_.' ']{0,31}$"/>
 							<label for="username" class="translate">Username</label>
 							<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
 						</div>
 						<div class="input-field col s3 tooltip">
-						<input type="password" data-crypt="1" class="value" id="password">
+					<input type="password" data-crypt="1" class="value validate" id="password" pattern="^[a-zA-Z0-9 _-!#$%&'()*+,\./:;=>?@[\]^`{|}~]{1,32}$"/>
 						<label for="password">Password</label>
 						<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
 						</div>				
 						<div class="col s2 input-field tooltip">
-							<input type="number" class="value" min="1" max="59" id="interval" />
+							<input type="number" class="value validate" min="1" max="60" step="1" id="interval" required pattern="[1-6][0-9]?"/>
 							<label for="interval" class="translate">polling interval in minutes</label>
-							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
+							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 60 minutes]</span>
 						</div>
 					</div><!-- End of row -->
 					<div class="row">
@@ -84,7 +86,7 @@
 							<label for history class="translate">Select history adapter</label>
 						</div>
 						<div class="col s3 input-field tooltip">	
-							<input type="text" class="value" id="dateformat"/>
+							<input type="text" class="value validate" id="dateformat" pattern="^[dmyhHMNosSlLtTWZUC:.,/' ]+$"/>
 							<label for="ipaddress" class="translate">Date format</label>
 							<span class="tooltiptext translate">Here you can enter the date format string for the tables</span>
 						</div>
@@ -119,7 +121,7 @@
 						</div>
 					</div><!-- End of row -->
 					<div class="col s2 input-field tooltip">
-						<input type="number" class="value" min="10" max="600" step="10" id="intervalFamily" />
+						<input type="number" class="value validate" min="10" max="600" step="5" id="intervalFamily" required pattern="[1-6][0-9]?"/>
 						<label for="intervalFamily" class="translate">polling interval in seconds</label>
 						<span class="tooltiptext translate">Here you can define the polling interval [between 10 to 600 seconds]</span>
 					</div>
