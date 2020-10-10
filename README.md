@@ -137,8 +137,13 @@ Here you will find information about the history of the current day.
 -->
 
 ### __WORK IN PROGRESS__
-* Did some changes
-* Did some more changes
+* (afuerhoff) second interval for family members implemented
+* (afuerhoff) mesh info added
+* (afuerhoff) configuration validation added
+* (afuerhoff) switch on/off guest wlan
+* (afuerhoff) switch on/off internet access of devices 
+* (afuerhoff) structural changes
+* (afuerhoff) code optimization
 
 ### 1.0.4 (2020-06-28)
 * (afuerhoff) bugfix json list and guest handling, new object guest.presence
