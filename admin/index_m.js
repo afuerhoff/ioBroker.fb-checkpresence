@@ -141,6 +141,21 @@ function getInfluxdbAdapter (hist) {
     });
 }
 
+// Every Field is Valid?
+function chkValidity() {
+    let valid = true;
+
+    $('.value').each(function() {
+        const $key = $(this);
+        const element = document.getElementById($key.attr('id'));
+
+        if ($key.attr('type') !== 'checkbox' && !element.checkValidity()) {
+            valid = false;
+        }
+    });
+    return valid;
+}
+
 // This will be called by the admin adapter when the settings page loads
 function load(settings, onChange) {
     if (!settings) return;
@@ -390,11 +405,16 @@ function load(settings, onChange) {
         $('.value').each(function () { 
             const $key = $(this);
             const id = $key.attr('id');
+
             if ($key.attr('type') === 'checkbox') {
                 // do not call onChange direct, because onChange could expect some arguments
-                $key.prop('checked', settings[id])
-                    .on('change', () => onChange())
-                ;
+                $key.prop('checked', settings[id]).on('change', function(){
+                    if (chkValidity()) {
+                        onChange();
+                    } else {
+                        onChange(false);
+                    }
+                }); //=> onChange())
             } else {
                 let val;
                 if ($key.data('crypt') =='1'){
@@ -402,12 +422,20 @@ function load(settings, onChange) {
                 } else{
                     val = settings[id];
                 }
-                //alert("Error1 " + val);
 
-                $key.val(val) //settings[id]
-                    .on('change', () => onChange())
-                    .on('keyup', () => onChange())
-                ;
+                $key.val(val).on('change', function(){ //=> onChange())
+                    if (chkValidity()) {
+                        onChange();
+                    } else {
+                        onChange(false);
+                    }
+                }).on('keyup', function(){ //=> onChange())
+                    if (chkValidity()) {
+                        onChange();
+                    } else {
+                        onChange(false);
+                    }
+                }); 
             }
         });
         onChange(false);
@@ -417,7 +445,9 @@ function load(settings, onChange) {
     });
 }
 
-$(document).ready(function(){
+//dependency between fbdevices and meshinfo
+//checking of meshinfo only valid if fbdevices are selected
+$(document).ready(function(){ 
     $('#meshinfo').change(function() 
     {
         if(this.checked == true)
