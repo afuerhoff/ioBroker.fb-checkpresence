@@ -24,23 +24,22 @@ const HTML_HISTORY  = '<table class="mdui-table"><thead><tr><th>Status</th><th>D
 const HTML_END = '</body></table>';
 const HTML_GUEST  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>IPAddress</th><th>MACAddress</th></tr></thead><tbody>';
 const HTML_FB  = '<table class="mdui-table"><thead><tr><th>Hostname</th><th>IPAddress</th><th>MACAddress</th><th>Active</th><th>Type</th></tr></thead><tbody>';
-const TR064_DEVINFO = '/deviceinfoSCPD.xml';
-const TR064_HOSTS = '/hostsSCPD.xml';
-const TR06_WANPPPCONN = '/wanpppconnSCPD.xml';
-const TR06_WANIPCONN = '/wanipconnSCPD.xml';
 
+//http://fritz.box:49000/tr64desc.xml
+//Actions
 let GETPATH = false;
 let GETMESHPATH = false;
 let GETBYMAC = false;
 let GETBYIP = false;
 let GETPORT = false;
 let GETEXTIP = false;
+let SETENABLE = false;
+let WLAN3INFO = false;
+let DEVINFO = false;
 
 let allDevices = [];
 let jsonTab;
 let htmlTab;
-let scheduledJob;
-let scheduledJobFamily;
 let enabled = true;
 let errorCnt = 0;
 const errorCntMax = 10;
@@ -170,69 +169,7 @@ function createJSONFbDeviceRow(cnt, hostName, ipAddress, macAddress, active, typ
     return json;
 }
 
-function decrypt(key, value) {
-    let result = '';
-    for (let i = 0; i < value.length; ++i) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
-}
-
-async function getDeviceList(gthis, cfg, Fb){
-    try {
-        //get device list
-        const hostPath = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetHostListPath', null);
-        if (hostPath.result != false){
-            const url = 'http://' + Fb.host + ':' + Fb.port + hostPath.resultData['NewX_AVM-DE_HostListPath'];
-            const deviceList = await Fb.getDeviceList(url);
-            if (deviceList != null){
-                gthis.log.debug('getDeviceList: ' + JSON.stringify(deviceList['List']['Item']));
-                gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
-                //gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
-                errorCnt = 0;
-                return deviceList['List']['Item'];
-            }else{
-                return null;
-            }
-        }else{
-            //gthis.log.error('can not read hostListPath!');
-            return null;
-        }
-    } catch (e) {
-        showError('getDeviceList: '+ e);
-        //gthis.setState('info.connection', { val: false, ack: true });
-        return null;
-    }   
-}
-
-async function getMeshList(gthis, cfg, Fb){
-    try {
-        //get device list
-        const meshPath = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetMeshListPath', null);
-        if (meshPath.result != false){
-            const url = 'http://' + Fb.host + ':' + Fb.port + meshPath.resultData['NewX_AVM-DE_MeshListPath'];
-            const meshList = await Fb.getMeshList(url);
-            if (meshList != null){
-                gthis.log.debug('getMeshList: ' + JSON.stringify(meshList['nodes']));
-                //gthis.setState('devices', { val: deviceList['List']['Item'].length, ack: true });
-                //gthis.setState('info.connection', { val: true, ack: true }); //Fritzbox connection established
-                errorCnt = 0;
-                return meshList['nodes'];
-            }else{
-                return null;
-            }
-        }else{
-            //gthis.log.error('can not read hostListPath!');
-            return null;
-        }
-    } catch (e) {
-        showError('getMeshList: '+ e);
-        //gthis.setState('info.connection', { val: false, ack: true });
-        return null;
-    }   
-}
-
-async function getDeviceInfo(items, cfg){
+async function getDeviceInfo(items, mesh, cfg){
     try {
         //analyse guests
         let guestCnt = 0;
@@ -249,16 +186,10 @@ async function getDeviceInfo(items, cfg){
         let jsonFbDevices = '[';
         let jsonFbDevActive = '[';
         let jsonFbDevInactive = '[';
-
-        //Get mesh info
-        let mesh = null;
         const enabledMeshInfo = gthis.config.meshinfo;
-        //gthis.log.info('function mesh info: ' + enabledMeshInfo);            
-        if (GETMESHPATH != null && GETMESHPATH == true && enabledMeshInfo == true){
-            mesh = await getMeshList(gthis, cfg, Fb);
-            if (mesh != null) gthis.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true }); //raw data
-            //gthis.log.info(' meshdevice ' + JSON.stringify(mesh));
-        }
+
+        obj.createFbDeviceObjects(gthis, items, enabled);
+        if (!items) return false;
 
         for (let i = 0; i < items.length; i++) {
             if (enabled == false) break;
@@ -308,14 +239,6 @@ async function getDeviceInfo(items, cfg){
             gthis.setState('fb-devices.' + hostName + '.macaddress', { val: items[i]['MACAddress'], ack: true });
             gthis.setState('fb-devices.' + hostName + '.ipaddress', { val: items[i]['IPAddress'], ack: true });
             gthis.setState('fb-devices.' + hostName + '.active', { val: items[i]['Active'], ack: true });
-            /*const active = await gthis.getStateAsync('fb-devices.' + items[i]['HostName'] + '.active');
-            if(active.ts <= Date.now() - 10000 ) {
-                gthis.log.info(items[i]['HostName'] + ' 1 ' + active.val);
-                gthis.setState('fb-devices.' + items[i]['HostName'] + '.active', { val: items[i]['Active'], ack: true });
-            }else{
-                if(items[i]['Active'] == true) gthis.setState('fb-devices.' + items[i]['HostName'] + '.active', { val: items[i]['Active'], ack: true });
-                gthis.log.info(items[i]['HostName'] + ' 2 ' + active.val);
-            }*/
             gthis.setState('fb-devices.' + hostName + '.interfacetype', { val: items[i]['InterfaceType'], ack: true });
             gthis.setState('fb-devices.' + hostName + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
             gthis.setState('fb-devices.' + hostName + '.guest', { val: items[i]['X_AVM-DE_Guest'], ack: true });
@@ -334,22 +257,19 @@ async function getDeviceInfo(items, cfg){
                     let meshdevice = mesh.find(el => el.device_mac_address === items[i]['MACAddress']);
                     if (meshdevice == null) {
                         meshdevice = mesh.find(el => el.device_name === items[i]['HostName']);
-                        //gthis.log.info(items[i]['HostName'] + ' meshdevice ' + JSON.stringify(meshdevice));
                     }
                     if (meshdevice != null) {
                         gthis.setState('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
-                        //gthis.log.info('Mesh Device: ' + hostName + ' ' + JSON.stringify(meshdevice));
-                        //items[i]
                         for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) {
                             const nInterface = meshdevice['node_interfaces'][ni];
                             let interfaceName = nInterface['name'];
                             if (interfaceName == '') interfaceName = nInterface['type'];
-                            
-                            await obj.createMeshObjects(gthis, items[i]['HostName'], ni);
-                            const hostname = items[i]['HostName'];
+                            //gthis.log.info('createMeshObjects2 ' + JSON.stringify(items[i]));
+                            obj.createMeshObjects(gthis, [items[i]], ni, enabled);
+                            /*const hostname = items[i]['HostName'];
                             if (hostname.includes('.')){
                                 hostName = hostname.replace('.', '-');
-                            }
+                            }*/
 
                             gthis.setState('fb-devices.' + hostName + '.' + ni + '.name', { val: nInterface['name'], ack: true });
                             gthis.setState('fb-devices.' + hostName + '.' + ni + '.type', { val: nInterface['type'], ack: true });
@@ -365,18 +285,13 @@ async function getDeviceInfo(items, cfg){
                                     if ( nodelinks['state'] == 'CONNECTED'){
                                         if (nodelinks['node_1_uid'] != meshdevice['uid']){ //Top connection
                                             const node1 = mesh.find(el => el.uid === nodelinks['node_1_uid']);
-                                            //gthis.log.info(JSON.stringify(node1));
-                                            //gthis.log.info('mesh ' + node['device_name'] + ' ' + interFace['uid'] + ' ' + interFace['name'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_1_uid']) + ' ' + nodelinks['node_interface_1_uid'] + ' ' + node1['uid'] + ' ' + ' ' + node1['device_name']);
                                             if (link != '') link += ',';
                                             link += node1['device_name'];
-                                            //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_1_uid']) + ' ' + nodelinks['node_interface_1_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
                                         }
                                         if (nodelinks['node_2_uid'] != meshdevice['uid']){ //Down connection
                                             const node1 = mesh.find(el => el.uid === nodelinks['node_2_uid']);
-                                            //gthis.log.info(JSON.stringify(node1));
                                             if (link != '') link += ',';
                                             link += node1['device_name'];
-                                            //gthis.log.info('mesh ' + meshdevice['uid'] + ' ' + meshdevice['device_name'] + ' ' + nInterface['uid'] + ' '  + nInterface['name'] + ' ' + nodelinks['uid'] + ' ' + nodelinks['type'] + ' -> ' + JSON.stringify(nodelinks['node_2_uid']) + ' ' + nodelinks['node_interface_2_uid'] + ' ' + node1['uid'] + ' ' + node1['device_name']);
                                         }
                                         data_rate_rx = nodelinks['cur_data_rate_rx'] / 1000;
                                         data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
@@ -439,13 +354,11 @@ async function getDeviceInfo(items, cfg){
             gthis.setState('blacklist', { val: false, ack: true });
         }
         gthis.log.debug('getDeviceInfo blCnt: '+ blCnt);
-        
         return true;
-    }  catch (e) {
-        showError('getDeviceInfo: '+ e);
-        //gthis.setState('info.connection', { val: false, ack: true });
+    } catch (error) {
+        gthis.log.error('getDeviceInfo: ' + error);
         return false;
-    }    
+    }
 }
 
 async function resyncFbObjects(items){
@@ -473,7 +386,7 @@ async function resyncFbObjects(items){
                                     gthis.log.info('object to delete <' + dName + '>');
                                     gthis.getStates(dName + '.*', async function (err, states) {
                                         for (const idS in states) {
-                                            gthis.log.info(JSON.stringify(idS));
+                                            //gthis.log.info(JSON.stringify(idS));
                                             gthis.delObject(idS, function(err){
                                                 if (err) {
                                                     gthis.log.error('cannot delete object: ' + idS + ' Error: ' + err);
@@ -506,397 +419,169 @@ async function resyncFbObjects(items){
             }); 
         }
     } catch (error) {
-        gthis.log.error(error);
+        gthis.log.error('resyncFbObjects ' + error);
     }
 }
 
-async function getActive(index, cfg, memberRow, dnow, presence, Fb){
-    try {
+function getActive(index, cfg, memberRow, dnow, presence, Fb){
+    return new Promise((resolve, reject) => {
+    //try {
+        //if (enabled === false) return null;
         //const re = /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/;
-        let hostEntry = null;
         const member = memberRow.familymember; 
         const mac = memberRow.macaddress; 
         const ip = memberRow.ipaddress; 
         if (memberRow.useip == undefined || ip == undefined){
-            hostEntry ={result: false};
-            gthis.log.error('Please edit configuration in admin view and save it! Some items (use ip, ip-address) in new version are missing');  
+            //presence.err = 'Please edit configuration in admin view and save it! Some items (use ip, ip-address) are missing';
+            //gthis.log.error(presence.err);
+            reject('Please edit configuration in admin view and save it! Some items (use ip, ip-address) are missing'); 
         }else{
+            let pr = null;
             if (memberRow.useip == false){
                 if (mac != ''){
-                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
-                    if(hostEntry.result === false){
-                        if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
-                            gthis.log.warn('macaddress ' + mac + ' from member ' + member + ' not found in fritzbox device list');
-                        } else if (hostEntry.errorMsg.errorDescription == 'Invalid Args'){
-                            gthis.log.warn('invalid arguments for macaddress ' + mac + ' from member ' + member);
-                        } else {
-                            gthis.log.warn('macaddress ' + mac + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
-                        }
-                        hostEntry = {result: true, resultData: {NewActive: 0}};
-                    }
+                    pr = Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
                 }else{
-                    gthis.log.warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
-                    hostEntry ={result: false};
+                    //presence.err = 'The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!';
+                    //gthis.log.warn(presence.err);
+                    reject('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
                 }
-            }else{ //true
+            }else{
                 if (GETBYIP == true && ip != ''){
-                    hostEntry = await Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
-                    if(hostEntry.result === false){
-                        if (hostEntry.errorMsg.errorDescription == 'NoSuchEntryInArray'){
-                            gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ' not found in fritzbox device list');
-                        } else if (hostEntry.errorMsg.errorDescription == 'Invalid Args') {
-                            gthis.log.warn('invalid arguments for ipaddress ' + ip + ' from member ' + member);
-                        } else {
-                            gthis.log.warn('ipaddress ' + ip + ' from member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
-                        }
-                        hostEntry = {result: true, resultData: {NewActive: 0}};
-                    }
+                    pr = Fb.soapAction(Fb, '/upnp/control/hosts', urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
                 }else{
-                    if (memberRow.ipaddress == '') gthis.log.warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
-                    if (GETBYIP == false) gthis.log.warn('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
-                    hostEntry ={result: false};
-                }
-            }
-        }
-        if (hostEntry != null && hostEntry.result != false){
-            //gthis.setState('info.connection', { val: true, ack: true });
-            const newActive = hostEntry.resultData['NewActive'];
-
-            let memberActive = false; 
-            let comming = null;
-            let going = null;
-            const curVal = await gthis.getStateAsync(member); //actual member state
-            const curValNew = await gthis.getStateAsync(member + '.presence'); //actual member state
-            if (curVal == null || curValNew == null) return null;
-            if (curVal.val != curValNew.val) { //Workaround for new object
-                gthis.setState(member + '.presence', { val: curVal.val, ack: true });
-            }
-            if (curVal.val != null){
-                //calculation of '.since'
-                const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
-                if (curVal.val == true){
-                    gthis.setState(member + '.present.since', { val: diff, ack: true });
-                    gthis.setState(member + '.absent.since', { val: 0, ack: true });
-                }
-                if (curVal.val == false){
-                    gthis.setState(member + '.absent.since', { val: diff, ack: true });
-                    gthis.setState(member + '.present.since', { val: 0, ack: true });
-                }
-
-                //analyse member presence
-                if (newActive == 1){ //member = true
-                    memberActive = true;
-                    presence.one = true;
-                    if (presence.oneNames == '') {
-                        presence.oneNames += member;
-                    }else{
-                        presence.oneNames += ', ' + member;
+                    if (memberRow.ipaddress == '') {
+                        //presence.err = 'The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!';
+                        //gthis.log.warn(presence.err);
+                        reject('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
                     }
-                    if (curVal.val == false){ //signal changing to true
-                        gthis.log.debug('newActive ' + member + ' ' + newActive);
-                        gthis.setState(member, { val: true, ack: true });
-                        gthis.setState(member + '.presence', { val: true, ack: true });
-                        gthis.setState(member + '.comming', { val: dnow, ack: true });
-                        comming = dnow;
-                    }
-                    if (curVal.val == null){
-                        gthis.log.warn('Member value is null! Value set to true');
-                        gthis.setState(member, { val: true, ack: true });
-                        gthis.setState(member + '.presence', { val: true, ack: true });
-                    }
-                }else{ //member = false
-                    presence.all = false;
-                    if (presence.allNames == '') {
-                        presence.allNames += member;
-                    }else{
-                        presence.allNames += ', ' + member;
-                    }
-                    if (curVal.val == true){ //signal changing to false
-                        gthis.log.debug('newActive ' + member + ' ' + newActive);
-                        gthis.setState(member, { val: false, ack: true });
-                        gthis.setState(member + '.presence', { val: false, ack: true });
-                        gthis.setState(member + '.going', { val: dnow, ack: true });
-                        going = dnow;
-                    }
-                    if (curVal.val == null){
-                        gthis.log.warn('Member value is null! Value set to false');
-                        gthis.setState(member, { val: false, ack: true });
-                        gthis.setState(member + '.presence', { val: false, ack: true });
+                    if (GETBYIP == false) {
+                        //presence.err = 'The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported';
+                        //gthis.log.warn(presence.err);
+                        reject('The service X_AVM-DE_GetSpecificHostEntryByIP for ' + member + ' is not supported');
                     }
                 }
-
-            }else{
-                showError('getActive: content of object ' + member + ' is wrong!'); 
             }
-                            
-            const comming1 = await gthis.getStateAsync(member + '.comming');
-            comming = comming1.val;
-            const going1 = await gthis.getStateAsync(member + '.going');
-            going = going1.val;
-            if (comming1.val == null) {
-                comming = new Date(curVal.lc);
-                gthis.setState(member + '.comming', { val: comming, ack: true });
-            }
-            if (going1.val == null) {
-                going = new Date(curVal.lc);
-                gthis.setState(member + '.going', { val: going, ack: true });
-            }
-            jsonTab += createJSONRow(cfg, 'Name', member, 'Active', memberActive, 'Kommt', comming, 'Geht', going);
-            htmlTab += createHTMLRow(cfg, member, memberActive, comming, going);
-            gthis.log.debug('getActive ' + jsonTab);
-            return curVal;
-        }else{
-            //gthis.log.error('can not read hostEntry! <' + 'status=' + hostEntry.status + ' errNo=' + hostEntry.errNo + ' ' + hostEntry.errorMsg + '>');
-            return null;
-        }
-    }  catch (e) {
-        showError('getActive: ' + e);
-        //gthis.setState('info.connection', { val: false, ack: true });
-        return null;
-    }    
-}
-
-async function checkPresence(gthis, cfg, Fb){
-    try {
-        const midnight = new Date();
-        midnight.setHours(0,0,0);
-        const dnow = new Date();
-
-        // functions for family members
-        jsonTab = '[';
-        htmlTab = HTML;
-        const presence = {
-            all: true,
-            one: false,
-            oneNames: '',
-            allNames: ''
-        };
-        
-        //connection check
-        const info = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetInfo', null);
-        if (info.status == 200){
-            gthis.setState('info.connection', { val: true, ack: true });
-            gthis.setState('info.lastUpdate', { val: new Date(), ack: true });
-        }else{
-            gthis.setState('info.connection', { val: false, ack: true });
-        }
-        //gthis.log.info('' + JSON.stringify(info.status));
-
-        //Get extIp
-        if (GETEXTIP != null && GETEXTIP == true){
-            let extIp = await Fb.soapAction(Fb, '/upnp/control/wanpppconn1', 'urn:dslforum-org:service:WANPPPConnection:1', 'GetInfo', null, true);
-            gthis.log.debug(JSON.stringify(extIp));
-            if (extIp != 'undefined' && extIp.result != false){
-                const extIpOld = gthis.getStateAsync('info.extIp');
-                if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
-            }else{
-                extIp = await Fb.soapAction(Fb, '/upnp/control/wanipconnection1', 'urn:dslforum-org:service:WANIPConnection:1', 'GetInfo', null, true);
-                gthis.log.debug(JSON.stringify(extIp));
-                if (extIp != 'undefined' && extIp.result != false){
-                    const extIpOld = gthis.getStateAsync('info.extIp');
-                    if (extIpOld.val != extIp.resultData['NewExternalIPAddress'] ) gthis.setState('info.extIp', { val: extIp.resultData['NewExternalIPAddress'], ack: true });
-                }else{
-                    gthis.log.warn('can not read external ip address');
+            if(enabled == false) {
+                //presence.err = 'canceld from adapter';
+                resolve(presence);
+            } 
+            Promise.all([pr]).then(hostEntry => {
+                if(hostEntry[0].result === false){
+                    if (hostEntry[0].errorMsg.errorDescription == 'NoSuchEntryInArray'){
+                        reject('mac or ipaddress from member ' + member + ' not found in fritzbox device list');
+                        //gthis.log.warn('mac or ipaddress from member ' + member + ' not found in fritzbox device list');
+                    } else if (hostEntry[0].errorMsg.errorDescription == 'Invalid Args'){
+                        //gthis.log.warn('invalid arguments for member ' + member);
+                        reject('invalid arguments for member ' + member);
+                    } else {
+                        //gthis.log.warn('member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
+                        reject('member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
+                    }
                 }
-            }
-        }else{
-            gthis.log.warn('can not read external ip address');
-        }
-
-        for (let k = 0; k < cfg.members.length; k++) {
-            if (enabled == false) break;
-            const memberRow = cfg.members[k]; //Row from family members table
-            const member = memberRow.familymember; 
-
-            if (memberRow.enabled == true && GETBYMAC == true){ //member enabled in configuration settings
-                try { //get fritzbox data
-                    const curVal = await getActive(k, cfg, memberRow, dnow, presence, Fb);
-                    if (curVal != null){
-                        //get history data
-                        let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
-                        let absent = 0;
-
-                        const end = new Date().getTime();
-                        const start = midnight.getTime();
-                        let lastVal = null;
-                        let lastValCheck = false;
-                        //const dPoint = await getObjectP('fb-checkpresence.0.' + member);
-                        //gthis.log.info(`${gthis.namespace}` + '.' + member);
-                        //const dPoint = await getObjectP(`${gthis.namespace}` + '.' + member);
-                        const dPoint = await gthis.getObjectAsync(`${gthis.namespace}` + '.' + member);
-
-                        const memb = member;
-                        if (cfg.history != ''){
-                            //gthis.log.info('history start' + JSON.stringify(dPoint.common));
-                            if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
-                                try {
-                                    gthis.sendTo(cfg.history, 'getHistory', {
-                                        id: `${gthis.namespace}` + '.' + memb,
-                                        //id: 'fb-checkpresence.0.' + memb,
-                                        options:{
-                                            end:        end,
-                                            start:      start,
-                                            ignoreNull: true,
-                                            aggregate: 'onchange'
-                                        }
-                                    }, function (result1) {
-                                        if (result1 == null) {
-                                            gthis.log.warn('can not read history from ' + memb + ' ' + result1.error);
-                                        }else{
-                                            const cntActualDay = result1.result.length;
-                                            gthis.log.debug('history cntActualDay: ' + cntActualDay);
-                                            gthis.sendTo(cfg.history, 'getHistory', {
-                                                id: `${gthis.namespace}` + '.' + memb,
-                                                options: {
-                                                    end:        end,
-                                                    count:      cntActualDay+1,
-                                                    ignoreNull: true,
-                                                    aggregate: 'onchange'
-                                                }
-                                            }, function (result) {
-                                                if (result == null) {
-                                                    gthis.log.warn('can not read history from ' + memb + ' ' + result.error);
-                                                }else{
-                                                    let htmlHistory = HTML_HISTORY;
-                                                    let jsonHistory = '[';
-                                                    let bfirstFalse = false;
-                                                    let firstFalse = midnight;
-                                                    gthis.log.debug('history ' + memb + ' cntActualDay: ' + cntActualDay + ' cntHistory: ' + result.result.length);
-                                                    let cnt = 0;
-                                                    
-                                                    let i = 0;
-                                                    for (let iv = 0; iv < result.result.length; iv++) {
-                                                        if (enabled == false) break;
-                                                        if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
-                                                            i = iv;
-                                                        }else{
-                                                            i = result.result.length - iv - 1;
-                                                        }
-                                                        if (result.result[i].val != null ){
-                                                            const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
-                                                            htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
-                                                            jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
-                                                            cnt += 1;
-                                                            const hTime = new Date(result.result[i].ts);
-                                                            //gthis.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
-                                                            if (hTime >= midnight.getTime()){
-                                                                if (lastVal == null){
-                                                                    //if no lastVal exists
-                                                                    lastVal = curVal.val; 
-                                                                    lastValCheck = true;
-                                                                    gthis.log.info(memb + ': No history before this day is available (lastVal = null)');
-                                                                }else{
-                                                                    if (lastVal == false && lastValCheck == true){
-                                                                        absent = Math.round((hTime - midnight.getTime())/1000/60);
-                                                                        lastValCheck = false;
-                                                                    }
-                                                                    if (result.result[i].val == false){
-                                                                        if (bfirstFalse == false){
-                                                                            firstFalse = new Date(result.result[i].ts);
-                                                                            bfirstFalse = true;
-                                                                        }
-                                                                    }
-                                                                    if (result.result[i].val == true){
-                                                                        if (bfirstFalse == true){
-                                                                            bfirstFalse = false;
-                                                                            absent += Math.round((hTime - firstFalse.getTime())/1000/60);
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }else{
-                                                                gthis.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
-                                                                lastVal = result.result[i].val;
-                                                                lastValCheck = true;
-                                                            }   
-                                                        }
-                                                    }
-                                                    if (bfirstFalse == true){
-                                                        bfirstFalse = false;
-                                                        absent += Math.round((dnow - firstFalse.getTime())/1000/60);
-                                                    }
-                                                    present -= absent;
-                                                    
-                                                    gthis.setState(memb + '.present.sum_day', { val: present, ack: true });
-                                                    gthis.setState(memb + '.absent.sum_day', { val: absent, ack: true });
-
-                                                    jsonHistory += ']';
-                                                    htmlHistory += HTML_END;
-                                                    gthis.setState(memb + '.history', { val: jsonHistory, ack: true });
-                                                    gthis.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
-                                                }
-                                            });
-                                        }
-                                    });
-                                } catch (ex) {
-                                    //gthis.setState('info.connection', { val: false, ack: true });
-                                    showError('checkPresence: ' + ex.message);
-                                }
-                            }else{
-                                gthis.log.info('History from ' + memb + ' not enabled');
+                if (hostEntry[0] && hostEntry[0].result == true){
+                    const newActive = hostEntry[0].resultData['NewActive'] == 1 ? true : false;
+                    //let memberActive = false; 
+                    let comming = null;
+                    let going = null;
+                    gthis.getStateAsync(member + '.presence').then(function(curVal){ //actual member state
+                        /*if (curVal == null ) {
+                            presence.err = 'can not get actual value';
+                            reject(presence, err);
+                        }*/
+                        if (curVal && curVal.val != null){
+                            //calculation of '.since'
+                            const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
+                            if (curVal.val == true){
+                                gthis.setState(member + '.present.since', { val: diff, ack: true });
+                                gthis.setState(member + '.absent.since', { val: 0, ack: true });
                             }
-                        }else{//history enabled
-                            gthis.setState(memb + '.history', { val: 'disabled', ack: true });
-                            gthis.setState(memb + '.historyHtml', { val: 'disabled', ack: true });
-                            gthis.setState(memb + '.present.sum_day', { val: -1, ack: true });
-                            gthis.setState(memb + '.absent.sum_day', { val: -1, ack: true });
+                            if (curVal.val == false){
+                                gthis.setState(member + '.absent.since', { val: diff, ack: true });
+                                gthis.setState(member + '.present.since', { val: 0, ack: true });
+                            }
+                            //analyse member presence
+                            if (newActive == true){ //member = true
+                                //memberActive = true;
+                                presence.one = true;
+                                presence.allAbsence = false;
+                                if (presence.presentMembers == '') {
+                                    presence.presentMembers += member;
+                                }else{
+                                    presence.presentMembers += ', ' + member;
+                                }
+                                //gthis.log.info(presence.presentMembers);
+                                if (curVal.val == false){ //signal changing to true
+                                    gthis.log.info('newActive ' + member + ' ' + newActive);
+                                    gthis.setState(member, { val: true, ack: true });
+                                    gthis.setState(member + '.presence', { val: true, ack: true });
+                                    gthis.setState(member + '.comming', { val: dnow, ack: true });
+                                    comming = dnow;
+                                }
+                                if (curVal.val == null){
+                                    gthis.log.warn('Member value is null! Value set to true');
+                                    gthis.setState(member, { val: true, ack: true });
+                                    gthis.setState(member + '.presence', { val: true, ack: true });
+                                }
+                            }else{ //member = false
+                                presence.all = false;
+                                presence.oneAbsence = true;
+                                if (presence.absentMembers == '') {
+                                    presence.absentMembers += member;
+                                }else{
+                                    presence.absentMembers += ', ' + member;
+                                }
+                                if (curVal.val == true){ //signal changing to false
+                                    gthis.log.info('newActive ' + member + ' ' + newActive);
+                                    gthis.setState(member, { val: false, ack: true });
+                                    gthis.setState(member + '.presence', { val: false, ack: true });
+                                    gthis.setState(member + '.going', { val: dnow, ack: true });
+                                    going = dnow;
+                                }
+                                if (curVal.val == null){
+                                    gthis.log.warn('Member value is null! Value set to false');
+                                    gthis.setState(member, { val: false, ack: true });
+                                    gthis.setState(member + '.presence', { val: false, ack: true });
+                                }
+                            }
+                            gthis.setState(member, { val: newActive, ack: true });
+                            gthis.setState(member + '.presence', { val: newActive, ack: true });
+                            presence.val = newActive;
+                            //gthis.log.info(JSON.stringify(presence));
+                            //if(enabled == false) return null;
+                            Promise.all([gthis.getStateAsync(member + '.comming'), gthis.getStateAsync(member + '.going')]).then(values => {
+                                const comming1 = values[0];
+                                comming = comming1.val;
+                                const going1 = values[1];
+                                going = going1.val;
+                                if (comming1.val == null) {
+                                    comming = new Date(curVal.lc);
+                                    gthis.setState(member + '.comming', { val: comming, ack: true });
+                                }
+                                if (going1.val == null) {
+                                    going = new Date(curVal.lc);
+                                    gthis.setState(member + '.going', { val: going, ack: true });
+                                }
+                                jsonTab += createJSONRow(cfg, 'Name', member, 'Active', newActive, 'Kommt', comming, 'Geht', going);
+                                htmlTab += createHTMLRow(cfg, member, newActive, comming, going);
+                                //gthis.log.debug('getActive ' + jsonTab);
+                                resolve(presence);
+                            }).catch(function(error){
+                                reject('getActive: ' + JSON.stringify(error));
+                            });              
+                        }else{
+                            reject('getActive: object ' + member + ' does not exist!');
+                            //showError('getActive: content of object ' + member + ' is wrong!'); 
                         }
-                    }
-                } catch (error) {
-                    //gthis.setState('info.connection', { val: false, ack: true });
-                    showError('checkPresence: ' + error);
+                    }).catch(function(error){
+                        reject('getActive presence: ' + JSON.stringify(error));
+                    }); 
                 }
-            }//enabled in configuration settings
-            
-        }// for end
-        jsonTab = jsonTab.substr(0, jsonTab.length-1); //delete last comma
-        jsonTab += ']';
-        htmlTab += HTML_END;  
-
-        gthis.setState('json', { val: jsonTab, ack: true });
-        gthis.setState('html', { val: htmlTab, ack: true });
-    
-        gthis.setState('presenceAll', { val: presence.all, ack: true });
-        gthis.setState('presence', { val: presence.one, ack: true });
-        gthis.setState('absentMembers', { val: presence.allNames, ack: true });
-        gthis.setState('presentMembers', { val: presence.oneNames, ack: true });
-        return true;
-    }
-    catch (error) {
-        showError('checkPresence: ' + error);
-        //gthis.setState('info.connection', { val: false, ack: true });
-        return false;
-    }
-}
-
-function enableHistory(cfg, member) {
-    try {
-        let alias = '';
-        gthis.sendTo(cfg.history, 'getEnabledDPs', {}, function (result) {
-            if (result[`${gthis.namespace}` + '.' + member] != undefined && result[`${gthis.namespace}` + '.' + member].aliasId != undefined){
-                alias = result[`${gthis.namespace}` + '.' + member].aliasId;
-            }
-            gthis.sendTo(cfg.history, 'enableHistory', {
-                id: `${gthis.namespace}` + '.' + member,
-                options: {
-                    changesOnly:  true,
-                    debounce:     0,
-                    retention:    31536000,
-                    maxLength:    10,
-                    changesMinDelta: 0,
-                    aliasId: alias
-                }
-            }, function (result2) {
-                if (result2.error) {
-                    showError('enableHistory.3 ' + member + ' ' + result2.error);
-                }
-                if (result2.success) {
-                    gthis.log.debug('enableHistory.2 ' + member + ' ' + result2.success);
-                }
+            }).catch(function(error){
+                gthis.log.error('getActive ' + JSON.stringify(error));
+                reject(error);
             });
-        });
-    } catch (error) {
-        gthis.log.error('enableHistory ' + error);        
-    }
+        }
+    });
 }
 
 Array.prototype.indexOfObject = function (property, value, ind=-1) {
@@ -905,11 +590,6 @@ Array.prototype.indexOfObject = function (property, value, ind=-1) {
     }
     return -1;
 };
-
-async function _sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
 
 class FbCheckpresence extends utils.Adapter {
 
@@ -927,6 +607,74 @@ class FbCheckpresence extends utils.Adapter {
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
         gthis = this;
+        enabled = true;
+        errorCnt = 0;
+        Fb = null;
+        allDevices = [];
+        this.timeout1 = null;
+        this.timeout2 = null;
+    }
+
+    decrypt(key, value) {
+        let result = '';
+        for (let i = 0; i < value.length; ++i) {
+            result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+        }
+        return result;
+    }
+
+    loopFamily(cron, cfg, Fb) {
+        try {            
+            //const start = process.hrtime();
+            gthis.timeout1 = setTimeout(async function() {
+                const work = process.hrtime();
+                //const crontime = process.hrtime(start);
+                gthis.log.debug('loopFamily starts');
+                if (DEVINFO == true) {
+                    const res = Fb.connectionCheck(); //Sets the connection led
+                    if(res.result === false) gthis.log.error('connectionCheck: '  + JSON.stringify(res));
+                }
+                await gthis.checkPresence(gthis, cfg, Fb);
+                const time = process.hrtime(work);
+                gthis.log.debug('loopFamily ends after ' + time + ' s');
+                if (cron >= 10000) gthis.loopFamily(cron, cfg, Fb);
+            }, cron);
+        } catch (error) {
+            this.log.error('loopFamily ' + error);            
+        }
+    }
+
+    async loopDevices(cron, cfg, Fb) {
+        try {            
+            gthis.timeout2 = setTimeout(async function() {
+                const work = process.hrtime();
+                gthis.log.debug('loopDevices starts');
+                if (GETPATH != null && GETPATH == true && gthis.config.fbdevices == true){
+                    const itemlist = await Fb.getDeviceList();
+                    const extIp = (GETEXTIP != null && GETEXTIP == true) ? Fb.getExtIp() : Promise.resolve();
+                    const guestWlan = (WLAN3INFO != null && WLAN3INFO == true) ? Fb.getGuestWlan() : Promise.resolve();
+                    const enabledMeshInfo = gthis.config.meshinfo;
+                    const meshlist = (GETMESHPATH != null && GETMESHPATH == true && enabledMeshInfo == true) ? Fb.getMeshList() : Promise.resolve();
+                    await Promise.all([meshlist, extIp, guestWlan, itemlist]).then(results => {
+                        getDeviceInfo(results[3], results[0], cfg);
+                    }).catch(function(error){
+                        gthis.log.error('loopDevices: ' + error);
+                    });
+                }
+                const time = process.hrtime(work);
+                gthis.log.debug('loopDevices2 ends after ' + time + ' s');
+                if (cron >= 10000) gthis.loopDevices(cron, cfg, Fb);
+            }, cron);
+        } catch (error) {
+            this.log.error('loopDevices ' + error);            
+        }
+    }
+
+    async stopAdapter(){
+        //this.log.warn('Adapter stops');
+        const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+        adapterObj.common.enabled = false;  // Adapter ausschalten
+        await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
     }
 
     /**
@@ -935,38 +683,45 @@ class FbCheckpresence extends utils.Adapter {
     async onReady() {
         try {
             // Initialize your adapter here
-            //const getForeignObjectP = util.promisify(this.getForeignObject);
+            //Logging of adapter start
+            this.log.info('start fb-checkpresence: ip-address: "' + this.config.ipaddress + '" - interval devices: ' + this.config.interval + ' Min.' + ' - interval members: ' + this.config.intervalFamily + ' s');
+            this.log.debug('configuration user: <' + this.config.username + '>');
+            this.log.debug('configuration history: <' + this.config.history + '>');
+            this.log.debug('configuration dateformat: <' + this.config.dateformat + '>');
+            this.log.debug('configuration familymembers: ' + JSON.stringify(this.config.familymembers));
+            this.log.debug('configuration fb-devices ' + this.config.fbdevices);
+            this.log.debug('configuratuion mesh info: ' + this.config.meshinfo);            
 
+            //decrypt fritzbox password
             const sysObj =  await this.getForeignObjectAsync('system.config');
-            let adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
-            let adapterObjChanged = false;
-   
             if (sysObj && sysObj.native && sysObj.native.secret) {
-                gthis.config.password = decrypt(sysObj.native.secret, this.config.password);
+                this.config.password = this.decrypt(sysObj.native.secret, this.config.password);
             } else {
-                gthis.config.password = decrypt('SdoeQ85NTrg1B0FtEyzf', this.config.password);
+                this.config.password = this.decrypt('SdoeQ85NTrg1B0FtEyzf', this.config.password);
             }
 
-            //if interval <= 0 than set to 1 
+            //Configuration changes if needed
+            let adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
+            let adapterObjChanged = false; //for changes
+            
+            //if interval <= 0 than set to 1
             if (this.config.interval <= 0) {
                 adapterObj.native.interval = 1;
                 adapterObjChanged = true;
-                //await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
                 this.config.interval = 1;
                 this.log.warn('interval is less than 1. Set to 1 Min.');
             }
 
-            //create new configuration items 
+            //create new configuration items -> workaround for older versions
             for(let i=0;i<this.config.familymembers.length;i++){
                 if (this.config.familymembers[i].useip == undefined) {
                     adapterObj.native.familymembers[i].useip = false;
                     adapterObj.native.familymembers[i].ipaddress = '';
                     adapterObjChanged = true;
-                    //await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
                 }
             }
 
-            if (adapterObjChanged === true){
+            if (adapterObjChanged === true){ //Save changes
                 await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
             }
 
@@ -982,15 +737,8 @@ class FbCheckpresence extends utils.Adapter {
                 wl: this.config.whitelist
             };
             
-            //const cron = '*/' + cfg.iv + ' * * * *';
             const cron = cfg.iv * 60000;
-            const cronFamily = this.config.intervalFamily * 1000;
-            this.log.info('start fb-checkpresence: ip-address: ' + cfg.ip + ' polling interval: ' + cfg.iv + ' Min.');
-            this.log.debug('configuration user: <' + this.config.username + '>');
-            this.log.debug('configuration history: <' + this.config.history + '>');
-            this.log.debug('configuration dateformat: <' + this.config.dateformat + '>');
-            this.log.debug('configuration familymembers: ' + JSON.stringify(this.config.familymembers));
-            this.log.debug('configuratuion mesh info: ' + this.config.meshinfo);            
+            const cronFamily = this.config.intervalFamily * 1000; //One second multiplied with minimum 10
             
             const devInfo = {
                 host: this.config.ipaddress,
@@ -999,127 +747,68 @@ class FbCheckpresence extends utils.Adapter {
                 uid: this.config.username,
                 pwd: this.config.password
             };
-            Fb = new fb.Fb(devInfo, this);
 
-            //check if the functions are supported by avm
-            GETPATH = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetHostListPath');
-            GETMESHPATH = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetMeshListPath');
-            GETBYMAC = await Fb.chkService(TR064_HOSTS, 'GetSpecificHostEntry');
-            GETBYIP = await Fb.chkService(TR064_HOSTS, 'X_AVM-DE_GetSpecificHostEntryByIP');
-            GETPORT = await Fb.chkService(TR064_DEVINFO, 'GetSecurityPort');
-            GETEXTIP = await Fb.chkService(TR06_WANPPPCONN, 'GetInfo');
-            if ( GETEXTIP == false) GETEXTIP = await Fb.chkService(TR06_WANIPCONN, 'GetInfo');
-
-            //const test = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', 'urn:dslforum-org:service:DeviceConfig:1', 'X_AVM-DE_CreateUrlSID', null);
-            //gthis.log.info(JSON.stringify(test));
-
-            if (GETPORT != null && GETPORT == true){
-                const port = await Fb.soapAction(Fb, '/upnp/control/deviceinfo', 'urn:dslforum-org:service:DeviceInfo:1', 'GetSecurityPort', null);
-                if (port.result != false){
-                    Fb._sslPort = parseInt(port.resultData['NewSecurityPort']);
-                    gthis.log.debug('sslPort ' + Fb._sslPort);
-                }else{
-                    gthis.log.error('can not read security port! <' + 'status=' + port.status + ' errNo=' + port.errNo + ' ' + port.errorMsg + '>');
-                    //gthis.log.error('can not read security port! <' + port.errorMsg + '>');
-                }
-            }else{
-                adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
-                adapterObj.common.enabled = false;  // Adapter ausschalten
-                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+            Fb = await fb.Fb.init(devInfo, this);
+            //Fb = new fb.Fb(devInfo, this);
+            if(Fb.services === null) {
+                gthis.log.error('Can not get services! Adapter stops');
+                this.stopAdapter();
             }
 
+            //Check if services/actions are supported
+            GETPATH = await Fb.chkService('X_AVM-DE_GetHostListPath', 'Hosts1');
+            GETMESHPATH = await Fb.chkService('X_AVM-DE_GetMeshListPath', 'Hosts1');
+            GETBYMAC = await Fb.chkService('GetSpecificHostEntry', 'Hosts1');
+            GETBYIP = await Fb.chkService('X_AVM-DE_GetSpecificHostEntryByIP', 'Hosts1');
+            GETPORT = await Fb.chkService('GetSecurityPort', 'DeviceInfo1');
+            GETEXTIP = await Fb.chkService('GetInfo', 'WANPPPConnection1');
+            if ( GETEXTIP == false) GETEXTIP = await Fb.chkService('GetInfo', 'WANIPConnection1');
+            SETENABLE = await Fb.chkService('SetEnable', 'WLANConfiguration3');
+            WLAN3INFO = await Fb.chkService('GetInfo', 'WLANConfiguration3');
+            DEVINFO = await Fb.chkService('GetInfo', 'DeviceInfo1');
+            await Fb.chkService('DisallowWANAccessByIP', 'X_AVM-DE_HostFilter');
+            await Fb.chkService('GetWANAccessByIP', 'X_AVM-DE_HostFilter');
+            
+            //const test = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', 'urn:dslforum-org:service:DeviceConfig:1', 'X_AVM-DE_CreateUrlSID', null);
+
             //Create global objects
-            obj.createGlobalObjects(this, HTML+HTML_END, HTML_GUEST+HTML_END);
-            this.log.debug('createGlobalObjects');
+            await obj.createGlobalObjects(this, HTML+HTML_END, HTML_GUEST+HTML_END, enabled);
+            await obj.createMemberObjects(this, cfg, HTML_HISTORY + HTML_END, enabled);
 
             //create Fb devices
-            const enabledFbDevices = gthis.config.fbdevices;
-            gthis.log.debug('function fb-devices ' + enabledFbDevices);
-            if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
-                const items = await getDeviceList(gthis, cfg, Fb);
+            if (GETPATH != null && GETPATH == true && gthis.config.fbdevices == true){
+                const items = await Fb.getDeviceList(gthis, cfg, Fb);
                 if (items != null){
-                    for (let i = 0; i < items.length; i++) {
-                        //const n = items.indexOfObject('HostName', items[i]['HostName'], i);
-                        //if (n != -1 ) gthis.log.warn('duplicate fritzbox device item. Please correct the hostname in the fritzbox settings for the device -> ' + items[i]['HostName'] + ' ' + items[i]['MACAddress']);
-                        await obj.createFbDeviceObjects(gthis, items[i]['HostName']);
-                        await obj.createMeshObjects(gthis, items[i]['HostName'], 0); //create channel 0 as default interface
-                    }
-                    this.log.debug('Fritzbox device objects succesfully created');
+                    await Promise.all([
+                        obj.createFbDeviceObjects(gthis, items, enabled),
+                        obj.createMeshObjects(gthis, items, 0, enabled) //create channel 0 as default interface
+                    ]).catch(function(error){
+                        gthis.log.error('createFbDeviceObjects ' + error);
+                    });
                 }else{
-                    this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox!");
+                    this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox! Adapter stops");
                     adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
                     adapterObj.common.enabled = false;  // Adapter ausschalten
                     await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
-                    //return null;
                 }
-                await resyncFbObjects(items);
+                resyncFbObjects(items);
             }
 
-            if (!cfg.members) {
-                this.log.info('no family members defined -> some functions are disabled');
-            }else{
-                //Create objects for family members
-                for (let k = 0; k < cfg.members.length; k++) {
-                    const memberRow = cfg.members[k];
-                    const member = memberRow.familymember;
-                    if (memberRow.enabled == true){
-                        obj.createMemberObjects(this, member, HTML_HISTORY + HTML_END);
-                        this.log.debug('createMemberObjects ' + member);
-                        if (cfg.history != ''){
-                            enableHistory(cfg, member);
-                        }else{
-                            gthis.log.info('History function disabled');
-                        }
-                    }
-                }
-            }           
-            // in this template all states changes inside the adapters namespace are subscribed
-            this.subscribeStates('guest.wlan');  
-
-            //Get device info
-            let items = null;
-            if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
-                items = await getDeviceList(gthis, cfg, Fb);
-                if (items != null){
-                    getDeviceInfo(items, cfg);
-                }
-            }
-
-            await checkPresence(gthis, cfg, Fb); // Main function
-            this.log.debug('checkPresence first run');
+            // states changes inside the adapters namespace are subscribed
+            this.subscribeStates(`${gthis.namespace}` + '.guest.wlan');
+            this.subscribeStates(`${gthis.namespace}` + '.fb-devices.*.disabled');  
 
             //get uuid for transaction
             //const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
             //const uuid = sSid['NewUUID'].replace('uuid:', '');
-            scheduledJobFamily = setInterval(async function(){
-                await checkPresence(gthis, cfg, Fb);
-                gthis.log.debug('checkPresence scheduled');
-            }, cronFamily);
-
-            scheduledJob = setInterval(async function(){
-                //start transaction
-                //const startTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationStarted', [[1, 'NewSessionID', uuid]]);
-                //gthis.log.debug('checkPresence start transaction -> ' + JSON.stringify(startTransaction));
- 
-                //Get device info
-                let items = null;
-                if (GETPATH != null && GETPATH == true && enabledFbDevices == true){
-                    items = await getDeviceList(gthis, cfg, Fb);
-                    if (items != null){
-                        getDeviceInfo(items, cfg);
-                    }
-                }
-                
-                //stop transaction
-                //const stopTransaction = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'ConfigurationFinished', null);
-                //gthis.log.debug('checkPresence ' + JSON.stringify(stopTransaction));
-                gthis.log.debug('getDeviceInfo scheduled');
-            }, cron);
+            this.loopFamily(1000, cfg, Fb); //Execute family loop
+            this.loopDevices(2000, cfg, Fb);
+            this.loopFamily(cronFamily, cfg, Fb); //Execute family loop
+            this.loopDevices(cron, cfg, Fb);
         } catch (error) {
-            //gthis.setState('info.connection', { val: false, ack: true });
             showError('onReady: ' + error);
         }
-    }//onReady
+    }
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -1128,15 +817,16 @@ class FbCheckpresence extends utils.Adapter {
     async onUnload(callback) {
         try {
             enabled = false;
-            clearInterval(scheduledJob);
-            clearInterval(scheduledJobFamily);
-            gthis.log.info('cleaned everything up ...');
-            await _sleep(3000);
-            gthis.log.info('cleaned everything up 1...');
-            //setTimeout(callback(), 3000);
-            callback();
+            this.timeout1 && clearTimeout(this.timeout1);
+            this.timeout1 = null;
+            this.timeout2 && clearTimeout(this.timeout2);
+            this.timeout2 = null;
+            Fb.exitRequest;
+            this.log.info('cleaned everything up ...');
+            callback && callback();
         } catch (e) {
-            callback();
+            this.log.error(e);
+            callback && callback();
         }
     }
 
@@ -1161,26 +851,45 @@ class FbCheckpresence extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     async onStateChange(id, state) {
-        if (id == `${gthis.namespace}` + '.guest.wlan'){
-            let guestwlan;
-            this.log.info(`state1 ${id} changed: ${state.val} (ack = ${state.ack})`);
-            if (state.val == true){
-                guestwlan = await Fb.soapAction(Fb, '/upnp/control/wlanconfig3', urn + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', 1]]);
-                if (guestwlan['status'] != 200 || guestwlan['result'] == false) this.log.error(JSON.stringify(guestwlan));
-            }else{
-                guestwlan = await Fb.soapAction(Fb, '/upnp/control/wlanconfig3', urn + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', 0]]);
-                if (guestwlan['status'] != 200 || guestwlan['result'] == false) this.log.error(JSON.stringify(guestwlan));
-            }
-        }
+        try {
+            if (state) {
+                if (id == `${gthis.namespace}` + '.guest.wlan' && SETENABLE == true && state.ack === false){
+                    this.log.info(`state1 ${id} changed: ${state.val} (ack = ${state.ack})`);
+                    const val = state.val ? '1' : '0';
+                    const guestwlan = await Fb.soapAction(Fb, '/upnp/control/wlanconfig3', urn + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', val]]);
+                    if (guestwlan['status'] != 200 || guestwlan['result'] == false) {
+                        this.log.error(JSON.stringify(guestwlan));
+                        gthis.setState(id, { val: state.val, ack: true });
+                    }
+                }
 
-        /*if (state) {
-            // The state was changed
-            this.log.info(`system.adapter.${this.namespace}`);
-            this.log.info(`state2 ${id} changed: ${state.val} (ack = ${state.ack})`);
-        } else {
-            // The state was deleted
-            this.log.debug(`state ${id} deleted`);
-        }*/
+                if (id.includes('disabled') && state.ack === false){
+                    this.log.info(`state2 ${id} changed: ${state.val} (ack = ${state.ack})`);
+                    const ipId = id.replace('.disabled', '') + '.ipaddress';
+                    const ipaddress = await gthis.getStateAsync(ipId);
+                    const val = state.val ? '1' : '0';
+                    gthis.log.info('ip ' + JSON.stringify(ipaddress.val) + ' ' + val);
+                    const disabled = await Fb.soapAction(Fb, '/upnp/control/x_hostfilter', urn + 'X_AVM-DE_HostFilter:1', 'DisallowWANAccessByIP', [[1, 'NewIPv4Address', ipaddress.val],[2, 'NewDisallow', val]]);
+                    if (disabled['status'] != 200 || disabled['result'] == false) {
+                        this.log.error(JSON.stringify('DisallowWANAccessByIP ' + disabled));
+                    }else{
+                        await Fb.getWanAccess(ipaddress);
+                        gthis.setState(id, { val: state.val, ack: true });
+                    }
+                }
+            }
+
+            /*if (state) {
+                // The state was changed
+                this.log.info(`system.adapter.${this.namespace}`);
+                this.log.info(`state2 ${id} changed: ${state.val} (ack = ${state.ack})`);
+            } else {
+                // The state was deleted
+                this.log.debug(`state ${id} deleted`);
+            }*/
+        } catch (error) {
+            this.log.error('state change: ' + JSON.stringify(error));            
+        }
     }
 
     /**
@@ -1224,7 +933,7 @@ class FbCheckpresence extends utils.Adapter {
 
                         let items;
                         if (GETPATH == true){
-                            items =  await getDeviceList(this, null, Fb);
+                            items =  await Fb.getDeviceList(this, null, Fb);
                             if (items == null){
                                 return;
                             }
@@ -1252,6 +961,182 @@ class FbCheckpresence extends utils.Adapter {
         } catch (e) {
             showError('onMessage: '+e.message);
         }
+    }
+
+    async checkPresence(gthis, cfg, Fb){
+        return new Promise((resolve, reject) => {
+            const midnight = new Date(); //Date of day change 
+            midnight.setHours(0,0,0);
+            const dnow = new Date(); //Actual date and time for comparison
+
+            // functions for family members
+            jsonTab = '[';
+            htmlTab = HTML;
+
+            let count = 0;
+            let length = cfg.members.length; //Correction if not all members enabled
+            for (let k = 0; k < cfg.members.length; k++){
+                if (cfg.members[k].enabled == false) length--;
+            }
+            let presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false };
+            for (let k = 0; k < cfg.members.length; k++) { //loop over family members
+                if (enabled == false) break; //cancel if disabled over unload
+                const memberRow = cfg.members[k]; //Row from family members table
+                const member = memberRow.familymember; 
+                if (memberRow.enabled == true && GETBYMAC == true){ //member enabled in configuration settings and service is supported
+                    Promise.all([getActive(k, cfg, memberRow, dnow, presence, Fb), gthis.getObjectAsync(`${gthis.namespace}` + '.' + member)]).then((values) => {
+                        count++;
+                        const curVal = values[0];
+                        presence = curVal;
+                        const dPoint = values[1];
+                        if (curVal != null){
+                            //get history data
+                            let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
+                            let absent = 0;
+
+                            const end = new Date().getTime();
+                            const start = midnight.getTime();
+                            let lastVal = null;
+                            let lastValCheck = false;
+
+                            const memb = member;
+                            if (cfg.history != ''){
+                                if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
+                                    try {
+                                        gthis.sendTo(cfg.history, 'getHistory', {
+                                            id: `${gthis.namespace}` + '.' + memb,
+                                            //id: 'fb-checkpresence.0.' + memb,
+                                            options:{
+                                                end:        end,
+                                                start:      start,
+                                                ignoreNull: true,
+                                                aggregate: 'onchange'
+                                            }
+                                        }, function (result1) {
+                                            if (result1 == null) {
+                                                reject('can not read history from ' + memb + ' ' + result1.error);
+                                            }else{
+                                                const cntActualDay = result1.result.length;
+                                                gthis.log.debug('history cntActualDay: ' + cntActualDay);
+                                                gthis.sendTo(cfg.history, 'getHistory', {
+                                                    id: `${gthis.namespace}` + '.' + memb,
+                                                    options: {
+                                                        end:        end,
+                                                        count:      cntActualDay+1,
+                                                        ignoreNull: true,
+                                                        aggregate: 'onchange'
+                                                    }
+                                                }, function (result) {
+                                                    if (result == null) {
+                                                        reject('can not read history from ' + memb + ' ' + result.error);
+                                                    }else{
+                                                        let htmlHistory = HTML_HISTORY;
+                                                        let jsonHistory = '[';
+                                                        let bfirstFalse = false;
+                                                        let firstFalse = midnight;
+                                                        gthis.log.debug('history ' + memb + ' cntActualDay: ' + cntActualDay + ' cntHistory: ' + result.result.length);
+                                                        let cnt = 0;
+                                                        
+                                                        let i = 0;
+                                                        for (let iv = 0; iv < result.result.length; iv++) {
+                                                            if (enabled == false) break;
+                                                            if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
+                                                                i = iv;
+                                                            }else{
+                                                                i = result.result.length - iv - 1;
+                                                            }
+                                                            if (result.result[i].val != null ){
+                                                                const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
+                                                                htmlHistory += createHTMLHistoryRow(cfg, result.result[i].val, hdate);
+                                                                jsonHistory += createJSONHistoryRow(cnt, cfg, 'Active', result.result[i].val, 'Date', hdate);
+                                                                cnt += 1;
+                                                                const hTime = new Date(result.result[i].ts);
+                                                                //gthis.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                                                if (hTime >= midnight.getTime()){
+                                                                    if (lastVal == null){
+                                                                        //if no lastVal exists
+                                                                        lastVal = curVal.val; 
+                                                                        lastValCheck = true;
+                                                                        gthis.log.info(memb + ': No history before this day is available (lastVal = null)');
+                                                                    }else{
+                                                                        if (lastVal == false && lastValCheck == true){
+                                                                            absent = Math.round((hTime - midnight.getTime())/1000/60);
+                                                                            lastValCheck = false;
+                                                                        }
+                                                                        if (result.result[i].val == false){
+                                                                            if (bfirstFalse == false){
+                                                                                firstFalse = new Date(result.result[i].ts);
+                                                                                bfirstFalse = true;
+                                                                            }
+                                                                        }
+                                                                        if (result.result[i].val == true){
+                                                                            if (bfirstFalse == true){
+                                                                                bfirstFalse = false;
+                                                                                absent += Math.round((hTime - firstFalse.getTime())/1000/60);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }else{
+                                                                    gthis.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                                                    lastVal = result.result[i].val;
+                                                                    lastValCheck = true;
+                                                                }   
+                                                            }
+                                                        }
+                                                        if (bfirstFalse == true){
+                                                            bfirstFalse = false;
+                                                            absent += Math.round((dnow - firstFalse.getTime())/1000/60);
+                                                        }
+                                                        present -= absent;
+                                                        
+                                                        gthis.setState(memb + '.present.sum_day', { val: present, ack: true });
+                                                        gthis.setState(memb + '.absent.sum_day', { val: absent, ack: true });
+
+                                                        jsonHistory += ']';
+                                                        htmlHistory += HTML_END;
+                                                        gthis.setState(memb + '.history', { val: jsonHistory, ack: true });
+                                                        gthis.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } catch (ex) {
+                                        reject('checkPresence history: ' + ex.message);
+                                    }
+                                }else{
+                                    gthis.log.info('History from ' + memb + ' not enabled');
+                                }
+                            }else{//history enabled
+                                gthis.setState(memb + '.history', { val: 'disabled', ack: true });
+                                gthis.setState(memb + '.historyHtml', { val: 'disabled', ack: true });
+                                gthis.setState(memb + '.present.sum_day', { val: -1, ack: true });
+                                gthis.setState(memb + '.absent.sum_day', { val: -1, ack: true });
+                            }
+                        }
+                        if (count == length) {
+                            //gthis.log.info('count == length ' + JSON.stringify(presence));
+                            jsonTab = jsonTab.substr(0, jsonTab.length-1); //delete last comma
+                            jsonTab += ']';
+                            htmlTab += HTML_END;  
+
+                            gthis.setState('json', { val: jsonTab, ack: true });
+                            gthis.setState('html', { val: htmlTab, ack: true });
+                        
+                            gthis.setState('presenceAll', { val: presence.all, ack: true });
+                            gthis.setState('absenceAll', { val: presence.allAbsence, ack: true });
+                            gthis.setState('presence', { val: presence.one, ack: true });
+                            gthis.setState('absence', { val: presence.oneAbsence, ack: true });
+                            gthis.setState('absentMembers', { val: presence.absentMembers, ack: true });
+                            gthis.setState('presentMembers', { val: presence.presentMembers, ack: true });
+                            resolve(true);
+                        }
+                    }).catch(function(error){
+                        reject('checkPresence: ' + JSON.stringify(error));
+                    }); 
+                }//enabled in configuration settings
+            }// for end
+            //return true;
+        });
     }
 
 }
