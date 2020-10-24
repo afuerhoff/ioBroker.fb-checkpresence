@@ -645,6 +645,7 @@ class FbCheckpresence extends utils.Adapter {
                                             data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
                                         }
                                         this.setState('fb-devices.' + hostName + '.' + ni + '.link', { val: link, ack: true });
+                                        this.setState('fb-devices.' + hostName + '.' + ni + '.rx_rcpi', { val: nodelinks['rx_rcpi'], ack: true });
                                         this.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
                                         this.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
                                     }
