@@ -655,6 +655,7 @@ class FbCheckpresence extends utils.Adapter {
                             this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
                             this.setState('fb-devices.' + hostName + '.' + '0' + '.cur_data_rate_rx', { val: 0, ack: true });
                             this.setState('fb-devices.' + hostName + '.' + '0' + '.cur_data_rate_tx', { val: 0, ack: true });
+                            this.setState('fb-devices.' + hostName + '.' + '0' + '.rx_rcpi', { val: 0, ack: true });
                         }
                     }
                 }
