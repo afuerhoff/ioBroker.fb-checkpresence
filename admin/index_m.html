@@ -25,6 +25,7 @@
 			#tabFam th, #tabFam td {text-align: left;padding: 3px;}
 			#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
 			input:invalid {border: red solid 3px;}
+			input:valid {border: rgb(0, 255, 21) solid 3px;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -69,9 +70,9 @@
 						<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
 						</div>				
 						<div class="col s2 input-field tooltip">
-							<input type="number" class="value validate" min="1" max="60" step="1" id="interval" required pattern="[1-6][0-9]?"/>
+							<input type="number" class="value validate" min="1" max="59" step="1" id="interval" required pattern="[1-5][0-9]?"/>
 							<label for="interval" class="translate">polling interval in minutes</label>
-							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 60 minutes]</span>
+							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
 						</div>
 					</div><!-- End of row -->
 					<div class="row">
@@ -121,7 +122,7 @@
 						</div>
 					</div><!-- End of row -->
 					<div class="col s2 input-field tooltip">
-						<input type="number" class="value validate" min="10" max="600" step="5" id="intervalFamily" required pattern="[1-6][0-9]?"/>
+						<input type="number" class="value validate" min="10" max="600" step="1" id="intervalFamily" required pattern="[1-6][0-9]?"/>
 						<label for="intervalFamily" class="translate">polling interval in seconds</label>
 						<span class="tooltiptext translate">Here you can define the polling interval [between 10 to 600 seconds]</span>
 					</div>
