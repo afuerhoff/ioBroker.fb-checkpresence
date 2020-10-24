@@ -402,7 +402,7 @@ function load(settings, onChange) {
         //for (var key in settings) {
         //if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
         //}
-        $('.value').each(function () { 
+        $('.value').each(function () {
             const $key = $(this);
             const id = $key.attr('id');
 
