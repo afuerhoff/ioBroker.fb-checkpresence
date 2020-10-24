@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.0.4",
+        "version": "1.1.0",
         "news": {
+            "1.1.0": {
+                "en": "second interval for family members implemented\nmesh info added\nconfiguration validation added\nswitch on, off guest wlan\nswitch on, off internet access of devices \nstructural changes\ncode optimization",
+                "de": "zweites Intervall für Familienmitglieder implementiert\nMesh-Info hinzugefügt\nKonfigurationsvalidierung hinzugefügt\nein- und ausschalten gast wlan\nEin- und Ausschalten des Internetzugangs von Geräten\nStrukturelle Veränderungen\nCodeoptimierung",
+                "ru": "реализован второй интервал для членов семьи\nинформация о сетке добавлена\nдобавлена проверка конфигурации\nвключить, выключить гостевую wlan\nвключить, выключить доступ устройств в Интернет\nструктурные изменения\nоптимизация кода",
+                "pt": "segundo intervalo para membros da família implementado\ninformação de malha adicionada\nvalidação de configuração adicionada\nligar, desligar wlan convidado\nligar, desligar o acesso à Internet dos dispositivos\nmudanças estruturais\notimização de código",
+                "nl": "tweede interval voor gezinsleden geïmplementeerd\nmesh-info toegevoegd\nconfiguratie validatie toegevoegd\ngasten wlan in-, uitschakelen\nin- en uitschakelen van internettoegang van apparaten\nstructurele veranderingen\ncode optimalisatie",
+                "fr": "deuxième intervalle pour les membres de la famille mis en œuvre\ninformations de maillage ajoutées\nvalidation de la configuration ajoutée\nallumer, éteindre le wlan invité\nactiver, désactiver l'accès Internet des appareils\nchangements structurels\noptimisation du code",
+                "it": "secondo intervallo per i membri della famiglia implementato\ninformazioni sulla mesh aggiunte\nconvalida della configurazione aggiunta\naccendere, spegnere la WLAN ospite\naccendere, spegnere l'accesso a Internet dei dispositivi\ncambiamenti strutturali\nottimizzazione del codice",
+                "es": "segundo intervalo para miembros de la familia implementado\ninformación de malla agregada\nvalidación de configuración agregada\nencender, apagar invitado wlan\nencender, apagar el acceso a Internet de los dispositivos\ncambios estructurales\noptimización de código",
+                "pl": "wprowadzono drugi interwał dla członków rodziny\ndodano informacje o siatce\ndodana weryfikacja konfiguracji\nwłącz, wyłącz gości wlan\nwłączanie, wyłączanie dostępu urządzeń do internetu\nzmiany strukturalne\noptymalizacja kodu",
+                "zh-cn": "实施第二次家庭成员间隔\n添加了网格信息\n添加了配置验证\n打开，关闭访客WLAN\n打开，关闭设备的互联网访问\n结构变化\n代码优化"
+            },
             "1.0.4": {
                 "en": "bugfix json list and guest handling, new object guest.presence",
                 "de": "Bugfix JSON-Liste und Gastbehandlung, neues Objekt guest.presence",
