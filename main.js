@@ -528,7 +528,7 @@ class FbCheckpresence extends utils.Adapter {
             if (!items) return false;
             if (!mesh) return false;
             await obj.createFbDeviceObjects(this, items, this.enabled);
-            this.setState('fb-devices.mesh', { val: JSON.stringify(items), ack: true });
+            this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
 
             for (let i = 0; i < items.length; i++) {
                 if (this.enabled == false) break;
