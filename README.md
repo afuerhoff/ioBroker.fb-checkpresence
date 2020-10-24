@@ -170,8 +170,8 @@ Here you will find information about the history of the current day.
 * (afuerhoff) second interval for family members implemented
 * (afuerhoff) mesh info added
 * (afuerhoff) configuration validation added
-* (afuerhoff) switch on/off guest wlan
-* (afuerhoff) switch on/off internet access of devices 
+* (afuerhoff) switch on, off guest wlan
+* (afuerhoff) switch on, off internet access of devices 
 * (afuerhoff) structural changes
 * (afuerhoff) code optimization
 
