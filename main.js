@@ -106,7 +106,7 @@ class FbCheckpresence extends utils.Adapter {
             if (c == dataArray.length-2){
                 json += '"'  + dataArray[c+1] + '"}';
             }else{
-                json += '"'  + dataArray[c+1] + ',';
+                json += '"'  + dataArray[c+1] + '",';
             }
         }
         return json;
