@@ -341,8 +341,8 @@ class FbCheckpresence extends utils.Adapter {
             }
 
             // states changes inside the adapters namespace are subscribed
-            this.subscribeStates(`${this.namespace}` + '.guest.wlan');
-            this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
+            if (this.SETENABLE === true && this.WLAN3INFO === true) this.subscribeStates(`${this.namespace}` + '.guest.wlan');
+            if (this.DISALLOWWANACCESSBYIP === true && this.GETWANACCESSBYIP === true) this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
 
             //get uuid for transaction
             //const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
