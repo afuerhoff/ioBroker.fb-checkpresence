@@ -67,6 +67,7 @@ class FbCheckpresence extends utils.Adapter {
         this.DEVINFO = false;
         this.GETWANACCESSBYIP = false;
         this.DISALLOWWANACCESSBYIP = false;
+        this.REBOOT = false;
     }
 
     decrypt(key, value) {
@@ -115,7 +116,6 @@ class FbCheckpresence extends utils.Adapter {
     async resyncFbObjects(items){
         try {
             // Get all fb-device objects of this adapter
-            const gthis = this;
             if (items && this.config.syncfbdevices == true){
                 const devices = await this.getDevicesAsync();
                 for (const id in devices) {
@@ -135,28 +135,28 @@ class FbCheckpresence extends utils.Adapter {
                                 }
                             }
                             if (found == false && !dName.includes('whitelist')){
-                                const states = await gthis.getStatesAsync(dName + '.*');
+                                const states = await this.getStatesAsync(dName + '.*');
                                 for (const idS in states) {
-                                    await gthis.delObjectAsync(idS);
-                                    await gthis.delStateAsync(idS);
+                                    await this.delObjectAsync(idS);
+                                    await this.delStateAsync(idS);
                                 }
-                                const ch = await gthis.getChannelsOfAsync();
+                                const ch = await this.getChannelsOfAsync();
                                 for (const c in ch) {
                                     if (ch[c]._id.includes(dName + '.')){
-                                        await gthis.delObjectAsync(ch[c]._id);
+                                        await this.delObjectAsync(ch[c]._id);
                                     }
                                 }
-                                await gthis.delObjectAsync(devices[id]._id);
-                                gthis.log.info('device <' + devices[id]._id + '> successfully deleted');
+                                await this.delObjectAsync(devices[id]._id);
+                                this.log.info('device <' + devices[id]._id + '> successfully deleted');
                             }
                         }
                     }
                 }
-                gthis.log.info('fb-devices synchronized successfully');
-                const adapterObj = await gthis.getForeignObjectAsync(`system.adapter.${gthis.namespace}`);
+                this.log.info('fb-devices synchronized successfully');
+                const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
                 adapterObj.native.syncfbdevices = false;
-                gthis.config.syncfbdevices = false;
-                await gthis.setForeignObjectAsync(`system.adapter.${gthis.namespace}`, adapterObj);
+                this.config.syncfbdevices = false;
+                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
 
             }
         } catch (error) {
@@ -178,8 +178,8 @@ class FbCheckpresence extends utils.Adapter {
                         cnt1 = 0;
                         //const itemlist = await Fb.getDeviceList();
                         if (gthis.DEVINFO == true) {
-                            const res = await gthis.Fb.connectionCheck(); //Sets the connection led
-                            if(res.result === false) gthis.log.error('connectionCheck: '  + JSON.stringify(res));
+                            await gthis.Fb.connectionCheck(); //Sets the connection led
+                            //if(res.result === false) gthis.log.error('connectionCheck: '  + JSON.stringify(res));
                         }
                         await gthis.checkPresence(cfg);
                         time = process.hrtime(work);
@@ -306,18 +306,19 @@ class FbCheckpresence extends utils.Adapter {
             }
 
             //Check if services/actions are supported
-            this.GETPATH = await this.Fb.chkService('X_AVM-DE_GetHostListPath', 'Hosts1');
-            this.GETMESHPATH = await this.Fb.chkService('X_AVM-DE_GetMeshListPath', 'Hosts1');
-            this.GETBYMAC = await this.Fb.chkService('GetSpecificHostEntry', 'Hosts1');
-            this.GETBYIP = await this.Fb.chkService('X_AVM-DE_GetSpecificHostEntryByIP', 'Hosts1');
-            this.GETPORT = await this.Fb.chkService('GetSecurityPort', 'DeviceInfo1');
-            this.GETEXTIP = await this.Fb.chkService('GetInfo', 'WANPPPConnection1');
-            if ( this.GETEXTIP == false) this.GETEXTIP = await this.Fb.chkService('GetInfo', 'WANIPConnection1');
-            this.SETENABLE = await this.Fb.chkService('SetEnable', 'WLANConfiguration3');
-            this.WLAN3INFO = await this.Fb.chkService('GetInfo', 'WLANConfiguration3');
-            this.DEVINFO = await this.Fb.chkService('GetInfo', 'DeviceInfo1');
-            this.DISALLOWWANACCESSBYIP = await this.Fb.chkService('DisallowWANAccessByIP', 'X_AVM-DE_HostFilter');
-            this.GETWANACCESSBYIP = await this.Fb.chkService('GetWANAccessByIP', 'X_AVM-DE_HostFilter');
+            this.GETPATH = await this.Fb.chkService('X_AVM-DE_GetHostListPath', 'Hosts1', 'X_AVM-DE_GetHostListPath');
+            this.GETMESHPATH = await this.Fb.chkService('X_AVM-DE_GetMeshListPath', 'Hosts1', 'X_AVM-DE_GetMeshListPath');
+            this.GETBYMAC = await this.Fb.chkService('GetSpecificHostEntry', 'Hosts1', 'GetSpecificHostEntry');
+            this.GETBYIP = await this.Fb.chkService('X_AVM-DE_GetSpecificHostEntryByIP', 'Hosts1', 'X_AVM-DE_GetSpecificHostEntryByIP');
+            this.GETPORT = await this.Fb.chkService('GetSecurityPort', 'DeviceInfo1', 'GetSecurityPort');
+            this.GETEXTIP = await this.Fb.chkService('GetInfo', 'WANPPPConnection1', 'GetInfo');
+            if ( this.GETEXTIP == false) this.GETEXTIP = await this.Fb.chkService('GetInfo', 'WANIPConnection1', 'GetInfo');
+            this.SETENABLE = await this.Fb.chkService('SetEnable', 'WLANConfiguration3', 'SetEnable');
+            this.WLAN3INFO = await this.Fb.chkService('GetInfo', 'WLANConfiguration3', 'WLANConfiguration3-GetInfo');
+            this.DEVINFO = await this.Fb.chkService('GetInfo', 'DeviceInfo1', 'DeviceInfo1-GetInfo');
+            this.DISALLOWWANACCESSBYIP = await this.Fb.chkService('DisallowWANAccessByIP', 'X_AVM-DE_HostFilter', 'DisallowWANAccessByIP');
+            this.GETWANACCESSBYIP = await this.Fb.chkService('GetWANAccessByIP', 'X_AVM-DE_HostFilter', 'GetWANAccessByIP');
+            this.REBOOT = await this.Fb.chkService('Reboot', 'DeviceConfig1', 'Reboot');
             
             //const test = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', 'urn:dslforum-org:service:DeviceConfig:1', 'X_AVM-DE_CreateUrlSID', null);
 
@@ -329,8 +330,10 @@ class FbCheckpresence extends utils.Adapter {
             if (this.GETPATH != null && this.GETPATH == true && this.config.fbdevices == true){
                 const items = await this.Fb.getDeviceList(this, cfg, this.Fb);
                 if (items != null){
-                    await obj.createFbDeviceObjects(this, items, this.enabled);
-                    await obj.createMeshObjects(this, items, 0, this.enabled); //create channel 0 as default interface
+                    let res = await obj.createFbDeviceObjects(this, items, this.enabled);
+                    if (res === true) this.log.info('createFbDeviceObjects finished successfully');
+                    res = await obj.createMeshObjects(this, items, 0, this.enabled); //create channel 0 as default interface
+                    if (res === true) this.log.info('createMeshObjects finished successfully');
                 }else{
                     this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox! Adapter stops");
                     adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
@@ -343,6 +346,7 @@ class FbCheckpresence extends utils.Adapter {
             // states changes inside the adapters namespace are subscribed
             if (this.SETENABLE === true && this.WLAN3INFO === true) this.subscribeStates(`${this.namespace}` + '.guest.wlan');
             if (this.DISALLOWWANACCESSBYIP === true && this.GETWANACCESSBYIP === true) this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
+            if (this.REBOOT === true) this.subscribeStates(`${this.namespace}` + '.reboot');  
 
             //get uuid for transaction
             //const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
@@ -418,6 +422,19 @@ class FbCheckpresence extends utils.Adapter {
                         //this.setState(id, { val: state.val, ack: true });
                     }else{
                         throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(DisallowWANAccess)};
+                    }
+                }
+
+                if (id == `${this.namespace}` + '.reboot' && this.REBOOT === true){
+                    this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
+                    if (state.val === true){
+                        const reboot = await this.Fb.soapAction(this.Fb, '/upnp/control/deviceconfig', this.urn + 'DeviceConfig:1', 'Reboot', null);
+                        if (reboot['status'] == 200 || reboot['result'] == true) {
+                            this.setState(`${this.namespace}` + '.reboot', { val: false, ack: true });
+                        }else{
+                            this.setState(`${this.namespace}` + '.reboot', { val: false, ack: true });
+                            throw('reboot failure! ' + JSON.stringify(reboot));
+                        }
                     }
                 }
             }
@@ -909,7 +926,7 @@ class FbCheckpresence extends utils.Adapter {
                         const start = midnight.getTime();
                         let lastVal = null;
                         let lastValCheck = false;
-                        const gthis = this;
+                        //const gthis = this;
                         const memb = member;
                         if (cfg.history != ''){
                             if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
@@ -917,16 +934,16 @@ class FbCheckpresence extends utils.Adapter {
                                     const result = await this.getHistoryTable(this, cfg, memb, start, end);
                                     if (!result) throw('Can not get history items of member ' + memb);
                                     //this.log.info('history: ' + JSON.stringify(result));
-                                    let htmlHistory = gthis.HTML_HISTORY;
+                                    let htmlHistory = this.HTML_HISTORY;
                                     let jsonHistory = '[';
                                     let bfirstFalse = false;
                                     let firstFalse = midnight;
-                                    gthis.log.debug('history ' + memb + ' cntHistory: ' + result.result.length);
+                                    this.log.debug('history ' + memb + ' cntHistory: ' + result.result.length);
                                     let cnt = 0;
                                     
                                     let i = 0;
                                     for (let iv = 0; iv < result.result.length; iv++) {
-                                        if (gthis.enabled == false) break;
+                                        if (this.enabled == false) break;
                                         if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
                                             i = iv;
                                         }else{
@@ -934,8 +951,8 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                         if (result.result[i].val != null ){
                                             const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
-                                            htmlHistory += gthis.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hdate, cfg.dateFormat)]);
-                                            jsonHistory += gthis.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hdate, cfg.dateFormat)]);
+                                            htmlHistory += this.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hdate, cfg.dateFormat)]);
+                                            jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hdate, cfg.dateFormat)]);
                                             cnt += 1;
                                             const hTime = new Date(result.result[i].ts);
                                             //this.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
@@ -944,7 +961,7 @@ class FbCheckpresence extends utils.Adapter {
                                                     //if no lastVal exists
                                                     lastVal = curVal.val; 
                                                     lastValCheck = true;
-                                                    gthis.log.debug(memb + ': No history item before this day is available');
+                                                    this.log.debug(memb + ': No history item before this day is available');
                                                 }else{
                                                     if (lastVal == false && lastValCheck == true){
                                                         absent = Math.round((hTime - midnight.getTime())/1000/60);
@@ -964,7 +981,7 @@ class FbCheckpresence extends utils.Adapter {
                                                     }
                                                 }
                                             }else{
-                                                gthis.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                                this.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
                                                 lastVal = result.result[i].val;
                                                 lastValCheck = true;
                                             }   
@@ -976,19 +993,19 @@ class FbCheckpresence extends utils.Adapter {
                                     }
                                     present -= absent;
                                     
-                                    gthis.setState(memb + '.present.sum_day', { val: present, ack: true });
-                                    gthis.setState(memb + '.absent.sum_day', { val: absent, ack: true });
+                                    this.setState(memb + '.present.sum_day', { val: present, ack: true });
+                                    this.setState(memb + '.absent.sum_day', { val: absent, ack: true });
 
                                     jsonHistory += ']';
-                                    htmlHistory += gthis.HTML_END;
-                                    gthis.setState(memb + '.history', { val: jsonHistory, ack: true });
-                                    gthis.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
+                                    htmlHistory += this.HTML_END;
+                                    this.setState(memb + '.history', { val: jsonHistory, ack: true });
+                                    this.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
 
                                 } catch (ex) {
                                     throw('checkPresence history: ' + ex.message);
                                 }
                             }else{
-                                gthis.log.info('History from ' + memb + ' not enabled');
+                                this.log.info('History from ' + memb + ' not enabled');
                             }
                         }else{//history enabled
                             this.setState(memb + '.history', { val: 'disabled', ack: true });
