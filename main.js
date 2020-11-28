@@ -543,9 +543,8 @@ class FbCheckpresence extends utils.Adapter {
             const enabledMeshInfo = this.config.meshinfo;
 
             if (!items) return false;
-            if (!mesh) return false;
             await obj.createFbDeviceObjects(this, items, this.enabled);
-            this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
+            if (mesh) this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
 
             for (let i = 0; i < items.length; i++) {
                 if (this.enabled == false) break;
@@ -767,7 +766,7 @@ class FbCheckpresence extends utils.Adapter {
                         throw('member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
                     }
                 }
-                if (hostEntry && hostEntry.result == true){
+                if (hostEntry && hostEntry.result == true && hostEntry.resultData){
                     const newActive = hostEntry.resultData['NewActive'] == 1 ? true : false;
                     //let memberActive = false; 
                     let comming = null;
@@ -844,6 +843,7 @@ class FbCheckpresence extends utils.Adapter {
                         }
                         this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, cfg.dateFormat), 'Geht', dateFormat(going, cfg.dateFormat)]);
                         this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, cfg.dateFormat), dateFormat(going, cfg.dateFormat)]);
+                        //this.log.info('getActive ' + member + ' finished');
                         return presence;
                     }else{
                         throw('object ' + member + ' does not exist!');
