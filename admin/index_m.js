@@ -463,7 +463,9 @@ $(document).ready(function(){
             const x = document.getElementById('meshinfo');
             x.checked = false;
         }
-    });   
+    });
+    //$('.collapsible').collapsible();
+    //$('.tooltipped').tooltip();
     if (M) M.updateTextFields();
 });
 
