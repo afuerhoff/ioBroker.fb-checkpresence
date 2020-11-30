@@ -566,7 +566,7 @@ class FbCheckpresence extends utils.Adapter {
                     //htmlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
                     //jsonRow += createJSONGuestRow(guestCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
-                    this.log.debug('getDeviceInfo: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
+                    this.log.debug('getDeviceInfo active guest: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
                     guestCnt += 1;
                 }
                 let foundwl = false;
