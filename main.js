@@ -554,18 +554,14 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 if (items[i]['Active'] == 1){ // active devices
                     jsonFbDevActive += this.createJSONTableRow(activeCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress'], 'Active', items[i]['Active'], 'Type', deviceType]);
-                    //jsonFbDevActive += createJSONFbDeviceRow(activeCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
                     activeCnt += 1;
                 }else{
                     jsonFbDevInactive += this.createJSONTableRow(inactiveCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress'], 'Active', items[i]['Active'], 'Type', deviceType]);
-                    //jsonFbDevInactive += createJSONFbDeviceRow(inactiveCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
                     inactiveCnt += 1;
                 }
                 if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){ //active guests
                     htmlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]); //guests table
-                    //htmlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    //jsonRow += createJSONGuestRow(guestCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     this.log.debug('getDeviceInfo active guest: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
                     guestCnt += 1;
                 }
@@ -579,22 +575,16 @@ class FbCheckpresence extends utils.Adapter {
                 if (foundwl == false && items[i]['X_AVM-DE_Guest'] == 0){ //&& items[i]['Active'] == 1
                     deviceType = 'blacklist';
                     htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
-                    //htmlBlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    //jsonBlRow += createJSONGuestRow(blCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     blCnt += 1;
                 } 
                 if (foundwl == true ){
                     deviceType = 'whitelist';
-                    //htmlWlRow += createHTMLGuestRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     jsonWlRow += this.createJSONTableRow(wlCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    //jsonWlRow += createJSONGuestRow(wlCnt, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']);
                     wlCnt += 1;
                 }
                 htmlFbDevices += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType]);
-                //htmlFbDevices += createHTMLFbDeviceRow(items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
                 jsonFbDevices += this.createJSONTableRow(i, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress'], 'Active', items[i]['Active'], 'Type', deviceType]);
-                //jsonFbDevices += createJSONFbDeviceRow(i, items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType);
                 
                 let hostName = items[i]['HostName'];
                 if (hostName.includes('.')){
