@@ -175,18 +175,20 @@ class FbCheckpresence extends utils.Adapter {
                     let time = null;
                     if (cnt1 == int1){
                         //gthis.log.info('loopFamily starts');
-                        cnt1 = 0;
-                        //const itemlist = await Fb.getDeviceList();
                         if (gthis.DEVINFO == true) {
                             await gthis.Fb.connectionCheck(); //Sets the connection led
-                            //if(res.result === false) gthis.log.error('connectionCheck: '  + JSON.stringify(res));
                         }
+                        cnt1 = 0;
+                        //const itemlist = await Fb.getDeviceList();
                         await gthis.checkPresence(cfg);
                         time = process.hrtime(work);
                         gthis.log.debug('loopFamily ends after ' + time + ' s');
                     }
                     if (cnt2 == int2){
-                        gthis.log.debug('loopDevices starts');
+                        //gthis.log.debug('loopDevices starts');
+                        if (gthis.DEVINFO == true) {
+                            await gthis.Fb.connectionCheck(); //Sets the connection led
+                        }
                         cnt2 = 0;
                         if (gthis.GETPATH != null && gthis.GETPATH == true && gthis.config.fbdevices == true){
                             let meshlist = null;
