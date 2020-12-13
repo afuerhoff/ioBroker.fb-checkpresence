@@ -17,20 +17,10 @@
 		<script type="text/javascript" src="words.js"></script>
 		<script type="text/javascript" src="index_m.js"></script>
 
-		<style>
-			h5 {padding: 10px}
-			table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
-			#searchFam, #searchWL {font-size: 12px;padding: 0px;margin: 0px 0px 0px 40px;}
-			#tabFam, #tabWL {font-size: 13px;}
-			#tabFam th, #tabFam td {text-align: left;padding: 3px;}
-			#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
-			input:invalid {border: red solid 3px;}
-			input:valid {border: rgb(0, 255, 21) solid 3px;}
-		</style>
 		<script type="text/javascript">
-			$(document).ready(function(){
-				document.getElementById("buttonadd").addEventListener("click", beforeOpen);
-			});
+			//$(document).ready(function(){
+			//	document.getElementById("buttonadd").addEventListener("click", beforeOpen);
+			//});
 		</script>
 	</head>
 
@@ -59,6 +49,29 @@
 
 				<!-- define tab-main -->
 				<div id="tab-main" class="col s12 page">
+
+					<div class="row">
+						<div class="col s12">
+							<ul class="collapsible">
+								<li>
+									<div class="collapsible-header config-section"><h5 class="translate">For help click here</h5><i class="material-icons">live_help</i></div>
+									<div class="collapsible-body">
+										<ul class="collapsible" id="c2">
+											<li>
+												<div class="collapsible-header config-section" ><h5 class="translate">FRITZ!Box settings</h5><i class="material-icons">live_help</i></div>
+												<div class="collapsible-body" af-include-html="help_fbsettings.html"></div>
+											</li>
+											<li>
+												<div class="collapsible-header config-section"><h5 class="translate">Adapter settings</h5><i class="material-icons">live_help</i></div>
+												<div class="collapsible-body" af-include-html="help_adaptersettings.html"></div>
+											</li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
 					<div class="row">
 						<div class="col s2 input-field tooltip">	
 							<input type="text" class="value validate" id="ipaddress" required 
@@ -107,6 +120,11 @@
 							<label for="fbdevices" class="translate black-text">create FB-Devices</label>
 							<span class="tooltiptext translate">Please check the checkbox if you want to create objects for FB-Devices</span>
 					  	</div>
+						  <div class="col s3 input-field tooltip">
+							<input type="checkbox" class="value" id="meshinfo"/>
+							<label for="meshinfo" class="translate black-text">create mesh info</label>
+							<span class="tooltiptext translate">Please check the checkbox if you want to create objects for mesh</span>
+					  	</div>
 						<div class="col s3 input-field tooltip">	
 							<input type="checkbox" class="value" id="syncfbdevices"/>
 							<label for="syncfbdevices" class="translate black-text">synchronize FB-Devices (once)</label>
@@ -114,30 +132,21 @@
 					  	</div>
 					</div>
 
-					<div class="row">
-						<div class="col s3 input-field tooltip">
-							<input type="checkbox" class="value" id="meshinfo"/>
-							<label for="meshinfo" class="translate black-text">create mesh info</label>
-							<span class="tooltiptext translate">Please check the checkbox if you want to create objects for mesh</span>
-					  	</div>
-					</div>
-					
 				</div><!-- End of tab main -->
 
 				<!--Define tab family-->
 				<div id="tab-family" class="col s12 page">
-					<ul class="collapsible">
-						<li>
-						  <div style="font-size: 1.0em" class="collapsible-header"><i class="material-icons">live_help</i>Help</div>
-						  <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-						</li>
-					</ul>
 					<div class="row">
-						<div class="col s12 m8 l8">
-							<p style="font-size: 0.9em" class="translate">Here you can insert name and Mac address or IP address for a family member.</p>
-							<p style="font-size: 0.9em" class="translate">For every enabled table line an object will be created.</p>
+						<div class="col s12">
+							<ul class="collapsible">
+								<li>
+									<div class="collapsible-header config-section"><h5 class="translate">For help click here</h5><i class="material-icons">live_help</i></div>
+									<div class="collapsible-body" af-include-html="help_familysettings.html"></div>
+								</li>
+							</ul>
 						</div>
-					</div><!-- End of row -->
+					</div>
+
 					<div class="col s2 input-field tooltip">
 						<input data-position="bottom" data-tooltip="I am a tooltip" type="number" class="value validate tooltipped" min="10" max="600" step="1" id="intervalFamily" required pattern="[1-6][0-9]?"/>
 						<label for="intervalFamily" class="translate">polling interval in seconds</label>
@@ -175,12 +184,18 @@
 				</div><!-- End of tab family -->
 
 				<div id="tab-whitelist" class="col s12 page">
+
 					<div class="row">
-						<div class="col s12 m12 l12">
-							<p class="translate">Here you can insert known devices in the whitelist.</p>
-							<p class="translate">For every unknown device you get a warning in the blacklist object.</p>
+						<div class="col s12">
+							<ul class="collapsible">
+								<li>
+									<div class="collapsible-header config-section"><h5 class="translate">For help click here</h5><i class="material-icons">live_help</i></div>
+									<div class="collapsible-body" af-include-html="help_wlsettings.html"></div>
+								</li>
+							</ul>
 						</div>
-					</div><!-- End of row -->
+					</div>
+
 					<div id="whitevalues">
 						<div class="row">
 							<div class="col s12">

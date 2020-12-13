@@ -448,6 +448,9 @@ function load(settings, onChange) {
 //dependency between fbdevices and meshinfo
 //checking of meshinfo only valid if fbdevices are selected
 $(document).ready(function(){ 
+    includeHTML();
+    document.getElementById('buttonadd').addEventListener('click', beforeOpen);
+
     $('#meshinfo').change(function() 
     {
         if(this.checked == true)
@@ -464,8 +467,8 @@ $(document).ready(function(){
             x.checked = false;
         }
     });
-    //$('.collapsible').collapsible();
-    //$('.tooltipped').tooltip();
+    $('.collapsible').collapsible();
+    $('.tooltipped').tooltip();
     if (M) M.updateTextFields();
 });
 
@@ -527,4 +530,33 @@ function save(callback) {
     obj.familymembers = table2values('values');
     obj.whitelist = table2values('whitevalues');
     callback(obj);
+}
+
+function includeHTML() {
+    //https://www.w3schools.com/howto/howto_html_include.asp
+    let i, elmnt, file, xhttp;
+    /* Loop through a collection of all HTML elements: */
+    const z = document.getElementsByTagName('*');
+    for (i = 0; i < z.length; i++) {
+        elmnt = z[i];
+        /*search for elements with a certain atrribute:*/
+        file = elmnt.getAttribute('af-include-html');
+        if (file) {
+            /* Make an HTTP request using the attribute value as the file name: */
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+                    if (this.status == 404) {elmnt.innerHTML = 'Page not found.';}
+                    /* Remove the attribute, and call this function once more: */
+                    elmnt.removeAttribute('af-include-html');
+                    includeHTML();
+                }
+            };
+            xhttp.open('GET', file, true);
+            xhttp.send();
+            /* Exit the function: */
+            return;
+        }
+    }
 }

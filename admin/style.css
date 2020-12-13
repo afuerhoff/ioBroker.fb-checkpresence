@@ -1,18 +1,11 @@
 /* You can delete those if you want. I just found them very helpful */
-* {
-    box-sizing: border-box
-}
-.m {
-    /* Don't cut off dropdowns! */
-    overflow: initial;
-}
+* {box-sizing: border-box;}
+.m {/* Don't cut off dropdowns! */overflow: initial;}
 
 /* Add your styles here */
 
 /* Tooltip container */
-.tooltip {
-   position: relative;
-   display: inline-block;
+.tooltip { position: relative; display: inline-block;
    /*border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
@@ -53,17 +46,22 @@
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-   visibility: visible;
-   opacity: 1;
-}
+.tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
 
 /* Required to avoid y-scrollbar. */
 .modal { max-height:85% !important; }
 .m .page {height: auto !important; min-height:75% !important; }
 
+/* add space at top/bottom */
+.spaceTop {margin-top: 0.1em; }
+.spaceBottom {margin-top: 3em; }
+
+/* span */
+.m span { font-size: 1.0em !important }  /* span is set to 0.9em for some unknown reason, we set back to 1.0em  */
+.m .dialog-config-buttons span { font-size: 0.9em !important }  /* leave span at 0.9em for the save/cancel etc. buttons  */
+
 /* Header section */
-#header-area {margin-top: 5px; margin-bottom: 1px; background-color:#398ceb;}
+#header-area {margin-top: 5px; margin-bottom: 1px; background-color:#64b5f6;}
 #header-area #header-logo-title .logo {float:left; margin-right: 10px;}
 #header-area #header-logo-title p {line-height: normal !important; margin: 0 !important; padding: 8px 0 0 8px;}
 #header-area #header-logo-title p>span.h-title {font-size: 1.8em !important; color:white; }
@@ -77,3 +75,65 @@
 .m .tabs .tab a:hover { border-bottom: 2px solid #46a0e9 !important; }
 .m .row .col.m1 { width: 20%; } 
 #tab-area { padding-left:0;padding-right:0; margin-top: 0px; margin-bottom: 1px; background-color:#174475; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2) }
+
+/* add space at top/bottom */
+.spaceTop3em {margin-top: 3em; }
+.spaceBottom3em {margin-top: 3em; }
+
+/* Code */
+/*code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; background-color: rgba(101, 190, 246, 0.05); border-radius: 0; }
+
+/* Links */
+.page a:link, .page a:visited { color: #0d47a1;}      /* unvisited link */
+.page a:visited { color:#616e83; } /* visited link */
+.page a:visited { color:#2696ef; } /* visited link */
+.page a:hover { text-decoration: underline; } /* mouse over link */
+.page a:active { color: #0d47a1; } /* selected link */
+
+/* ****** collapsible sections ****** */
+/* collapsible: general ****** */
+.collapsible .collapsible-header { background-color: #c8e4fa69 !important; box-shadow: none!important;}
+.collapsible .collapsible-header { padding-top:3px !important; padding-bottom:1px !important;}
+.collapsible .collapsible-header i { padding-top:3px; }
+.collapsible .collapsible-header h5 { font-weight: bold; font-size:1.1em; margin-top:0.6em;}
+
+#c2 .collapsible-header { background-color:  #9e9e9e !important; box-shadow: none!important;}
+#c2 .collapsible-header { padding-top:4px !important; padding-bottom:1px !important;}
+#c2 .collapsible-header i { padding-top:2px; }
+#c2 .collapsible-header h5 { font-weight: bold; font-size:1.0em; margin-top:0.5em;}
+#c2 .collapsible-header.config-section img {width: 3%; height: 3%;}
+
+/* collapsible: Config Table Header/Documentation ****** */
+.collapsible-header.config-section    { background-color:#757575 !important; }
+.collapsible-header.config-section i.material-icons { color:#fff; font-size: 1.3em;} /* icon color */
+.collapsible-header.config-section h5 { color:#fff; }
+.collapsible-header.config-section { display: flex; justify-content: space-between; } /* for right alignment of question mark icon */
+.collapsible-header.config-section i.material-icons { padding-right: 0; margin-right: 0;}
+
+.collapsible .collapsible-body {margin-top: 10px; margin-right: 10px; margin-bottom: 10px; padding-top: 1px; box-shadow: none!important;}
+.collapsible .collapsible-body ol li {font-size: 1.1em;}
+.collapsible .collapsible-body ol li:not(:last-child) { margin-bottom: .6em; }
+.collapsible .collapsible-body p { font-size: 1.0em; line-height: 1.0em !important; margin: 3px;}
+.collapsible .collapsible-body code { font-size: 1.1em !important; padding-top:1px;}
+.collapsible .collapsible-body td:nth-child(1) { font-weight:normal; color: #0d47a1; width: 200px; } /* Format first column */
+.collapsible .collapsible-body table.striped > tbody > tr:nth-child(odd) {background-color: rgba(201, 205, 209, 0.5);}
+.collapsible .collapsible-body table {font-size: 1.0em; margin-top:1px; margin-left: 5px;}
+.collapsible .collapsible-body th {font-size: 1.1em; background-color: #38383869; padding: 10px; margin-right: 10px;}
+.collapsible .collapsible-body td {font-size: 1.1em; padding:10px; margin-right: 10px;}
+.collapsible .collapsible-body tr {padding:3px;}
+
+
+/* collapsible: Documentation ****** */
+.collapsible-body.instructions td { line-height: 1.0em; }
+
+/*.tab1 {color: #174475;} */
+.collapsible .collapsible-body .headline1 {background-color: #84bcf8; color: white; padding: 10px; margin-top: 10px;}
+
+/*h5 {padding: 10px}*/
+table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
+#searchFam, #searchWL {font-size: 12px;padding: 0px;margin: 0px 0px 0px 40px;}
+#tabFam, #tabWL {font-size: 13px;}
+#tabFam th, #tabFam td {text-align: left;padding: 3px;}
+#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
+input:invalid {border: red solid 3px;}
+input:valid {border: rgb(0, 255, 21) solid 3px;}
