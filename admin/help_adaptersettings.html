@@ -1,0 +1,63 @@
+<table class="bordered striped">
+    <thead>
+        <tr>
+            <th class="translate">Settings</th>
+            <th class="translate">Mandatory</th>
+            <th class="translate">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="translate">IP Fritzbox</td>
+            <td class="translate">Yes</td>
+            <td class="translate">Here you must insert the ip address (i.e. 192.168.178.1) or the domain name (i.e. fritz.box) of your fritzbox</td>
+        </tr>
+        <tr>
+            <td class="translate">Username</td>
+            <td class="translate">Yes</td>
+            <td class="translate">The username is the FRITZ!Box user you have created</td>
+        </tr>
+        <tr>
+            <td class="translate">Password</td>
+            <td class="translate">Yes</td>
+            <td class="translate">You have to set the password for your FRITZ!Box user. In case of an adapter failure it could helpful if you insert the password again and save the adapter configuration.</td>
+        </tr>
+        <tr>
+            <td class="translate">polling interval in minutes</td>
+            <td class="translate">Yes</td>
+            <td class="translate">The Interval can set between 1 and 59 minutes. This is the interval for the FB-devices setting</td>
+        </tr>
+        <tr>
+            <td class="translate">Select history adapter</td>
+            <td class="translate">No</td>
+            <td class="translate">All the installed history adapters are chown here. You should choose your prefered one</td>
+        </tr>
+        <tr>
+            <td class="translate">Date format</td>
+            <td class="translate">Yes</td>
+            <td class="translate">
+                <p>The date format is used for some json lists and html tables.</p>
+                <p>See here for more information: <a href="https://www.npmjs.com/package/dateformat#mask-options" target="_blank">npm dateformat: mask options></p>
+                <img src="dateformat.png" alt="Date format">
+            </td>
+        </tr>
+        <tr>
+            <td class="translate">create FB-Devices</td>
+            <td class="translate">No</td>
+            <td class="translate">If enabled, the folder fb-devices is created in the object section from ioBroker. 
+                For every device in the fritzbox a device object is created in the fb-devices folder.</td>
+        </tr>
+        <tr>
+            <td class="translate">create mesh info</td>
+            <td class="translate">No</td>
+            <td class="translate">This option could be enabled, if the FB-Device option is enabled. 
+                For every interface of a device in the mesh list a channel is created.
+                </td>
+        </tr>
+        <tr>
+            <td class="translate">synchronize FB-Devices (once)</td>
+            <td class="translate">No</td>
+            <td class="translate">Enable this option to synchronize the devices ones</td>
+        </tr>
+    </tbody>
+</table>
