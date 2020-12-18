@@ -70,6 +70,10 @@ firmware version (>= 7.25)of the fritzbox. See here fore information: https://av
 The password is encrypted and wasn't saved in clear text. The user name and password may have a maximum of 
 32 characters. See for information: https://service.avm.de/help/de/FRITZ-Box-Fon-WLAN-7490/014/hilfe_zeichen_fuer_kennwoerter#:~:text=Namen%20f%C3%BCr%20Benutzer,Kennwortfeld%20darf%20nicht%20leer%20sein.
 
+### Ssl option
+In some cases the adapter could not connect to the fritzbox. It could help to disable this option.
+In this case the adapter tries to connect without https. 
+
 ### Interval
 You have separate intervals for family members and Fritzbox devices.
 The interval for Fritzbox devices can be configured from 1 to 59 minutes. Normally a value between 1 and 5 minutes is an optimal interval to read the fritzbox data. Family members could be configured from 10s to 600s. Every new cycle starts if the previous cycle 
