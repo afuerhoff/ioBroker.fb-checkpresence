@@ -65,10 +65,15 @@
 							<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
 						</div>
 						<div class="input-field col s3 tooltip">
-					<input type="password" data-crypt="1" class="value validate" id="password" pattern="^[a-zA-Z0-9 _-!#$%&'()*+,\./:;=>?@[\]^`{|}~]{1,32}$"/>
-						<label for="password">Password</label>
-						<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
+							<input type="password" data-crypt="1" class="value validate" id="password" pattern="^[a-zA-Z0-9 _-!#$%&'()*+,\./:;=>?@[\]^`{|}~]{1,32}$"/>
+							<label for="password">Password</label>
+							<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
 						</div>				
+						<div class="col s1 input-field tooltip">	
+							<input type="checkbox" class="value" id="ssl"/>
+							<label for="ssl" class="translate black-text">ssl</label>
+							<span class="tooltiptext translate">Please disable, if you have problems to connect to the fritzbox</span>
+					  	</div>
 						<div class="col s2 input-field tooltip">
 							<input type="number" class="value validate" min="1" max="59" step="1" id="interval" required pattern="[1-5][0-9]?"/>
 							<label for="interval" class="translate">polling interval in minutes</label>

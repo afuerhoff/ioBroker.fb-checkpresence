@@ -281,6 +281,7 @@
         "familymembers": [],
         "whitelist": [],
         "ipaddress": "fritz.box",
+        "ssl": true,
         "interval": 1,
         "intervalFamily": 60,
         "history": "",
