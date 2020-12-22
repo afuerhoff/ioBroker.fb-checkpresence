@@ -77,8 +77,8 @@
 #tab-area { padding-left:0;padding-right:0; margin-top: 0px; margin-bottom: 1px; background-color:#174475; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2) }
 
 /* add space at top/bottom */
-.spaceTop3em {margin-top: 3em; }
-.spaceBottom3em {margin-top: 3em; }
+/*.spaceTop3em {margin-top: 3em; }
+.spaceBottom3em {margin-top: 3em; }*/
 
 /* Code */
 /*code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; background-color: rgba(101, 190, 246, 0.05); border-radius: 0; }
@@ -111,17 +111,18 @@
 .collapsible-header.config-section i.material-icons { padding-right: 0; margin-right: 0;}
 
 .collapsible .collapsible-body {margin-top: 10px; margin-right: 10px; margin-bottom: 10px; padding-top: 1px; box-shadow: none!important;}
-.collapsible .collapsible-body ol li {font-size: 1.1em;}
-.collapsible .collapsible-body ol li:not(:last-child) { margin-bottom: .6em; }
-.collapsible .collapsible-body p { font-size: 1.0em; line-height: 1.0em !important; margin: 3px;}
+/*.collapsible .collapsible-body ol li {font-size: 1.1em;}
+.collapsible .collapsible-body ol li:not(:last-child) { margin-bottom: .6em; }*/
+.collapsible .collapsible-body p { font-size: 1.0em; line-height: 1.1em !important; margin: 3px;}
 .collapsible .collapsible-body code { font-size: 1.1em !important; padding-top:1px;}
-.collapsible .collapsible-body td:nth-child(1) { font-weight:normal; color: #0d47a1; width: 200px; } /* Format first column */
+/*.collapsible .collapsible-body td:nth-child(1) { font-weight:normal; color: #0d47a1; width: 200px; } /* Format first column */
+.collapsible .collapsible-body td:nth-child(1) { width: 300px; } /* Format first column */
 .collapsible .collapsible-body table.striped > tbody > tr:nth-child(odd) {background-color: rgba(201, 205, 209, 0.5);}
 .collapsible .collapsible-body table {font-size: 1.0em; margin-top:1px; margin-left: 5px;}
-.collapsible .collapsible-body th {font-size: 1.1em; background-color: #38383869; padding: 10px; margin-right: 10px;}
-.collapsible .collapsible-body td {font-size: 1.1em; padding:10px; margin-right: 10px;}
+.collapsible .collapsible-body th {background-color: #38383869; padding: 10px; margin-right: 10px;}
+/*.collapsible .collapsible-body th {background-color: #c8e4fa69; padding: 10px; margin-right: 10px;}*/
+/*.collapsible .collapsible-body td {font-size: 1.1em; padding:10px; margin-right: 10px;}*/
 .collapsible .collapsible-body tr {padding:3px;}
-
 
 /* collapsible: Documentation ****** */
 .collapsible-body.instructions td { line-height: 1.0em; }
@@ -137,3 +138,6 @@ table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
 #tabWL th, #tabWL td {text-align: left;	padding: 1px;}
 input:invalid {border: red solid 3px;}
 input:valid {border: rgb(0, 255, 21) solid 3px;}
+
+/* Help text format */
+.bg-color-1 {background-color: #777777; color: white}
