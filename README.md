@@ -49,6 +49,7 @@ Following TR-064 services and actions are used:
 * WLANConfiguration3 - GetInfo
 * X_AVM-DE_HostFilter - DisallowWANAccessByIP
 * X_AVM-DE_HostFilter - GetWANAccessByIP
+* DeviceConfig:1 - Reboot
 
 By default, the TR-064 interface is not activated. However, this can easily be changed via the 
 FritzBox web interface. To do this log in into your FritzBox and ensure that the expert view is activated. 
@@ -171,7 +172,16 @@ Here you will find information about the history of the current day.
 <!--
     Placeholder for the next version (at the beginning of the line):
     ## __WORK IN PROGRESS__
+    * Did some changes
+    * Did some more changes
 -->
+
+### __WORK IN PROGRESS__
+* (afuerhoff) Configuration optimized
+* (afuerhoff) Bugfix dateformat pattern
+* (afuerhoff) SSL (https) workaround implemented
+* (afuerhoff) Connection check optimized
+* (afuerhoff) Documentation added
 
 ### 1.1.0 (2020-10-24)
 * (afuerhoff) second interval for family members implemented
