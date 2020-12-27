@@ -198,7 +198,7 @@ class FbCheckpresence extends utils.Adapter {
                             if (gthis.GETMESHPATH != null && gthis.GETMESHPATH == true && gthis.config.meshinfo == true) meshlist = await gthis.Fb.getMeshList();
                             if (itemlist && meshlist) {
                                 const hosts = await gthis.getAllFbObjects(itemlist);
-                                await gthis.getDeviceInfoNew(hosts, meshlist, cfg);
+                                await gthis.getDeviceInfo(hosts, meshlist, cfg);
                             }
                         }
                         time = process.hrtime(work);
@@ -431,7 +431,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (items != null){
                     const res = await obj.createFbDeviceObjects(this, items, this.enabled);
                     if (res === true) this.log.info('createFbDeviceObjects finished successfully');
-                    await obj.createMeshObjects(this, items, 0, this.enabled);
+                    //await obj.createMeshObjects(this, items, 0, this.enabled);
                 }else{
                     this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox! Adapter stops");
                     adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
@@ -618,7 +618,7 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
 
-    async getDeviceInfoNew(hosts, mesh, cfg){
+    async getDeviceInfo(hosts, mesh, cfg){
         try {
             //analyse guests
             let guestCnt = 0;
@@ -639,7 +639,7 @@ class FbCheckpresence extends utils.Adapter {
 
             if (!hosts) return false;
             const newObjs = hosts.filter(host => host.status == 'new');
-            if (newObjs) await obj.createFbDeviceObjectsNew(this, newObjs, this.enabled);
+            if (newObjs) await obj.createFbDeviceObjects(this, newObjs, this.enabled);
             
             if (mesh) this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
 
@@ -840,203 +840,6 @@ class FbCheckpresence extends utils.Adapter {
                         }
                     }
                 }
-            }
-            jsonRow += ']';
-            jsonBlRow += ']';
-            jsonWlRow += ']';
-            htmlRow += this.HTML_END;
-            htmlBlRow += this.HTML_END;
-            htmlFbDevices += this.HTML_END;
-            jsonFbDevices += ']';
-            jsonFbDevActive += ']';
-            jsonFbDevInactive += ']';
-            
-            this.setState('fb-devices.count', { val: items.length, ack: true });
-            this.setState('fb-devices.json', { val: jsonFbDevices, ack: true });
-            this.setState('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
-            this.setState('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
-            this.setState('fb-devices.html', { val: htmlFbDevices, ack: true });
-            this.setState('fb-devices.active', { val: activeCnt, ack: true });
-            this.setState('fb-devices.inactive', { val: inactiveCnt, ack: true });
-
-            this.setState('guest.listHtml', { val: htmlRow, ack: true });
-            this.setState('guest.listJson', { val: jsonRow, ack: true });
-            this.setState('guest.count', { val: guestCnt, ack: true });
-            this.setState('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
-
-            this.setState('activeDevices', { val: activeCnt, ack: true });
-
-            this.setState('blacklist.count', { val: blCnt, ack: true });
-            this.setState('blacklist.listHtml', { val: htmlBlRow, ack: true });
-            this.setState('blacklist.listJson', { val: jsonBlRow, ack: true });
-            
-            this.setState('whitelist.json', { val: jsonWlRow, ack: true });
-            this.setState('whitelist.count', { val: cfg.wl.length, ack: true });
-
-            if (guestCnt > 0) {
-                this.setState('guest', { val: true, ack: true });
-            }else {
-                this.setState('guest', { val: false, ack: true });
-            }
-            this.log.debug('getDeviceInfo activeCnt: '+ activeCnt);
-            if (blCnt > 0) {
-                this.setState('blacklist', { val: true, ack: true });
-            }else {
-                this.setState('blacklist', { val: false, ack: true });
-            }
-            this.log.debug('getDeviceInfo blCnt: '+ blCnt);
-            return true;
-        } catch (error) {
-            this.log.error('getDeviceInfo: ' + error);
-            return false;
-        }
-    }
-
-
-    async getDeviceInfo(items, mesh, cfg){
-        try {
-            //analyse guests
-            let guestCnt = 0;
-            let activeCnt = 0;
-            let inactiveCnt = 0;
-            let blCnt = 0;
-            let wlCnt = 0;
-            let htmlRow = this.HTML_GUEST;
-            let htmlBlRow = this.HTML_GUEST;
-            let htmlFbDevices = this.HTML_FB;
-            let jsonRow = '[';
-            let jsonBlRow = '[';
-            let jsonWlRow = '[';
-            let jsonFbDevices = '[';
-            let jsonFbDevActive = '[';
-            let jsonFbDevInactive = '[';
-            const enabledMeshInfo = this.config.meshinfo;
-
-            if (!items) return false;
-            await obj.createFbDeviceObjects(this, items, this.enabled);
-            if (mesh) this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
-
-            for (let i = 0; i < items.length; i++) {
-                if (this.enabled == false) break;
-                let deviceType = '-';
-                if (items[i]['X_AVM-DE_Guest'] == 1){
-                    deviceType = 'guest';
-                }
-                if (items[i]['Active'] == 1){ // active devices
-                    jsonFbDevActive += this.createJSONTableRow(activeCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress'], 'Active', items[i]['Active'], 'Type', deviceType]);
-                    activeCnt += 1;
-                }else{
-                    jsonFbDevInactive += this.createJSONTableRow(inactiveCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress'], 'Active', items[i]['Active'], 'Type', deviceType]);
-                    inactiveCnt += 1;
-                }
-                if (items[i]['X_AVM-DE_Guest'] == 1 && items[i]['Active'] == 1){ //active guests
-                    htmlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]); //guests table
-                    jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    this.log.debug('getDeviceInfo active guest: ' + items[i]['HostName'] + ' ' + items[i]['IPAddress'] + ' ' + items[i]['MACAddress']);
-                    guestCnt += 1;
-                }
-                let foundwl = false;
-                for(let w = 0; w < cfg.wl.length; w++) {
-                    if (cfg.wl[w].white_macaddress == items[i]['MACAddress']){
-                        foundwl = true;
-                        break;
-                    }
-                }
-                if (foundwl == false && items[i]['X_AVM-DE_Guest'] == 0){ //&& items[i]['Active'] == 1
-                    deviceType = 'blacklist';
-                    htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
-                    jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    blCnt += 1;
-                } 
-                if (foundwl == true ){
-                    deviceType = 'whitelist';
-                    jsonWlRow += this.createJSONTableRow(wlCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    wlCnt += 1;
-                }
-                htmlFbDevices += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress'], items[i]['Active'], deviceType]);
-                jsonFbDevices += this.createJSONTableRow(i, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress'], 'Active', items[i]['Active'], 'Type', deviceType]);
-                
-                let hostName = items[i]['HostName'];
-                if (hostName.includes('.')){
-                    hostName = hostName.replace('.', '-');
-                }
-                this.setState('fb-devices.' + hostName + '.macaddress', { val: items[i]['MACAddress'], ack: true });
-                this.setState('fb-devices.' + hostName + '.ipaddress', { val: items[i]['IPAddress'], ack: true });
-                this.setState('fb-devices.' + hostName + '.active', { val: items[i]['Active'], ack: true });
-                this.setState('fb-devices.' + hostName + '.interfacetype', { val: items[i]['InterfaceType'], ack: true });
-                this.setState('fb-devices.' + hostName + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
-                this.setState('fb-devices.' + hostName + '.guest', { val: items[i]['X_AVM-DE_Guest'], ack: true });
-                this.setState('fb-devices.' + hostName + '.whitelist', { val: foundwl, ack: true });
-                this.setState('fb-devices.' + hostName + '.blacklist', { val: ! (foundwl && items[i]['X_AVM-DE_Guest']), ack: true });
-                for (let k=0; k<cfg.members.length; k++){
-                    if (cfg.members[k].macaddress == items[i]['MACAddress']){
-                        this.setState(cfg.members[k].familymember + '.speed', { val: items[i]['X_AVM-DE_Speed'], ack: true });
-                        break;
-                    }
-                }
-
-                //Get mesh info for device
-                if (this.GETMESHPATH != null && this.GETMESHPATH == true && enabledMeshInfo == true){
-                    if (mesh != null){
-                        let meshdevice = mesh.find(el => el.device_mac_address === items[i]['MACAddress']);
-                        if (meshdevice == null) {
-                            meshdevice = mesh.find(el => el.device_name === items[i]['HostName']);
-                        }
-                        if (meshdevice != null) {
-                            this.setState('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
-                            for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) {
-                                const nInterface = meshdevice['node_interfaces'][ni];
-                                let interfaceName = nInterface['name'];
-                                if (interfaceName == '') interfaceName = nInterface['type'];
-                                //this.log.info('createMeshObjects2 ' + JSON.stringify(items[i]));
-                                obj.createMeshObjects(this, [items[i]], ni, this.enabled);
-                                /*const hostname = items[i]['HostName'];
-                                if (hostname.includes('.')){
-                                    hostName = hostname.replace('.', '-');
-                                }*/
-
-                                this.setState('fb-devices.' + hostName + '.' + ni + '.name', { val: nInterface['name'], ack: true });
-                                this.setState('fb-devices.' + hostName + '.' + ni + '.type', { val: nInterface['type'], ack: true });
-                                //this.setState('fb-devices.' + hostName + '.' + ni + '.security', { val: nInterface['security'], ack: true });
-                                
-                                if (nInterface['node_links'].length > 0){ //filter empty interfaces
-                                    let link = '';
-                                    let data_rate_rx = 0;
-                                    let data_rate_tx = 0;
-
-                                    for (let nl = 0; nl < nInterface['node_links'].length; nl++) {
-                                        const nodelinks = nInterface['node_links'][nl]; 
-                                        if ( nodelinks['state'] == 'CONNECTED'){
-                                            if (nodelinks['node_1_uid'] != meshdevice['uid']){ //Top connection
-                                                const node1 = mesh.find(el => el.uid === nodelinks['node_1_uid']);
-                                                if (link != '') link += ',';
-                                                link += node1['device_name'];
-                                            }
-                                            if (nodelinks['node_2_uid'] != meshdevice['uid']){ //Down connection
-                                                const node1 = mesh.find(el => el.uid === nodelinks['node_2_uid']);
-                                                if (link != '') link += ',';
-                                                link += node1['device_name'];
-                                            }
-                                            data_rate_rx = nodelinks['cur_data_rate_rx'] / 1000;
-                                            data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
-                                        }
-                                        this.setState('fb-devices.' + hostName + '.' + ni + '.link', { val: link, ack: true });
-                                        this.setState('fb-devices.' + hostName + '.' + ni + '.rx_rcpi', { val: nodelinks['rx_rcpi'], ack: true });
-                                        this.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
-                                        this.setState('fb-devices.' + hostName + '.' + ni + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
-                                    }
-                                }
-                            }
-                        }else{
-                            this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
-                            this.setState('fb-devices.' + hostName + '.' + '0' + '.cur_data_rate_rx', { val: 0, ack: true });
-                            this.setState('fb-devices.' + hostName + '.' + '0' + '.cur_data_rate_tx', { val: 0, ack: true });
-                            this.setState('fb-devices.' + hostName + '.' + '0' + '.rx_rcpi', { val: 0, ack: true });
-                        }
-                    }
-                }
-
-
             }
             jsonRow += ']';
             jsonBlRow += ']';
