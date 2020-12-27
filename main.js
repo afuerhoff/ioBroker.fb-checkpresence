@@ -799,8 +799,8 @@ class FbCheckpresence extends utils.Adapter {
                                                 if (link != '') link += ',';
                                                 link += node1['device_name'];
                                             }
-                                            data_rate_rx = nodelinks['cur_data_rate_rx'] / 1000;
-                                            data_rate_tx = nodelinks['cur_data_rate_tx'] / 1000;
+                                            data_rate_rx = Math.round(nodelinks['cur_data_rate_rx'] / 1000);
+                                            data_rate_tx = Math.round(nodelinks['cur_data_rate_tx'] / 1000);
                                         }
                                         this.setState('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: link, ack: true });
                                         this.setState('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: nodelinks['rx_rcpi'], ack: true });
