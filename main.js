@@ -421,8 +421,6 @@ class FbCheckpresence extends utils.Adapter {
             this.GETWANACCESSBYIP = await this.Fb.chkService('GetWANAccessByIP', 'X_AVM-DE_HostFilter', 'GetWANAccessByIP');
             this.REBOOT = await this.Fb.chkService('Reboot', 'DeviceConfig1', 'Reboot');
             
-            //const test = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', 'urn:dslforum-org:service:DeviceConfig:1', 'X_AVM-DE_CreateUrlSID', null);
-
             //Create global objects
             await obj.createGlobalObjects(this, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
             await obj.createMemberObjects(this, cfg, this.HTML_HISTORY + this.HTML_END, this.enabled);
@@ -433,8 +431,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (items != null){
                     const res = await obj.createFbDeviceObjects(this, items, this.enabled);
                     if (res === true) this.log.info('createFbDeviceObjects finished successfully');
-                    //res = await obj.createMeshObjects(this, items, 0, this.enabled); //create channel 0 as default interface
-                    //if (res === true) this.log.info('createMeshObjects finished successfully');
+                    await obj.createMeshObjects(this, items, 0, this.enabled);
                 }else{
                     this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox! Adapter stops");
                     adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
@@ -449,9 +446,6 @@ class FbCheckpresence extends utils.Adapter {
             if (this.DISALLOWWANACCESSBYIP === true && this.GETWANACCESSBYIP === true) this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
             if (this.REBOOT === true) this.subscribeStates(`${this.namespace}` + '.reboot');  
 
-            //get uuid for transaction
-            //const sSid = await Fb.soapAction(Fb, '/upnp/control/deviceconfig', urn + 'DeviceConfig:1', 'X_GenerateUUID', null);
-            //const uuid = sSid['NewUUID'].replace('uuid:', '');
             this.loop(10, 55, cronFamily, cron, cfg);
         } catch (error) {
             this.showError('onReady: ' + error);
@@ -645,8 +639,7 @@ class FbCheckpresence extends utils.Adapter {
 
             if (!hosts) return false;
             const newObjs = hosts.filter(host => host.status == 'new');
-            //this.log.info(JSON.stringify(newObjs));
-            await obj.createFbDeviceObjectsNew(this, newObjs, this.enabled);
+            if (newObjs) await obj.createFbDeviceObjectsNew(this, newObjs, this.enabled);
             
             if (mesh) this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
 
@@ -713,7 +706,6 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
 
-                //fb-checkpresence.0.info  ??????
                 const hostCh = ch.filter(ch => ch._id.includes('.' + hostName + '.'));
 
                 //Get mesh info for device
@@ -731,40 +723,39 @@ class FbCheckpresence extends utils.Adapter {
                                 let found = false;
                                 for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) {
                                     const nInterface = meshdevice['node_interfaces'][ni];
-                                    const interfaceUid = nInterface['uid'];
                                     const ifType = nInterface['type'];
                                     const ifName = nInterface['name'];
                                     const ifNewName = ifName == '' ? ifType : ifName;
                                     if (hostCh[c]._id.includes('.' + hostName + '.' + ifNewName)){
-                                        //this.log.info('Interface: ' + ch[c]._id);
                                         found = true;
                                         break;
                                     }
                                 }
                                 if (found == false){ //old interfaces
-                                    this.log.info('Interface not found: ' + hostCh[c]._id);
-                                    this.log.info('Interface not found: ' + JSON.stringify(meshdevice));
-                                    this.log.info('Interface not found: ' + hosts[i]['hnOrg']);
-                                    //await this.deleteChannelAsync(hostCh[c]._id.replace(`${this.namespace}` + '.fb-devices.',''));
-                                    //.replace(`${this.namespace}` + '.fb-devices.' + hostName + '.' ,'')
-                                    await this.delObjectAsync(hostCh[c]._id);
-                                    const states = await this.getStatesAsync(hostCh[c]._id + '.*');
-                                    if (states){
-                                        for (const idS in states) {
-                                            await this.delObjectAsync(idS);
-                                            await this.delStateAsync(idS);
+                                    this.log.debug('Interface not found: ' + hostCh[c]._id);
+                                    if (Number.isInteger(parseInt(hostCh[c]._id.replace(`${this.namespace}.fb-devices.` + hostName + '.', '')))){
+                                        const states = await this.getStatesAsync(hostCh[c]._id + '.*');
+                                        if (states){
+                                            for (const idS in states) {
+                                                await this.delObjectAsync(idS);
+                                                await this.delStateAsync(idS);
+                                            }
                                         }
+                                        await this.delObjectAsync(hostCh[c]._id);
+                                    }else{
+                                        this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
+                                        this.setState(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
+                                        this.setState(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
+                                        this.setState(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
+                                        this.setState(hostCh[c]._id + '.link', { val: '', ack: true });
                                     }
                                 }
                             }
                             for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) { 
                                 const nInterface = meshdevice['node_interfaces'][ni];
-                                const interfaceUid = nInterface['uid'];
                                 const ifType = nInterface['type'];
                                 const ifName = nInterface['name'];
                                 const ifNewName = ifName == '' ? ifType : ifName;
-                                //const meshD = meshdevice['node_interfaces'];
-                                //const intf = meshD.filter(x => x.uid.includes(hostName + '.'));
                                 let found = false;
                                 for (const c in hostCh) {
                                     if (hostCh[c]._id.includes('.' + hostName + '.' + ifNewName)){
@@ -775,14 +766,12 @@ class FbCheckpresence extends utils.Adapter {
                                 if (found == false){ //new interfaces
                                     this.log.info('New interface found: ' + hostName + '.' + ifNewName);
                                     obj.createMeshObject(this, hostName, ifNewName, this.enabled);
-                                    //obj.createMeshObjects(this, [items[i]], ni, this.enabled);
                                 }
                             }
 
                             for (let ni = 0; ni < meshdevice['node_interfaces'].length; ni++) {
                                 const nInterface = meshdevice['node_interfaces'][ni];
                                 let interfaceName = nInterface['name'];
-                                const interfaceUid = nInterface['uid'];
                                 let ifType = nInterface['type'];
                                 const ifName = nInterface['name'];
                                 const ifNewName = ifName == '' ? ifType : ifName;
@@ -829,25 +818,25 @@ class FbCheckpresence extends utils.Adapter {
                             }
                         }else{
                             for (const c in hostCh) {
-                                this.log.info('Host not in mesh list: ' + hostCh[c]._id);
-                                //await this.deleteChannelAsync(hostCh[c]._id.replace(`${this.namespace}` + '.fb-devices.',''));
-                                //.replace(`${this.namespace}` + '.fb-devices.' + hostName + '.' ,'')
-                                await this.delObjectAsync(hostCh[c]._id);
-                                const states = await this.getStatesAsync(hostCh[c]._id + '.*');
-                                if (states){                                
-                                    for (const idS in states) {
-                                        await this.delObjectAsync(idS);
-                                        await this.delStateAsync(idS);
+                                this.log.debug('Host not in mesh list: ' + hostCh[c]._id);
+                                if (Number.isInteger(parseInt(hostCh[c]._id.replace(`${this.namespace}.fb-devices.` + hostName + '.', '')))){
+                                    const states = await this.getStatesAsync(hostCh[c]._id + '.*');
+                                    if (states){                                
+                                        for (const idS in states) {
+                                            await this.delObjectAsync(idS);
+                                            await this.delStateAsync(idS);
+                                        }
                                     }
+                                    await this.delObjectAsync(hostCh[c]._id);
+                                }else{
+                                    this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
+                                    this.setState(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
+                                    this.setState(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
+                                    this.setState(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
+                                    this.setState(hostCh[c]._id + '.link', { val: '', ack: true });
                                 }
-                                //await this.delObjectAsync(c);
                             }
 
-                            //this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
-                            //this.setState('fb-devices.' + hostName + '.' + '0' + '.cur_data_rate_rx', { val: 0, ack: true });
-                            //this.setState('fb-devices.' + hostName + '.' + '0' + '.cur_data_rate_tx', { val: 0, ack: true });
-                            //this.setState('fb-devices.' + hostName + '.' + '0' + '.rx_rcpi', { val: 0, ack: true });
-                            //this.setState('fb-devices.' + hostName + '.' + '0' + '.link', { val: '', ack: true });
                         }
                     }
                 }
