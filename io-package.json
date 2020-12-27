@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.0",
+        "version": "1.1.1",
         "news": {
+            "1.1.1": {
+                "en": "Configuration optimized\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nDocumentation added\nMesh handling optimized",
+                "de": "Konfiguration optimiert\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nDokumentation hinzugefügt\nNetzhandhabung optimiert",
+                "ru": "Оптимизированная конфигурация\nИсправление ошибки в шаблоне формата даты\nРеализован обходной путь SSL (https)\nОптимизирована проверка подключения\nДобавлена документация\nОптимизирована обработка сетки",
+                "pt": "Configuração otimizada\nPadrão de formato de data de correção de bug\nSolução alternativa SSL (https) implementada\nVerificação de conexão otimizada\nDocumentação adicionada\nManuseio de malha otimizado",
+                "nl": "Configuratie geoptimaliseerd\nBugfix dateformat-patroon\nSSL (https) tijdelijke oplossing geïmplementeerd\nVerbindingscontrole geoptimaliseerd\nDocumentatie toegevoegd\nMesh handling geoptimaliseerd",
+                "fr": "Configuration optimisée\nCorrectif du modèle de format de date\nSolution de contournement SSL (https) mise en œuvre\nContrôle de connexion optimisé\nDocumentation ajoutée\nGestion du maillage optimisée",
+                "it": "Configurazione ottimizzata\nBugfix dateformat pattern\nSoluzione alternativa SSL (https) implementata\nControllo della connessione ottimizzato\nDocumentazione aggiunta\nGestione della rete ottimizzata",
+                "es": "Configuración optimizada\nPatrón de formato de fecha de corrección de errores\nSolución alternativa SSL (https) implementada\nComprobación de conexión optimizada\nDocumentación agregada\nManejo de malla optimizado",
+                "pl": "Konfiguracja zoptymalizowana\nWzorzec formatu daty poprawek\nZaimplementowano obejście SSL (https)\nSprawdzanie połączenia zoptymalizowane\nDokumentacja została dodana\nZoptymalizowana obsługa siatki",
+                "zh-cn": "配置优化\n错误修正日期格式模式\n实施SSL（https）解决方法\n连接检查已优化\n已添加文档\n优化网格处理"
+            },
             "1.1.0": {
                 "en": "second interval for family members implemented\nmesh info added\nconfiguration validation added\nswitch on, off guest wlan\nswitch on, off internet access of devices \nstructural changes\ncode optimization",
                 "de": "zweites Intervall für Familienmitglieder implementiert\nMesh-Info hinzugefügt\nKonfigurationsvalidierung hinzugefügt\nein- und ausschalten gast wlan\nEin- und Ausschalten des Internetzugangs von Geräten\nStrukturelle Veränderungen\nCodeoptimierung",

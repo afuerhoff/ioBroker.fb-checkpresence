@@ -176,7 +176,7 @@ Here you will find information about the history of the current day.
     * Did some more changes
 -->
 
-### __WORK IN PROGRESS__
+### 1.1.1 (2020-12-27)
 * (afuerhoff) Configuration optimized
 * (afuerhoff) Bugfix dateformat pattern
 * (afuerhoff) SSL (https) workaround implemented
@@ -203,11 +203,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) error handling optimized
 * (afuerhoff) external ip implemented
 * (afuerhoff) check if mac or ip are listed in fritzbox
-
-### 1.0.1 (2020-04-12)
-* (afuerhoff) error handling optimized
-* (afuerhoff) history configuration optimized
-* (afuerhoff) re-synchronisation of fb-devices implemented
 
 ## License
 MIT License
