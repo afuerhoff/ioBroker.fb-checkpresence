@@ -182,6 +182,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) SSL (https) workaround implemented
 * (afuerhoff) Connection check optimized
 * (afuerhoff) Documentation added
+* (afuerhoff) Mesh handling optimized 
 
 ### 1.1.0 (2020-10-24)
 * (afuerhoff) second interval for family members implemented
