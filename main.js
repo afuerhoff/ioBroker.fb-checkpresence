@@ -429,7 +429,8 @@ class FbCheckpresence extends utils.Adapter {
             if (this.GETPATH != null && this.GETPATH == true && this.config.fbdevices == true){
                 const items = await this.Fb.getDeviceList(this, cfg, this.Fb);
                 if (items != null){
-                    const res = await obj.createFbDeviceObjects(this, items, this.enabled);
+                    const hosts = await this.getAllFbObjects(items);
+                    const res = await obj.createFbDeviceObjects(this, hosts, this.enabled);
                     if (res === true) this.log.info('createFbDeviceObjects finished successfully');
                     //await obj.createMeshObjects(this, items, 0, this.enabled);
                 }else{
