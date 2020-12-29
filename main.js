@@ -979,7 +979,7 @@ class FbCheckpresence extends utils.Adapter {
                     //let memberActive = false; 
                     let comming = null;
                     let going = null;
-                    const curVal = await this.getStateAsync(member + '.presence'); //.then(function(curVal){ //actual member state
+                    const curVal = await this.getStateAsync(member + '.presence');
                     if (curVal && curVal.val != null){
                         //calculation of '.since'
                         const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
@@ -1064,6 +1064,49 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
 
+    async getActiveNew(index, memberRow){
+        try {
+            const member = memberRow.familymember; 
+            const mac = memberRow.macaddress; 
+            const ip = memberRow.ipaddress; 
+            if (memberRow.useip == undefined || ip == undefined){
+                throw('Please edit configuration in admin view and save it! Some items (use ip, ip-address) are missing'); 
+            }else{
+                let hostEntry = null;
+                if (memberRow.useip == false){
+                    if (mac != ''){
+                        hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
+                    }else{
+                        throw('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                    }
+                }else{
+                    if (this.GETBYIP == true && ip != ''){
+                        hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
+                    }else{
+                        if (memberRow.ipaddress == '') {
+                            throw('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                        }
+                    }
+                }
+                if(hostEntry && hostEntry.result === false){
+                    if (hostEntry[0].errorMsg.errorDescription == 'NoSuchEntryInArray'){
+                        throw('mac or ipaddress from member ' + member + ' not found in fritzbox device list');
+                    } else if (hostEntry[0].errorMsg.errorDescription == 'Invalid Args'){
+                        throw('invalid arguments for member ' + member);
+                    } else {
+                        throw('member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
+                    }
+                }
+                if (hostEntry && hostEntry.result == true && hostEntry.resultData){
+                    return hostEntry.resultData['NewActive'] == 1 ? true : false;
+                }
+            }
+        } catch(error){
+            this.log.error('getActive: ' + JSON.stringify(error));
+            return null;
+        }
+    }
+
     getHistoryTable(gthis, cfg, memb, start, end){
         return new Promise((resolve, reject) => {
             gthis.sendTo(cfg.history, 'getHistory', {
@@ -1100,150 +1143,231 @@ class FbCheckpresence extends utils.Adapter {
         });
     }
 
-    async checkPresence(cfg){
+    async calcMemberAttributes(member, index, newActive, dnow, presence, cfg){
         try {
             const midnight = new Date(); //Date of day change 
             midnight.setHours(0,0,0);
-            const dnow = new Date(); //Actual date and time for comparison
+            
+            //let memberActive = false; 
+            let comming = null;
+            let going = null;
 
-            // functions for family members
-            this.jsonTab = '[';
-            this.htmlTab = this.HTML;
-
-            let count = 0;
-            let length = cfg.members.length; //Correction if not all members enabled
-            for (let k = 0; k < cfg.members.length; k++){
-                if (cfg.members[k].enabled == false) length--;
+            const dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + member);
+            const curVal = await this.getStateAsync(member + '.presence');
+            if (curVal && curVal.val != null){
+                //calculation of '.since'
+                const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
+                if (curVal.val == true){
+                    this.setState(member + '.present.since', { val: diff, ack: true });
+                    this.setState(member + '.absent.since', { val: 0, ack: true });
+                }
+                if (curVal.val == false){
+                    this.setState(member + '.absent.since', { val: diff, ack: true });
+                    this.setState(member + '.present.since', { val: 0, ack: true });
+                }
+                //analyse member presence
+                if (newActive == true){ //member = true
+                    //memberActive = true;
+                    presence.one = true;
+                    presence.allAbsence = false;
+                    if (presence.presentMembers == '') {
+                        presence.presentMembers += member;
+                    }else{
+                        presence.presentMembers += ', ' + member;
+                    }
+                    if (curVal.val == false){ //signal changing to true
+                        this.log.info('newActive ' + member + ' ' + newActive);
+                        this.setState(member, { val: true, ack: true });
+                        this.setState(member + '.presence', { val: true, ack: true });
+                        this.setState(member + '.comming', { val: dnow, ack: true });
+                        comming = dnow;
+                    }
+                    if (curVal.val == null){
+                        this.log.warn('Member value is null! Value set to true');
+                        this.setState(member, { val: true, ack: true });
+                        this.setState(member + '.presence', { val: true, ack: true });
+                    }
+                }else{ //member = false
+                    presence.all = false;
+                    presence.oneAbsence = true;
+                    if (presence.absentMembers == '') {
+                        presence.absentMembers += member;
+                    }else{
+                        presence.absentMembers += ', ' + member;
+                    }
+                    if (curVal.val == true){ //signal changing to false
+                        this.log.info('newActive ' + member + ' ' + newActive);
+                        this.setState(member, { val: false, ack: true });
+                        this.setState(member + '.presence', { val: false, ack: true });
+                        this.setState(member + '.going', { val: dnow, ack: true });
+                        going = dnow;
+                    }
+                    if (curVal.val == null){
+                        this.log.warn('Member value is null! Value set to false');
+                        this.setState(member, { val: false, ack: true });
+                        this.setState(member + '.presence', { val: false, ack: true });
+                    }
+                }
+                this.setState(member, { val: newActive, ack: true });
+                this.setState(member + '.presence', { val: newActive, ack: true });
+                presence.val = newActive;
+                const comming1 = await this.getStateAsync(member + '.comming');
+                comming = comming1.val;
+                const going1 = await this.getStateAsync(member + '.going');
+                going = going1.val;
+                if (comming1.val == null) {
+                    comming = new Date(curVal.lc);
+                    this.setState(member + '.comming', { val: comming, ack: true });
+                }
+                if (going1.val == null) {
+                    going = new Date(curVal.lc);
+                    this.setState(member + '.going', { val: going, ack: true });
+                }
+                this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, cfg.dateFormat), 'Geht', dateFormat(going, cfg.dateFormat)]);
+                this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, cfg.dateFormat), dateFormat(going, cfg.dateFormat)]);
+                //this.log.info('getActive ' + member + ' finished');
+                //return presence;
+            }else{
+                throw('object ' + member + ' does not exist!');
             }
-            let presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false };
-            for (let k = 0; k < cfg.members.length; k++) { //loop over family members
-                if (this.enabled == false) break; //cancel if disabled over unload
-                const memberRow = cfg.members[k]; //Row from family members table
-                const member = memberRow.familymember; 
-                if (memberRow.enabled == true && this.GETBYMAC == true){ //member enabled in configuration settings and service is supported
-                    const curVal = await this.getActive(count, cfg, memberRow, dnow, presence);
-                    const dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + member);
-                    count++;
-                    presence = curVal;
-                    if (curVal != null){
-                        //get history data
-                        let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
-                        let absent = 0;
 
-                        const end = new Date().getTime();
-                        const start = midnight.getTime();
-                        let lastVal = null;
-                        let lastValCheck = false;
-                        //const gthis = this;
-                        const memb = member;
-                        if (cfg.history != ''){
-                            if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
-                                try {
-                                    const result = await this.getHistoryTable(this, cfg, memb, start, end);
-                                    if (!result) throw('Can not get history items of member ' + memb);
-                                    //this.log.info('history: ' + JSON.stringify(result));
-                                    let htmlHistory = this.HTML_HISTORY;
-                                    let jsonHistory = '[';
-                                    let bfirstFalse = false;
-                                    let firstFalse = midnight;
-                                    this.log.debug('history ' + memb + ' cntHistory: ' + result.result.length);
-                                    let cnt = 0;
-                                    
-                                    let i = 0;
-                                    for (let iv = 0; iv < result.result.length; iv++) {
-                                        if (this.enabled == false) break;
-                                        if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
-                                            i = iv;
-                                        }else{
-                                            i = result.result.length - iv - 1;
-                                        }
-                                        if (result.result[i].val != null ){
-                                            const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
-                                            htmlHistory += this.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hdate, cfg.dateFormat)]);
-                                            jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hdate, cfg.dateFormat)]);
-                                            cnt += 1;
-                                            const hTime = new Date(result.result[i].ts);
-                                            //this.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
-                                            if (hTime >= midnight.getTime()){
-                                                if (lastVal == null){
-                                                    //if no lastVal exists
-                                                    lastVal = curVal.val; 
-                                                    lastValCheck = true;
-                                                    this.log.debug(memb + ': No history item before this day is available');
-                                                }else{
-                                                    if (lastVal == false && lastValCheck == true){
-                                                        absent = Math.round((hTime - midnight.getTime())/1000/60);
-                                                        lastValCheck = false;
-                                                    }
-                                                    if (result.result[i].val == false){
-                                                        if (bfirstFalse == false){
-                                                            firstFalse = new Date(result.result[i].ts);
-                                                            bfirstFalse = true;
-                                                        }
-                                                    }
-                                                    if (result.result[i].val == true){
-                                                        if (bfirstFalse == true){
-                                                            bfirstFalse = false;
-                                                            absent += Math.round((hTime - firstFalse.getTime())/1000/60);
-                                                        }
-                                                    }
-                                                }
-                                            }else{
-                                                this.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
-                                                lastVal = result.result[i].val;
-                                                lastValCheck = true;
-                                            }   
-                                        }
-                                    }
-                                    if (bfirstFalse == true){
-                                        bfirstFalse = false;
-                                        absent += Math.round((dnow - firstFalse.getTime())/1000/60);
-                                    }
-                                    present -= absent;
-                                    
-                                    this.setState(memb + '.present.sum_day', { val: present, ack: true });
-                                    this.setState(memb + '.absent.sum_day', { val: absent, ack: true });
+            if (presence != null){
+                //get history data
+                let present = Math.round((dnow - midnight)/1000/60); //time from midnight to now = max. present time
+                let absent = 0;
 
-                                    jsonHistory += ']';
-                                    htmlHistory += this.HTML_END;
-                                    this.setState(memb + '.history', { val: jsonHistory, ack: true });
-                                    this.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
-
-                                } catch (ex) {
-                                    throw('checkPresence history: ' + ex.message);
+                const end = new Date().getTime();
+                const start = midnight.getTime();
+                let lastVal = null;
+                let lastValCheck = false;
+                //const gthis = this;
+                const memb = member;
+                if (cfg.history != ''){
+                    if (dPoint.common.custom != undefined && dPoint.common.custom[cfg.history].enabled == true){
+                        try {
+                            const result = await this.getHistoryTable(this, cfg, memb, start, end);
+                            if (!result) throw('Can not get history items of member ' + memb);
+                            //this.log.info('history: ' + JSON.stringify(result));
+                            let htmlHistory = this.HTML_HISTORY;
+                            let jsonHistory = '[';
+                            let bfirstFalse = false;
+                            let firstFalse = midnight;
+                            this.log.debug('history ' + memb + ' cntHistory: ' + result.result.length);
+                            let cnt = 0;
+                            
+                            let i = 0;
+                            for (let iv = 0; iv < result.result.length; iv++) {
+                                if (this.enabled == false) break;
+                                if (result.result[0].ts < result.result[result.result.length-1].ts){ //Workaround for history sorting behaviour
+                                    i = iv;
+                                }else{
+                                    i = result.result.length - iv - 1;
                                 }
-                            }else{
-                                this.log.info('History from ' + memb + ' not enabled');
+                                if (result.result[i].val != null ){
+                                    const hdate = dateFormat(new Date(result.result[i].ts), cfg.dateformat);
+                                    htmlHistory += this.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hdate, cfg.dateFormat)]);
+                                    jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hdate, cfg.dateFormat)]);
+                                    cnt += 1;
+                                    const hTime = new Date(result.result[i].ts);
+                                    //this.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                    if (hTime >= midnight.getTime()){
+                                        if (lastVal == null){
+                                            //if no lastVal exists
+                                            lastVal = presence.val; 
+                                            lastValCheck = true;
+                                            this.log.debug(memb + ': No history item before this day is available');
+                                        }else{
+                                            if (lastVal == false && lastValCheck == true){
+                                                absent = Math.round((hTime - midnight.getTime())/1000/60);
+                                                lastValCheck = false;
+                                            }
+                                            if (result.result[i].val == false){
+                                                if (bfirstFalse == false){
+                                                    firstFalse = new Date(result.result[i].ts);
+                                                    bfirstFalse = true;
+                                                }
+                                            }
+                                            if (result.result[i].val == true){
+                                                if (bfirstFalse == true){
+                                                    bfirstFalse = false;
+                                                    absent += Math.round((hTime - firstFalse.getTime())/1000/60);
+                                                }
+                                            }
+                                        }
+                                    }else{
+                                        this.log.debug('history lastVal ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
+                                        lastVal = result.result[i].val;
+                                        lastValCheck = true;
+                                    }   
+                                }
                             }
-                        }else{//history enabled
-                            this.setState(memb + '.history', { val: 'disabled', ack: true });
-                            this.setState(memb + '.historyHtml', { val: 'disabled', ack: true });
-                            this.setState(memb + '.present.sum_day', { val: -1, ack: true });
-                            this.setState(memb + '.absent.sum_day', { val: -1, ack: true });
+                            if (bfirstFalse == true){
+                                bfirstFalse = false;
+                                absent += Math.round((dnow - firstFalse.getTime())/1000/60);
+                            }
+                            present -= absent;
+                            
+                            this.setState(memb + '.present.sum_day', { val: present, ack: true });
+                            this.setState(memb + '.absent.sum_day', { val: absent, ack: true });
+
+                            jsonHistory += ']';
+                            htmlHistory += this.HTML_END;
+                            this.setState(memb + '.history', { val: jsonHistory, ack: true });
+                            this.setState(memb + '.historyHtml', { val: htmlHistory, ack: true });
+
+                        } catch (ex) {
+                            throw(ex.message);
                         }
                     }else{
-                        this.log.warn('can not get active state from member ' + member);
-                        break;
+                        this.log.info('History from ' + memb + ' not enabled');
                     }
-                    if (count == length) {
-                        this.jsonTab += ']';
-                        this.htmlTab += this.HTML_END;  
-
-                        this.setState('json', { val: this.jsonTab, ack: true });
-                        this.setState('html', { val: this.htmlTab, ack: true });
-                    
-                        this.setState('presenceAll', { val: presence.all, ack: true });
-                        this.setState('absenceAll', { val: presence.allAbsence, ack: true });
-                        this.setState('presence', { val: presence.one, ack: true });
-                        this.setState('absence', { val: presence.oneAbsence, ack: true });
-                        this.setState('absentMembers', { val: presence.absentMembers, ack: true });
-                        this.setState('presentMembers', { val: presence.presentMembers, ack: true });
-                        return true;
-                    }
-                }//enabled in configuration settings
-            }// for end
+                }else{//history enabled
+                    this.setState(memb + '.history', { val: 'disabled', ack: true });
+                    this.setState(memb + '.historyHtml', { val: 'disabled', ack: true });
+                    this.setState(memb + '.present.sum_day', { val: -1, ack: true });
+                    this.setState(memb + '.absent.sum_day', { val: -1, ack: true });
+                }
+            }else{
+                this.log.warn('can not get active state from member ' + member);
+                //break;
+            }
         } catch (error) {
-            this.log.error('getActive: ' + JSON.stringify(error));            
+            this.log.error('calcMember ' + error);
+        }
+    }
+
+    async checkPresence(cfg){
+        try {
+            const dnow = new Date(); //Actual date and time for comparison
+            this.jsonTab = '[';
+            this.htmlTab = this.HTML;
+            const presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false };
+
+            const membersFiltered = cfg.members.filter(x => x.enabled == true);
+            for (let k = 0; k < membersFiltered.length; k++) { //loop over enabled family members
+                if (this.enabled == false) break; //cancel if disabled over unload
+                const memberRow = membersFiltered[k]; //Row from family members table
+                const member = memberRow.familymember; 
+                if (this.GETBYMAC == true){ //member enabled in configuration settings and service is supported
+                    const newActive = await this.getActiveNew(k, memberRow);
+                    this.calcMemberAttributes(member, k, newActive, dnow, presence, cfg);
+                }
+            }
+            this.jsonTab += ']';
+            this.htmlTab += this.HTML_END;  
+
+            this.setState('json', { val: this.jsonTab, ack: true });
+            this.setState('html', { val: this.htmlTab, ack: true });
+        
+            this.setState('presenceAll', { val: presence.all, ack: true });
+            this.setState('absenceAll', { val: presence.allAbsence, ack: true });
+            this.setState('presence', { val: presence.one, ack: true });
+            this.setState('absence', { val: presence.oneAbsence, ack: true });
+            this.setState('absentMembers', { val: presence.absentMembers, ack: true });
+            this.setState('presentMembers', { val: presence.presentMembers, ack: true });
+            return true;
+        } catch (error) {
+            this.log.error('checkPresence: ' + JSON.stringify(error));            
         }
     }
 }
