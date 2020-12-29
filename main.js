@@ -749,7 +749,8 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState('fb-devices.' + hostName + '.whitelist', { val: foundwl, ack: true });
                 this.setState('fb-devices.' + hostName + '.blacklist', { val: ! (foundwl && hosts[i]['guest']), ack: true });
                 
-                for (let k=0; k<cfg.members.length; k++){ //speed für Family members
+                const membersFiltered = cfg.members.filter(x => x.enabled == true);
+                for (let k=0; k < membersFiltered.length; k++){ //speed für Family members
                     if (cfg.members[k].macaddress == hosts[i]['mac']){
                         this.setState(cfg.members[k].familymember + '.speed', { val: hosts[i]['speed'], ack: true });
                         break;
@@ -939,133 +940,6 @@ class FbCheckpresence extends utils.Adapter {
         } catch (error) {
             this.log.error('getDeviceInfo: ' + error);
             return false;
-        }
-    }
-
-    async getActive(index, cfg, memberRow, dnow, presence){
-        try {
-            //if (enabled === false) return null;
-            const member = memberRow.familymember; 
-            const mac = memberRow.macaddress; 
-            const ip = memberRow.ipaddress; 
-            if (memberRow.useip == undefined || ip == undefined){
-                throw('Please edit configuration in admin view and save it! Some items (use ip, ip-address) are missing'); 
-            }else{
-                let hostEntry = null;
-                if (memberRow.useip == false){
-                    if (mac != ''){
-                        hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
-                    }else{
-                        throw('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
-                    }
-                }else{
-                    if (this.GETBYIP == true && ip != ''){
-                        hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
-                    }else{
-                        if (memberRow.ipaddress == '') {
-                            throw('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
-                        }
-                    }
-                }
-                if(this.enabled == false) {
-                    return presence;
-                } 
-                if(hostEntry && hostEntry.result === false){
-                    if (hostEntry[0].errorMsg.errorDescription == 'NoSuchEntryInArray'){
-                        throw('mac or ipaddress from member ' + member + ' not found in fritzbox device list');
-                    } else if (hostEntry[0].errorMsg.errorDescription == 'Invalid Args'){
-                        throw('invalid arguments for member ' + member);
-                    } else {
-                        throw('member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
-                    }
-                }
-                if (hostEntry && hostEntry.result == true && hostEntry.resultData){
-                    const newActive = hostEntry.resultData['NewActive'] == 1 ? true : false;
-                    //let memberActive = false; 
-                    let comming = null;
-                    let going = null;
-                    const curVal = await this.getStateAsync(member + '.presence');
-                    if (curVal && curVal.val != null){
-                        //calculation of '.since'
-                        const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
-                        if (curVal.val == true){
-                            this.setState(member + '.present.since', { val: diff, ack: true });
-                            this.setState(member + '.absent.since', { val: 0, ack: true });
-                        }
-                        if (curVal.val == false){
-                            this.setState(member + '.absent.since', { val: diff, ack: true });
-                            this.setState(member + '.present.since', { val: 0, ack: true });
-                        }
-                        //analyse member presence
-                        if (newActive == true){ //member = true
-                            //memberActive = true;
-                            presence.one = true;
-                            presence.allAbsence = false;
-                            if (presence.presentMembers == '') {
-                                presence.presentMembers += member;
-                            }else{
-                                presence.presentMembers += ', ' + member;
-                            }
-                            if (curVal.val == false){ //signal changing to true
-                                this.log.info('newActive ' + member + ' ' + newActive);
-                                this.setState(member, { val: true, ack: true });
-                                this.setState(member + '.presence', { val: true, ack: true });
-                                this.setState(member + '.comming', { val: dnow, ack: true });
-                                comming = dnow;
-                            }
-                            if (curVal.val == null){
-                                this.log.warn('Member value is null! Value set to true');
-                                this.setState(member, { val: true, ack: true });
-                                this.setState(member + '.presence', { val: true, ack: true });
-                            }
-                        }else{ //member = false
-                            presence.all = false;
-                            presence.oneAbsence = true;
-                            if (presence.absentMembers == '') {
-                                presence.absentMembers += member;
-                            }else{
-                                presence.absentMembers += ', ' + member;
-                            }
-                            if (curVal.val == true){ //signal changing to false
-                                this.log.info('newActive ' + member + ' ' + newActive);
-                                this.setState(member, { val: false, ack: true });
-                                this.setState(member + '.presence', { val: false, ack: true });
-                                this.setState(member + '.going', { val: dnow, ack: true });
-                                going = dnow;
-                            }
-                            if (curVal.val == null){
-                                this.log.warn('Member value is null! Value set to false');
-                                this.setState(member, { val: false, ack: true });
-                                this.setState(member + '.presence', { val: false, ack: true });
-                            }
-                        }
-                        this.setState(member, { val: newActive, ack: true });
-                        this.setState(member + '.presence', { val: newActive, ack: true });
-                        presence.val = newActive;
-                        const comming1 = await this.getStateAsync(member + '.comming');
-                        comming = comming1.val;
-                        const going1 = await this.getStateAsync(member + '.going');
-                        going = going1.val;
-                        if (comming1.val == null) {
-                            comming = new Date(curVal.lc);
-                            this.setState(member + '.comming', { val: comming, ack: true });
-                        }
-                        if (going1.val == null) {
-                            going = new Date(curVal.lc);
-                            this.setState(member + '.going', { val: going, ack: true });
-                        }
-                        this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, cfg.dateFormat), 'Geht', dateFormat(going, cfg.dateFormat)]);
-                        this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, cfg.dateFormat), dateFormat(going, cfg.dateFormat)]);
-                        //this.log.info('getActive ' + member + ' finished');
-                        return presence;
-                    }else{
-                        throw('object ' + member + ' does not exist!');
-                    }
-                }
-            }
-        } catch(error){
-            this.log.error('getActive: ' + JSON.stringify(error));
-            return null;
         }
     }
 
