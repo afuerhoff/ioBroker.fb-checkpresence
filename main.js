@@ -179,8 +179,9 @@ class FbCheckpresence extends utils.Adapter {
                             await gthis.Fb.connectionCheck(); //Sets the connection led
                         }
                         cnt1 = 0;
-                        //const itemlist = await Fb.getDeviceList();
-                        await gthis.checkPresence(cfg);
+                        const itemlist = await gthis.Fb.getDeviceList();
+                        const hosts = await gthis.getAllFbObjects(itemlist);
+                        await gthis.checkPresence(cfg, hosts);
                         time = process.hrtime(work);
                         gthis.log.debug('loopFamily ends after ' + time + ' s');
                     }
@@ -192,12 +193,12 @@ class FbCheckpresence extends utils.Adapter {
                         cnt2 = 0;
                         if (gthis.GETPATH != null && gthis.GETPATH == true && gthis.config.fbdevices == true){
                             let meshlist = null;
-                            const itemlist = await gthis.Fb.getDeviceList();
+                            //const itemlist = await gthis.Fb.getDeviceList();
                             if (gthis.GETEXTIP != null && gthis.GETEXTIP == true) await gthis.Fb.getExtIp();
                             if (gthis.WLAN3INFO != null && gthis.WLAN3INFO == true) await gthis.Fb.getGuestWlan('guest.wlan');
                             if (gthis.GETMESHPATH != null && gthis.GETMESHPATH == true && gthis.config.meshinfo == true) meshlist = await gthis.Fb.getMeshList();
-                            if (itemlist && meshlist) {
-                                const hosts = await gthis.getAllFbObjects(itemlist);
+                            if (this.Fb.deviceList && meshlist) {
+                                const hosts = await gthis.getAllFbObjects(this.Fb.deviceList);
                                 await gthis.getDeviceInfo(hosts, meshlist, cfg);
                             }
                         }
@@ -413,6 +414,10 @@ class FbCheckpresence extends utils.Adapter {
                 if (this.config.familymembers[i].useip == undefined) {
                     adapterObj.native.familymembers[i].useip = false;
                     adapterObj.native.familymembers[i].ipaddress = '';
+                    adapterObjChanged = true;
+                }
+                if (this.config.familymembers[i].usename == undefined) {
+                    adapterObj.native.familymembers[i].usename = false;
                     adapterObjChanged = true;
                 }
             }
@@ -1064,27 +1069,37 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
 
-    async getActiveNew(index, memberRow){
+    async getActiveNew(index, memberRow, hosts){
         try {
             const member = memberRow.familymember; 
             const mac = memberRow.macaddress; 
-            const ip = memberRow.ipaddress; 
+            const ip = memberRow.ipaddress;
+            let active = false;
             if (memberRow.useip == undefined || ip == undefined){
                 throw('Please edit configuration in admin view and save it! Some items (use ip, ip-address) are missing'); 
             }else{
                 let hostEntry = null;
-                if (memberRow.useip == false){
+                if (memberRow.useip == false && memberRow.usename == false){
                     if (mac != ''){
                         hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], true);
+                        if(hostEntry && hostEntry.result === true) active = hostEntry.resultData['NewActive'] == 1 ? true : false;
                     }else{
                         throw('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
                     }
                 }else{
-                    if (this.GETBYIP == true && ip != ''){
-                        hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
-                    }else{
-                        if (memberRow.ipaddress == '') {
-                            throw('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                    if (memberRow.useip == true && memberRow.usename == false){
+                        if (this.GETBYIP == true && ip != ''){
+                            hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
+                            if(hostEntry && hostEntry.result === true) active = hostEntry.resultData['NewActive'] == 1 ? true : false;
+                        }else{
+                            if (memberRow.ipaddress == '') {
+                                throw('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                            }
+                        }
+                    }else{ //use name
+                        const host = hosts.filter(x => x.hn == member && x.active == 1);
+                        if (host.length > 0){
+                            active = true;
                         }
                     }
                 }
@@ -1095,11 +1110,9 @@ class FbCheckpresence extends utils.Adapter {
                         throw('invalid arguments for member ' + member);
                     } else {
                         throw('member ' + member + ': ' + hostEntry.errorMsg.errorDescription);
-                    }
+                    }     
                 }
-                if (hostEntry && hostEntry.result == true && hostEntry.resultData){
-                    return hostEntry.resultData['NewActive'] == 1 ? true : false;
-                }
+                return active;
             }
         } catch(error){
             this.log.error('getActive: ' + JSON.stringify(error));
@@ -1154,6 +1167,7 @@ class FbCheckpresence extends utils.Adapter {
 
             const dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + member);
             const curVal = await this.getStateAsync(member + '.presence');
+            if (curVal && curVal.val == null) curVal.val = false; 
             if (curVal && curVal.val != null){
                 //calculation of '.since'
                 const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
@@ -1336,7 +1350,7 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
 
-    async checkPresence(cfg){
+    async checkPresence(cfg, hosts){
         try {
             const dnow = new Date(); //Actual date and time for comparison
             this.jsonTab = '[';
@@ -1349,7 +1363,7 @@ class FbCheckpresence extends utils.Adapter {
                 const memberRow = membersFiltered[k]; //Row from family members table
                 const member = memberRow.familymember; 
                 if (this.GETBYMAC == true){ //member enabled in configuration settings and service is supported
-                    const newActive = await this.getActiveNew(k, memberRow);
+                    const newActive = await this.getActiveNew(k, memberRow, hosts);
                     this.calcMemberAttributes(member, k, newActive, dnow, presence, cfg);
                 }
             }
