@@ -197,8 +197,8 @@ class FbCheckpresence extends utils.Adapter {
                             if (gthis.GETEXTIP != null && gthis.GETEXTIP == true) await gthis.Fb.getExtIp();
                             if (gthis.WLAN3INFO != null && gthis.WLAN3INFO == true) await gthis.Fb.getGuestWlan('guest.wlan');
                             if (gthis.GETMESHPATH != null && gthis.GETMESHPATH == true && gthis.config.meshinfo == true) meshlist = await gthis.Fb.getMeshList();
-                            if (this.Fb.deviceList && meshlist) {
-                                const hosts = await gthis.getAllFbObjects(this.Fb.deviceList);
+                            if (gthis.Fb.deviceList && meshlist) {
+                                const hosts = await gthis.getAllFbObjects(gthis.Fb.deviceList);
                                 await gthis.getDeviceInfo(hosts, meshlist, cfg);
                             }
                         }
@@ -693,7 +693,7 @@ class FbCheckpresence extends utils.Adapter {
             
             if (mesh) this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
 
-            const items = hosts.filter(host => host.status == 'unchanged' || host.status == 'new');
+            //const items = hosts.filter(host => host.status == 'unchanged' || host.status == 'new');
             const ch = await this.getChannelsOfAsync(); //get all channels
 
             for (let i = 0; i < hosts.length; i++) {
@@ -901,13 +901,13 @@ class FbCheckpresence extends utils.Adapter {
             jsonFbDevActive += ']';
             jsonFbDevInactive += ']';
             
-            this.setState('fb-devices.count', { val: items.length, ack: true });
+            //this.setState('fb-devices.count', { val: items.length, ack: true });
             this.setState('fb-devices.json', { val: jsonFbDevices, ack: true });
             this.setState('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
             this.setState('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
             this.setState('fb-devices.html', { val: htmlFbDevices, ack: true });
-            this.setState('fb-devices.active', { val: activeCnt, ack: true });
-            this.setState('fb-devices.inactive', { val: inactiveCnt, ack: true });
+            //this.setState('fb-devices.active', { val: activeCnt, ack: true });
+            //this.setState('fb-devices.inactive', { val: inactiveCnt, ack: true });
 
             this.setState('guest.listHtml', { val: htmlRow, ack: true });
             this.setState('guest.listJson', { val: jsonRow, ack: true });
