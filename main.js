@@ -224,33 +224,88 @@ class FbCheckpresence extends utils.Adapter {
                     const dName = devices[id].common.name;
                     const shortNameOrg = dName.replace('fb-devices.', '');
                     const shortName = shortNameOrg.replace('.', '-');
-                    let found = false;
                     if (dName.includes('fb-devices.')){
-                        for(let i=0;i<items.length;i++){
-                            let hostName = items[i]['HostName'];
-                            if (hostName.includes('.')){
-                                hostName = hostName.replace('.', '-');
+                        const host = items.filter(x => x.HostName === shortNameOrg);
+                        const activeHost = host.filter(x => x.Active === '1');
+                        if (host){
+                            if (host.length == 0){
+                                const device = {
+                                    status: 'old',
+                                    dp: 'fb-devices.' + shortName,
+                                    hn: shortName,
+                                    hnOrg: shortNameOrg,
+                                    mac: await this.getStateAsync('fb-devices.' + shortName + '.macaddress').val,
+                                    ip: await this.getStateAsync('fb-devices.' + shortName + '.ipaddress').val,
+                                    active: 0,
+                                    data: null,
+                                    interfaceType: '',
+                                    speed: 0,
+                                    guest: 0
+                                };
+                                hosts.push(device);                                
                             }
-                            if (shortName == hostName) {
-                                found = true;
+                            if (host.length == 1){
+                                let hostName = host[0]['HostName'];
+                                if (hostName.includes('.')){
+                                    hostName = hostName.replace('.', '-');
+                                }
                                 const device = {
                                     status: 'unchanged',
                                     dp: 'fb-devices.' + hostName,
                                     hn: hostName,
-                                    hnOrg: items[i]['HostName'],
-                                    mac: items[i]['MACAddress'],
-                                    ip: items[i]['IPAddress'],
-                                    active: items[i]['Active'],
-                                    data: items[i],
-                                    interfaceType: items[i]['InterfaceT,ype'],
-                                    speed: items[i]['X_AVM-DE_Speed'],
-                                    guest: items[i]['X_AVM-DE_Guest']
+                                    hnOrg: host[0]['HostName'],
+                                    mac: host[0]['MACAddress'],
+                                    ip: host[0]['IPAddress'],
+                                    active: host[0]['Active'],
+                                    data: host[0],
+                                    interfaceType: host[0]['InterfaceType'],
+                                    speed: host[0]['X_AVM-DE_Speed'],
+                                    guest: host[0]['X_AVM-DE_Guest']
                                 };
                                 hosts.push(device);
-                                break;
                             }
-                        }
-                        if (found == false && !dName.includes('whitelist')){ //old objects
+                            if (host.length > 1){
+                                if (activeHost.length > 0){
+                                    let hostName = activeHost[0]['HostName'];
+                                    if (hostName.includes('.')){
+                                        hostName = hostName.replace('.', '-');
+                                    }
+                                    const device = {
+                                        status: 'unchanged',
+                                        dp: 'fb-devices.' + hostName,
+                                        hn: hostName,
+                                        hnOrg: activeHost[0]['HostName'],
+                                        mac: activeHost[0]['MACAddress'],
+                                        ip: activeHost[0]['IPAddress'],
+                                        active: activeHost[0]['Active'],
+                                        data: activeHost[0],
+                                        interfaceType: activeHost[0]['InterfaceType'],
+                                        speed: activeHost[0]['X_AVM-DE_Speed'],
+                                        guest: activeHost[0]['X_AVM-DE_Guest']
+                                    };
+                                    hosts.push(device);
+                                }else{
+                                    let hostName = host[0]['HostName'];
+                                    if (hostName.includes('.')){
+                                        hostName = hostName.replace('.', '-');
+                                    }
+                                    const device = {
+                                        status: 'unchanged',
+                                        dp: 'fb-devices.' + hostName,
+                                        hn: hostName,
+                                        hnOrg: host[0]['HostName'],
+                                        mac: host[0]['MACAddress'],
+                                        ip: host[0]['IPAddress'],
+                                        active: host[0]['Active'],
+                                        data: host[0],
+                                        interfaceType: host[0]['InterfaceType'],
+                                        speed: host[0]['X_AVM-DE_Speed'],
+                                        guest: host[0]['X_AVM-DE_Guest']
+                                    };
+                                    hosts.push(device);
+                                }
+                            }
+                        }else{
                             const device = {
                                 status: 'old',
                                 dp: 'fb-devices.' + shortName,
@@ -274,19 +329,8 @@ class FbCheckpresence extends utils.Adapter {
                 if (hostName.includes('.')){
                     hostName = hostName.replace('.', '-');
                 }
-                let found = false;
-                for (const id in devices) {
-                    if (devices[id] != undefined && devices[id].common != undefined){
-                        const dName = devices[id].common.name;
-                        const shortNameOrg = dName.replace('fb-devices.', '');
-                        const shortName = shortNameOrg.replace('.', '-');
-                        if (shortName == hostName) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                if (found == false){ //new objects
+                const host = devices.filter(x => x._id.replace(`${this.namespace}` + '.fb-devices.','') === hostName);
+                if (!host || host.length == 0){
                     const device = {
                         status: 'new',
                         dp: 'fb-devices.' + hostName,
