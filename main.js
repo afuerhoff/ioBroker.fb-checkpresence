@@ -470,6 +470,9 @@ class FbCheckpresence extends utils.Adapter {
             this.GETWANACCESSBYIP = await this.Fb.chkService('GetWANAccessByIP', 'X_AVM-DE_HostFilter', 'GetWANAccessByIP');
             this.REBOOT = await this.Fb.chkService('Reboot', 'DeviceConfig1', 'Reboot');
             
+            const sec = await this.Fb.soapAction(this.Fb, '/upnp/control/wlanconfig3', this.urn + 'WLANConfiguration:3', 'GetSecurityKeys', null);
+
+            
             //Create global objects
             await obj.createGlobalObjects(this, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
             await obj.createMemberObjects(this, cfg, this.HTML_HISTORY + this.HTML_END, this.enabled);
@@ -915,7 +918,7 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('guest.count', { val: guestCnt, ack: true });
             this.setState('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
 
-            this.setState('activeDevices', { val: activeCnt, ack: true });
+            //this.setState('activeDevices', { val: activeCnt, ack: true });
 
             this.setState('blacklist.count', { val: blCnt, ack: true });
             this.setState('blacklist.listHtml', { val: htmlBlRow, ack: true });
@@ -1219,6 +1222,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.log.warn('can not get active state from member ' + member);
                 //break;
             }
+            return presence;
         } catch (error) {
             this.log.error('calcMember ' + error);
         }
