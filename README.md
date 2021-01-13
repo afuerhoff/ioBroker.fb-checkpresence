@@ -47,9 +47,11 @@ Following TR-064 services and actions are used:
 * WANIPConnection:1 - GetInfo
 * WLANConfiguration3 - SetEnable
 * WLANConfiguration3 - GetInfo
+* WLANConfiguration3 - GetSecurityKeys
 * X_AVM-DE_HostFilter - DisallowWANAccessByIP
 * X_AVM-DE_HostFilter - GetWANAccessByIP
 * DeviceConfig:1 - Reboot
+* LANConfigSecurity1 - X_AVM-DE_GetCurrentUser
 
 By default, the TR-064 interface is not activated. However, this can easily be changed via the 
 FritzBox web interface. To do this log in into your FritzBox and ensure that the expert view is activated. 
@@ -100,7 +102,7 @@ This option can be checked if the creation of FB devices is allowed. If this opt
 the mesh objects for every device in the Fritzbox device list are created.
 
 ### Family member settings
-For a configured family member you must enter the Name, the mac- or ip-address, a comment and if the member is enabled for calculating. For every member the adapter creates data objects and checks if the member is present or absent. 
+For a configured family member you must enter the Name, the mac- or ip-address, a comment and if the member is enabled for calculating. For every member the adapter creates a state presence and checks if the member is present or absent. The state was changed if the presence state changed. 
 To get the speed information in the objects you have to select fb-devices option.
 
 ### Whitelist settings
@@ -110,11 +112,14 @@ If you check the checkbox in the headline of the table all devices are selected.
 ## Features
 
 ### AVM support check
-The function checks the availability of used fritzbox features. The availability is logged as info. If you have problems
-look if the features are all set to true.
+The function checks the availability of used fritzbox features. The availability is logged as info. If you have problems look if the features are all set to true. Also the access rights are checked for the user and
+the feature is set to false if the acces right is not correct.
 
 ### Switch on / off the guest wlan
 Under the folder guest you can set the state wlan to true or false and then the guest wlan switches on or off.
+
+### QR code of guest wlan
+The QR code of the guest wlan is saved in the state wlanQR in the guest folder. The QR code can show in vis in the basic - Bool SVG widget.   
 
 ### Switch on / off the internet access of Fritzbox devices
 Under the folder FB-devices you could set the disabled state to true or false and the the internet access of this device
@@ -175,6 +180,13 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### __WORK IN PROGRESS__
+* (afuerhoff) QR-Code implemented
+* (afuerhoff) setState presence only if changed
+* (afuerhoff) access rights implemented
+* (afuerhoff) use name for presence
+* (afuerhoff) active / inactive devices 
+* (afuerhoff) documentation edited 
 
 ### 1.1.1 (2020-12-27)
 * (afuerhoff) Configuration optimized
