@@ -1,4 +1,9 @@
 # Older changes
+## 1.0.2 (2020-05-24)
+* (afuerhoff) error handling optimized
+* (afuerhoff) external ip implemented
+* (afuerhoff) check if mac or ip are listed in fritzbox
+
 ## 1.0.1 (2020-04-12)
 * (afuerhoff) error handling optimized
 * (afuerhoff) history configuration optimized

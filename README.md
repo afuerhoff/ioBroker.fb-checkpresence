@@ -180,7 +180,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### __WORK IN PROGRESS__
+### 1.1.2 (2021-01-13)
 * (afuerhoff) QR-Code implemented
 * (afuerhoff) setState presence only if changed
 * (afuerhoff) access rights implemented
@@ -211,11 +211,6 @@ Here you will find information about the history of the current day.
 
 ### 1.0.3 (2020-05-26)
 * (afuerhoff) bugfix checking mac or ip
-
-### 1.0.2 (2020-05-24)
-* (afuerhoff) error handling optimized
-* (afuerhoff) external ip implemented
-* (afuerhoff) check if mac or ip are listed in fritzbox
 
 ## License
 MIT License

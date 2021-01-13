@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "news": {
+            "1.1.2": {
+                "en": "QR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\ndocumentation edited",
+                "de": "QR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nDokumentation bearbeitet",
+                "ru": "QR-код реализован\nприсутствие setState только при изменении\nправа доступа реализованы\nиспользовать имя для присутствия\nактивные / неактивные устройства\nИсправлена ошибка интервала 10 секунд\nдокументация отредактирована",
+                "pt": "QR-Code implementado\nPresença setState apenas se alterado\ndireitos de acesso implementados\nuse o nome para presença\ndispositivos ativos / inativos\nbug do intervalo 10s corrigido\ndocumentação editada",
+                "nl": "QR-code geïmplementeerd\nsetState aanwezigheid alleen indien gewijzigd\ntoegangsrechten geïmplementeerd\ngebruik naam voor aanwezigheid\nactieve / inactieve apparaten\ninterval 10s bug opgelost\ndocumentatie bewerkt",
+                "fr": "QR-Code implémenté\nsetState présence uniquement en cas de modification\ndroits d'accès mis en œuvre\nutiliser le nom pour la présence\nappareils actifs / inactifs\nCorrection d'un bug d'intervalle 10s\ndocumentation éditée",
+                "it": "QR-Code implementato\nPresenza setState solo se modificato\ndiritti di accesso implementati\nusa il nome per la presenza\ndispositivi attivi / inattivi\nbug dell'intervallo di 10 secondi risolto\ndocumentazione modificata",
+                "es": "QR-Code implementado\nsetState presencia solo si se cambia\nderechos de acceso implementados\nusar el nombre para la presencia\ndispositivos activos / inactivos\nerror de intervalo 10s arreglado\ndocumentación editada",
+                "pl": "Wdrożono QR-Code\nsetState obecność tylko w przypadku zmiany\nprawa dostępu wdrożone\nużyj nazwy dla obecności\naktywne / nieaktywne urządzenia\nnaprawiony błąd co 10 sekund\nzredagowano dokumentację",
+                "zh-cn": "已实施QR码\nsetState仅在更改时存在\n实施访问权限\n使用名称表示存在\n活动/非活动设备\n间隔10秒的错误已修复\n文档编辑"
+            },
             "1.1.1": {
                 "en": "Configuration optimized\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nDocumentation added\nMesh handling optimized",
                 "de": "Konfiguration optimiert\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nDokumentation hinzugefügt\nNetzhandhabung optimiert",
