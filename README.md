@@ -185,7 +185,8 @@ Here you will find information about the history of the current day.
 * (afuerhoff) setState presence only if changed
 * (afuerhoff) access rights implemented
 * (afuerhoff) use name for presence
-* (afuerhoff) active / inactive devices 
+* (afuerhoff) active / inactive devices
+* (afuerhoff) interval 10s bug fixed
 * (afuerhoff) documentation edited 
 
 ### 1.1.1 (2020-12-27)
