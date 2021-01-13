@@ -49,29 +49,13 @@ class FbCheckpresence extends utils.Adapter {
         this.errorCntMax = 10;
 
         this.allDevices = [];
-        this.fbStates = [];
+        this.adapterStates = [];
         this.jsonTab;
         this.htmlTab;
         this.enabled = true;
         this.errorCnt = 0;
         this.Fb = null;
         this.timeout = null;
-
-        //http://fritz.box:49000/tr64desc.xml
-        //used actions
-        this.GETPATH = false;
-        this.GETMESHPATH = false;
-        this.GETBYMAC = false;
-        this.GETBYIP = false;
-        this.GETPORT = false;
-        this.GETEXTIP = false;
-        this.SETENABLE = false;
-        this.WLAN3INFO = false;
-        this.WLAN3GETSECKEY = false;
-        this.DEVINFO = false;
-        this.GETWANACCESSBYIP = false;
-        this.DISALLOWWANACCESSBYIP = false;
-        this.REBOOT = false;
     }
 
     decrypt(key, value) {
@@ -115,6 +99,14 @@ class FbCheckpresence extends utils.Adapter {
             }
         }
         return json;
+    }
+
+    async setStateIfNotEqual(id, options){
+        const ind = this.adapterStates.findIndex(x => x.id == id);
+        if (ind &&  this.adapterStates[ind].state.val != options.val){
+            this.setState(id, options);
+            this.adapterStates[ind].state.val = options.val;  
+        }
     }
 
     async resyncFbObjects(items){
@@ -179,9 +171,9 @@ class FbCheckpresence extends utils.Adapter {
                     let time = null;
                     if (cnt1 == int1){
                         //gthis.log.info('loopFamily starts');
-                        if (gthis.DEVINFO == true) {
-                            await gthis.Fb.connectionCheck(); //Sets the connection led
-                        }
+                        //if (gthis.Fb.DEVINFO == true) {
+                        await gthis.Fb.connectionCheck(); //Sets the connection led
+                        //}
                         cnt1 = 0;
                         const itemlist = await gthis.Fb.getDeviceList();
                         const hosts = await gthis.getAllFbObjectsNew(itemlist);
@@ -191,16 +183,16 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (cnt2 == int2){
                         //gthis.log.debug('loopDevices starts');
-                        if (gthis.DEVINFO == true) {
+                        if (gthis.Fb.DEVINFO == true) {
                             await gthis.Fb.connectionCheck(); //Sets the connection led
                         }
                         cnt2 = 0;
-                        if (gthis.GETPATH != null && gthis.GETPATH == true && gthis.config.fbdevices == true){
+                        await gthis.Fb.getExtIp();
+                        await gthis.Fb.getGuestWlan('guest.wlan');
+                        if (gthis.Fb.GETPATH != null && gthis.Fb.GETPATH == true && gthis.config.fbdevices == true){
                             let meshlist = null;
                             //const itemlist = await gthis.Fb.getDeviceList();
-                            if (gthis.GETEXTIP != null && gthis.GETEXTIP == true) await gthis.Fb.getExtIp();
-                            if (gthis.WLAN3INFO != null && gthis.WLAN3INFO == true) await gthis.Fb.getGuestWlan('guest.wlan');
-                            if (gthis.GETMESHPATH != null && gthis.GETMESHPATH == true && gthis.config.meshinfo == true) meshlist = await gthis.Fb.getMeshList();
+                            if (gthis.Fb.GETMESHPATH != null && gthis.Fb.GETMESHPATH == true && gthis.config.meshinfo == true) meshlist = await gthis.Fb.getMeshList();
                             if (gthis.Fb.deviceList && meshlist) {
                                 const hosts = await gthis.getAllFbObjectsNew(gthis.Fb.deviceList);
                                 await gthis.getWlBlInfo(gthis.Fb.deviceList, hosts, cfg);
@@ -571,28 +563,12 @@ class FbCheckpresence extends utils.Adapter {
                 this.stopAdapter();
             }
 
-            //Check if services/actions are supported
-            this.GETPATH = await this.Fb.chkService('X_AVM-DE_GetHostListPath', 'Hosts1', 'X_AVM-DE_GetHostListPath');
-            this.GETMESHPATH = await this.Fb.chkService('X_AVM-DE_GetMeshListPath', 'Hosts1', 'X_AVM-DE_GetMeshListPath');
-            this.GETBYMAC = await this.Fb.chkService('GetSpecificHostEntry', 'Hosts1', 'GetSpecificHostEntry');
-            this.GETBYIP = await this.Fb.chkService('X_AVM-DE_GetSpecificHostEntryByIP', 'Hosts1', 'X_AVM-DE_GetSpecificHostEntryByIP');
-            this.GETPORT = await this.Fb.chkService('GetSecurityPort', 'DeviceInfo1', 'GetSecurityPort');
-            this.GETEXTIP = await this.Fb.chkService('GetInfo', 'WANPPPConnection1', 'GetInfo');
-            if ( this.GETEXTIP == false) this.GETEXTIP = await this.Fb.chkService('GetInfo', 'WANIPConnection1', 'GetInfo');
-            this.SETENABLE = await this.Fb.chkService('SetEnable', 'WLANConfiguration3', 'SetEnable');
-            this.WLAN3INFO = await this.Fb.chkService('GetInfo', 'WLANConfiguration3', 'WLANConfiguration3-GetInfo');
-            this.WLAN3GETSECKEY = await this.Fb.chkService('GetSecurityKeys', 'WLANConfiguration3', 'WLANConfiguration3-GetSecurityKeys');
-            this.DEVINFO = await this.Fb.chkService('GetInfo', 'DeviceInfo1', 'DeviceInfo1-GetInfo');
-            this.DISALLOWWANACCESSBYIP = await this.Fb.chkService('DisallowWANAccessByIP', 'X_AVM-DE_HostFilter', 'DisallowWANAccessByIP');
-            this.GETWANACCESSBYIP = await this.Fb.chkService('GetWANAccessByIP', 'X_AVM-DE_HostFilter', 'GetWANAccessByIP');
-            this.REBOOT = await this.Fb.chkService('Reboot', 'DeviceConfig1', 'Reboot');
-            
             //Create global objects
-            await obj.createGlobalObjects(this, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
-            await obj.createMemberObjects(this, cfg, this.HTML_HISTORY + this.HTML_END, this.enabled);
+            await obj.createGlobalObjects(this, this.adapterStates, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
+            await obj.createMemberObjects(this, this.adapterStates, cfg, this.HTML_HISTORY + this.HTML_END, this.enabled);
 
             //create Fb devices
-            if (this.GETPATH != null && this.GETPATH == true && this.config.fbdevices == true){
+            if (this.Fb.GETPATH != null && this.Fb.GETPATH == true && this.config.fbdevices == true){
                 const items = await this.Fb.getDeviceList(this, cfg, this.Fb);
                 if (items != null){
                     const hosts = await this.getAllFbObjectsNew(items);
@@ -609,9 +585,9 @@ class FbCheckpresence extends utils.Adapter {
             }
 
             // states changes inside the adapters namespace are subscribed
-            if (this.SETENABLE === true && this.WLAN3INFO === true) this.subscribeStates(`${this.namespace}` + '.guest.wlan');
-            if (this.DISALLOWWANACCESSBYIP === true && this.GETWANACCESSBYIP === true) this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
-            if (this.REBOOT === true) this.subscribeStates(`${this.namespace}` + '.reboot');  
+            if (this.Fb.SETENABLE === true && this.Fb.WLAN3INFO === true) this.subscribeStates(`${this.namespace}` + '.guest.wlan');
+            if (this.Fb.DISALLOWWANACCESSBYIP === true && this.Fb.GETWANACCESSBYIP === true) this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
+            if (this.Fb.REBOOT === true) this.subscribeStates(`${this.namespace}` + '.reboot');  
 
             this.loop(9, 55, cronFamily, cron, cfg); //values must be less than cronfamily or cron
         } catch (error) {
@@ -660,7 +636,7 @@ class FbCheckpresence extends utils.Adapter {
     async onStateChange(id, state) {
         try {
             if (state) {
-                if (id == `${this.namespace}` + '.guest.wlan' && this.SETENABLE == true && state.ack === false && this.WLAN3INFO ===true){
+                if (id == `${this.namespace}` + '.guest.wlan' && this.Fb.SETENABLE == true && state.ack === false && this.Fb.WLAN3INFO ===true){
                     this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
                     const val = state.val ? '1' : '0';
                     const guestwlan = await this.Fb.soapAction(this.Fb, '/upnp/control/wlanconfig3', this.urn + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', val]]);
@@ -672,7 +648,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
 
-                if (id.includes('disabled') && state.ack === false && this.DISALLOWWANACCESSBYIP === true && this.GETWANACCESSBYIP === true){
+                if (id.includes('disabled') && state.ack === false && this.Fb.DISALLOWWANACCESSBYIP === true && this.Fb.GETWANACCESSBYIP === true){
                     this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
                     const ipId = id.replace('.disabled', '') + '.ipaddress';
                     const ipaddress = await this.getStateAsync(ipId);
@@ -687,7 +663,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
 
-                if (id == `${this.namespace}` + '.reboot' && this.REBOOT === true){
+                if (id == `${this.namespace}` + '.reboot' && this.Fb.REBOOT === true){
                     this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
                         const reboot = await this.Fb.soapAction(this.Fb, '/upnp/control/deviceconfig', this.urn + 'DeviceConfig:1', 'Reboot', null);
@@ -754,7 +730,7 @@ class FbCheckpresence extends utils.Adapter {
                         const Fb = new fb.Fb(devInfo, this);
 
                         let items;
-                        if (this.GETPATH == true){
+                        if (this.Fb.GETPATH == true){
                             items =  await Fb.getDeviceList(this, null, Fb);
                             if (items == null){
                                 return;
@@ -798,7 +774,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 const hostCh = ch.filter(ch => ch._id.includes('.' + hostName + '.'));
                 //Get mesh info for device
-                if (this.GETMESHPATH != null && this.GETMESHPATH == true && enabledMeshInfo == true){
+                if (this.Fb.GETMESHPATH != null && this.Fb.GETMESHPATH == true && enabledMeshInfo == true){
                     if (mesh != null){
                         let meshdevice = mesh.find(el => el.device_mac_address === hosts[i]['mac']);
                         if (meshdevice == null) {
@@ -1073,7 +1049,8 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('guest.listHtml', { val: htmlRow, ack: true });
             this.setState('guest.listJson', { val: jsonRow, ack: true });
             this.setState('guest.count', { val: guestCnt, ack: true });
-            this.setState('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
+            this.setStateIfNotEqual('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
+            //this.setState('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
 
             //this.setState('activeDevices', { val: activeCnt, ack: true });
 
@@ -1110,7 +1087,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }else{
                     if (memberRow.useip == true && memberRow.usename == false){
-                        if (this.GETBYIP == true && ip != ''){
+                        if (this.Fb.GETBYIP == true && ip != ''){
                             hostEntry = await this.Fb.soapAction(this.Fb, '/upnp/control/hosts', this.urn + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], true);
                             if(hostEntry && hostEntry.result === true) active = hostEntry.resultData['NewActive'] == 1 ? true : false;
                         }else{
@@ -1217,14 +1194,16 @@ class FbCheckpresence extends utils.Adapter {
                     if (curVal.val == false){ //signal changing to true
                         this.log.info('newActive ' + member + ' ' + newActive);
                         this.setState(member, { val: true, ack: true });
-                        this.setState(member + '.presence', { val: true, ack: true });
+                        //this.setState(member + '.presence', { val: true, ack: true });
+                        this.setStateIfNotEqual(member + '.presence', { val: true, ack: true });
                         this.setState(member + '.comming', { val: dnow, ack: true });
                         comming = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to true');
                         this.setState(member, { val: true, ack: true });
-                        this.setState(member + '.presence', { val: true, ack: true });
+                        //this.setState(member + '.presence', { val: true, ack: true });
+                        this.setStateIfNotEqual(member + '.presence', { val: true, ack: true });
                     }
                 }else{ //member = false
                     presence.all = false;
@@ -1238,18 +1217,20 @@ class FbCheckpresence extends utils.Adapter {
                     if (curVal.val == true){ //signal changing to false
                         this.log.info('newActive ' + member + ' ' + newActive);
                         this.setState(member, { val: false, ack: true });
-                        this.setState(member + '.presence', { val: false, ack: true });
+                        //this.setState(member + '.presence', { val: false, ack: true });
+                        this.setStateIfNotEqual(member + '.presence', { val: false, ack: true });
                         this.setState(member + '.going', { val: dnow, ack: true });
                         going = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to false');
                         this.setState(member, { val: false, ack: true });
-                        this.setState(member + '.presence', { val: false, ack: true });
+                        //this.setState(member + '.presence', { val: false, ack: true });
+                        this.setStateIfNotEqual(member + '.presence', { val: false, ack: true });
                     }
                 }
-                this.setState(member, { val: newActive, ack: true });
-                this.setState(member + '.presence', { val: newActive, ack: true });
+                //this.setState(member, { val: newActive, ack: true });
+                //this.setState(member + '.presence', { val: newActive, ack: true });
                 presence.val = newActive;
                 const comming1 = await this.getStateAsync(member + '.comming');
                 comming = comming1.val;
@@ -1415,7 +1396,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (this.enabled == false) break; //cancel if disabled over unload
                 const memberRow = membersFiltered[k]; //Row from family members table
                 const member = memberRow.familymember; 
-                if (this.GETBYMAC == true){ //member enabled in configuration settings and service is supported
+                if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
                     const newActive = await this.getActiveNew(k, memberRow, hosts);
                     if (newActive != null) await this.calcMemberAttributes(member, k, newActive, dnow, presence, cfg);
                     if (newActive != null) this.getMemberSpeed(cfg, memberRow, hosts, );
