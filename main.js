@@ -850,6 +850,7 @@ class FbCheckpresence extends utils.Adapter {
         try {
             //analyse guests
             let guestCnt = 0;
+            let guests = '';
             let activeCnt = 0;
             let inactiveCnt = 0;
             let htmlRow = this.HTML_GUEST;
@@ -878,6 +879,12 @@ class FbCheckpresence extends utils.Adapter {
                 if (hosts[i]['data'] != null && hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
                     htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
                     jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac']]);
+                    guests += guests == '' ? hosts[i]['hn'] : ', ' + hosts[i]['hn'];
+                    /*if (guests == '') {
+                        guests += hosts[i]['hn'];
+                    }else{
+                        guests += ', ' + hosts[i]['hn'];
+                    }*/                   
                     this.log.debug('getDeviceInfo active guest: ' + hosts[i]['hn'] + ' ' + hosts[i]['ip'] + ' ' + hosts[i]['mac']);
                     guestCnt += 1;
                 }
@@ -911,6 +918,7 @@ class FbCheckpresence extends utils.Adapter {
 
             this.setState('guest.listHtml', { val: htmlRow, ack: true });
             this.setState('guest.listJson', { val: jsonRow, ack: true });
+            this.setState('guest.presentGuests', { val: guests, ack: true });
             this.setState('guest.count', { val: guestCnt, ack: true });
             this.setStateIfNotEqual('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
             //this.setState('guest.presence', { val: guestCnt == 0 ? false : true, ack: true });
