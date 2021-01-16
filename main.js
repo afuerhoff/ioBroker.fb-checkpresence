@@ -835,8 +835,10 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('whitelist.count', { val: cfg.wl.length, ack: true });
             if (blCnt > 0) {
                 this.setState('blacklist', { val: true, ack: true });
+                this.setStateIfNotEqual('blacklist.presence', { val: true, ack: true });
             }else {
                 this.setState('blacklist', { val: false, ack: true });
+                this.setStateIfNotEqual('blacklist.presence', { val: true, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
             return true;
