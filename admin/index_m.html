@@ -311,7 +311,7 @@
 						<div class="row">
 							<div class="col s12">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<button id="buttonadd" class="btn waves-effect waves-light modal-trigger translate">Add family member</button>
+								<a id="buttonadd" class="btn waves-effect waves-light modal-trigger translate">Add family member</a>
 								<!--a class="btn waves-effect waves-light modal-trigger translate" href="#dlgFam" >Add family member</a-->
 								<!--href="#dlgFam"  onclick="addDlg()"-->
 							</div>
@@ -357,6 +357,11 @@
 											</thead>
 											<tbody>
 												<tr>
+													<td class="translate">Enable whitelist</td>
+													<td class="translate">No</td>
+													<td class="translate">Help wl enable 1v1</td>
+												</tr>
+												<tr>
 													<td><a class="btn-floating"><i class="material-icons">add</i></a></td>
 													<td class="translate">No</td>
 													<td class="translate">Help wl add 1v0</td>
@@ -383,12 +388,14 @@
 							</ul>
 						</div>
 					</div>
-
+					
 					<div id="whitevalues">
 						<div class="row">
 							<div class="col s12">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
 								<a class="btn waves-effect waves-light modal-trigger translate" href="#dlgWL">Add a device</a>
+								<input type="checkbox" class="value" id="enableWl"/>
+								<label for="enableWl" class="translate black-text">Enable whitelist</label>
 							</div>
 						</div>
 						<div class="row">

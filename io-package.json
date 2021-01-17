@@ -314,7 +314,8 @@
         "meshinfo": false,
         "syncfbdevices": false,
         "username": "",
-        "password": ""
+        "password": "",
+        "enableWl": true
     },
     "objects": [],
     "instanceObjects": [

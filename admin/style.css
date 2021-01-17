@@ -124,20 +124,21 @@
 /*.collapsible .collapsible-body td {font-size: 1.1em; padding:10px; margin-right: 10px;}*/
 .collapsible .collapsible-body tr {padding:3px;}
 
-/* collapsible: Documentation ****** */
-.collapsible-body.instructions td { line-height: 1.0em; }
-
-/*.tab1 {color: #174475;} */
-.collapsible .collapsible-body .headline1 {background-color: #84bcf8; color: white; padding: 10px; margin-top: 10px;}
-
 /*h5 {padding: 10px}*/
 table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
+
+/* Dialogboxes add family members and whitelist devices */
 #searchFam, #searchWL {font-size: 12px;padding: 0px;margin: 0px 0px 0px 40px;}
 #tabFam, #tabWL {font-size: 13px;}
 #tabFam th, #tabFam td {text-align: left;padding: 3px;}
-#tabWL th, #tabWL td {text-align: left;	padding: 1px;}
+#tabWL th, #tabWL td {text-align: left; padding: 1px;}
+
+/* Input validation for admin configuration */
 input:invalid {border: red solid 3px;}
 input:valid {border: rgb(0, 255, 21) solid 3px;}
 
 /* Help text format */
 .bg-color-1 {background-color: #777777; color: white}
+
+/* Button whitelist and blacklist */
+.btn {color: white !important; margin-right: 30px;} 

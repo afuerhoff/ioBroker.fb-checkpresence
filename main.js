@@ -199,9 +199,9 @@ class FbCheckpresence extends utils.Adapter {
                             if (gthis.Fb.GETMESHPATH != null && gthis.Fb.GETMESHPATH == true && gthis.config.meshinfo == true) meshlist = await gthis.Fb.getMeshList();
                             if (gthis.Fb.deviceList && meshlist) {
                                 const hosts = await gthis.getAllFbObjects(gthis.Fb.deviceList);
-                                await gthis.getWlBlInfo(gthis.Fb.deviceList, hosts, cfg);
-                                await gthis.getDeviceInfo(hosts);
-                                await gthis.getMeshInfo(hosts, meshlist);
+                                if (gthis.config.enableWl == true) await gthis.getWlBlInfo(gthis.Fb.deviceList, hosts, cfg);
+                                if (gthis.config.fbdevices == true) await gthis.getDeviceInfo(hosts);
+                                if (gthis.config.meshinfo == true) await gthis.getMeshInfo(hosts, meshlist);
                             }
                         }
                         time = process.hrtime(work);
@@ -351,6 +351,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration familymembers: ' + JSON.stringify(this.config.familymembers));
             this.log.debug('configuration fb-devices ' + this.config.fbdevices);
             this.log.debug('configuratuion mesh info: ' + this.config.meshinfo);            
+            this.log.debug('configuratuion whitelist: ' + this.config.enableWl);            
 
             //decrypt fritzbox password
             const sysObj =  await this.getForeignObjectAsync('system.config');
