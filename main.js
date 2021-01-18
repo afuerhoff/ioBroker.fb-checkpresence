@@ -452,6 +452,7 @@ class FbCheckpresence extends utils.Adapter {
             if (this.Fb.SETENABLE === true && this.Fb.WLAN3INFO === true) this.subscribeStates(`${this.namespace}` + '.guest.wlan');
             if (this.Fb.DISALLOWWANACCESSBYIP === true && this.Fb.GETWANACCESSBYIP === true) this.subscribeStates(`${this.namespace}` + '.fb-devices.*.disabled');  
             if (this.Fb.REBOOT === true) this.subscribeStates(`${this.namespace}` + '.reboot');  
+            if (this.Fb.RECONNECT === true) this.subscribeStates(`${this.namespace}` + '.reconnect');  
 
             this.loop(9, 55, cronFamily, cron, cfg); //values must be less than cronfamily or cron
         } catch (error) {
@@ -539,6 +540,19 @@ class FbCheckpresence extends utils.Adapter {
                         }
                     }
                 }
+
+                /*if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true){
+                    this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
+                    if (state.val === true){
+                        const reconnect = await this.Fb.soapAction(this.Fb, '/upnp/control/wanpppconn1', this.urn + 'WANPPPConnection:1', 'ForceTermination', null);
+                        if (reconnect['status'] == 200 || reconnect['result'] == true) {
+                            this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
+                        }else{
+                            this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
+                            throw('reboot failure! ' + JSON.stringify(reconnect));
+                        }
+                    }
+                }*/
             }
 
             /*if (state) {
