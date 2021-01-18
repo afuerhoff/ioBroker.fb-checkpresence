@@ -421,15 +421,15 @@ class FbCheckpresence extends utils.Adapter {
                 pwd: this.config.password
             };
 
+            //Create global objects
+            await obj.createGlobalObjects(this, this.adapterStates, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
+            await obj.createMemberObjects(this, this.adapterStates, cfg, this.HTML_HISTORY + this.HTML_END, this.enabled);
+
             this.Fb = await fb.Fb.init(devInfo, this);
             if(this.Fb.services === null) {
                 this.log.error('Can not get services! Adapter stops');
                 this.stopAdapter();
             }
-
-            //Create global objects
-            await obj.createGlobalObjects(this, this.adapterStates, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
-            await obj.createMemberObjects(this, this.adapterStates, cfg, this.HTML_HISTORY + this.HTML_END, this.enabled);
 
             //create Fb devices
             if (this.Fb.GETPATH != null && this.Fb.GETPATH == true && this.config.fbdevices == true){
@@ -708,7 +708,7 @@ class FbCheckpresence extends utils.Adapter {
                                 }
                                 if (found == false){ //new interfaces
                                     this.log.info('New interface found: ' + hostName + '.' + ifNewName);
-                                    obj.createMeshObject(this, hostName, ifNewName, this.enabled);
+                                    await obj.createMeshObject(this, hostName, ifNewName, this.enabled);
                                 }
                             }
 
