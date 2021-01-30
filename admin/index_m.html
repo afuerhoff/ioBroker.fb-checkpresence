@@ -52,7 +52,7 @@
 									<div class="collapsible-body">
 										<ul class="collapsible" id="c2">
 											<li>
-												<div class="collapsible-header config-section" ><h5 class="translate">FRITZ!Box settings</h5><i class="material-icons">live_help</i></div>
+												<div class="collapsible-header config-section" ><h6 class="translate">FRITZ!Box settings</h5><i class="material-icons">live_help</i></div>
 												<div class="collapsible-body"><!-- af-include-html="help_fbsettings.html"-->
 													<table class="bordered striped">
 														<thead>
@@ -86,7 +86,7 @@
 												</div>
 											</li>
 											<li>
-												<div class="collapsible-header config-section"><h5 class="translate">Adapter settings</h5><i class="material-icons">live_help</i></div>
+												<div class="collapsible-header config-section"><h6 class="translate">Adapter settings</h5><i class="material-icons">live_help</i></div>
 												<div class="collapsible-body"><!-- af-include-html="help_adaptersettings.html"-->
 													<table class="bordered striped">
 														<thead>
@@ -163,32 +163,27 @@
 							<input type="text" class="value validate" id="ipaddress" required 
 								pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|([a-zA-Z][\w.-]*)$"/>
 							<label for="ipaddress" class="translate">IP Fritzbox</label>
-							<span class="tooltiptext translate">Here you can enter the IP-Address from your Fritzbox</span>
+							<span class="tooltiptext translate">tooltipIp</span>
 						</div>
 						<div class="col s2 input-field tooltip">	
 							<input type="text" data-crypt="0" class="value validate" maxlength="32" id="username" pattern="^[a-zA-Z][a-zA-Z0-9-_.' ']{0,31}$"/>
 							<label for="username" class="translate">Username</label>
-							<span class="tooltiptext translate">Here you can enter the fritzbox user</span>
+							<span class="tooltiptext translate">tooltipUser</span>
 						</div>
 						<div class="input-field col s3 tooltip">
 							<input type="password" data-crypt="1" class="value validate" id="password" pattern="^[a-zA-Z0-9 _-!#$%&'()*+,\./:;=>?@[\]^`{|}~]{1,32}$"/>
 							<label for="password">Password</label>
-							<span class="tooltiptext translate">Here you can enter the password from the fritbox user</span>
+							<span class="tooltiptext translate">tooltipPw</span>
 						</div>				
-						<div class="col s1 input-field tooltip">	
+						<div class="col s3 input-field tooltip">	
 							<input type="checkbox" class="value" id="ssl"/>
 							<label for="ssl" class="translate black-text">ssl</label>
-							<span class="tooltiptext translate">Please disable the checkbox, if you have problems to connect to the fritzbox</span>
+							<span class="tooltiptext3 translate">tooltipSslv0</span>
 					  	</div>
-						<div class="col s2 input-field tooltip">
-							<input type="number" class="value validate" min="1" max="59" step="1" id="interval" required pattern="[1-5][0-9]?"/>
-							<label for="interval" class="translate">polling interval in minutes</label>
-							<span class="tooltiptext translate">Here you can define the polling interval [between 1 to 59 minutes]</span>
-						</div>
 					</div>
 
 					<div class="row">
-						<div class="col s2 input-field">
+						<div class="col s2 input-field tooltip">
 							<select class="value" id="history">
 								<!--option value="" disabled selected class="translate">Choose your option</option-->
 								<!--option value="" class="translate">disabled</option>
@@ -197,11 +192,17 @@
 								<option value="influxdb.0">InfluxDB</option-->
 							</select>
 							<label for history class="translate">Select history adapter</label>
+							<span class="tooltiptext translate">tooltipHistory</span>
 						</div>
 						<div class="col s3 input-field tooltip">	
 							<input type="text" class="value validate" id="dateformat" pattern="^[dmyhHMNosSlLtTWZUC:.-,/' ]+$"/>
 							<label for="ipaddress" class="translate">Date format</label>
-							<span class="tooltiptext translate">Here you can enter the date format string for the tables</span>
+							<span class="tooltiptext translate">tooltipDateformat</span>
+						</div>
+						<div class="col s3 input-field tooltip">
+							<input type="number" class="value validate" min="1" max="59" step="1" id="interval" required pattern="[1-5][0-9]?"/>
+							<label for="interval" class="translate">polling interval in minutes</label>
+							<span class="tooltiptext translate">tooltipInterval</span>
 						</div>
 					</div>
 
@@ -209,17 +210,17 @@
 						<div class="col s3 input-field tooltip">	
 							<input type="checkbox" class="value" id="fbdevices"/>
 							<label for="fbdevices" class="translate black-text">create FB-Devices</label>
-							<span class="tooltiptext translate">Please check the checkbox if you want to create objects for FB-Devices</span>
+							<span class="tooltiptext2 translate">tooltipFbdevices</span>
 					  	</div>
 						  <div class="col s3 input-field tooltip">
 							<input type="checkbox" class="value" id="meshinfo"/>
 							<label for="meshinfo" class="translate black-text">create mesh info</label>
-							<span class="tooltiptext translate">Please check the checkbox if you want to create objects for mesh</span>
+							<span class="tooltiptext2 translate">tooltipMesh</span>
 					  	</div>
 						<div class="col s3 input-field tooltip">	
 							<input type="checkbox" class="value" id="syncfbdevices"/>
 							<label for="syncfbdevices" class="translate black-text">synchronize FB-Devices (once)</label>
-							<span class="tooltiptext translate">Please check the checkbox if you want to resynchronize the FB-Device objects</span>
+							<span class="tooltiptext2 translate">tooltipFbsync</span>
 					  	</div>
 					</div>
 
@@ -301,19 +302,27 @@
 						</div>
 					</div>
 
-					<div class="col s3 input-field tooltip">
-						<input data-position="bottom" data-tooltip="I am a tooltip" type="number" class="value validate tooltipped" min="10" max="600" step="1" id="intervalFamily" required pattern="[1-6][0-9]?"/>
-						<label for="intervalFamily" class="translate">Polling interval in seconds</label>
-						<span class="tooltiptext translate">Here you can define the polling interval [between 10 to 600 seconds]</span>
-					</div>
-
 					<div id="values">
 						<div class="row">
-							<div class="col s12">
+							<div class="col s1 input-field tooltip">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<span class="tooltiptext1 translate">tooltipWlAddRow</span>
+							</div>
+							<div class="col s3 input-field tooltip">
 								<a id="buttonadd" class="btn waves-effect waves-light modal-trigger translate">Add family member</a>
+								<span class="tooltiptext1 translate">tooltipWlAdd</span>
 								<!--a class="btn waves-effect waves-light modal-trigger translate" href="#dlgFam" >Add family member</a-->
 								<!--href="#dlgFam"  onclick="addDlg()"-->
+							</div>
+							<div class="col s3 input-field tooltip">
+								<input type="number" class="value validate tooltipped" min="10" max="600" step="1" id="intervalFamily" required pattern="[1-6][0-9]?"/>
+								<label for="intervalFamily" class="translate">Polling interval in seconds</label>
+								<span class="tooltiptext translate">tooltipInterval2</span>
+							</div>
+							<div class="col s2 input-field tooltip">
+								<input type="number" class="value validate tooltipped" min="1" max="69" step="1" id="delay" required pattern="[0-6][1-9]?"/>
+								<label for="delay" class="translate">filter time in seconds</label>
+								<span class="tooltiptext translate">tooltipDelay</span>
 							</div>
 						</div>
 						<div class="row">
@@ -327,6 +336,7 @@
 											<th data-name="ipaddress" style="width: 15%" class="translate" for="ipaddress">IP-Address</th>
 											<th data-name="useip"  style="width: 7%" data-type="checkbox" class="translate">Use IP</th>
 											<th data-name="usename"  style="width: 7%" data-type="checkbox" class="translate">Use name</th>
+											<th data-name="usefilter"  style="width: 7%" data-type="checkbox" class="translate">Use filter</th>
 											<th data-name="comment" style="width: 30%" class="translate" for="comment">Comment</th>
 											<th data-name="enabled"  style="width: 10%" data-type="checkbox" class="translate">Enabled</th>
 											<th data-buttons="delete" style="width: 5%"></th>
@@ -391,11 +401,18 @@
 					
 					<div id="whitevalues">
 						<div class="row">
-							<div class="col s12">
+							<div class="col s1 input-field tooltip">
 								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<span class="tooltiptext1 translate">tooltipWlAddRow</span>
+							</div>
+							<div class="col s3 input-field tooltip">
 								<a class="btn waves-effect waves-light modal-trigger translate" href="#dlgWL">Add a device</a>
+								<span class="tooltiptext1 translate">tooltipWlAdd</span>
+							</div>
+							<div class="col s2 input-field tooltip">
 								<input type="checkbox" class="value" id="enableWl"/>
 								<label for="enableWl" class="translate black-text">Enable whitelist</label>
+								<span class="tooltiptext2 translate">tooltipWlv0</span>
 							</div>
 						</div>
 						<div class="row">

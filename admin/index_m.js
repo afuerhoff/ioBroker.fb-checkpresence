@@ -448,7 +448,7 @@ function load(settings, onChange) {
 //dependency between fbdevices and meshinfo
 //checking of meshinfo only valid if fbdevices are selected
 $(document).ready(function(){ 
-    includeHTML();
+    //includeHTML();
     document.getElementById('buttonadd').addEventListener('click', beforeOpen);
 
     $('#meshinfo').change(function() 

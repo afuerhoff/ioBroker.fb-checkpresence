@@ -308,6 +308,7 @@
         "ssl": true,
         "interval": 1,
         "intervalFamily": 60,
+        "delay": 15,
         "history": "",
         "dateformat": "yyyy.mm.dd HH:MM:ss",
         "fbdevices": false,
