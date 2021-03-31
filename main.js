@@ -500,6 +500,7 @@ class FbCheckpresence extends utils.Adapter {
             for(let i=0;i<this.config.familymembers.length;i++){
                 if (this.config.familymembers[i].usefilter == undefined) {
                     adapterObj.native.familymembers[i].usefilter = false;
+                    adapterObj.native.familymembers[i].group = '';
                     adapterObjChanged = true;
                 }
                 if (this.config.familymembers[i].usage == undefined) {
