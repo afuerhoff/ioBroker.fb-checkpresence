@@ -301,6 +301,8 @@
             }
         ]
     },
+    "encryptedNative": ["password"],
+    "protectedNative": ["password"],
     "native": {
         "familymembers": [],
         "whitelist": [],
@@ -309,11 +311,14 @@
         "interval": 1,
         "intervalFamily": 60,
         "delay": 15,
+        "compatibility": true,
         "history": "",
         "dateformat": "yyyy.mm.dd HH:MM:ss",
         "fbdevices": false,
         "meshinfo": false,
         "syncfbdevices": false,
+        "guestinfo": true,
+        "qrcode": false,
         "username": "",
         "password": "",
         "enableWl": true
