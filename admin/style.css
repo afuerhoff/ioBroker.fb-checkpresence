@@ -1,16 +1,22 @@
-/* You can delete those if you want. I just found them very helpful */
-* {box-sizing: border-box;}
-.m {/* Don't cut off dropdowns! */overflow: initial;}
+/* ------------------- CSS style provided by ioBroker Adapter Creator ------------------- */
+* { box-sizing: border-box; }
+.m { overflow: initial; /* Don't cut off dropdowns! */ }
+/* -------------------------------------------------------------------------------------- */
 
 /* Add your styles here */
+
 
 /* Tooltip container */
 .tooltip { position: relative; display: inline-block;
    /*border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext, .tooltip:hover .tooltiptext1 { visibility: visible; opacity: 1; }
+.tooltip:hover .tooltiptext2, .tooltip:hover .tooltiptext3 { visibility: visible; opacity: 1; }
+
 /* Tooltip text */
-.tooltip .tooltiptext {
+.tooltip .tooltiptext, .tooltip .tooltiptext1, .tooltip .tooltiptext2, .tooltip .tooltiptext3 {
    visibility: hidden;
    width: auto;
    background-color: #777;
@@ -19,106 +25,47 @@
    font-size: 12px !important;
    padding: 4px 4px;
    border-radius: 4px;
-
    /* Position the tooltip text */
    position: absolute;
    z-index: 1;
+   /* Fade in tooltip */
+   opacity: 0;
+   transition: opacity 1s;
+}
+
+.tooltip .tooltiptext {
+   /* Position the tooltip text */
    bottom: -30%;
    left: 5%;
    margin-top: 0px;
-
-   /* Fade in tooltip */
-   opacity: 0;
-   transition: opacity 1s;
 }
-
-/* Tooltip arrow */
-.tooltip .tooltiptext::after {
-   content: " ";
-   position: absolute;
-   bottom: 100%;  /* At the top of the tooltip */
-   left: 10%;
-   margin-left: -5px;
-   border-width: 5px;
-   border-style: solid;
-   border-color: transparent transparent #555 transparent;
- }
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
-.tooltip:hover .tooltiptext1 { visibility: visible; opacity: 1; }
-.tooltip:hover .tooltiptext2 { visibility: visible; opacity: 1; }
-.tooltip:hover .tooltiptext3 { visibility: visible; opacity: 1; }
 
 /* Tooltip text */
 .tooltip .tooltiptext1 {
-   visibility: hidden;
-   width: auto;
-   background-color: #777;
-   color: #fff;
-   text-align: left;
-   font-size: 12px !important;
-   padding: 4px 4px;
-   border-radius: 4px;
-
    /* Position the tooltip text */
-   position: absolute;
-   z-index: 1;
    bottom: -100%;
    left: 5%;
    margin-top: 0px;
-
-   /* Fade in tooltip */
-   opacity: 0;
-   transition: opacity 1s;
 }
 
 .tooltip .tooltiptext2 {
-   visibility: hidden;
-   width: auto;
-   background-color: #777;
-   color: #fff;
-   text-align: left;
-   font-size: 12px !important;
-   padding: 4px 4px;
-   border-radius: 4px;
-
    /* Position the tooltip text */
-   position: absolute;
-   z-index: 1;
    bottom: -150%;
    left: 5%;
    margin-top: 0px;
-
-   /* Fade in tooltip */
-   opacity: 0;
-   transition: opacity 1s;
 }
 
 .tooltip .tooltiptext3 {
-   visibility: hidden;
-   width: auto;
-   background-color: #777;
-   color: #fff;
-   text-align: left;
-   font-size: 12px !important;
-   padding: 4px 4px;
-   border-radius: 4px;
-
    /* Position the tooltip text */
    position: absolute;
    z-index: 1;
    bottom: -200%;
    left: 5%;
    margin-top: 0px;
-
-   /* Fade in tooltip */
-   opacity: 0;
-   transition: opacity 1s;
 }
 
 /* Tooltip arrow */
-.tooltip .tooltiptext1::after {
+.tooltip .tooltiptext::after, .tooltip .tooltiptext1::after {
    content: " ";
    position: absolute;
    bottom: 100%;  /* At the top of the tooltip */
@@ -129,7 +76,7 @@
    border-color: transparent transparent #555 transparent;
 }
 
-.tooltip .tooltiptext2::after {
+.tooltip .tooltiptext2::after, .tooltip .tooltiptext3::after {
    content: " ";
    position: absolute;
    bottom: 100%;  /* At the top of the tooltip */
@@ -139,39 +86,23 @@
    border-style: solid;
    border-color: transparent transparent #555 transparent;
 }
-
-.tooltip .tooltiptext3::after {
-   content: " ";
-   position: absolute;
-   bottom: 100%;  /* At the top of the tooltip */
-   left: 10%;
-   margin-left: -5px;
-   border-width: 5px;
-   border-style: solid;
-   border-color: transparent transparent #555 transparent;
-}
-
 
 /* Required to avoid y-scrollbar. */
 .modal { max-height:85% !important; }
 .m .page {height: auto !important; min-height:75% !important; }
 
-/* add space at top/bottom */
-.spaceTop {margin-top: 0.1em; }
-.spaceBottom {margin-top: 3em; }
-
 /* span */
 .m span { font-size: 1.0em !important }  /* span is set to 0.9em for some unknown reason, we set back to 1.0em  */
 .m .dialog-config-buttons span { font-size: 0.9em !important }  /* leave span at 0.9em for the save/cancel etc. buttons  */
 
-/* Header section */
+/* Header section fb-checkpresence*/
 #header-area {margin-top: 5px; margin-bottom: 1px; background-color:#64b5f6;}
 #header-area #header-logo-title .logo {float:left; margin-right: 10px;}
 #header-area #header-logo-title p {line-height: normal !important; margin: 0 !important; padding: 8px 0 0 8px;}
 #header-area #header-logo-title p>span.h-title {font-size: 1.8em !important; color:white; }
 #header-area #header-logo-title p>span.h-sub-title {font-size: 1.0em !important; color:white; font-style: italic; }
 
-/* Tabs menu */
+/* Tabs menu under header section */
 .m .tabs .tab a { color: rgba(13, 134, 231, 0.7); } /* Color */
 .m .tabs .tab a { padding: 0 5px; } /* space of x px at beginning and end of text  */
 .m .tabs .active { border-bottom: 2px solid #0d47a1; font-weight: bold;}
@@ -179,10 +110,6 @@
 .m .tabs .tab a:hover { border-bottom: 2px solid #46a0e9 !important; }
 .m .row .col.m1 { width: 20%; } 
 #tab-area { padding-left:0;padding-right:0; margin-top: 0px; margin-bottom: 1px; background-color:#174475; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2) }
-
-/* add space at top/bottom */
-/*.spaceTop3em {margin-top: 3em; }
-.spaceBottom3em {margin-top: 3em; }*/
 
 /* Code */
 /*code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; background-color: rgba(101, 190, 246, 0.05); border-radius: 0; }
@@ -229,21 +156,86 @@
 /*.collapsible .collapsible-body td {font-size: 1.1em; padding:10px; margin-right: 10px;}*/
 .collapsible .collapsible-body tr {padding:3px;}
 
-/*h5 {padding: 10px}*/
-table.highlight > tbody > tr:hover {color: blue;font-weight: bold;}
+/* Admin Tabelle Familienmitglieder */
+table.fmadmin th {margin-top:0px; }
+table.fmadmin th.header { background-color:#b6b6b6; color: white; font-size:90%; text-align:left; line-height: 1em; padding:5px!important; }
+table.fmadmin tr td { font-size: 80%!important; line-height: 1em; height: 0.9em!important;}
+table.fmadmin tr td:nth-child(3) input { font-weight:bold; }
+table.fmadmin tr td label input[type="checkbox"], .cb, .filled-in {background-color: white; vertical-align: middle;}
+table.fmadmin th:nth-child(1) { width: 5%; }
+table.fmadmin td:nth-child(1) { width: 5%; }
+table.fmadmin tr th:nth-child(2) { width: 10%; }
+table.fmadmin tr td:nth-child(2) { width: 10%; }
+table.fmadmin tr th:nth-child(3) { width: 20%; }
+table.fmadmin tr td:nth-child(3) { width: 20%; }
+table.fmadmin tr th:nth-child(4) { width: 15%; }
+table.fmadmin tr td:nth-child(4) { width: 15%; }
+table.fmadmin tr th:nth-child(5) { width: 12%; }
+table.fmadmin tr td:nth-child(5) { width: 12%; }
+table.fmadmin tr th:nth-child(6) { width: 10%; }
+table.fmadmin tr td:nth-child(6) { width: 10%; }
+table.fmadmin tr th:nth-child(7) { width: 10%; }
+table.fmadmin tr td:nth-child(7) { width: 10%; }
+table.fmadmin tr th:nth-child(8) { width: 8%; }
+table.fmadmin tr td:nth-child(8) { width: 8%; }
+table.fmadmin tr th:nth-child(9) { width: 15%; }
+table.fmadmin tr td:nth-child(9) { width: 15%; }
+table.fmadmin tr th:nth-child(10) { width: 5%; }
+table.fmadmin tr td:nth-child(10) { width: 5%; }
 
-/* Dialogboxes add family members and whitelist devices */
-#searchFam, #searchWL {font-size: 12px;padding: 0px;margin: 0px 0px 0px 40px;}
-#tabFam, #tabWL {font-size: 13px;}
-#tabFam th, #tabFam td {text-align: left;padding: 3px;}
-#tabWL th, #tabWL td {text-align: left; padding: 1px;}
+/* Button Abstand  */
+.btnAdmin {color: white !important; margin-left: 5px!important; float:right;} 
 
 /* Input validation for admin configuration */
 input:invalid {border: red solid 3px;}
 input:valid {border: rgb(0, 255, 21) solid 3px;}
 
+
+/* Dialogboxes family members and whitelist devices */
+/* ------------------------------------------------ */
+/* Error dialog */
+.dlgErrorTitle {background-color: #d46e29; color: white; border-radius: 1px; margin: 6px!important; font-size: 0.8em; padding: 6px!important}
+.errorText {margin:30px 0px 10px 10px; font-size:1.2em;}
+
+/* Devices dialog */
+#tabDevices, #tabWl {overflow-y: hide!important; width:100%}
+/*  Header */
+.dlgTitle {background-color: #2696ef; color: white; border-radius: 1px; margin: 6px!important; font-size: 0.8em; padding: 6px!important}
+.searchInput {font-size: 0.8em; line-height: 0.5em; padding: 0px!important;margin-left: 40px!important; margin-bottom: 0px!important; color: white; }
+.searchLabel {font-size: 0.8em; line-height: 0.5em; color: rgb(20, 34, 235); }
+input.searchInput { color:#2696ef !important; padding-left: 5px !important; width: 200px !important; margin:0 0 0 25px !important;  height: 2.5rem !important;}
+#dlgDevices button#btnResetSearch { left: 230px; width: 1.6em !important; height: 1.6em !important;}
+#dlgDevices button#btnResetSearch i {font-size: .9rem !important; line-height: 1rem !important; }
+#dlgWl button#btnResetSearchWl { left: 230px; width: 1.6em !important; height: 1.6em !important;}
+#dlgWL button#btnResetSearchWl i {font-size: .9rem !important; line-height: 1rem !important; }
+/* Content */
+#dlgDevices .modal-content, #dlgWl .modal-content {margin: 0px 0px 0px 5px; padding:0px; height: calc(85% - 140px)!important }
+#tabDevices tr td, #tabWl tr td {text-align:left; padding-left: 10px;}
+#tabDevices tr, #tabWl tr {line-height: 6px!important; font-size:90%;padding:0px!important}
+table.fm {width:94%; margin-top:0px; }
+table.fm tr.header { background-color:#b6b6b6; color: white; font-size:90%; text-align:left; line-height: 1em; padding:5px!important; }
+table.fm th.header { padding:0px!important; text-align:left; margin: 5px 0px 0px 6px;}
+/*table.fm th input[type="checkbox"] {text-align: center!important; vertical-align: middle!important; margin-top:30px!important}*/
+table.fm tr td { font-size: 90%!important; height: 0.9em!important; margin-top:5px!important}
+table.fm tr td:nth-child(3) input { font-weight:bold; }
+table.fm th:nth-child(1) { width: 5%; }
+table.fm td:nth-child(1) { width: 5%; }
+table.fm tr th:nth-child(2) { width: 35%; }
+table.fm tr td:nth-child(2) { width: 35%; }
+table.fm tr th:nth-child(3) { width: 30%; }
+table.fm tr td:nth-child(3) { width: 30%; }
+table.fm tr th:nth-child(4) { width: 30%; }
+table.fm tr td:nth-child(4) { width: 30%; }
+/* Footer */
+.btnDlg {color: white !important; margin-right: 5px!important; } 
+
+/*table.wl th.header { background-color:#575757; font-size:90%; text-align:left; line-height: 1em; padding:6px 2px;}*/
+/*table.wl tr td { font-size: 0.9em!important;}*/
+/*table.wl tr td input { font-size: 0.9em!important; }*/
+/*#tabWL th, #tabWL td {text-align: left; padding: 1px;}
+#searchWL {font-size: 12px;padding: 0px;margin: 0px 0px 0px 0px;}*/
+
+
 /* Help text format */
 .bg-color-1 {background-color: #777777; color: white}
 
-/* Button whitelist and blacklist */
-.btn {color: white !important; margin-right: 30px;} 

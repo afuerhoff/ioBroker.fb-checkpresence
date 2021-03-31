@@ -224,6 +224,19 @@
 					  	</div>
 					</div>
 
+					<div class="row">
+						<div class="col s3 input-field tooltip">	
+							<input type="checkbox" class="value" id="guestinfo"/>
+							<label for="guestinfo" class="translate black-text">guest</label>
+							<span class="tooltiptext2 translate">tooltipGuest</span>
+					  	</div>
+						<div class="col s3 input-field tooltip">	
+							<input type="checkbox" class="value" id="qrcode"/>
+							<label for="qrcode" class="translate black-text">qrcode</label>
+							<span class="tooltiptext2 translate">tooltipQR</span>
+					  	</div>
+					</div>
+
 				</div><!-- End of tab main -->
 
 				<!--Define tab family-->
@@ -303,47 +316,52 @@
 					</div>
 
 					<div id="values">
-						<div class="row">
-							<div class="col s1 input-field tooltip">
-								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<span class="tooltiptext1 translate">tooltipWlAddRow</span>
+						<div class="row valign-wrapper" style="margin-bottom:5px">
+							<div class="col input-field tooltip">
+								<a class="btnAdmin btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<!--span class="tooltiptext1 translate">tooltipWlAddRow</span-->
 							</div>
-							<div class="col s3 input-field tooltip">
-								<a id="buttonadd" class="btn waves-effect waves-light modal-trigger translate">Add family member</a>
-								<span class="tooltiptext1 translate">tooltipWlAdd</span>
-								<!--a class="btn waves-effect waves-light modal-trigger translate" href="#dlgFam" >Add family member</a-->
-								<!--href="#dlgFam"  onclick="addDlg()"-->
+							<div class="col input-field tooltip">
+								<a id="buttonadd" class="btnAdmin btn waves-effect waves-light modal-trigger translate">Add family member</a>
+								<!--span class="tooltiptext1 translate">tooltipWlAdd</span-->
 							</div>
-							<div class="col s3 input-field tooltip">
-								<input type="number" class="value validate tooltipped" min="10" max="600" step="1" id="intervalFamily" required pattern="[1-6][0-9]?"/>
+							<div class="col s2 input-field tooltip" style="margin-left:5px">
+								<input type="number" class="value validate" min="10" max="600" step="1" id="intervalFamily" required pattern="[1-6][0-9]?"/>
 								<label for="intervalFamily" class="translate">Polling interval in seconds</label>
 								<span class="tooltiptext translate">tooltipInterval2</span>
 							</div>
-							<div class="col s2 input-field tooltip">
-								<input type="number" class="value validate tooltipped" min="1" max="69" step="1" id="delay" required pattern="[0-6][1-9]?"/>
+							<div class="col s2 input-field tooltip" style="margin-left:5px">
+								<input type="number" class="value validate" min="1" max="69" step="1" id="delay" required pattern="[0-6][1-9]?"/>
 								<label for="delay" class="translate">filter time in seconds</label>
 								<span class="tooltiptext translate">tooltipDelay</span>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col s11">
-								<table class="table-values" style="width: 100%;">
-									<thead>
-										<tr>
-											<th data-name="_index" style="width: 5%" class="center-align translate"></th>
-											<th data-name="familymember" style="width: 25%" class="translate" for="familymember">Family member</th>
-											<th data-name="macaddress" style="width: 17%" class="translate" for="macaddress">Mac-Address</th>
-											<th data-name="ipaddress" style="width: 15%" class="translate" for="ipaddress">IP-Address</th>
-											<th data-name="useip"  style="width: 7%" data-type="checkbox" class="translate">Use IP</th>
-											<th data-name="usename"  style="width: 7%" data-type="checkbox" class="translate">Use name</th>
-											<th data-name="usefilter"  style="width: 7%" data-type="checkbox" class="translate">Use filter</th>
-											<th data-name="comment" style="width: 30%" class="translate" for="comment">Comment</th>
-											<th data-name="enabled"  style="width: 10%" data-type="checkbox" class="translate">Enabled</th>
-											<th data-buttons="delete" style="width: 5%"></th>
-										</tr>
-									</thead>
-								</table>
+							<div class="col s3 input-field tooltip" style="margin-left:5px">
+								<input type="checkbox" class="value" id="compatibility"/>
+								<label for="compatibility" class="translate">compatibility</label>
+								<span class="tooltiptext2 translate">tooltipCompatibilityv0</span>
 							</div>
+						</div>
+						<div class="col s12">
+							<table class="table-values fmadmin">
+								<thead>
+									<tr>
+										<!--th data-name="_index" style="width: 3%" class="header left-align translate"></th-->
+										<th data-name="enabled"  style="width: 30px" data-type="checkbox" class="header translate"><i class="material-icons left">check_box</i></th>
+										<th data-name="group" style="width: 200px" class="header translate" for="group">Group</th>
+										<th data-name="familymember" style="width: 200px" class="header translate" for="familymember">Family member</th>
+										<th data-name="devicename" style="width: 200px" class="header translate" for="devicename">Hostname</th>
+										<th data-name="macaddress" style="width: 200px" class="header translate" for="macaddress">Mac-address</th>
+										<th data-name="ipaddress" style="width: 200px" class="header translate" for="ipaddress">Ip-address</th>
+										<th data-name="usage" style="width: 200px" data-type="select" data-options="MAC;IP;Hostname" data-default="MAC" class="header translate" for="selectUsage">Usage of</th>
+										<!--th data-name="useip"  style="width: 7%" data-type="checkbox" class="translate">Use IP</th>
+										<th data-name="usename"  style="width: 7%" data-type="checkbox" class="translate">Use name</th-->
+										<th data-name="usefilter"  style="width: 100px" data-type="checkbox" class="header translate">Use filter</th>
+										<th data-name="comment" style="width: 250px" class="header translate" for="comment">Comment</th>
+										<th data-buttons="delete" class="header"></th>
+									</tr>
+								</thead>
+								<tbody><tr></tr></tbody>
+							</table>
 						</div>
 					</div>
 				</div><!-- End of tab family -->
@@ -400,30 +418,30 @@
 					</div>
 					
 					<div id="whitevalues">
-						<div class="row">
-							<div class="col s1 input-field tooltip">
-								<a class="btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
-								<span class="tooltiptext1 translate">tooltipWlAddRow</span>
+						<div class="row valign-wrapper" style="margin-bottom:5px">
+							<div class="col input-field tooltip">
+								<a class="btnAdmin btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
+								<!--span class="tooltiptext1 translate">tooltipWlAddRow</span-->
 							</div>
-							<div class="col s3 input-field tooltip">
-								<a class="btn waves-effect waves-light modal-trigger translate" href="#dlgWL">Add a device</a>
-								<span class="tooltiptext1 translate">tooltipWlAdd</span>
+							<div class="col input-field tooltip">
+								<a class="btnAdmin btn waves-effect waves-light modal-trigger translate" href="#dlgWL">Add a device</a>
+								<!--span class="tooltiptext1 translate">tooltipWlAdd</span-->
 							</div>
-							<div class="col s2 input-field tooltip">
+							<div class="col s2 input-field tooltip" style="margin-left:5px">
 								<input type="checkbox" class="value" id="enableWl"/>
 								<label for="enableWl" class="translate black-text">Enable whitelist</label>
 								<span class="tooltiptext2 translate">tooltipWlv0</span>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col s11">
-								<table class="table-values" style="width: 100%;">
+							<div class="col">
+								<table class="table-values wladmin">
 									<thead>
 										<tr>
-											<th data-name="_index" style="width: 5%" class="translate"></th>
-											<th data-name="white_device" style="width: 50%" class="translate" for="white_device">Device</th>
-											<th data-name="white_macaddress" style="width: 40%" class="translate" for="white_macaddress">Mac-Address</th>
-											<th data-buttons="delete" style="width: 5%"></th>
+											<th data-name="_index" style="width: 30px" class="header translate"></th>
+											<th data-name="white_device" style="width: 250px" class="header translate" for="white_device">Hostname</th>
+											<th data-name="white_macaddress" style="width: 200px" class="header translate" for="white_macaddress">Mac-address</th>
+											<th data-buttons="delete" class="header"></th>
 										</tr>
 									</thead>
 								</table>
@@ -431,9 +449,11 @@
 						</div>
 					</div>
 				</div><!-- End of tab white list -->
-
-				<div id="dlgFam" class="modal modal-fixed-footer grey lighten-2"></div>
-				<div id="dlgWL" class="modal modal-fixed-footer grey lighten-2"></div>
+				
+				<div class="m material-dialogs">
+					<div id="dlgDevices" class="modal modal-fixed-footer"></div>
+					<div id="dlgWL" class="modal modal-fixed-footer"></div>
+				</div>
 			</div>
 		</div><!-- End of adapter container -->
 	</body>

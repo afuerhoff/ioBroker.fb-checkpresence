@@ -1,41 +1,32 @@
 'use strict';
+/* eslint-disable no-irregular-whitespace */
+/* eslint-disable-next-line no-undef */
+/* eslint-env jquery, browser */               // https://eslint.org/docs/user-guide/configuring#specifying-environments
+/* global sendTo, getEnums, common, systemLang, socket, values2table, table2values, M, _, instance */  // for eslint
 /*eslint no-undef: "error"*/
 /*eslint-env browser*/
+
+const adapterNamespace = `fb-checkpresence.${instance}`;
 
 let familymembers = [];
 let whitelist = [];
 let arr;
-let dlgMembers;
-let dlgWl;
-let secret;
 let active = false;
 
 if (typeof _ !== 'function') _ = translateWord;
-
-function encrypt(key, value) {
-    let result = '';
-    for (let i = 0; i < value.length; ++i) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
-}
-
-function decrypt(key, value) {
-    let result = '';
-    for (let i = 0; i < value.length; ++i) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
-}	
 
 function search(event) {
     const input = document.getElementById(event.currentTarget.id);
     const filter = input.value.toUpperCase();
     let table = null;
-    if( event.currentTarget.id == 'searchFam'){
-        table = document.getElementById('tabFam');
-    }else{
-        table = document.getElementById('tabWL');
+    if( event.currentTarget.id == 'searchDevice'){
+        table = document.getElementById('tabDevices');
+        // Enable "reset search" button
+        $('button#btnResetSearch').attr('disabled', false);
+    }
+    if( event.currentTarget.id == 'searchWL'){
+        table = document.getElementById('tabWl');
+        $('button#btnResetSearchWl').attr('disabled', false);
     }
     const tr = table.getElementsByTagName('tr');
     // Loop through all table rows, and hide those who don't match the search query
@@ -83,10 +74,10 @@ function search(event) {
 
 async function getHistoryInstances(settings){
     let histArr =[];
-    histArr = await getHistoryAdapter(histArr);
-    histArr = await getSqlAdapter(histArr);
-    histArr = await getInfluxdbAdapter(histArr);
-    let selectElement = document.getElementById('history');
+    histArr = await getHistoryAdapter('history', histArr);
+    histArr = await getHistoryAdapter('sql', histArr);
+    histArr = await getHistoryAdapter('influxdb', histArr);
+    const selectElement = document.getElementById('history');
     const cnfHistory = settings.history;
     let option = document.createElement('option');
     option.text = 'disabled';
@@ -105,10 +96,9 @@ async function getHistoryInstances(settings){
     $('select').select();
 }
 
-function getHistoryAdapter (hist) {
+function getHistoryAdapter (adapter, hist) {
     return new Promise((resolve, reject) => {
-        getAdapterInstances('history', function (arr) {
-            //let hist=[];
+        getAdapterInstances(adapter, function (arr) {
             for (let i = 0; i < arr.length; i++) {
                 hist.push({'name' : arr[i]._id});
             }
@@ -117,31 +107,8 @@ function getHistoryAdapter (hist) {
     });
 }
 
-function getSqlAdapter (hist) {
-    return new Promise((resolve, reject) => {
-        getAdapterInstances('sql', function (arr) {
-            //let hist=[];
-            for (let i = 0; i < arr.length; i++) {
-                hist.push({'name' : arr[i]._id});
-            }
-            resolve(hist);
-        });
-    });
-}
 
-function getInfluxdbAdapter (hist) {
-    return new Promise((resolve, reject) => {
-        getAdapterInstances('influxdb', function (arr) {
-            //let hist=[];
-            for (let i = 0; i < arr.length; i++) {
-                hist.push({'name' : arr[i]._id});
-            }
-            resolve(hist);
-        });
-    });
-}
-
-// Every Field is Valid?
+// Field is valid?
 function chkValidity() {
     let valid = true;
 
@@ -156,252 +123,158 @@ function chkValidity() {
     return valid;
 }
 
-// This will be called by the admin adapter when the settings page loads
-function load(settings, onChange) {
-    if (!settings) return;
-    $('.hideOnLoad').hide();
-    $('.showOnLoad').show();
-    familymembers = settings.familymembers || [];
-    whitelist = settings.whitelist || [];
-    values2table('values', familymembers, onChange, tableOnReady);
-    values2table('whitevalues', whitelist, onChange);
-    
-    getHistoryInstances(settings);
-    
-    // if adapter is alive
-    socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
-        active =  (state && state.val);
-        if (!active) {
-            const content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + _('You have to start your ioBroker.' + adapter + ' adapter before you can use this function!') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-            $('.modal').append(content);
-            $('.modal').modal();
-            return;
-        }
+function dlgError(text){
+    const content = 
+        '<div class="modal-header">' + 
+            '<h6 class="dlgErrorTitle"><span>' + _('Error') + '</span></h6>' +
+        '</div>' + 
+        '<div class="modal-content">' +
+            '<p class="errorText">' + _(text) + '</p>' + 
+        '</div>' + 
+        '<div class="modal-footer">' + 
+            '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
+        '</div>';
+    $('#dlgDevices').append(content);
+    $('#dlgDevices').modal();
+    $('#dlgWL').append(content);
+    $('#dlgWL').modal();
+}
 
-        const g_onChange = onChange;
-        sendTo(adapter + '.' + instance, 'discovery', { onlyActive: true, reread: false }, function (result) {
-            try {
-                arr = JSON.parse(result);
-                if (arr.error) {
-                    const content = '<div class="modal-content"><h4>' + _('Error') + '</h4><p>' + arr.error.message + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-                    $('.modal').append(content);
-                    $('.modal').modal();
-                    return;
-                }
-                let bodyFam = '';
-                let bodyWl = '';
-                if (!arr.length) {
-                    const content = '<div class="modal-content"><h4>' + _('Add a familymember') + '</h4><p>' + _('Cannot find any device') + '</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-                    $('.modal').append(content);
-                    $('.modal').modal();
-                    return;
-                } else {
-                    dlgMembers=
-                        '<div class="input-field col s12">' + 
-                            '<i id="icon" class="material-icons prefix">search</i>' + 
-                            '<input id="searchFam" class="validate" type="text" onkeyup="search(event)">'  + 
-                            '<label for="searchFam">' + _('Search for device') + '..' + '</label>' +
-                        '</div>' +
-                        '<div col s12>' + 
-                            '<table class="responsive-table highlight" id="tabFam">' + 
-                                '<thead>' + 
-                                    '<tr class="grey darken-3 white-text">' + 
-                                        '<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all" onclick="select-all(event)"/><span></span></label></th>' + 
-                                        '<th class="left-align">' + 'Hostname' + '</th>' + 
-                                        '<th class="center-align">' + _('MAC address') + '</th>' + 
-                                        '<th class="center-align">' + _('IP address') + '</th>' + 
-                        //'<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="insertIP" /><span class="white-text" style="font-size: 13px">' + _('IP address') + '</span></th>' +
-                                    '</tr>' + 
-                                '</thead>' +
-                                '<tbody>';
-                    dlgWl=
-                        '<div class="input-field col s12">' + 
-                            '<i id="icon" class="material-icons prefix">search</i>' + 
-                            '<input id="searchWL" class="validate" type="text" onkeyup="search(event)">'  + 
-                            '<label for="searchWL">' + _('Search for device') + '..' + '</label>' +
-                        '</div>' +
-                        '<div col s12>' + 
-                            '<table class="responsive-table striped" id="tabWL">' + 
-                                '<thead>' + 
-                                    '<tr class="grey darken-3 white-text">' + 
-                                        '<th class="valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all2" onclick="select-all(event)"/><span></span></label></th>' + 
-                                        '<th class="left-align">' + 'Hostname' + '</th>' + 
-                                        '<th class="center-align">' + _('MAC address') + '</th>' + 
-                                    '</tr>' + 
-                                '</thead>' +
-                                '<tbody>';
-                    arr.forEach(function (element) {
-                        let chkVal = '';
-                        for(let i=0; i < whitelist.length; i++){
-                            if (element.mac == whitelist[i].white_macaddress){
-                                chkVal = 'checked';
-                                break;
-                            }
-                        }
-                        let chkVal2 = false;
-                        for(let i=0; i < familymembers.length; i++){
-                            if(familymembers[i].useip == false){
-                                if (element.mac == familymembers[i].macaddress){
-                                    chkVal2 = 'checked';
-                                    break;
-                                }
-                            }else{
-                                if (element.ip == familymembers[i].ipaddress){
-                                    chkVal2 = 'checked';
-                                    break;
-                                }
-                            }
-                        }
-                        bodyFam += 
-                        '<tr class="add-device" ' +
-                            'data-macaddress="' + (element.mac || '') + '" ' +
-                            'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
-                            'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
-                            '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkFM"' + chkVal2 + ' /><span></span></label></td>' +
-                            '<td>' + element.name + '</td>' +
-                            '<td class="center">' + element.mac + '</td>' +
-                            '<td class="center">' + element.ip + '</td>' +
-                        '</tr>';
-                        bodyWl += 
-                            '<tr ' +
-                                'data-white_macaddress="' + (element.mac || '') + '" ' +
-                                'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
-                                '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkWL"' + chkVal + ' /><span></span></label></td>' +
-                                '<td>' + element.name + '</td>' +
-                                '<td class="center">' + element.mac + '</td>' +
-                            '</tr>';
-                    });
-                    bodyFam += '</tbody></table></div>';
-                    const contentFam = 
-                        '<div class="modal-content translate">' + 
-                            '<h5 class="blue">' + _('Add family member') + '</h5>' + 
-                            '<p>' + dlgMembers + bodyFam + '</p>' + 
-                        '</div>' + 
-                        '<div class="modal-footer blue lighten-2">' + 
-                            '<!--a href="#!" class="modal-action modal-close btn-default waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</a-->' + 
-                            '<button type="button" class="modal-action modal-close waves-effect waves-light btn-flat" id="save"><i class="material-icons left">save</i>' + _('Add') + '</button>' + 
-                            '<button type="button" class="modal-close btn-default offset-s2 waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</button>' + 
-                        '</div>';
-                    bodyWl += '</tbody></table></div>';
-                    const contentWl = 
-                        '<div class="modal-content col s12 translate">' + 
-                            '<h5 class="blue" style="margin-top:20px">' + _('Add a device') + '</h5>' + 
-                            '<p>' + dlgWl + bodyWl + '</p>' + 
-                        '</div>' + 
-                        '<div class="modal-footer blue lighten-2">' + 
-                            '<button type="button" class="modal-action modal-close waves-effect waves-light btn-flat" id="save1"><i class="material-icons left">save</i>' + _('Add') + '</button>' + 
-                            '<button type="button" class="modal-close btn-default offset-s2 waves-effect waves-light btn-flat"><i class="material-icons left">close</i>' + _('Close') + '</button>' + 
-                        '</div>';
-                    $('#dlgFam').append(contentFam);
-                    $('#dlgFam').modal({dismissible: false,});
-                    $('#dlgWL').append(contentWl);
-                    $('#dlgWL').modal({dismissible: false,});
-                }
+function dlgDevices(arr, title, id){
+    let tableBodyDevices = '';
+    arr.forEach(function (element) {
+        const chkVal2 = '';
 
-                $('#save1').click(function () {
-                    // Loop through all checkboxes, and add all devices with selected checkboxes
-                    whitelist = []; //clear whitelist
-                    $('#tabWL input[type=checkbox]:checked').each(function () {
-                        const row = $(this).closest('tr')[0];
-                        const mac = $(row).data('white_macaddress');
-                        const device = $(row).data('white_device');
-                        if (device != null){
-                            whitelist.push({white_macaddress: mac, white_device: device});
-                            values2table('whitevalues', whitelist, g_onChange);
-                            g_onChange(true);
-                        }
-                    });
-                });
-                $('#save').click(function () {
-                    // Loop through all checkboxes, and add all devices with selected checkboxes
-                    const devices = []; //clear whitelist
-                    //familymembers = settings.familymembers || [];
-                    familymembers = table2values('values') || [];
-                    //const insertIP = $('#insertIP');
-                    $('#tabFam input[type=checkbox]:checked').each(function () {
-                        const row = $(this).closest('tr')[0];
-                        var ip = $(row).data('ip');
-                        var mac = $(row).data('macaddress');
-                        let device = $(row).data('familymember');
-                        if (device != undefined){
-                            let comment = device;
-                            let enabled = true;
-                            let useip = false;
-                            for (let i=0; i<familymembers.length; i++){
-                                useip = familymembers[i].useip;
-                                if(useip == false){
-                                    if (familymembers[i].macaddress == mac){
-                                        device = familymembers[i].familymember;
-                                        enabled = familymembers[i].enabled;
-                                        comment = familymembers[i].comment;
-                                        break;
-                                    }
-                                }else{
-                                    if (familymembers[i].ipaddress == ip){
-                                        device = familymembers[i].familymember;
-                                        enabled = familymembers[i].enabled;
-                                        comment = familymembers[i].comment;
-                                        break;
-                                    }
-                                }
-                            }
-                            devices.push({macaddress: mac, ipaddress: ip, enabled: enabled, familymember: device, useip: useip, comment: comment});
-                        }
-                    });
-                    values2table('values', devices, g_onChange, tableOnReady);
-                    g_onChange(true);
-                });
-                $('#select-all').click(function(event) {
-                    if(this.checked) {
-                        // Iterate each checkbox
-                        const checkboxes = document.querySelectorAll('input[name="chkFM"]');
-                        for (let i=0; i<checkboxes.length; i++) {
-                            checkboxes[i].checked = true;
-                        }
-                    } else {
-                        const checkboxes = document.querySelectorAll('input[name="chkFM"]');
-                        for (let i=0; i<checkboxes.length; i++) {
-                            checkboxes[i].checked = false;
-                        }
-                        /*$(':checkbox').each(function() {
-                            this.checked = false;                       
-                        });*/
-                    }
-                });
-                $('#select-all2').click(function(event) {
-                    if(this.checked) {
-                        // Iterate each checkbox
-                        const checkboxes = document.querySelectorAll('input[name="chkWL"]');
-                        for (let i=0; i<checkboxes.length; i++) {
-                            checkboxes[i].checked = true;
-                        }
-                        /*$(':checkbox').each(function() {
-                            this.checked = true;                        
-                        });*/
-                    } else {
-                        const checkboxes = document.querySelectorAll('input[name="chkWL"]');
-                        for (let i=0; i<checkboxes.length; i++) {
-                            checkboxes[i].checked = false;
-                        }
-                        /*$(':checkbox').each(function() {
-                            this.checked = false;                       
-                        });*/
-                    }
-                });
-            } catch (e) {
-                const content = '<div class="modal-content"><h4>Error</h4><p>Cannot find any device</p></div><div class="modal-footer"><a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a></div>';
-                $('.modal').append(content);
-                $('.modal').modal();
-            }
-        });
+        //onMessage -> allDevices name, mac, ip -> see main.js
+        tableBodyDevices += 
+            '<tr class="add-device" ' +
+                'data-macaddress="' + (element.mac || '') + '" ' +
+                'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
+                'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
+                '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkFM"' + chkVal2 + ' /><span></span></label></td>' +
+                '<td>' + element.name + '</td>' +
+                '<td class="center">' + element.mac + '</td>' +
+                '<td class="center">' + element.ip + '</td>' +
+            '</tr>';
     });
 
-    // example: select elements with id=key and class=value and insert value
-    socket.emit('getObject', 'system.config', function (err, obj) {
-        secret = (obj.native ? obj.native.secret : '') || 'SdoeQ85NTrg1B0FtEyzf';
-        //for (var key in settings) {
-        //if (settings.hasOwnProperty(key)) setValue(key, settings[key], onChange);
-        //}
+    const dialogDevices = 
+        '<div class="modal-header">' + 
+            '<h6 class="dlgTitle"><span class="translate">' + _(title) + '</span></h6>' +
+            '<div class="input-field inline">' + 
+                '<i id="icon" class="material-icons prefix">search</i>' + 
+                '<button id="btnResetSearch" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>' +
+                '<input id="searchDevice" name="search" class="validate searchInput" type="text" onkeyup="search(event)">'  + 
+                '<label class="searchLabel" for="searchDevice">' + _('Search for device') + '..' + '</label>' +
+            '</div>' +
+            '<div>' + 
+                '<table class="fm">' + 
+                    '<thead>' + 
+                        '<tr class="header">' +
+                            '<th class="valign-wrapper header"><label class="header"><input type="checkbox" class="cb filled-in header" id="select-all" onclick="select-all(event)"/><span></span></label></th>' + 
+                            '<th class="header left-align">' + 'Hostname' + '</th>' + 
+                            '<th class="header center-align">' + _('Mac-address') + '</th>' + 
+                            '<th class="header center-align">' + _('Ip-address') + '</th>' + 
+                        '</tr>' + 
+                    '</thead>' +
+                '</table>' +
+            '</div>' +
+        '</div>' +
+        '<div class="modal-content">' +
+            '<div>' + 
+                '<table class="fm" id="tabDevices">' + 
+                    '<tbody>' +
+                        tableBodyDevices +
+                    '</tbody>' +
+                '</table>' +
+            '</div>' +
+        '</div>' + 
+        '<div class="modal-footer">' + 
+            '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-set" id="save"><i class="large material-icons left">add</i><span class="translate">' + _('Add') + '</span></a>' +
+            '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
+        '</div>';
+
+    $(id).append(dialogDevices);
+    $(id).modal({dismissible: false});
+}
+
+function dlgWl(arr, title, id){
+    let tableBodyWl = '';
+    arr.forEach(function (element) {
+        let chkVal = '';
+        for(let i=0; i < whitelist.length; i++){
+            if (element.mac == whitelist[i].white_macaddress){
+                chkVal = 'checked';
+                break;
+            }
+        }
+
+        //onMessage -> allDevices name, mac, ip -> see main.js
+        tableBodyWl += 
+            '<tr ' +
+                'data-white_macaddress="' + (element.mac || '') + '" ' +
+                'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
+                '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkWL"' + chkVal + ' /><span></span></label></td>' +
+                '<td>' + element.name + '</td>' +
+                '<td class="center">' + element.mac + '</td>' +
+            '</tr>';
+    });
+
+    const dialogWl=
+        '<div class="modal-header">' + 
+            '<h6 class="dlgTitle"><span class="translate">' + _(title) + '</span></h6>' +
+            '<div class="input-field inline">' + 
+                '<i id="icon" class="material-icons prefix">search</i>' + 
+                '<button id="btnResetSearchWl" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>' +
+                '<input id="searchWL" name="search" class="validate searchInput" type="text" onkeyup="search(event)">'  + 
+                '<label class="searchLabel" for="searchWL">' + _('Search for device') + '..' + '</label>' +
+            '</div>' +
+            '<div>' + 
+                '<table class="fm">' + 
+                    '<thead>' + 
+                        '<tr class="header">' +
+                            '<th class="header valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all2" onclick="select-all(event)"/><span></span></label></th>' + 
+                            '<th class="header left-align">' + 'Hostname' + '</th>' + 
+                            '<th class="header center-align">' + _('Mac-address') + '</th>' + 
+                        '</tr>' + 
+                    '</thead>' +
+                '</table>' +
+            '</div>' +
+        '</div>' +
+        '<div class="modal-content col s12 translate">' + 
+            '<div>' + 
+                '<table class="fm" id="tabWl">' + 
+                    '<tbody>' +
+                        tableBodyWl +
+                    '</tbody>' +
+                '</table>' +
+            '</div>' +
+        '</div>' + 
+        '<div class="modal-footer">' + 
+            '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-set" id="save1"><i class="large material-icons left">add</i><span class="translate">' + _('Add') + '</span></a>' +
+            '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
+        '</div>';
+
+    $(id).append(dialogWl);
+    $(id).modal({dismissible: false,});
+}
+
+// This will be called by the admin adapter when the settings page loads
+async function load(settings, onChange) {
+    try {
+        if (!settings) return;
+        //$('.hideOnLoad').hide();
+        familymembers = settings.familymembers || [];
+        whitelist = settings.whitelist || [];
+        values2table('values', familymembers, onChange, tableOnReady);
+        values2table('whitevalues', whitelist, onChange);
+        
+        getHistoryInstances(settings); //fill select options
+
+        // Secret für Passwortverschlüsselung abfragen
+        //const obj = await emitAsync('getObject', 'system.config');
+        //if (obj){
+        //secret = (obj.native ? obj.native.secret : '') || 'SdoeQ85NTrg1B0FtEyzf';
         $('.value').each(function () {
             const $key = $(this);
             const id = $key.attr('id');
@@ -418,7 +291,8 @@ function load(settings, onChange) {
             } else {
                 let val;
                 if ($key.data('crypt') =='1'){
-                    val = decrypt(secret, settings[id]) ;
+                    //val = decrypt(secret, settings[id]) ;
+                    val = settings[id];
                 } else{
                     val = settings[id];
                 }
@@ -438,11 +312,189 @@ function load(settings, onChange) {
                 }); 
             }
         });
-        onChange(false);
-        // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
-        if (M) M.updateTextFields();
+        //}
         $('select').select();
-    });
+        if (M) M.updateTextFields();
+        onChange(false);
+
+        // if adapter is alive
+        const state = await emitAsync('getState', 'system.adapter.' + adapter + '.' + instance + '.alive');
+        active =  (state && state.val);
+        if (!active) {
+            dlgError('You have to start your ioBroker.' + adapter + ' adapter before you can use this function!');
+        }else{
+            const g_onChange = onChange;
+            const result = await sendToAsync('getDevices', { onlyActive: true, reread: true });
+            if (result != null) {    
+                arr = JSON.parse(result);
+                if(arr  || arr.result == true){
+                    dlgDevices(arr, 'Add family member', '#dlgDevices');
+                    dlgWl(arr, 'Add a device', '#dlgWL');
+                }else{
+                    dlgError('Can not read devices! Result = false');
+                    return false;
+                }
+
+                $('#save1').click(function () {
+                    // Loop through all checkboxes, and add all devices with selected checkboxes
+                    whitelist = []; //clear whitelist
+                    $('#tabWL input[type=checkbox]:checked').each(function () {
+                        const row = $(this).closest('tr')[0];
+                        const mac = $(row).data('white_macaddress');
+                        const device = $(row).data('white_device');
+                        if (device != null){
+                            whitelist.push({white_macaddress: mac, white_device: device});
+                            values2table('whitevalues', whitelist, g_onChange);
+                            g_onChange(true);
+                        }
+                    });
+                });
+
+                $('#save').click(function () {
+                    // Loop through all checkboxes, and add all devices with selected checkboxes
+                    const devices = []; //clear whitelist
+                    //familymembers = settings.familymembers || [];
+                    familymembers = table2values('values') || [];
+
+                    $('#tabDevices input[type=checkbox]:checked').each(function () {
+                        const row = $(this).closest('tr')[0];
+                        const ip = $(row).data('ip');
+                        const mac = $(row).data('macaddress');
+                        const device = $(row).data('familymember');
+                        if (device != undefined){
+                            let comment = '';
+                            let enabled = true;
+                            let famname = device;
+                            let usefilter = false;
+                            let usage = 'MAC';
+                            let group = '';
+                            for (let i=0; i<familymembers.length; i++){
+                                usage = familymembers[i].usage;
+                                if(usage == 'MAC'){
+                                    if (familymembers[i].macaddress == mac){
+                                        //device = familymembers[i].familymember;
+                                        enabled = familymembers[i].enabled;
+                                        comment = familymembers[i].comment;
+                                        usefilter = familymembers[i].usefilter;
+                                        famname = familymembers[i].familymember;
+                                        usage = familymembers[i].usage;
+                                        group = familymembers[i].group;
+                                        break;
+                                    }
+                                }
+                                if(usage == 'IP'){
+                                    if (familymembers[i].ipaddress == ip){
+                                        //device = familymembers[i].familymember;
+                                        enabled = familymembers[i].enabled;
+                                        comment = familymembers[i].comment;
+                                        usefilter = familymembers[i].usefilter;
+                                        famname = familymembers[i].familymember;
+                                        usage = familymembers[i].usage;
+                                        group = familymembers[i].group;
+                                        break;
+                                    }
+                                }
+                                if(usage == 'Hostname'){
+                                    if (familymembers[i].devicename == device){
+                                        //device = familymembers[i].familymember;
+                                        enabled = familymembers[i].enabled;
+                                        comment = familymembers[i].comment;
+                                        usefilter = familymembers[i].usefilter;
+                                        famname = familymembers[i].familymember;
+                                        usage = familymembers[i].usage;
+                                        group = familymembers[i].group;
+                                        break;
+                                    }
+                                }
+                            }           
+                            devices.push({group: group, devicename: device, macaddress: mac, ipaddress: ip, usage: usage, usefilter: usefilter, enabled: enabled, familymember: famname, comment: comment});
+                        }
+                    });
+                    for (let i=0; i<familymembers.length; i++){
+                        let enabled = familymembers[i].enabled;
+                        let comment = '';
+                        let famname = '';
+                        let usefilter = false;
+                        let usage = 'MAC';
+                        let group = '';
+                        let mac;
+                        let ip;
+                        let device;
+                        if(enabled === false){
+                            device = familymembers[i].devicename;
+                            mac = familymembers[i].macaddress;
+                            ip = familymembers[i].ipaddress;
+                            enabled = familymembers[i].enabled;
+                            comment = familymembers[i].comment;
+                            usefilter = familymembers[i].usefilter;
+                            famname = familymembers[i].familymember;
+                            usage = familymembers[i].usage;
+                            group = familymembers[i].group;
+                            devices.push({group: group, devicename: device, macaddress: mac, ipaddress: ip, usage: usage, usefilter: usefilter, enabled: enabled, familymember: famname, comment: comment});
+                        }
+                    }
+                    values2table('values', devices, g_onChange, tableOnReady);
+                    g_onChange(true);
+                });
+                $('#select-all').click(function(event) {
+                    if(this.checked) {
+                        // Iterate each checkbox
+                        const checkboxes = document.querySelectorAll('input[name="chkFM"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = true;
+                        }
+                    } else {
+                        const checkboxes = document.querySelectorAll('input[name="chkFM"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = false;
+                        }
+                    }
+                });
+                $('#select-all2').click(function(event) {
+                    if(this.checked) {
+                        // Iterate each checkbox
+                        const checkboxes = document.querySelectorAll('input[name="chkWL"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = true;
+                        }
+                    } else {
+                        const checkboxes = document.querySelectorAll('input[name="chkWL"]');
+                        for (let i=0; i<checkboxes.length; i++) {
+                            checkboxes[i].checked = false;
+                        }
+                    }
+                });
+                $('button#btnResetSearch').click(function(){
+                    $('input[name=search]').val('');
+                    const table = document.getElementById('tabDevices');
+                    const tr = table.getElementsByTagName('tr');
+                    // Loop through all table rows, and hide those who don't match the search query
+                    for (let i = 0; i < tr.length; i++) {
+                        tr[i].style.display = '';
+                    }                    
+                    $('button#btnResetSearch').attr('disabled', true);
+                });
+                $('button#btnResetSearchWl').click(function(){
+                    $('input[name=search]').val('');
+                    const table = document.getElementById('tabWl');
+                    const tr = table.getElementsByTagName('tr');
+                    // Loop through all table rows, and hide those who don't match the search query
+                    for (let i = 0; i < tr.length; i++) {
+                        tr[i].style.display = '';
+                    }                    
+                    $('button#btnResetSearchWl').attr('disabled', true);
+                });
+            }else{
+                dlgError('Can not read devices! Result = null');
+            }
+        }
+        // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
+
+        //$('.showOnLoad').show();
+    } catch (e) {
+        dlgError('Cannot find any device! ' + e.message);
+        return;
+    }
 }
 
 //dependency between fbdevices and meshinfo
@@ -476,19 +528,30 @@ function beforeOpen(){
     // check checkboxes
     const fm = table2values('values') || [];
     for(let i = 0; i<fm.length;i++){
-        $('#tabFam input[type=checkbox]').each(function () {
+        $('#tabDevices input[type=checkbox]').each(function () {
             const row = $(this).closest('tr')[0];
             const mac = $(row).data('macaddress');
-            if(mac != 'undefined'){
-                if(mac == fm[i].macaddress){
-                    $(this).prop('checked', true);
-                }
+            const ip = $(row).data('ipaddress');
+            const dn = $(row).data('familymember');
+            //const usage = $(row).data('usage');
+            if (mac && mac == fm[i].macaddress && fm[i].usage === 'MAC' && fm[i].enabled === true){
+                $(this).prop('checked', true);
+            }
+            if (ip && ip == fm[i].ipaddress && fm[i].usage === 'IP' && fm[i].enabled === true){
+                $(this).prop('checked', true);
+            }
+            if (dn && dn == fm[i].familymember && mac && mac == fm[i].macaddress && fm[i].usage === 'Hostname' && fm[i].enabled === true){
+                $(this).prop('checked', true);
             }
         });
     }
     // Open add dialog
-    const elems = document.getElementById('dlgFam');
-    const instance = M.Modal.getInstance(elems);
+    let elems = document.getElementById('dlgDevices');
+    let instance = M.Modal.getInstance(elems);
+    instance.open();
+
+    elems = document.getElementById('dlgWl');
+    instance = M.Modal.getInstance(elems);
     instance.open();
     //instance.destroy();
 }
@@ -497,7 +560,7 @@ function tableOnReady() {
     $('#values .table-values .values-buttons[data-command="delete"]').on('click', function () {
         const id = $(this).data('index');
         const mac = $('#values .values-input[data-name="macaddress"][data-index="' + id + '"]').val();
-        $('#tabFam input[type=checkbox]:checked').each(function () {
+        $('#tabDevices input[type=checkbox]:checked').each(function () {
             const row = $(this).closest('tr')[0];
             const dlgMac = $(row).data('macaddress');
             if (mac == dlgMac){
@@ -522,7 +585,8 @@ function save(callback) {
                 obj[$this.attr('id')] = parseInt($this.val(), 10);
                 break;
             default:
-                obj[$this.attr('id')] = $this.data('crypt') && $this.val() ? encrypt(secret, $this.val()) : $this.val();
+                //obj[$this.attr('id')] = $this.data('crypt') && $this.val() ? encrypt(secret, $this.val()) : $this.val();
+                obj[$this.attr('id')] = $this.val();
                 break;					
         }
     });
@@ -532,31 +596,28 @@ function save(callback) {
     callback(obj);
 }
 
-function includeHTML() {
-    //https://www.w3schools.com/howto/howto_html_include.asp
-    let i, elmnt, file, xhttp;
-    /* Loop through a collection of all HTML elements: */
-    const z = document.getElementsByTagName('*');
-    for (i = 0; i < z.length; i++) {
-        elmnt = z[i];
-        /*search for elements with a certain atrribute:*/
-        file = elmnt.getAttribute('af-include-html');
-        if (file) {
-            /* Make an HTTP request using the attribute value as the file name: */
-            xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-                    if (this.status == 404) {elmnt.innerHTML = 'Page not found.';}
-                    /* Remove the attribute, and call this function once more: */
-                    elmnt.removeAttribute('af-include-html');
-                    includeHTML();
-                }
-            };
-            xhttp.open('GET', file, true);
-            xhttp.send();
-            /* Exit the function: */
-            return;
-        }
-    }
+function sendToAsync(cmd, obj) {
+    return new Promise((resolve, reject) => {
+        sendTo(adapterNamespace, cmd, obj, (result) => {
+            if (result.error) {
+                //console.error('sendToAsync(): ' + result.error);
+                reject(null);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function emitAsync(func, id) {
+    return new Promise((resolve, reject) => {
+        socket.emit(func, id, (err, stateObj) => {
+            if (err) {
+                console.error('emitAsync(): ' + err);
+                reject(null);
+            } else {
+                resolve(stateObj);
+            }
+        });
+    });
 }
