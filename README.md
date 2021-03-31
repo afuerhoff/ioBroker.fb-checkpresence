@@ -191,7 +191,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### __WORK IN PROGRESS__
+### 1.1.3 (2021-03-31)
 * (afuerhoff) family groups implemented
 * (afuerhoff) compatability mode implemented
 * (afuerhoff) dependencies updated
@@ -231,9 +231,6 @@ Here you will find information about the history of the current day.
 
 ### 1.0.4 (2020-06-28)
 * (afuerhoff) bugfix json list and guest handling, new object guest.presence
-
-### 1.0.3 (2020-05-26)
-* (afuerhoff) bugfix checking mac or ip
 
 ## License
 MIT License

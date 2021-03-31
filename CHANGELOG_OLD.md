@@ -1,4 +1,7 @@
 # Older changes
+## 1.0.3 (2020-05-26)
+* (afuerhoff) bugfix checking mac or ip
+
 ## 1.0.2 (2020-05-24)
 * (afuerhoff) error handling optimized
 * (afuerhoff) external ip implemented

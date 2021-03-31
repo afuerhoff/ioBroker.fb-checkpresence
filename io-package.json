@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.2",
+        "version": "1.1.3",
         "news": {
+            "1.1.3": {
+                "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated",
+                "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert",
+                "ru": "семейные группы реализованы\nреализован режим совместимости\nзависимости обновлены\nдобавлены параметры конфигурации\nоптимизированы диалоговые окна\nпереводы обновлены\nоптимизирована общая структура программы\nреализован фильтр для членов семьи\nобновлена обработка паролей\nдокументация обновлена",
+                "pt": "grupos familiares implementados\nmodo de compatibilidade implementado\ndependências atualizadas\nopções de configuração adicionadas\ncaixas de diálogo otimizadas\ntraduções atualizadas\nestrutura geral do programa otimizada\nfiltro para membros da família implementado\ntratamento de senha atualizado\ndocumentação atualizada",
+                "nl": "familiegroepen geïmplementeerd\ncompatibiliteitsmodus geïmplementeerd\nafhankelijkheden bijgewerkt\nconfiguratie-opties toegevoegd\ndialoogvensters geoptimaliseerd\nvertalingen bijgewerkt\nalgemene programmastructuur geoptimaliseerd\nfilter voor familieleden geïmplementeerd\nwachtwoordverwerking bijgewerkt\ndocumentatie bijgewerkt",
+                "fr": "groupes familiaux mis en œuvre\nmode de compatibilité implémenté\ndépendances mises à jour\noptions de configuration ajoutées\nboîtes de dialogue optimisées\ntraductions mises à jour\nstructure générale du programme optimisée\nfiltre pour les membres de la famille implémenté\ngestion des mots de passe mise à jour\ndocumentation mise à jour",
+                "it": "gruppi familiari implementati\nmodalità di compatibilità implementata\ndipendenze aggiornate\nopzioni di configurazione aggiunte\nfinestre di dialogo ottimizzate\ntraduzioni aggiornate\nstruttura generale del programma ottimizzata\nfiltro per i membri della famiglia implementato\ngestione della password aggiornata\ndocumentazione aggiornata",
+                "es": "grupos familiares implementados\nmodo de compatibilidad implementado\ndependencias actualizadas\nopciones de configuración agregadas\ncuadros de diálogo optimizados\ntraducciones actualizadas\nestructura general del programa optimizada\nfiltro para miembros de la familia implementado\nmanejo de contraseñas actualizado\ndocumentación actualizada",
+                "pl": "wprowadzono grupy rodzinne\nzaimplementowano tryb zgodności\nzaktualizowane zależności\ndodane opcje konfiguracyjne\nzoptymalizowane okna dialogowe\nzaktualizowane tłumaczenia\nogólna struktura programu została zoptymalizowana\nfiltr dla członków rodziny zaimplementowany\naktualizacja obsługi hasła\nzaktualizowana dokumentacja",
+                "zh-cn": "实施家庭团体\n兼容模式已实施\n依赖关系已更新\n添加了配置选项\n优化对话框\n翻译已更新\n通用程序结构优化\n实现家庭成员的过滤器\n密码处理已更新\n文档更新"
+            },
             "1.1.2": {
                 "en": "QR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\ndocumentation edited",
                 "de": "QR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nDokumentation bearbeitet",
@@ -230,18 +242,6 @@
                 "es": "características optimizadas",
                 "pl": "zoptymalizowane funkcje",
                 "zh-cn": "优化功能"
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
             }
         },
         "title": "Fritzbox CheckPresence",
@@ -301,8 +301,12 @@
             }
         ]
     },
-    "encryptedNative": ["password"],
-    "protectedNative": ["password"],
+    "encryptedNative": [
+        "password"
+    ],
+    "protectedNative": [
+        "password"
+    ],
     "native": {
         "familymembers": [],
         "whitelist": [],
