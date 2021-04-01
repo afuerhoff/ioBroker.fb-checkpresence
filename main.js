@@ -53,23 +53,33 @@ class FbCheckpresence extends utils.Adapter {
         this.errorCnt = 0;
         this.Fb = null;
         this.tout = null;
+        this.suppressMesg = false;
     }
 
-    errorHandler(error, title, adapter=this){
-        if(adapter === null) adapter = this;
+    errorHandler(error, title){
+        //if(adapter === null) adapter = this;
         if (typeof error === 'string') {
-            adapter.log.warn(title + error.name + ' ' + error.message);
+            this.log.warn(title + error.name + ' ' + error.message);
         }
         else if (typeof error === 'object')
         {
             if (error instanceof TypeError) {
-                adapter.log.error(title + ' ' + error.name + ': ' + error.message);
+                this.log.error(title + ' ' + error.name + ': ' + error.message);
             }else if (error instanceof Error){
-                adapter.log.warn(title + ' ' + error.name + ': ' + error.message);
+                if (error.message == 'NoSuchEntryInArray' && this.suppressMesg == false){
+                    this.log.warn(title + ' ' + error.name + ': ' + error.message + ' -> please check entry (mac, ip, hostname) in configuration! It is not listed in the Fritzbox device list');
+                    this.suppressMesg = true;
+                }
+                if (error.message.includes('EHOSTUNREACH')){
+                    this.log.warn(title + ' ' + error.name + ': ' + error.message + ' -> please check fritzbox connection! Ip-address in configuration correct?');
+                }
+                if (error.message != 'NoSuchEntryInArray' && !error.message.includes('EHOSTUNREACH')){
+                    this.log.warn(title + ' ' + error.name + ': ' + error.message);
+                }
             }else{
-                adapter.log.warn(title + ' ' + error.name + ': ' + JSON.stringify(error));
+                this.log.warn(title + ' ' + error.name + ': ' + JSON.stringify(error));
             }
-        }        
+        }
     }
 
     showError(errorMsg) {
@@ -1041,9 +1051,9 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     async getActive(memberRow){
+        const member = memberRow.familymember; 
         try {
             const hosts = this.hosts;      
-            const member = memberRow.familymember; 
             //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
             const mac = memberRow.macaddress; 
             const ip = memberRow.ipaddress;
@@ -1083,7 +1093,7 @@ class FbCheckpresence extends utils.Adapter {
             }
             return active;
         } catch(error){
-            this.errorHandler(error, 'getActive: ');
+            this.errorHandler(error, 'getActive ' + member + ': ');
             return null;
         }
     }
