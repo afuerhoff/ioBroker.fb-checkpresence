@@ -534,6 +534,14 @@ class FbCheckpresence extends utils.Adapter {
             
             //Create global objects
             await obj.createGlobalObjects(this, this.adapterStates, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
+
+            this.Fb.suportedServices.forEach(element => {
+                this.setState('info.' + element.id, { val: element.enabled, ack: true });
+            });
+            this.setState('reboot', { val: false, ack: true });
+            this.setState('reconnect', { val: false, ack: true });
+
+
             await obj.createMemberObjects(this, membersFiltered, familyGroups, this.adapterStates, this.memberStates, this.config, this.HTML_HISTORY + this.HTML_END, this.enabled);
 
             //create Fb devices
