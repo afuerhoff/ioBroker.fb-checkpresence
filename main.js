@@ -74,7 +74,11 @@ class FbCheckpresence extends utils.Adapter {
                     this.log.warn(title + ' ' + error.name + ': ' + error.message + ' -> please check fritzbox connection! Ip-address in configuration correct?');
                 }
                 if (error.message != 'NoSuchEntryInArray' && !error.message.includes('EHOSTUNREACH')){
-                    this.log.warn(title + ' ' + error.name + ': ' + error.message);
+                    if (error.message === undefined){
+                        this.log.warn(title + ' ' + JSON.stringify(error));
+                    }else{
+                        this.log.warn(title + ' ' + error.name + ': ' + error.message);
+                    }
                 }
             }else{
                 this.log.warn(title + ' ' + error.name + ': ' + JSON.stringify(error));
@@ -295,12 +299,12 @@ class FbCheckpresence extends utils.Adapter {
                         mesg += `${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB | `; 
                     }                
                     this.log.info(mesg);*/
+                    this.log.debug('loop main ends after ' + time + ' s');
                 }
             } catch (error) {
                 this.errorHandler(error, 'loop: '); 
             } finally {
                 time = process.hrtime(work);
-                this.log.debug('loop main ends after ' + time + ' s');
                 clearTimeout(this.tout);
                 this.tout = null;
             }
