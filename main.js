@@ -1161,10 +1161,20 @@ class FbCheckpresence extends utils.Adapter {
         try {
             const member = memberRow.familymember;
             let memberPath = '';
+            let historyPath = '';
+            let dPoint = null;
             if (this.config.compatibility === true){
-                memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
+                memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member;
+                historyPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member + '.presence';
+                if (memberRow.group == ''){
+                    dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath);
+                }else{
+                    dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath + '.presence');
+                }
             } else {
                 memberPath = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
+                dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath + '.presence');
+                historyPath = memberRow.group == '' ? 'familyMembers.' + member + '.presence' : 'familyMembers.' + memberRow.group + '.' + member + '.presence';
             }
 
             const midnight = new Date(); //Date of day change 
@@ -1173,12 +1183,6 @@ class FbCheckpresence extends utils.Adapter {
             //let memberActive = false; 
             let comming = null;
             let going = null;
-            let dPoint = null;
-            if (memberRow.group == '' && this.config.compatibility === true){
-                dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath);
-            }else{
-                dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath + '.presence');
-            }
             const curVal = await this.getStateAsync(memberPath + '.presence');
             if (curVal && curVal.val == null) curVal.val = false; 
             if (curVal && curVal.val != null){
@@ -1293,7 +1297,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (this.config.history != ''){
                     if (dPoint.common.custom != undefined && dPoint.common.custom[this.config.history].enabled == true){
                         try {
-                            const result = await this.getHistoryTable(this, memb, memberPath, start, end);
+                            const result = await this.getHistoryTable(this, memb, historyPath, start, end);
                             if (!result) throw Error('Can not get history items of member ' + memb);
                             //this.log.info('history: ' + JSON.stringify(result));
                             let htmlHistory = this.HTML_HISTORY;
