@@ -670,18 +670,19 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
 
-                /*if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true){
+                if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true){
                     this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
-                        const reconnect = await this.Fb.soapAction(this.Fb, '/upnp/control/wanpppconn1', this.urn + 'WANPPPConnection:1', 'ForceTermination', null);
-                        if (reconnect['status'] == 200 || reconnect['result'] == true) {
+                        const soapResult = {data: null};
+                        await this.Fb.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null, soapResult);
+                        if (soapResult && soapResult.data) {
                             this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
                         }else{
                             this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
-                            throw('reboot failure! ' + JSON.stringify(reconnect));
+                            throw('reconnect failure! ' + JSON.stringify(soapResult));
                         }
                     }
-                }*/
+                }
             }
 
             /*if (state) {
@@ -693,7 +694,13 @@ class FbCheckpresence extends utils.Adapter {
                 this.log.debug(`state ${id} deleted`);
             }*/
         } catch (error) {
-            this.log.error('onStateChange: ' + JSON.stringify(error));            
+            if (error.message == 'DisconnectInProgress'){
+                this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
+                this.log.info('Fritzbox reconnect in progress');            
+                await this._sleep(5000);
+            }else{
+                this.log.error('onStateChange: ' + error.name + ' ' + error.message);            
+            }
         }
     }
 
