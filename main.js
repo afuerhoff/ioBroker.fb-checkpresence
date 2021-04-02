@@ -59,12 +59,22 @@ class FbCheckpresence extends utils.Adapter {
     errorHandler(error, title){
         //if(adapter === null) adapter = this;
         if (typeof error === 'string') {
-            this.log.warn(title + error.name + ' ' + error.message);
+            if (error.name === undefined || error.message === undefined){
+                this.log.warn(title + ' ' + JSON.stringify(error));
+            }else{
+                this.log.warn(title + ' ' + error.name + ': ' + error.message);
+            }
+            //this.log.warn(title + error.name + ' ' + error.message);
         }
         else if (typeof error === 'object')
         {
             if (error instanceof TypeError) {
-                this.log.error(title + ' ' + error.name + ': ' + error.message);
+                //this.log.error(title + ' ' + error.name + ': ' + error.message);
+                if (error.name === undefined || error.message === undefined){
+                    this.log.warn(title + ' ' + JSON.stringify(error));
+                }else{
+                    this.log.warn(title + ' ' + error.name + ': ' + error.message);
+                }
             }else if (error instanceof Error){
                 if (error.message == 'NoSuchEntryInArray' && this.suppressMesg == false){
                     this.log.warn(title + ' ' + error.name + ': ' + error.message + ' -> please check entry (mac, ip, hostname) in configuration! It is not listed in the Fritzbox device list');
@@ -74,7 +84,7 @@ class FbCheckpresence extends utils.Adapter {
                     this.log.warn(title + ' ' + error.name + ': ' + error.message + ' -> please check fritzbox connection! Ip-address in configuration correct?');
                 }
                 if (error.message != 'NoSuchEntryInArray' && !error.message.includes('EHOSTUNREACH')){
-                    if (error.message === undefined){
+                    if (error.name === undefined || error.message === undefined){
                         this.log.warn(title + ' ' + JSON.stringify(error));
                     }else{
                         this.log.warn(title + ' ' + error.name + ': ' + error.message);
@@ -264,7 +274,7 @@ class FbCheckpresence extends utils.Adapter {
         while(this.enabled === true){
             this.tout = setTimeout(() => {
                 this.log.error('cycle error! Please restart the adapter');
-            }, 60000);
+            }, 300000);
             let time = null;
             let work = null;
             try {
