@@ -309,12 +309,12 @@ class FbCheckpresence extends utils.Adapter {
                         mesg += `${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB | `; 
                     }                
                     this.log.info(mesg);*/
+                    time = process.hrtime(work);
                     this.log.debug('loop main ends after ' + time + ' s');
                 }
             } catch (error) {
                 this.errorHandler(error, 'loop: '); 
             } finally {
-                time = process.hrtime(work);
                 clearTimeout(this.tout);
                 this.tout = null;
             }
@@ -627,7 +627,7 @@ class FbCheckpresence extends utils.Adapter {
         try {
             if (state) {
                 if (id == `${this.namespace}` + '.guest.wlan' && this.Fb.SETENABLE == true && state.ack === false && this.Fb.WLAN3INFO ===true && this.config.guestinfo === true){
-                    this.log.info(`State ${id} changed: ${state.val} (ack = ${state.ack})`);
+                    this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     const val = state.val ? '1' : '0';
                     const soapResult = {data: null};
                     await this.Fb.soapAction('/upnp/control/wlanconfig3', 'urn:dslforum-org:service:' + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', val]], soapResult);
@@ -641,7 +641,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 if (id.includes('disabled') && state.ack === false && this.Fb.DISALLOWWANACCESSBYIP === true && this.Fb.GETWANACCESSBYIP === true){
-                    this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
+                    this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     const ipId = id.replace('.disabled', '') + '.ipaddress';
                     const ipaddress = await this.getStateAsync(ipId);
                     const val = state.val ? '1' : '0';
@@ -656,7 +656,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 if (id == `${this.namespace}` + '.reboot' && this.Fb.REBOOT === true){
-                    this.log.info(`State ${id} changed: ${state.val} (ack = ${state.ack})`);
+                    this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
                         const soapResult = {data: null};
                         await this.Fb.soapAction('/upnp/control/deviceconfig', 'urn:dslforum-org:service:' + 'DeviceConfig:1', 'Reboot', null, soapResult);
@@ -671,10 +671,15 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true){
-                    this.log.info(`${id} changed: ${state.val} (ack = ${state.ack})`);
+                    this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
                         const soapResult = {data: null};
-                        await this.Fb.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null, soapResult);
+                        if(this.RECONNECT && this.RECONNECT == true && (this.accessType == 'DSL' || this.accessType == 'X_AVM-DE_Fiber')){
+                            await this.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null, soapResult);
+                        }
+                        if (this.GETEXTIPBYIP && this.GETEXTIPBYIP == true && (this.accessType == 'Ethernet' || this.accessType == 'X_AVMDE_UMTS' || this.accessType == 'X_AVM-DE_LTE' || this.accessType == 'X_AVM-DE_Cable')) {
+                            await this.soapAction('/upnp/control/wanipconnection1', 'urn:dslforum-org:service:' + 'WANIPConnection:1', 'ForceTermination', null, soapResult);
+                        }
                         if (soapResult && soapResult.data) {
                             this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
                         }else{
