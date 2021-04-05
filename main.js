@@ -495,6 +495,11 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration whitelist: ' + this.config.enableWl);            
             this.log.debug('configuration compatibility: ' + this.config.compatibility);            
             this.log.debug('configuration ssl: ' + this.config.ssl);            
+            this.log.debug('configuration qr code: ' + this.config.qrcode);            
+            this.log.debug('configuration guest info: ' + this.config.guestinfo);            
+            this.log.debug('configuration filter delay: ' + this.config.delay);            
+
+            this.log.info('configuration default connection: ' + this.Fb.connection);            
 
             this.Fb.suportedServices.forEach(element => {
                 element.enabled ? this.log.info(element.name + ' is supported') : this.log.warn(element.name + ' is not supported! Feature is deactivated!');
@@ -674,11 +679,10 @@ class FbCheckpresence extends utils.Adapter {
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
                         const soapResult = {data: null};
-                        if(this.RECONNECT && this.RECONNECT == true && (this.accessType == 'DSL' || this.accessType == 'X_AVM-DE_Fiber')){
-                            await this.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null, soapResult);
-                        }
-                        if (this.GETEXTIPBYIP && this.GETEXTIPBYIP == true && (this.accessType == 'Ethernet' || this.accessType == 'X_AVMDE_UMTS' || this.accessType == 'X_AVM-DE_LTE' || this.accessType == 'X_AVM-DE_Cable')) {
-                            await this.soapAction('/upnp/control/wanipconnection1', 'urn:dslforum-org:service:' + 'WANIPConnection:1', 'ForceTermination', null, soapResult);
+                        if(this.Fb.RECONNECT && this.Fb.RECONNECT == true && this.Fb.connection == '1.WANPPPConnection.1'){
+                            await this.Fb.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null, soapResult);
+                        }else{
+                            await this.Fb.soapAction('/upnp/control/wanipconnection1', 'urn:dslforum-org:service:' + 'WANIPConnection:1', 'ForceTermination', null, soapResult);
                         }
                         if (soapResult && soapResult.data) {
                             this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
