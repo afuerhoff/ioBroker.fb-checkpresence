@@ -323,6 +323,7 @@
         "syncfbdevices": false,
         "guestinfo": true,
         "qrcode": false,
+        "qrcodecolor": "black",
         "username": "",
         "password": "",
         "enableWl": true
