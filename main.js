@@ -46,6 +46,7 @@ class FbCheckpresence extends utils.Adapter {
         this.allDevices = [];
         this.adapterStates = [];
         this.memberStates = [];
+        this.historyAlive = false;
         this.hosts = null;
         this.jsonTab;
         this.htmlTab;
@@ -556,8 +557,21 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('reboot', { val: false, ack: true });
             this.setState('reconnect', { val: false, ack: true });
 
+            //If history is enbled, check if history adapter is running. 
+            if (this.config.history != ''){
+                this.historyAlive = await this.getForeignStateAsync('system.adapter.' + this.config.history + '.alive');
+                if (this.historyAlive.val === false){
+                    for (let to = 0; to < 6; to++){
+                        this.log.warn('history adapter is not alive! Waiting 10s');
+                        await this._sleep(10000);
+                        this.historyAlive = await this.getForeignStateAsync('system.adapter.' + this.config.history + '.alive');
+                        if (this.historyAlive.val === true) break;
+                    }
+                    if (this.historyAlive.val === false) this.stopAdapter();
+                }
+            } 
 
-            await obj.createMemberObjects(this, membersFiltered, familyGroups, this.adapterStates, this.memberStates, this.config, this.HTML_HISTORY + this.HTML_END, this.enabled);
+            await obj.createMemberObjects(this, membersFiltered, familyGroups, this.adapterStates, this.memberStates, this.config, this.HTML_HISTORY + this.HTML_END, this.enabled, this.historyAlive.val);
 
             //create Fb devices
             if (this.Fb.GETPATH != null && this.Fb.GETPATH == true && this.config.fbdevices == true){
@@ -1310,7 +1324,7 @@ class FbCheckpresence extends utils.Adapter {
                 let lastValCheck = false;
                 //const gthis = this;
                 const memb = member;
-                if (this.config.history != ''){
+                if (this.config.history != '' && this.historyAlive.val === true){
                     if (dPoint.common.custom != undefined && dPoint.common.custom[this.config.history].enabled == true){
                         try {
                             const result = await this.getHistoryTable(this, memb, historyPath, start, end);
