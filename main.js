@@ -529,19 +529,33 @@ class FbCheckpresence extends utils.Adapter {
             //create new configuration items -> workaround for older versions
             for(let i=0;i<this.config.familymembers.length;i++){
                 if (this.config.familymembers[i].usefilter == undefined) {
+                    this.log.warn(this.config.familymembers[i].familymember + ' usefilter is undefined! Changed to false');
                     adapterObj.native.familymembers[i].usefilter = false;
+                    adapterObjChanged = true;
+                }
+                if (this.config.familymembers[i].group == undefined) {
+                    this.log.warn(this.config.familymembers[i].familymember + ' group is undefined! Changed to ""');
                     adapterObj.native.familymembers[i].group = '';
+                    adapterObjChanged = true;
+                }
+                if (this.config.familymembers[i].devicename == undefined) {
+                    this.log.warn(this.config.familymembers[i].familymember + ' devicename is undefined! Changed to ""');
+                    adapterObj.native.familymembers[i].devicename = '';
                     adapterObjChanged = true;
                 }
                 if (this.config.familymembers[i].usage == undefined) {
                     if (this.config.familymembers[i].useip == true) adapterObj.native.familymembers[i].usage = 'IP';
                     if (this.config.familymembers[i].usename == true) adapterObj.native.familymembers[i].usage = 'Hostname';
                     if (this.config.familymembers[i].usename == false && this.config.familymembers[i].useip == false) adapterObj.native.familymembers[i].usage = 'MAC';
+                    if (adapterObj.native.familymembers[i].usage == undefined) adapterObj.native.familymembers[i].usage = 'MAC';
+                    this.log.warn(this.config.familymembers[i].familymember + ' usage is undefined! Changed to ' + adapterObj.native.familymembers[i].usage);
                     adapterObjChanged = true;
                 }
             }
 
             if (adapterObjChanged === true){ //Save changes
+                this.log.info('some familymember attributes were changed! Please check the configuration');
+                this.log.info('Adapter restarts');
                 await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
             }
 
@@ -1233,6 +1247,7 @@ class FbCheckpresence extends utils.Adapter {
                 //analyse member presence
                 
                 this.setStateIfNotEqual(memberPath + '.presence', { val: newActive, ack: true });
+                if ( memberRow.group== '' && this.config.compatibility === true) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
                 //this.setStateFiltered(memberPath + '.presence', { val: newActive, ack: true });
                 //if (memberRow.group == '' && this.config.compatibility == false) this.setStateFiltered(memberPath2 + '.presence', { val: newActive, ack: true });
                 //if (memberRow.group == '' && this.config.compatibility == false) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
@@ -1249,7 +1264,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == false){ //signal changing to true
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: true, ack: true });
+                        //if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: true, ack: true });
                         //this.setState(member + '.presence', { val: true, ack: true });
                         //this.setStateFiltered(memberPath + '.presence', { val: true, ack: true });
                         this.setState(memberPath + '.comming', { val: dnow, ack: true });
@@ -1274,7 +1289,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == true){ //signal changing to false
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: false, ack: true });
+                        //if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: false, ack: true });
                         //this.setStateFiltered(memberPath + '.presence', { val: false, ack: true });
                         this.setState(memberPath + '.going', { val: dnow, ack: true });
                         //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.going', { val: dnow, ack: true });
