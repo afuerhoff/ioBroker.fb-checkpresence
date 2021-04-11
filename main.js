@@ -324,14 +324,14 @@ class FbCheckpresence extends utils.Adapter {
 
     setDeviceStates() {
         const deviceList = this.Fb.deviceList;
-        this.setState('devices', { val: deviceList.length, ack: true });
+        if(this.config.compatibility == true) this.setState('devices', { val: deviceList.length, ack: true });
         this.setState('fb-devices.count', { val: deviceList.length, ack: true });
         let inActiveHosts = deviceList.filter(host => host.Active == '0');
         this.setState('fb-devices.inactive', { val: inActiveHosts.length, ack: true });
         inActiveHosts = null;
         let activeHosts = deviceList.filter(host => host.Active == '1');
         this.setState('fb-devices.active', { val: activeHosts.length, ack: true });
-        this.setState('activeDevices', { val: activeHosts.length, ack: true });
+        if(this.config.compatibility == true) this.setState('activeDevices', { val: activeHosts.length, ack: true });
         activeHosts = null;
     }
     
@@ -1016,10 +1016,10 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('whitelist.json', { val: jsonWlRow, ack: true });
             this.setState('whitelist.count', { val: this.config.whitelist.length, ack: true });
             if (blCnt > 0) {
-                this.setState('blacklist', { val: true, ack: true });
+                if(this.config.compatibility == true) this.setState('blacklist', { val: true, ack: true });
                 this.setStateIfNotEqual('blacklist.presence', { val: true, ack: true });
             }else {
-                this.setState('blacklist', { val: false, ack: true });
+                if(this.config.compatibility == true) this.setState('blacklist', { val: false, ack: true });
                 this.setStateIfNotEqual('blacklist.presence', { val: true, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
@@ -1106,7 +1106,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState('guest.count', { val: guestCnt, ack: true });
                 const val = guestCnt > 0 ? true : false;
                 this.setStateIfNotEqual('guest.presence', { val: val, ack: true });
-                this.setState('guest', { val: val, ack: true });
+                if(this.config.compatibility == true) this.setState('guest', { val: val, ack: true });
             }
             this.log.debug('getDeviceInfo activeCnt: '+ activeCnt);
             return true;
