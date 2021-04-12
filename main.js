@@ -682,7 +682,8 @@ class FbCheckpresence extends utils.Adapter {
                     const soapResult = {data: null};
                     await this.Fb.soapAction('/upnp/control/x_hostfilter', 'urn:dslforum-org:service:' + 'X_AVM-DE_HostFilter:1', 'DisallowWANAccessByIP', [[1, 'NewIPv4Address', ipaddress.val],[2, 'NewDisallow', val]], soapResult);
                     if (soapResult && soapResult.data) {
-                        this.adapter.setState(id, { val: await this.Fb.getWanAccess(ipaddress), ack: true });
+                        const wanaccess = await this.Fb.getWanAccess(ipaddress);
+                        if (wanaccess !== null) this.setState(id, { val: wanaccess, ack: true });
                     }else{
                         throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult.data)};
                     }
@@ -1082,7 +1083,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
                 this.setState('fb-devices.' + hostName + '.speed', { val: hosts[i]['speed'], ack: true });
                 this.setState('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
-
+                this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
             }
             jsonRow += ']';
             htmlRow += this.HTML_END;
