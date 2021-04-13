@@ -1083,7 +1083,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
                 this.setState('fb-devices.' + hostName + '.speed', { val: hosts[i]['speed'], ack: true });
                 this.setState('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
-                this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
+                if (hosts[i]['data'] != null) this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
             }
             jsonRow += ']';
             htmlRow += this.HTML_END;
