@@ -412,10 +412,10 @@ class FbCheckpresence extends utils.Adapter {
             }
 
             for (const id in fbDevices) {
-                if (devices[id] != undefined && devices[id].common != undefined){
-                    const dName = devices[id].common.name;
+                if (fbDevices[id] != undefined && fbDevices[id].common != undefined){
+                    const dName = fbDevices[id].common.name;
                     const shortName = dName.replace('fb-devices.', '');
-                    const shortNameOrg = devices[id].common.desc;
+                    const shortNameOrg = fbDevices[id].common.desc;
                     //shortNameOrg = shortNameOrg.replace('-', '.');
                     let host = items.filter(x => x.HostName === shortName);
                     if (host && host.length == 0){
@@ -500,6 +500,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration guest info: ' + this.config.guestinfo);            
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
+            this.log.info('test version: 1.1.3_a');            
             this.log.info('configuration default connection: ' + this.Fb.connection);            
 
             this.Fb.suportedServices.forEach(element => {
