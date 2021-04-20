@@ -500,8 +500,9 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration guest info: ' + this.config.guestinfo);            
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
-            this.log.info('test version: 1.1.3_a');            
-            this.log.info('configuration default connection: ' + this.Fb.connection);            
+            this.log.info('test version: 1.1.3_c');            
+            const mesg = this.Fb.connection == null ? '-' : this.Fb.connection;
+            this.log.info('configuration default connection: ' + mesg);            
 
             this.Fb.suportedServices.forEach(element => {
                 element.enabled ? this.log.info(element.name + ' is supported') : this.log.warn(element.name + ' is not supported! Feature is deactivated!');
@@ -563,6 +564,11 @@ class FbCheckpresence extends utils.Adapter {
             const intDev = this.config.interval * 60;
             const intFamily = this.config.intervalFamily;
             
+            if(this.config.compatibility === true) {
+                this.log.warn('In an future version some states are not more existent. Please use compatibility = false to switch to the new handling of the states!');
+                this.log.warn('You should then manually delete the old states!');
+            }
+
             //Create global objects
             await obj.createGlobalObjects(this, this.adapterStates, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
 
@@ -1125,39 +1131,100 @@ class FbCheckpresence extends utils.Adapter {
             //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
             const mac = memberRow.macaddress; 
             const ip = memberRow.ipaddress;
-            let active = false;
+            const deviceName = memberRow.devicename;
+            let active = null;
             let host = null;
-            switch (memberRow.usage) {
-                case 'MAC':
-                    if (mac != ''){
-                        const soapResult = {data: null};
-                        await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], soapResult);
-                        if(soapResult && soapResult.data) {
-                            active = soapResult.data['NewActive'] == 1 ? true : false;
+            if(this.Fb.GETPATH === true){
+                if (hosts === null) return null;
+                switch (memberRow.usage) {
+                    case 'MAC':
+                        if (mac != ''){
+                            host = hosts.filter(x => x.mac == mac);
+                            if (host && host.length > 0){
+                                active = host[0].active; 
+                            }else{
+                                if (this.suppressMesg == false){
+                                    this.suppressMesg = true;
+                                    throw Error('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
+                                }
+                            }
+                        }else{
+                            if (this.suppressMesg == false){
+                                this.suppressMesg = true;
+                                throw Error('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                            }
                         }
-                    }else{
-                        throw Error('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
-                    }
-                    break;
-                case 'IP':
-                    if (this.Fb.GETBYIP == true && ip != ''){
-                        const soapResult = {data: null};
-                        await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], soapResult);
-                        if(soapResult && soapResult.data) active = soapResult.data['NewActive'] == 1 ? true : false;
-                    }else{
-                        if (memberRow.ipaddress == '') {
+                        break;
+                    case 'IP':
+                        if (ip != ''){
+                            host = hosts.filter(x => x.ip == ip);
+                            if (host && host.length > 0){
+                                active = host[0].active; 
+                            }else{
+                                if (this.suppressMesg == false){
+                                    this.suppressMesg = true;
+                                    throw Error('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
+                                }
+                            }
+                        }else{
                             throw Error('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
                         }
-                    }
-                    break;
-                case 'Hostname':
-                    if (hosts === null) return null;
-                    host = hosts.filter(x => x.hn == memberRow.devicename && x.active == 1);
-                    active = host && host.length > 0 ? true : false; 
-                    host = null;
-                    break;            
-                default:
-                    break;
+                        break;
+                    case 'Hostname':
+                        if (deviceName != ''){
+                            host = hosts.filter(x => x.hn == deviceName);
+                            if (host && host.length > 0){
+                                active = host[0].active; 
+                            }else{
+                                if (this.suppressMesg == false){
+                                    this.suppressMesg = true;
+                                    throw Error('The configured hostname for member ' + member + ' was not found. Please insert a valid hostname!');
+                                }
+                            }
+                        }else{
+                            if (this.suppressMesg == false){
+                                this.suppressMesg = true;
+                                throw Error('The configured hostname for ' + member + ' is empty. Please insert a valid hostname!');
+                            }
+                        }
+                        break;            
+                    default:
+                        break;
+                }
+            }else{
+                switch (memberRow.usage) {
+                    case 'MAC':
+                        if (mac != ''){
+
+                            const soapResult = {data: null};
+                            await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], soapResult);
+                            if(soapResult && soapResult.data) {
+                                active = soapResult.data['NewActive'] == 1 ? true : false;
+                            }
+                        }else{
+                            throw Error('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                        }
+                        break;
+                    case 'IP':
+                        if (this.Fb.GETBYIP == true && ip != ''){
+                            const soapResult = {data: null};
+                            await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], soapResult);
+                            if(soapResult && soapResult.data) active = soapResult.data['NewActive'] == 1 ? true : false;
+                        }else{
+                            if (memberRow.ipaddress == '') {
+                                throw Error('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                            }
+                        }
+                        break;
+                    case 'Hostname':
+                        if (this.suppressMesg == false){
+                            this.suppressMesg = true;
+                            throw Error('The feature hostname is not supported for ' + member + '!');
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
             return active;
         } catch(error){
@@ -1489,15 +1556,128 @@ class FbCheckpresence extends utils.Adapter {
     async checkPresence(){
         try {
             const dnow = new Date(); //Actual date and time for comparison
+            let work = process.hrtime();
+            let timeStr = '';
+            if(this.Fb.GETPATH === true){ //use of device list for presence if supported
+                await this.Fb.getDeviceList();
+                await this.getAllFbObjects();
+            }
+            let time = process.hrtime(work);
+            timeStr += 'time ' + time + 's, ';
+            work = process.hrtime();
+
+            let membersFiltered = this.config.familymembers.filter(x => x.enabled == true); //only enabled members
+            const memberValues = []; //array for temporary values -> for filtering
+            const filteringNeeded = [];
+            //get presence from all members
+            for (let m = 0; m < membersFiltered.length; m++) {
+                const group = membersFiltered[m].group;
+                const memberRow = membersFiltered[m]; //Row from family members table
+                const member = memberRow.familymember;
+                let memberPath = '';
+                if (this.config.compatibility === true){
+                    memberPath = group == '' ? '' : 'familyMembers.' + group + '.'; 
+                } else {
+                    memberPath = group == '' ? 'familyMembers.' : 'familyMembers.' + group + '.'; 
+                }
+                const activeOld = this.getAdapterState(memberPath + member + '.presence');
+                const activeNew = await this.getActive(memberRow);
+                if (activeNew === false && activeOld != activeNew && memberRow.usefilter === true){
+                    filteringNeeded.push({oldVal: activeOld, newVal: activeNew, member: member, memberPath: memberPath, memberRow: memberRow, group: group});
+                }
+                memberValues.push({oldVal: activeOld, newVal: activeNew, member: member, memberPath: memberPath, memberRow: memberRow, group: group});
+            }
+            time = process.hrtime(work);
+            timeStr += time + 's, ';
+            work = process.hrtime();
+            if (filteringNeeded.length > 0){
+                await this._sleep(this.config.delay * 1000);
+                if(this.Fb.GETPATH === true){
+                    await this.Fb.getDeviceList();
+                    await this.getAllFbObjects();
+                }
+                for (let f = 0; f < filteringNeeded.length; f++) { //loop over family members which are false
+                    if (this.enabled == false) break; //cancel if disabled over unload
+                    const memberRow = filteringNeeded[f].memberRow; //Row from family members table
+                    const activeNew = await this.getActive(memberRow);
+                    const ind = memberValues.findIndex(x => x.member == memberRow.familymember && JSON.stringify(x.memberRow) == JSON.stringify(memberRow));
+                    if(activeNew === false) memberValues[ind].newVal = activeNew;
+                }
+            }
+            time = process.hrtime(work);
+            timeStr += time + 's, ';
+            work = process.hrtime();
+            
+            let familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
+            for (let g = 0; g < familyGroups.length; g++) {
+                if (this.enabled == false) break; //cancel if disabled over unload
+                const group = familyGroups[g];
+                const groupMembers = memberValues.filter(x => x.group == group);
+                let memberPath = '';
+                if (this.config.compatibility === true){
+                    memberPath = group == '' ? '' : 'familyMembers.' + group + '.'; 
+                } else {
+                    memberPath = group == '' ? 'familyMembers.' : 'familyMembers.' + group + '.'; 
+                }
+
+                this.jsonTab = '[';
+                this.htmlTab = this.HTML;
+                const presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false,  presentCount: 0, absentCount: 0};
+                for (let k = 0; k < groupMembers.length; k++) { //loop over enabled family members
+                    if (this.enabled == false) break; //cancel if disabled over unload
+                    const memberRow = groupMembers[k].memberRow; //Row from family members table
+                    if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
+                        const newActive = groupMembers[k].newVal;
+                        if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
+                        if (newActive != null) this.getMemberSpeed(memberRow);
+                    }
+                }
+                if (this.enabled == false) break; //cancel if disabled over unload
+
+                //group states
+                this.jsonTab += ']';
+                this.htmlTab += this.HTML_END;
+                this.setState(memberPath + 'json', { val: this.jsonTab, ack: true });
+                this.setState(memberPath + 'html', { val: this.htmlTab, ack: true });
+                this.setState(memberPath + 'presenceAll', { val: presence.all, ack: true });
+                this.setState(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
+                this.setState(memberPath + 'presence', { val: presence.one, ack: true });
+                this.setState(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
+                this.setState(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
+                this.setState(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
+                this.setState(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
+                this.setState(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
+            }
+            time = process.hrtime(work);
+            //this.log.info(timeStr + time + 's');
+
+            membersFiltered = null;
+            familyGroups = null;
+            return true;
+        } catch (error) {
+            this.errorHandler(error, 'checkPresence: '); 
+        }
+    }
+
+    async checkPresenceOld(){
+        try {
+            const dnow = new Date(); //Actual date and time for comparison
             //this.jsonTab = '[';
             //this.htmlTab = this.HTML;
             //const presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false,  presentCount: 0, absentCount: 0};
             let membersFiltered = this.config.familymembers.filter(x => x.enabled == true);
             let familyGroups = this.removeDuplicates(membersFiltered);
+            let filtered = false;
+            if(this.Fb.GETPATH === true){
+                await this.Fb.getDeviceList();
+                await this.getAllFbObjects();
+            }
+
             for (let g = 0; g < familyGroups.length; g++) {
                 const group = familyGroups[g];
+                const toFilter = [];
 
-                let groupMembers = membersFiltered.filter(x => x.group == group);
+                const groupMembers = membersFiltered.filter(x => x.group == group);
                 //const memberPath = group == '' ? '' : 'familyMembers.' + group + '.'; 
 
                 let memberPath = '';
@@ -1514,26 +1694,35 @@ class FbCheckpresence extends utils.Adapter {
                     if (this.enabled == false) break; //cancel if disabled over unload
                     const memberRow = groupMembers[k]; //Row from family members table
                     if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
-                        if(this.Fb.GETPATH === true){
-                            await this.Fb.getDeviceList();
-                            await this.getAllFbObjects();
-                        }
                         const member = memberRow.familymember;
                         const state = this.getAdapterState(memberPath + member + '.presence');
-                        let newActive = await this.getActive(memberRow);
-                        if (state === true && newActive === false){
-                            await this._sleep(this.config.delay * 1000);
-                            if(this.Fb.GETPATH === true){
-                                await this.Fb.getDeviceList();
-                                await this.getAllFbObjects();
-                            } 
-                            newActive = await this.getActive(memberRow);
-                        }                    
-                        if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
-                        if (newActive != null) this.getMemberSpeed(memberRow);
+                        const newActive = await this.getActive(memberRow);
+                        if (newActive === false && memberRow.usefilter === true && state === true) {
+                            toFilter.push({id: member, path: memberPath, row: memberRow, active: newActive});
+                        }else{
+                            if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
+                            if (newActive != null) this.getMemberSpeed(memberRow);
+                        }
                     }
                 }
-                groupMembers = null;
+                if (toFilter.length > 0){
+                    await this._sleep(this.config.delay * 1000);
+                    if(this.Fb.GETPATH === true && filtered === false){
+                        await this.Fb.getDeviceList();
+                        await this.getAllFbObjects();
+                        filtered = true;
+                    } 
+                    for (let k = 0; k < toFilter.length; k++) { //loop over family members which are false
+                        if (this.enabled == false) break; //cancel if disabled over unload
+                        const memberRow = toFilter[k].row; //Row from family members table
+                        if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
+                            const newActive = await this.getActive(memberRow);
+                            if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
+                            if (newActive != null) this.getMemberSpeed(memberRow);
+                        }
+                    }
+                }
+                //groupMembers = null;
                 if (this.enabled == false) break; //cancel if disabled over unload
 
                 this.jsonTab += ']';
@@ -1549,6 +1738,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
                 this.setState(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
+
             membersFiltered = null;
             familyGroups = null;
             //this.jsonTab += ']';
@@ -1571,7 +1761,7 @@ class FbCheckpresence extends utils.Adapter {
             //this.log.error('checkPresence: ' + JSON.stringify(error));            
         }
     }
-    
+
     removeDuplicates(array) {
         const a = [];
         array.map(x => {
