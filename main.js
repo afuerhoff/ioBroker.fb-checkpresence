@@ -500,7 +500,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration guest info: ' + this.config.guestinfo);            
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
-            this.log.info('test version: 1.1.3_c');            
+            this.log.info('test version: 1.1.3_d');            
             const mesg = this.Fb.connection == null ? '-' : this.Fb.connection;
             this.log.info('configuration default connection: ' + mesg);            
 
@@ -1083,6 +1083,7 @@ class FbCheckpresence extends utils.Adapter {
                 jsonFbDevices += this.createJSONTableRow(i, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType]);
                 
                 const hostName = hosts[i]['hn'];
+                if (hostName.includes('MyFRITZ!App')) this.log.info('hostname: ' + hostName + ' ' + hosts[i].active);
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 this.setState('fb-devices.' + hostName + '.macaddress', { val: hosts[i]['mac'], ack: true });
                 this.setState('fb-devices.' + hostName + '.ipaddress', { val: hosts[i]['ip'], ack: true });
