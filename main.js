@@ -265,7 +265,7 @@ class FbCheckpresence extends utils.Adapter {
             }else{
                 this.setState('info.connection', { val: false, ack: true });
             }
-            this.setState('info.lastUpdate', { val: new Date(), ack: true });
+            this.setState('info.lastUpdate', { val: (new Date()).toString(), ack: true });
         } catch (error) {
             this.errorHandler(error, 'connCheck: '); 
         }
@@ -982,7 +982,7 @@ class FbCheckpresence extends utils.Adapter {
                 //let deviceType = '-';
                 const wl = this.config.whitelist.filter(x => x.white_macaddress == items[i]['MACAddress']);
                 const wlFound = wl.length > 0 ? true : false;
-                if (wlFound == false && items[i] != null){ //&& items[i]['X_AVM-DE_Guest'] == 0//&& items[i]['Active'] == 1
+                if (wlFound == false && items[i] != null){ //blacklist
                     //deviceType = 'blacklist';
                     htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
                     jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
@@ -1085,8 +1085,10 @@ class FbCheckpresence extends utils.Adapter {
                 const hostName = hosts[i]['hn'];
                 if (hostName.includes('MyFRITZ!App')) this.log.info('hostname: ' + hostName + ' ' + hosts[i].active);
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
-                this.setState('fb-devices.' + hostName + '.macaddress', { val: hosts[i]['mac'], ack: true });
-                this.setState('fb-devices.' + hostName + '.ipaddress', { val: hosts[i]['ip'], ack: true });
+                const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
+                const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
+                this.setState('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
+                this.setState('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
                 this.setState('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
                 this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
                 this.setState('fb-devices.' + hostName + '.speed', { val: hosts[i]['speed'], ack: true });
