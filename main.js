@@ -151,7 +151,7 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
 
-    setStateIfNotEqual(id, options){
+    /*setStateIfNotEqual(id, options){
         try {
             let ind = this.adapterStates.findIndex(x => x.id == id);
             if (ind != -1 &&  this.adapterStates[ind].state.val != options.val){
@@ -165,13 +165,13 @@ class FbCheckpresence extends utils.Adapter {
         } catch (error) {
             this.errorHandler(error, 'setStateIfNotEqual: '); 
         }
-    }
+    }*/
 
     setStateFiltered(id, options){
         try {
             const ind = this.memberStates.findIndex(x => x.id == id);
             if (ind != -1 && this.memberStates[ind].state.val == false && options.val == true){
-                if (this.setStateIfNotEqual(id, options)) this.log.info('0 ' + id + ' ' + options.val);
+                if (this.setStateChangedAsync(id, options)) this.log.info('0 ' + id + ' ' + options.val);
                 this.memberStates[ind].state.val = options.val;
                 return;
             }       
@@ -181,7 +181,7 @@ class FbCheckpresence extends utils.Adapter {
                 return;
             }       
             if (ind != -1 &&  this.memberStates[ind].state.val == false && options.val == false){
-                if (this.setStateIfNotEqual(id, options)) this.log.info('2 ' + id + ' ' + options.val);
+                if (this.setStateChangedAsync(id, options)) this.log.info('2 ' + id + ' ' + options.val);
                 this.memberStates[ind].state.val = options.val;
                 return;
             }       
@@ -294,7 +294,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (cnt2 >= int2){
                     cnt2 = 0;
                     //gthis.log.debug('loopDevices starts');
-                    this.setStateIfNotEqual('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
+                    this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
                     if (this.config.guestinfo === true){
                         this.setState('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
                     }
@@ -500,7 +500,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration guest info: ' + this.config.guestinfo);            
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
-            this.log.info('test version: 1.1.3_f');            
+            this.log.info('test version: 1.1.3_g');            
             const mesg = this.Fb.connection == null ? '-' : this.Fb.connection;
             this.log.info('configuration default connection: ' + mesg);            
 
@@ -1025,10 +1025,10 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('whitelist.count', { val: this.config.whitelist.length, ack: true });
             if (blCnt > 0) {
                 if(this.config.compatibility == true) this.setState('blacklist', { val: true, ack: true });
-                this.setStateIfNotEqual('blacklist.presence', { val: true, ack: true });
+                this.setStateChangedAsync('blacklist.presence', { val: true, ack: true });
             }else {
                 if(this.config.compatibility == true) this.setState('blacklist', { val: false, ack: true });
-                this.setStateIfNotEqual('blacklist.presence', { val: true, ack: true });
+                this.setStateChangedAsync('blacklist.presence', { val: true, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
             jsonWlRow = null;
@@ -1116,7 +1116,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState('guest.presentGuests', { val: guests, ack: true });
                 this.setState('guest.count', { val: guestCnt, ack: true });
                 const val = guestCnt > 0 ? true : false;
-                this.setStateIfNotEqual('guest.presence', { val: val, ack: true });
+                this.setStateChangedAsync('guest.presence', { val: val, ack: true });
                 if(this.config.compatibility == true) this.setState('guest', { val: val, ack: true });
             }
             this.log.debug('getDeviceInfo activeCnt: '+ activeCnt);
@@ -1307,22 +1307,17 @@ class FbCheckpresence extends utils.Adapter {
                 if (curVal.val == true){
                     this.setState(memberPath + '.present.since', { val: diff, ack: true });
                     this.setState(memberPath + '.absent.since', { val: 0, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.present.since', { val: diff, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.absent.since', { val: 0, ack: true });
                 }
                 if (curVal.val == false){
                     this.setState(memberPath + '.absent.since', { val: diff, ack: true });
                     this.setState(memberPath + '.present.since', { val: 0, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.absent.since', { val: diff, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.present.since', { val: 0, ack: true });
                 }
                 //analyse member presence
                 
-                this.setStateIfNotEqual(memberPath + '.presence', { val: newActive, ack: true });
-                if ( memberRow.group== '' && this.config.compatibility === true) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
-                //this.setStateFiltered(memberPath + '.presence', { val: newActive, ack: true });
-                //if (memberRow.group == '' && this.config.compatibility == false) this.setStateFiltered(memberPath2 + '.presence', { val: newActive, ack: true });
-                //if (memberRow.group == '' && this.config.compatibility == false) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
+                this.setStateChangedAsync(memberPath + '.presence', { val: newActive, ack: true });
+                //this.setStateIfNotEqual(memberPath + '.presence', { val: newActive, ack: true });
+                if ( memberRow.group== '' && this.config.compatibility === true) this.setStateChangedAsync(memberPath, { val: newActive, ack: true });
+                //if ( memberRow.group== '' && this.config.compatibility === true) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
 
                 if (newActive == true){ //member = true
                     //memberActive = true;
@@ -1336,19 +1331,13 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == false){ //signal changing to true
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        //if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: true, ack: true });
-                        //this.setState(member + '.presence', { val: true, ack: true });
-                        //this.setStateFiltered(memberPath + '.presence', { val: true, ack: true });
-                        this.setState(memberPath + '.comming', { val: dnow, ack: true });
-                        //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.comming', { val: dnow, ack: true });
+                        this.setState(memberPath + '.comming', { val: dnow.toString(), ack: true });
                         comming = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to true');
                         if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: true, ack: true });
-                        //this.setState(member + '.presence', { val: true, ack: true });
-                        this.setStateIfNotEqual(memberPath + '.presence', { val: true, ack: true });
-                        //if (memberRow.group == '' && this.config.compatibility == false) this.setStateIfNotEqual(memberPath2 + '.presence', { val: true, ack: true });
+                        this.setStateChangedAsync(memberPath + '.presence', { val: true, ack: true });
                     }
                 }else{ //member = false
                     presence.all = false;
@@ -1361,22 +1350,15 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == true){ //signal changing to false
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        //if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: false, ack: true });
-                        //this.setStateFiltered(memberPath + '.presence', { val: false, ack: true });
-                        this.setState(memberPath + '.going', { val: dnow, ack: true });
-                        //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.going', { val: dnow, ack: true });
+                        this.setState(memberPath + '.going', { val: dnow.toString(), ack: true });
                         going = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to false');
                         if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: false, ack: true });
-                        //this.setState(member + '.presence', { val: false, ack: true });
-                        this.setStateIfNotEqual(memberPath + '.presence', { val: false, ack: true });
-                        //if (memberRow.group == '' && this.config.compatibility == false) this.setStateIfNotEqual(memberPath2 + '.presence', { val: false, ack: true });
+                        this.setStateChangedAsync(memberPath + '.presence', { val: false, ack: true });
                     }
                 }
-                //this.setState(member, { val: newActive, ack: true });
-                //this.setState(member + '.presence', { val: newActive, ack: true });
                 presence.val = newActive;
                 const comming1 = await this.getStateAsync(memberPath + '.comming');
                 comming = comming1.val;
@@ -1384,18 +1366,14 @@ class FbCheckpresence extends utils.Adapter {
                 going = going1.val;
                 if (comming1.val == null) {
                     comming = new Date(curVal.lc);
-                    this.setState(memberPath + '.comming', { val: comming, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.comming', { val: comming, ack: true });
+                    this.setState(memberPath + '.comming', { val: comming.toString(), ack: true });
                 }
                 if (going1.val == null) {
                     going = new Date(curVal.lc);
-                    this.setState(memberPath + '.going', { val: going, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.going', { val: going, ack: true });
+                    this.setState(memberPath + '.going', { val: going.toString(), ack: true });
                 }
                 this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, this.config.dateformat), 'Geht', dateFormat(going, this.config.dateformat)]);
                 this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, this.config.dateformat), dateFormat(going, this.config.dateformat)]);
-                //this.log.info('getActive ' + member + ' finished');
-                //return presence;
             }else{
                 throw Error('object ' + member + ' does not exist!');
             }
@@ -1409,14 +1387,12 @@ class FbCheckpresence extends utils.Adapter {
                 const start = midnight.getTime();
                 let lastVal = null;
                 let lastValCheck = false;
-                //const gthis = this;
                 const memb = member;
                 if (this.config.history != '' && this.historyAlive.val === true){
                     if (dPoint.common.custom != undefined && dPoint.common.custom[this.config.history].enabled == true){
                         try {
                             const result = await this.getHistoryTable(this, memb, historyPath, start, end);
                             if (!result) throw Error('Can not get history items of member ' + memb);
-                            //this.log.info('history: ' + JSON.stringify(result));
                             let htmlHistory = this.HTML_HISTORY;
                             let jsonHistory = '[';
                             let bfirstFalse = false;
@@ -1438,7 +1414,6 @@ class FbCheckpresence extends utils.Adapter {
                                     htmlHistory += this.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hTime, this.config.dateformat)]);
                                     jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hTime, this.config.dateformat)]);
                                     cnt += 1;
-                                    //this.log.debug('history ' + memb + ' ' + result.result[i].val + ' time: ' + hTime);
                                     if (hTime >= midnight.getTime()){
                                         if (lastVal == null){
                                             //if no lastVal exists
@@ -1478,15 +1453,11 @@ class FbCheckpresence extends utils.Adapter {
                             
                             this.setState(memberPath + '.present.sum_day', { val: present, ack: true });
                             this.setState(memberPath + '.absent.sum_day', { val: absent, ack: true });
-                            //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.present.sum_day', { val: present, ack: true });
-                            //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.absent.sum_day', { val: absent, ack: true });
 
                             jsonHistory += ']';
                             htmlHistory += this.HTML_END;
                             this.setState(memberPath + '.history', { val: jsonHistory, ack: true });
                             this.setState(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
-                            //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.history', { val: jsonHistory, ack: true });
-                            //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.historyHtml', { val: htmlHistory, ack: true });
 
                         } catch (err) {
                             throw Error(err);
@@ -1499,19 +1470,13 @@ class FbCheckpresence extends utils.Adapter {
                     this.setState(memberPath + '.historyHtml', { val: 'disabled', ack: true });
                     this.setState(memberPath + '.present.sum_day', { val: -1, ack: true });
                     this.setState(memberPath + '.absent.sum_day', { val: -1, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.history', { val: 'disabled', ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.historyHtml', { val: 'disabled', ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.present.sum_day', { val: -1, ack: true });
-                    //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.absent.sum_day', { val: -1, ack: true });
                 }
             }else{
                 this.log.warn('can not get active state from member ' + member);
-                //break;
             }
             return presence;
         } catch (error) {
             this.errorHandler(error, 'calcMemberAttributes: ');
-            //this.log.error('calcMember ' + error.name + ' ' + error.message);
         }
     }
 
