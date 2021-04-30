@@ -361,8 +361,8 @@ class FbCheckpresence extends utils.Adapter {
                         active: items[i]['Active'] == 1 ? true : false,
                         data: items[i],
                         interfaceType: items[i]['InterfaceType'],
-                        speed: items[i]['X_AVM-DE_Speed'],
-                        guest: items[i]['X_AVM-DE_Guest']
+                        speed: parseInt(items[i]['X_AVM-DE_Speed']),
+                        guest: items[i]['X_AVM-DE_Guest'] == 0 ? false : true
                     };
                     hosts.push(device);
                 }
@@ -377,8 +377,8 @@ class FbCheckpresence extends utils.Adapter {
                         active: items[i]['Active'] == 1 ? true : false,
                         data: items[i],
                         interfaceType: items[i]['InterfaceType'],
-                        speed: items[i]['X_AVM-DE_Speed'],
-                        guest: items[i]['X_AVM-DE_Guest']
+                        speed: parseInt(items[i]['X_AVM-DE_Speed']),
+                        guest: items[i]['X_AVM-DE_Guest'] == 0 ? false : true
                     };
                     hosts.push(device);
                 }
@@ -401,8 +401,8 @@ class FbCheckpresence extends utils.Adapter {
                         active: active,
                         data: active == true ? itemActive[0] : items[i],
                         interfaceType: active == true ? itemActive[0]['InterfaceType'] : items[i]['InterfaceType'],
-                        speed: active == true ? itemActive[0]['X_AVM-DE_Speed'] : items[i]['X_AVM-DE_Speed'],
-                        guest: active == true ? itemActive[0]['X_AVM-DE_Guest'] : items[i]['X_AVM-DE_Guest']
+                        speed: active == true ? parseInt(itemActive[0]['X_AVM-DE_Speed']) : parseInt(items[i]['X_AVM-DE_Speed']),
+                        guest: active == true ? itemActive[0]['X_AVM-DE_Guest'] == 0 ? false : true : items[i]['X_AVM-DE_Guest'] == 0 ? false : true
                     };
                     const temp = hosts.filter(x => x.hn == hostName);
                     if (temp.length == 0) hosts.push(device);
@@ -428,11 +428,11 @@ class FbCheckpresence extends utils.Adapter {
                                 hnOrg: shortNameOrg,
                                 mac: await this.getStateAsync('fb-devices.' + shortName + '.macaddress').val,
                                 ip: await this.getStateAsync('fb-devices.' + shortName + '.ipaddress').val,
-                                active: 0,
+                                active: false,
                                 data: null,
                                 interfaceType: '',
                                 speed: 0,
-                                guest: 0
+                                guest: false
                             };
                             hosts.push(device);       
                         }
@@ -500,7 +500,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration guest info: ' + this.config.guestinfo);            
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
-            this.log.info('test version: 1.1.3_d');            
+            this.log.info('test version: 1.1.3_e');            
             const mesg = this.Fb.connection == null ? '-' : this.Fb.connection;
             this.log.info('configuration default connection: ' + mesg);            
 
@@ -919,7 +919,7 @@ class FbCheckpresence extends utils.Adapter {
                                             data_rate_rx = Math.round(nodelinks['cur_data_rate_rx'] / 1000);
                                             data_rate_tx = Math.round(nodelinks['cur_data_rate_tx'] / 1000);
                                         }
-                                        this.setState('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: nodelinks['rx_rcpi'], ack: true });
+                                        this.setState('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: Math.round(nodelinks['rx_rcpi']), ack: true });
                                         this.setState('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
                                         this.setState('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
                                     }
@@ -1629,6 +1629,7 @@ class FbCheckpresence extends utils.Adapter {
                     const memberRow = groupMembers[k].memberRow; //Row from family members table
                     if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
                         const newActive = groupMembers[k].newVal;
+                        //this.log.info('newActive1 ' + memberRow.familymember + ' ' + newActive);
                         if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
                         if (newActive != null) this.getMemberSpeed(memberRow);
                     }
