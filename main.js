@@ -500,7 +500,7 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration guest info: ' + this.config.guestinfo);            
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
-            this.log.info('test version: 1.1.3_e');            
+            this.log.info('test version: 1.1.3_f');            
             const mesg = this.Fb.connection == null ? '-' : this.Fb.connection;
             this.log.info('configuration default connection: ' + mesg);            
 
