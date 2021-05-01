@@ -13,6 +13,16 @@ const dateFormat = require('dateformat');
 const fb = require('./lib/fb');
 const obj = require('./lib/objects');
 
+class Warn extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'Warning';
+        this.toString = function() {
+            return this.name + ': ' + this.message;
+        };
+    }
+}
+
 class FbCheckpresence extends utils.Adapter {
 
     /**
@@ -1083,7 +1093,7 @@ class FbCheckpresence extends utils.Adapter {
                 jsonFbDevices += this.createJSONTableRow(i, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType]);
                 
                 const hostName = hosts[i]['hn'];
-                if (hostName.includes('MyFRITZ!App')) this.log.info('hostname: ' + hostName + ' ' + hosts[i].active);
+                //if (hostName.includes('MyFRITZ!App')) this.log.info('hostname: ' + hostName + ' ' + hosts[i].active);
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
@@ -1091,7 +1101,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
                 this.setState('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
                 this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
-                this.setState('fb-devices.' + hostName + '.speed', { val: hosts[i]['speed'], ack: true });
+                this.setState('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
                 this.setState('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
                 if (hosts[i]['data'] != null) this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
             }
@@ -1148,13 +1158,13 @@ class FbCheckpresence extends utils.Adapter {
                             }else{
                                 if (this.suppressMesg == false){
                                     this.suppressMesg = true;
-                                    throw Error('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
+                                    throw new Warn('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
                             if (this.suppressMesg == false){
                                 this.suppressMesg = true;
-                                throw Error('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                                throw new Warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
                             }
                         }
                         break;
@@ -1166,11 +1176,11 @@ class FbCheckpresence extends utils.Adapter {
                             }else{
                                 if (this.suppressMesg == false){
                                     this.suppressMesg = true;
-                                    throw Error('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
+                                    throw new Warn('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
-                            throw Error('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                            throw new Warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
                         }
                         break;
                     case 'Hostname':
@@ -1205,7 +1215,7 @@ class FbCheckpresence extends utils.Adapter {
                                 active = soapResult.data['NewActive'] == 1 ? true : false;
                             }
                         }else{
-                            throw Error('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                            throw Warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
                         }
                         break;
                     case 'IP':
@@ -1517,7 +1527,7 @@ class FbCheckpresence extends utils.Adapter {
             }
         }
         items = null;
-        this.setState(memberPath + '.speed', { val: speed, ack: true });
+        this.setState(memberPath + '.speed', { val: parseInt(speed), ack: true });
         //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.speed', { val: speed, ack: true });
     }
 
