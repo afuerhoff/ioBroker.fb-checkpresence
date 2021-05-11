@@ -294,6 +294,7 @@
         "dataSource": "poll",
         "compact": true,
         "materialize": true,
+        "stopBeforeUpdate": true,        
         "messagebox": true,
         "dependencies": [
             {

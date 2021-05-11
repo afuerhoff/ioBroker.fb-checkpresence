@@ -193,6 +193,14 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### __WORK IN PROGRESS__
+* (afuerhoff) some bugs are fixed
+* (afuerhoff) family groups implemented
+* (afuerhoff) compatability mode implemented
+* (afuerhoff) filter for family members implemeted
+* (afuerhoff) QR-Code implemented
+* (afuerhoff) some other optimizations
+
 ### 1.1.3 (2021-03-31)
 * (afuerhoff) family groups implemented
 * (afuerhoff) compatability mode implemented
