@@ -194,12 +194,26 @@ Here you will find information about the history of the current day.
     * Did some more changes
 -->
 ### __WORK IN PROGRESS__
-* (afuerhoff) some bugs are fixed
 * (afuerhoff) family groups implemented
 * (afuerhoff) compatability mode implemented
+* (afuerhoff) dependencies updated
+* (afuerhoff) configuration options added
+* (afuerhoff) dialogboxes optimized
+* (afuerhoff) translations updated
+* (afuerhoff) general program structure optimized
 * (afuerhoff) filter for family members implemeted
+* (afuerhoff) password handling updated
+* (afuerhoff) documentation updated
 * (afuerhoff) QR-Code implemented
-* (afuerhoff) some other optimizations
+* (afuerhoff) setState presence only if changed
+* (afuerhoff) access rights implemented
+* (afuerhoff) use name for presence
+* (afuerhoff) active / inactive devices
+* (afuerhoff) interval 10s bug fixed
+* (afuerhoff) Bugfix dateformat pattern
+* (afuerhoff) SSL (https) workaround implemented
+* (afuerhoff) Connection check optimized
+* (afuerhoff) Mesh handling optimized 
 
 ### 1.1.3 (2021-03-31)
 * (afuerhoff) family groups implemented
@@ -212,6 +226,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) filter for family members implemeted
 * (afuerhoff) password handling updated
 * (afuerhoff) documentation updated
+
 
 ### 1.1.2 (2021-01-13)
 * (afuerhoff) QR-Code implemented
