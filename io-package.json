@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.3",
+        "version": "1.1.4",
         "news": {
+            "1.1.4": {
+                "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated\nQR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nMesh handling optimized",
+                "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert\nQR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nNetzhandhabung optimiert",
+                "ru": "семейные группы реализованы\nреализован режим совместимости\nзависимости обновлены\nдобавлены параметры конфигурации\nоптимизированы диалоговые окна\nпереводы обновлены\nоптимизирована общая структура программы\nреализован фильтр для членов семьи\nобновлена обработка паролей\nдокументация обновлена\nQR-код реализован\nприсутствие setState только если изменено\nправа доступа реализованы\nиспользовать имя для присутствия\nактивные / неактивные устройства\nИсправлена ошибка интервала 10 секунд\nИсправление ошибки в шаблоне формата даты\nРеализован обходной путь SSL (https)\nОптимизирована проверка подключения\nОптимизирована обработка сетки",
+                "pt": "grupos familiares implementados\nmodo de compatibilidade implementado\ndependências atualizadas\nopções de configuração adicionadas\ncaixas de diálogo otimizadas\ntraduções atualizadas\nestrutura geral do programa otimizada\nfiltro para membros da família implementado\ntratamento de senha atualizado\ndocumentação atualizada\nQR-Code implementado\nPresença setState apenas se alterado\ndireitos de acesso implementados\nuse o nome para presença\ndispositivos ativos / inativos\nbug do intervalo 10s corrigido\nPadrão de formato de data de correção de bug\nSolução alternativa SSL (https) implementada\nVerificação de conexão otimizada\nManuseio de malha otimizado",
+                "nl": "familiegroepen geïmplementeerd\ncompatibiliteitsmodus geïmplementeerd\nafhankelijkheden bijgewerkt\nconfiguratie-opties toegevoegd\ndialoogvensters geoptimaliseerd\nvertalingen bijgewerkt\nalgemene programmastructuur geoptimaliseerd\nfilter voor familieleden geïmplementeerd\nwachtwoordverwerking bijgewerkt\ndocumentatie bijgewerkt\nQR-code geïmplementeerd\nsetState aanwezigheid alleen indien gewijzigd\ntoegangsrechten geïmplementeerd\ngebruik naam voor aanwezigheid\nactieve / inactieve apparaten\ninterval 10s bug opgelost\nBugfix dateformat-patroon\nSSL (https) tijdelijke oplossing geïmplementeerd\nVerbindingscontrole geoptimaliseerd\nMesh handling geoptimaliseerd",
+                "fr": "groupes familiaux mis en œuvre\nmode de compatibilité implémenté\ndépendances mises à jour\noptions de configuration ajoutées\nboîtes de dialogue optimisées\ntraductions mises à jour\nstructure générale du programme optimisée\nfiltre pour les membres de la famille implémenté\ngestion des mots de passe mise à jour\ndocumentation mise à jour\nQR-Code implémenté\nsetState présence uniquement en cas de modification\ndroits d'accès mis en œuvre\nutiliser le nom pour la présence\nappareils actifs / inactifs\nCorrection d'un bug d'intervalle 10s\nCorrectif du modèle de format de date\nSolution de contournement SSL (https) mise en œuvre\nContrôle de connexion optimisé\nGestion du maillage optimisée",
+                "it": "gruppi familiari implementati\nmodalità di compatibilità implementata\ndipendenze aggiornate\nopzioni di configurazione aggiunte\nfinestre di dialogo ottimizzate\ntraduzioni aggiornate\nstruttura generale del programma ottimizzata\nfiltro per i membri della famiglia implementato\ngestione della password aggiornata\ndocumentazione aggiornata\nQR-Code implementato\nPresenza setState solo se modificato\ndiritti di accesso implementati\nusa il nome per la presenza\ndispositivi attivi / inattivi\nbug di intervallo 10s corretto\nBugfix dateformat pattern\nSoluzione alternativa SSL (https) implementata\nControllo della connessione ottimizzato\nGestione della rete ottimizzata",
+                "es": "grupos familiares implementados\nmodo de compatibilidad implementado\ndependencias actualizadas\nopciones de configuración agregadas\ncuadros de diálogo optimizados\ntraducciones actualizadas\nestructura general del programa optimizada\nfiltro para miembros de la familia implementado\nmanejo de contraseñas actualizado\ndocumentación actualizada\nQR-Code implementado\nsetState presencia solo si se cambia\nderechos de acceso implementados\nusar el nombre para la presencia\ndispositivos activos / inactivos\nerror de intervalo 10s arreglado\nPatrón de formato de fecha de corrección de errores\nSolución alternativa de SSL (https) implementada\nComprobación de conexión optimizada\nManejo de malla optimizado",
+                "pl": "wprowadzono grupy rodzinne\nzaimplementowano tryb zgodności\nzaktualizowane zależności\ndodane opcje konfiguracyjne\nzoptymalizowane okna dialogowe\nzaktualizowane tłumaczenia\nogólna struktura programu została zoptymalizowana\nfiltr dla członków rodziny zaimplementowany\naktualizacja obsługi hasła\nzaktualizowana dokumentacja\nWdrożono QR-Code\nsetState obecność tylko w przypadku zmiany\nprawa dostępu wdrożone\nużyj nazwy dla obecności\naktywne / nieaktywne urządzenia\nnaprawiony błąd co 10 sekund\nWzorzec formatu daty poprawek\nZaimplementowano obejście SSL (https)\nSprawdzanie połączenia zoptymalizowane\nZoptymalizowana obsługa siatki",
+                "zh-cn": "实施家庭团体\n兼容模式已实施\n依赖关系已更新\n添加了配置选项\n优化对话框\n翻译已更新\n通用程序结构优化\n实现家庭成员的过滤器\n密码处理已更新\n文档更新\n已实施QR码\nsetState仅在更改时存在\n实施访问权限\n使用名称表示存在\n活动/非活动设备\n间隔10秒的错误已修复\n错误修正日期格式模式\n实施SSL（https）解决方法\n连接检查已优化\n优化的网格处理"
+            },
             "1.1.3": {
                 "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated",
                 "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert",
@@ -230,18 +242,6 @@
                 "es": "función de invitado agregada",
                 "pl": "dodano funkcję gościa",
                 "zh-cn": "访客功能已添加"
-            },
-            "0.0.2": {
-                "en": "optimized features",
-                "de": "optimierte Funktionen",
-                "ru": "оптимизированные функции",
-                "pt": "recursos otimizados",
-                "nl": "geoptimaliseerde functies",
-                "fr": "fonctionnalités optimisées",
-                "it": "caratteristiche ottimizzate",
-                "es": "características optimizadas",
-                "pl": "zoptymalizowane funkcje",
-                "zh-cn": "优化功能"
             }
         },
         "title": "Fritzbox CheckPresence",
@@ -294,7 +294,7 @@
         "dataSource": "poll",
         "compact": true,
         "materialize": true,
-        "stopBeforeUpdate": true,        
+        "stopBeforeUpdate": true,
         "messagebox": true,
         "dependencies": [
             {
