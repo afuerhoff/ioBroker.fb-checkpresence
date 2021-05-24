@@ -23,4 +23,3 @@ scripts/update_node.sh
 .vscode/launch.json
 
 iob_npm.done
-package-lock.json
