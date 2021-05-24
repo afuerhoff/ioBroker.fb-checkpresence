@@ -193,6 +193,11 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+
+### __WORK IN PROGRESS__
+* (afuerhoff) npm updated
+* (afuerhoff) checkservice fixed
+
 ### 1.1.4 (2021-05-11)
 * (afuerhoff) family groups implemented
 * (afuerhoff) compatability mode implemented
