@@ -192,7 +192,7 @@ Here you will find information about the history of the current day.
 -->
 
 ### __WORK IN PROGRESS__
-* (afuerhoff) npm updated
+* (afuerhoff) dependencies updated
 * (afuerhoff) checkservice fixed
 
 ### 1.1.4 (2021-05-11)
@@ -228,7 +228,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) filter for family members implemeted
 * (afuerhoff) password handling updated
 * (afuerhoff) documentation updated
-
 
 ### 1.1.2 (2021-01-13)
 * (afuerhoff) QR-Code implemented
