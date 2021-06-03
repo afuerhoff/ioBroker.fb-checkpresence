@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.4",
+        "version": "1.1.5",
         "news": {
+            "1.1.5": {
+                "en": "dependencies updated\ncheckservice fixed",
+                "de": "Abhängigkeiten aktualisiert\nCheckservice behoben",
+                "ru": "зависимости обновлены\nчексервис исправлен",
+                "pt": "dependências atualizadas\nserviço de verificação corrigido",
+                "nl": "afhankelijkheden bijgewerkt\ncheckservice vast",
+                "fr": "dépendances mises à jour\nservice de contrôle corrigé",
+                "it": "dipendenze aggiornate\nservizio di controllo risolto",
+                "es": "dependencias actualizadas\ncheckservice arreglado",
+                "pl": "zaktualizowano zależności\nnaprawiono usługę sprawdzania",
+                "zh-cn": "依赖项已更新\n检查服务固定"
+            },
             "1.1.4": {
                 "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated\nQR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nMesh handling optimized",
                 "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert\nQR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nNetzhandhabung optimiert",
@@ -230,18 +242,6 @@
                 "es": "error de cálculo resuelto",
                 "pl": "błąd obliczeniowy rozwiązany",
                 "zh-cn": "计算错误已解决"
-            },
-            "0.0.3": {
-                "en": "guest feature added",
-                "de": "Gast-Feature hinzugefügt",
-                "ru": "добавлена функция гостя",
-                "pt": "recurso convidado adicionado",
-                "nl": "gastfunctie toegevoegd",
-                "fr": "fonctionnalité invité ajoutée",
-                "it": "funzione ospite aggiunta",
-                "es": "función de invitado agregada",
-                "pl": "dodano funkcję gościa",
-                "zh-cn": "访客功能已添加"
             }
         },
         "title": "Fritzbox CheckPresence",

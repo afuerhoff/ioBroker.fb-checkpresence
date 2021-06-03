@@ -1,4 +1,13 @@
 # Older changes
+## 1.1.0 (2020-10-24)
+* (afuerhoff) second interval for family members implemented
+* (afuerhoff) mesh info added
+* (afuerhoff) configuration validation added
+* (afuerhoff) switch on, off guest wlan
+* (afuerhoff) switch on, off internet access of devices 
+* (afuerhoff) structural changes
+* (afuerhoff) code optimization
+
 ## 1.0.4 (2020-06-28)
 * (afuerhoff) bugfix json list and guest handling, new object guest.presence
 
