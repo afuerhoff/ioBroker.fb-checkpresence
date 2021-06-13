@@ -645,6 +645,7 @@ class FbCheckpresence extends utils.Adapter {
             this.enabled = false;
             if (this.Fb != null) this.Fb.exitRequest();
             this.tout && clearTimeout(this.tout);
+            this.setState('info.connection', { val: false, ack: true });
             this.log.info('cleaned everything up ...');
             setTimeout(callback, 3000);
         } catch (e) {
@@ -1152,7 +1153,8 @@ class FbCheckpresence extends utils.Adapter {
                 switch (memberRow.usage) {
                     case 'MAC':
                         if (mac != ''){
-                            host = hosts.filter(x => x.mac == mac);
+                            //host = hosts.filter(x => x.mac == mac);
+                            host = hosts.filter(x => x.mac.includes(mac) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
@@ -1170,7 +1172,8 @@ class FbCheckpresence extends utils.Adapter {
                         break;
                     case 'IP':
                         if (ip != ''){
-                            host = hosts.filter(x => x.ip == ip);
+                            //host = hosts.filter(x => x.ip == ip);
+                            host = hosts.filter(x => x.ip.includes(ip) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
