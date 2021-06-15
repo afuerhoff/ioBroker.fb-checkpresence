@@ -1154,7 +1154,7 @@ class FbCheckpresence extends utils.Adapter {
                     case 'MAC':
                         if (mac != ''){
                             //host = hosts.filter(x => x.mac == mac);
-                            host = hosts.filter(x => x.mac.includes(mac) === true);
+                            host = hosts.filter(x => x.mac.toString().includes(mac) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
@@ -1173,7 +1173,7 @@ class FbCheckpresence extends utils.Adapter {
                     case 'IP':
                         if (ip != ''){
                             //host = hosts.filter(x => x.ip == ip);
-                            host = hosts.filter(x => x.ip.includes(ip) === true);
+                            host = hosts.filter(x => x.ip.toString().includes(ip) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
@@ -1183,7 +1183,10 @@ class FbCheckpresence extends utils.Adapter {
                                 }
                             }
                         }else{
-                            throw new Warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                            if (this.suppressMesg == false){
+                                this.suppressMesg = true;
+                                throw new Warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                            }
                         }
                         break;
                     case 'Hostname':
@@ -1211,7 +1214,6 @@ class FbCheckpresence extends utils.Adapter {
                 switch (memberRow.usage) {
                     case 'MAC':
                         if (mac != ''){
-
                             const soapResult = {data: null};
                             await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], soapResult);
                             if(soapResult && soapResult.data) {
