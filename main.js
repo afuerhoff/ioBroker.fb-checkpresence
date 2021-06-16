@@ -436,8 +436,8 @@ class FbCheckpresence extends utils.Adapter {
                                 dp: 'fb-devices.' + shortName,
                                 hn: shortName,
                                 hnOrg: shortNameOrg,
-                                mac: await this.getStateAsync('fb-devices.' + shortName + '.macaddress').val,
-                                ip: await this.getStateAsync('fb-devices.' + shortName + '.ipaddress').val,
+                                mac: '', //await this.getStateAsync('fb-devices.' + shortName + '.macaddress').val,
+                                ip: '', //await this.getStateAsync('fb-devices.' + shortName + '.ipaddress').val,
                                 active: false,
                                 data: null,
                                 interfaceType: '',
@@ -1143,7 +1143,7 @@ class FbCheckpresence extends utils.Adapter {
         try {
             const hosts = this.hosts;      
             //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
-            const mac = memberRow.macaddress; 
+            const mac = memberRow.macaddress;
             const ip = memberRow.ipaddress;
             const deviceName = memberRow.devicename;
             let active = null;
@@ -1154,7 +1154,7 @@ class FbCheckpresence extends utils.Adapter {
                     case 'MAC':
                         if (mac != ''){
                             //host = hosts.filter(x => x.mac == mac);
-                            host = hosts.filter(x => x.mac.toString().includes(mac) === true);
+                            host = hosts.filter(x => x.mac.includes(mac) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
@@ -1173,7 +1173,7 @@ class FbCheckpresence extends utils.Adapter {
                     case 'IP':
                         if (ip != ''){
                             //host = hosts.filter(x => x.ip == ip);
-                            host = hosts.filter(x => x.ip.toString().includes(ip) === true);
+                            host = hosts.filter(x => x.ip.includes(ip) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
