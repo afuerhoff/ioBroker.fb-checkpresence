@@ -1,4 +1,12 @@
 # Older changes
+## 1.1.1 (2020-12-27)
+* (afuerhoff) Configuration optimized
+* (afuerhoff) Bugfix dateformat pattern
+* (afuerhoff) SSL (https) workaround implemented
+* (afuerhoff) Connection check optimized
+* (afuerhoff) Documentation added
+* (afuerhoff) Mesh handling optimized 
+
 ## 1.1.0 (2020-10-24)
 * (afuerhoff) second interval for family members implemented
 * (afuerhoff) mesh info added

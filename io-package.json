@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.5",
+        "version": "1.1.6",
         "news": {
+            "1.1.6": {
+                "en": "html input pattern fixed for password and user\ngetActive function fixed\ndependencies updated",
+                "de": "HTML-Eingabemuster für Passwort und Benutzer korrigiert fixed\ngetActive-Funktion behoben\nAbhängigkeiten aktualisiert",
+                "ru": "шаблон ввода html исправлен для пароля и пользователя\nИсправлена функция getActive\nзависимости обновлены",
+                "pt": "Padrão de entrada html corrigido para senha e usuário\nfunção getActive corrigida\ndependências atualizadas",
+                "nl": "html invoerpatroon opgelost voor wachtwoord en gebruiker\ngetActive-functie opgelost\nafhankelijkheden bijgewerkt",
+                "fr": "modèle d'entrée html corrigé pour le mot de passe et l'utilisateur\nFonction getActive corrigée\ndépendances mises à jour",
+                "it": "modello di input html corretto per password e utente\nFunzione getActive riparata\ndipendenze aggiornate",
+                "es": "patrón de entrada html fijo para contraseña y usuario\nFunción getActive fija\ndependencias actualizadas",
+                "pl": "Naprawiono wzorzec wejściowy html dla hasła i użytkownika\nNaprawiono funkcję getActive\nzaktualizowano zależności",
+                "zh-cn": "为密码和用户固定的 html 输入模式\ngetActive 功能已修复\n依赖项已更新"
+            },
             "1.1.5": {
                 "en": "dependencies updated\ncheckservice fixed",
                 "de": "Abhängigkeiten aktualisiert\nCheckservice behoben",
@@ -230,18 +242,6 @@
                 "es": "configuración optimizada",
                 "pl": "zoptymalizowana konfiguracja",
                 "zh-cn": "配置优化"
-            },
-            "0.0.4": {
-                "en": "calculation error resolved",
-                "de": "Rechenfehler behoben",
-                "ru": "ошибка расчета устранена",
-                "pt": "erro de cálculo resolvido",
-                "nl": "berekeningsfout opgelost",
-                "fr": "erreur de calcul résolue",
-                "it": "errore di calcolo risolto",
-                "es": "error de cálculo resuelto",
-                "pl": "błąd obliczeniowy rozwiązany",
-                "zh-cn": "计算错误已解决"
             }
         },
         "title": "Fritzbox CheckPresence",
