@@ -199,6 +199,7 @@ Here you will find information about the history of the current day.
 -->
 ### __WORK IN PROGRESS__
 * (afuerhoff) html input pattern fixed for password and user
+* (afuerhoff) getActive function fixed
 * (afuerhoff) dependencies updated
 
 ### 1.1.5 (2021-06-03)
