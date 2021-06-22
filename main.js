@@ -65,6 +65,7 @@ class FbCheckpresence extends utils.Adapter {
         this.Fb = null;
         this.tout = null;
         this.suppressMesg = false;
+        this.suppressArr = [];
     }
 
     errorHandler(error, title){
@@ -562,6 +563,13 @@ class FbCheckpresence extends utils.Adapter {
                     if (adapterObj.native.familymembers[i].usage == undefined) adapterObj.native.familymembers[i].usage = 'MAC';
                     this.log.warn(this.config.familymembers[i].familymember + ' usage is undefined! Changed to ' + adapterObj.native.familymembers[i].usage);
                     adapterObjChanged = true;
+                }
+            }
+
+            //suppress messages from family members after one occurence
+            for(let i=0;i<this.config.familymembers.length;i++){
+                if (this.config.familymembers[i].enabled === true){
+                    this.suppressArr[i] = {name: this.config.familymembers[i].familymember, suppress: false, hostname: this.config.familymembers[i].hostname, mac: this.config.familymembers[i].mac, ip: this.config.familymembers[i].ip};
                 }
             }
 
@@ -1148,6 +1156,11 @@ class FbCheckpresence extends utils.Adapter {
             const deviceName = memberRow.devicename;
             let active = null;
             let host = null;
+            let mesg = this.suppressArr.filter(function(x){
+                if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                    return x;
+                }
+            });
             if(this.Fb.GETPATH === true){
                 if (hosts === null) return null;
                 switch (memberRow.usage) {
@@ -1158,14 +1171,28 @@ class FbCheckpresence extends utils.Adapter {
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
-                                if (this.suppressMesg == false){
-                                    this.suppressMesg = true;
+                                //if (this.suppressMesg == false){
+                                if (mesg[0].suppress === false){
+                                    mesg = this.suppressArr.filter(function(x){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                            x.suppress = true;
+                                            return x;
+                                        }
+                                    });
+                                    //this.suppressMesg = true;
                                     throw new Warn('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
-                            if (this.suppressMesg == false){
-                                this.suppressMesg = true;
+                            //if (this.suppressMesg == false){
+                            if (mesg[0].suppress === false){
+                                mesg = this.suppressArr.filter(function(x){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        x.suppress = true;
+                                        return x;
+                                    }
+                                });
+                                //this.suppressMesg = true;
                                 throw new Warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
                             }
                         }
@@ -1177,14 +1204,28 @@ class FbCheckpresence extends utils.Adapter {
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
-                                if (this.suppressMesg == false){
-                                    this.suppressMesg = true;
+                                //if (this.suppressMesg == false){
+                                if (mesg[0].suppress === false){
+                                    mesg = this.suppressArr.filter(function(x){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                            x.suppress = true;
+                                            return x;
+                                        }
+                                    });
+                                    //this.suppressMesg = true;
                                     throw new Warn('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
-                            if (this.suppressMesg == false){
-                                this.suppressMesg = true;
+                            //if (this.suppressMesg == false){
+                            if (mesg[0].suppress === false){
+                                mesg = this.suppressArr.filter(function(x){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        x.suppress = true;
+                                        return x;
+                                    }
+                                });
+                                //this.suppressMesg = true;
                                 throw new Warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
                             }
                         }
@@ -1195,14 +1236,28 @@ class FbCheckpresence extends utils.Adapter {
                             if (host && host.length > 0){
                                 active = host[0].active; 
                             }else{
-                                if (this.suppressMesg == false){
-                                    this.suppressMesg = true;
+                                //if (this.suppressMesg == false){
+                                if (mesg[0].suppress === false){
+                                    mesg = this.suppressArr.filter(function(x){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                            x.suppress = true;
+                                            return x;
+                                        }
+                                    });
+                                    //this.suppressMesg = true;
                                     throw Error('The configured hostname for member ' + member + ' was not found. Please insert a valid hostname!');
                                 }
                             }
                         }else{
-                            if (this.suppressMesg == false){
-                                this.suppressMesg = true;
+                            //if (this.suppressMesg == false){
+                            if (mesg[0].suppress === false){
+                                mesg = this.suppressArr.filter(function(x){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        x.suppress = true;
+                                        return x;
+                                    }
+                                });
+                                //this.suppressMesg = true;
                                 throw Error('The configured hostname for ' + member + ' is empty. Please insert a valid hostname!');
                             }
                         }
@@ -1220,7 +1275,15 @@ class FbCheckpresence extends utils.Adapter {
                                 active = soapResult.data['NewActive'] == 1 ? true : false;
                             }
                         }else{
-                            throw Warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                            if (mesg[0].suppress === false){
+                                mesg = this.suppressArr.filter(function(x){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        x.suppress = true;
+                                        return x;
+                                    }
+                                });
+                                throw Warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
+                            }
                         }
                         break;
                     case 'IP':
@@ -1230,13 +1293,28 @@ class FbCheckpresence extends utils.Adapter {
                             if(soapResult && soapResult.data) active = soapResult.data['NewActive'] == 1 ? true : false;
                         }else{
                             if (memberRow.ipaddress == '') {
-                                throw Error('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                                if (mesg[0].suppress === false){
+                                    mesg = this.suppressArr.filter(function(x){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                            x.suppress = true;
+                                            return x;
+                                        }
+                                    });
+                                    throw Error('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
+                                }
                             }
                         }
                         break;
                     case 'Hostname':
-                        if (this.suppressMesg == false){
-                            this.suppressMesg = true;
+                        //if (this.suppressMesg == false){
+                        if (mesg[0].suppress === false){
+                            mesg = this.suppressArr.filter(function(x){
+                                if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                    x.suppress = true;
+                                    return x;
+                                }
+                            });
+                            //this.suppressMesg = true;
                             throw Error('The feature hostname is not supported for ' + member + '!');
                         }
                         break;
