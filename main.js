@@ -1180,7 +1180,7 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                     });
                                     //this.suppressMesg = true;
-                                    throw new Warn('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
+                                    throw new Warn('The configured mac-address for member ' + member + ' was not found in the fritzbox. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
@@ -1213,7 +1213,7 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                     });
                                     //this.suppressMesg = true;
-                                    throw new Warn('The configured mac-address for member ' + member + ' was not found. Please insert a valid mac-address!');
+                                    throw new Warn('The configured mac-address for member ' + member + ' was not found in the fritzbox. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
@@ -1245,7 +1245,7 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                     });
                                     //this.suppressMesg = true;
-                                    throw Error('The configured hostname for member ' + member + ' was not found. Please insert a valid hostname!');
+                                    throw Error('The configured hostname for member ' + member + ' was not found in the fritzbox. Please insert a valid hostname!');
                                 }
                             }
                         }else{

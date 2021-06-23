@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.6",
+        "version": "1.1.7",
         "news": {
+            "1.1.7": {
+                "en": "message handling optimized\ndependencies updated",
+                "de": "Nachrichtenbehandlung optimiert\nAbhängigkeiten aktualisiert",
+                "ru": "оптимизирована обработка сообщений\nзависимости обновлены",
+                "pt": "tratamento de mensagens otimizado\ndependências atualizadas",
+                "nl": "berichtverwerking geoptimaliseerd\nafhankelijkheden bijgewerkt",
+                "fr": "gestion des messages optimisée\ndépendances mises à jour",
+                "it": "gestione dei messaggi ottimizzata\ndipendenze aggiornate",
+                "es": "manejo de mensajes optimizado\ndependencias actualizadas",
+                "pl": "zoptymalizowana obsługa wiadomości\nzaktualizowano zależności",
+                "zh-cn": "消息处理优化\n依赖项已更新"
+            },
             "1.1.6": {
                 "en": "html input pattern fixed for password and user\ngetActive function fixed\ndependencies updated",
                 "de": "HTML-Eingabemuster für Passwort und Benutzer korrigiert fixed\ngetActive-Funktion behoben\nAbhängigkeiten aktualisiert",
@@ -230,18 +242,6 @@
                 "es": "error en la tabla json y html resuelto",
                 "pl": "błąd w tabeli json i html rozwiązany",
                 "zh-cn": "json和html表中的错误已解决"
-            },
-            "0.0.5": {
-                "en": "configuration optimized",
-                "de": "Konfiguration optimiert",
-                "ru": "оптимизированная конфигурация",
-                "pt": "configuração otimizada",
-                "nl": "configuratie geoptimaliseerd",
-                "fr": "configuration optimisée",
-                "it": "configurazione ottimizzata",
-                "es": "configuración optimizada",
-                "pl": "zoptymalizowana konfiguracja",
-                "zh-cn": "配置优化"
             }
         },
         "title": "Fritzbox CheckPresence",

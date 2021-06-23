@@ -1,4 +1,13 @@
 # Older changes
+## 1.1.2 (2021-01-13)
+* (afuerhoff) QR-Code implemented
+* (afuerhoff) setState presence only if changed
+* (afuerhoff) access rights implemented
+* (afuerhoff) use name for presence
+* (afuerhoff) active / inactive devices
+* (afuerhoff) interval 10s bug fixed
+* (afuerhoff) documentation edited 
+
 ## 1.1.1 (2020-12-27)
 * (afuerhoff) Configuration optimized
 * (afuerhoff) Bugfix dateformat pattern
