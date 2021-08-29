@@ -569,7 +569,7 @@ class FbCheckpresence extends utils.Adapter {
             //suppress messages from family members after one occurence
             for(let i=0;i<this.config.familymembers.length;i++){
                 if (this.config.familymembers[i].enabled === true){
-                    this.suppressArr[i] = {name: this.config.familymembers[i].familymember, suppress: false, hostname: this.config.familymembers[i].hostname, mac: this.config.familymembers[i].mac, ip: this.config.familymembers[i].ip};
+                    this.suppressArr[i] = {name: this.config.familymembers[i].familymember, suppress: false, hostname: this.config.familymembers[i].devicename, mac: this.config.familymembers[i].macaddress, ip: this.config.familymembers[i].ipaddress};
                 }
             }
 
@@ -1157,7 +1157,7 @@ class FbCheckpresence extends utils.Adapter {
             let active = null;
             let host = null;
             let mesg = this.suppressArr.filter(function(x){
-                if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                     return x;
                 }
             });
@@ -1169,12 +1169,13 @@ class FbCheckpresence extends utils.Adapter {
                             //host = hosts.filter(x => x.mac == mac);
                             host = hosts.filter(x => x.mac.includes(mac) === true);
                             if (host && host.length > 0){
-                                active = host[0].active; 
+                                active = host[0].active;
+                                //this.log.info('getActive ' + host[0].hn + ' ' + host[0].mac + ' ' + host[0].active);
                             }else{
                                 //if (this.suppressMesg == false){
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
-                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ipaddress === memberRow.ip && x.hostname === memberRow.devicename){
                                             x.suppress = true;
                                             return x;
                                         }
@@ -1187,7 +1188,7 @@ class FbCheckpresence extends utils.Adapter {
                             //if (this.suppressMesg == false){
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
-                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                         x.suppress = true;
                                         return x;
                                     }
@@ -1203,11 +1204,12 @@ class FbCheckpresence extends utils.Adapter {
                             host = hosts.filter(x => x.ip.includes(ip) === true);
                             if (host && host.length > 0){
                                 active = host[0].active; 
+                                //this.log.info('getActive ' + host[0].hn + ' ' + host[0].ip + ' ' + host[0].active);
                             }else{
                                 //if (this.suppressMesg == false){
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
-                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                             x.suppress = true;
                                             return x;
                                         }
@@ -1220,7 +1222,7 @@ class FbCheckpresence extends utils.Adapter {
                             //if (this.suppressMesg == false){
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
-                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                         x.suppress = true;
                                         return x;
                                     }
@@ -1235,11 +1237,12 @@ class FbCheckpresence extends utils.Adapter {
                             host = hosts.filter(x => x.hn == deviceName);
                             if (host && host.length > 0){
                                 active = host[0].active; 
+                                //this.log.info('getActive ' + host[0].hn + ' ' + host[0].mac + ' ' + host[0].active);
                             }else{
                                 //if (this.suppressMesg == false){
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
-                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                             x.suppress = true;
                                             return x;
                                         }
@@ -1252,7 +1255,7 @@ class FbCheckpresence extends utils.Adapter {
                             //if (this.suppressMesg == false){
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
-                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                         x.suppress = true;
                                         return x;
                                     }
@@ -1277,7 +1280,7 @@ class FbCheckpresence extends utils.Adapter {
                         }else{
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
-                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                    if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                         x.suppress = true;
                                         return x;
                                     }
@@ -1295,7 +1298,7 @@ class FbCheckpresence extends utils.Adapter {
                             if (memberRow.ipaddress == '') {
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
-                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                        if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                             x.suppress = true;
                                             return x;
                                         }
@@ -1309,7 +1312,7 @@ class FbCheckpresence extends utils.Adapter {
                         //if (this.suppressMesg == false){
                         if (mesg[0].suppress === false){
                             mesg = this.suppressArr.filter(function(x){
-                                if (x.name ===  memberRow.familymember && x.mac === memberRow.mac && x.ip === memberRow.ip && x.hostname === memberRow.hostname){
+                                if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
                                     x.suppress = true;
                                     return x;
                                 }
