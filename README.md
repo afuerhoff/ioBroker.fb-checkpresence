@@ -197,6 +197,12 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### __WORK IN PROGRESS__
+* (afuerhoff) issue#61: units added
+* (afuerhoff) workaround for 7390 added (missing systemVersion in xml)
+* (afuerhoff) dependencies updated
+
+
 ### 1.1.7 (2021-06-23)
 * (afuerhoff) message handling optimized
 * (afuerhoff) dependencies updated
