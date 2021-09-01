@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.7",
+        "version": "1.1.8",
         "news": {
+            "1.1.8": {
+                "en": "issue#61: units added\nworkaround for 7390 added (missing systemVersion in xml)\ndependencies updated",
+                "de": "Ausgabe Nr. 61: Einheiten hinzugefügt\nWorkaround für 7390 hinzugefügt (fehlende systemVersion in xml)\nAbhängigkeiten aktualisiert",
+                "ru": "выпуск # 61: добавлены юниты\nдобавлен обходной путь для 7390 (отсутствует версия systemVersion в xml)\nзависимости обновлены",
+                "pt": "edição nº 61: unidades adicionadas\nsolução alternativa para 7390 adicionada (systemVersion ausente em xml)\ndependências atualizadas",
+                "nl": "issue#61: eenheden toegevoegd\nworkaround voor 7390 toegevoegd (ontbrekende systemVersion in xml)\nafhankelijkheden bijgewerkt",
+                "fr": "problème n°61 : unités ajoutées\nsolution de contournement pour 7390 ajoutée (systemVersion manquante dans xml)\ndépendances mises à jour",
+                "it": "problema#61: unità aggiunte\nsoluzione alternativa per 7390 aggiunta (systemVersion mancante in xml)\ndipendenze aggiornate",
+                "es": "problema # 61: unidades agregadas\nsolución alternativa para 7390 agregada (falta systemVersion en xml)\ndependencias actualizadas",
+                "pl": "Problem#61: dodano jednostki\ndodano obejście dla 7390 (brak wersji systemVersion w xml)\nzaktualizowano zależności",
+                "zh-cn": "问题#61：添加的单位\n添加了 7390 的解决方法（xml 中缺少 systemVersion）\n依赖项已更新"
+            },
             "1.1.7": {
                 "en": "message handling optimized\ndependencies updated",
                 "de": "Nachrichtenbehandlung optimiert\nAbhängigkeiten aktualisiert",
@@ -230,18 +242,6 @@
                 "es": "error de fecha inválido resuelto. Información de depuración añadida. Los valores predeterminados de los objetos de fecha cambiaron.",
                 "pl": "błąd nieprawidłowej daty rozwiązany. Dodano informacje debugowania. Wartości domyślne z obiektów Data uległy zmianie.",
                 "zh-cn": "解决了无效的日期错误。添加了调试信息。 Date对象的默认值已更改。"
-            },
-            "0.0.6": {
-                "en": "bug in json and html table resolved",
-                "de": "Fehler in JSON- und HTML-Tabelle behoben",
-                "ru": "исправлена ошибка в json и html таблицах",
-                "pt": "bug na tabela json e html resolvida",
-                "nl": "fout in json en html-tabel opgelost",
-                "fr": "bug dans la table json et html résolu",
-                "it": "bug risolto nella tabella json e html",
-                "es": "error en la tabla json y html resuelto",
-                "pl": "błąd w tabeli json i html rozwiązany",
-                "zh-cn": "json和html表中的错误已解决"
             }
         },
         "title": "Fritzbox CheckPresence",

@@ -1,4 +1,16 @@
 # Older changes
+## 1.1.3 (2021-03-31)
+* (afuerhoff) family groups implemented
+* (afuerhoff) compatability mode implemented
+* (afuerhoff) dependencies updated
+* (afuerhoff) configuration options added
+* (afuerhoff) dialogboxes optimized
+* (afuerhoff) translations updated
+* (afuerhoff) general program structure optimized
+* (afuerhoff) filter for family members implemeted
+* (afuerhoff) password handling updated
+* (afuerhoff) documentation updated
+
 ## 1.1.2 (2021-01-13)
 * (afuerhoff) QR-Code implemented
 * (afuerhoff) setState presence only if changed
