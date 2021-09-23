@@ -197,6 +197,11 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### __WORK IN PROGRESS__
+* (afuerhoff) dependencies updated
+* (afuerhoff) issue #63: getExtIp logging solved
+* (afuerhoff) issue #65: wrong logging in instance > 0 solved  
+
 ### 1.1.8 (2021-09-01)
 * (afuerhoff) issue#61: units added
 * (afuerhoff) workaround for 7390 added (missing systemVersion in xml)
