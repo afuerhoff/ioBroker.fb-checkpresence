@@ -197,7 +197,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### __WORK IN PROGRESS__
+### 1.1.10 (2021-09-24)
 * (afuerhoff) dependencies updated
 
 ### 1.1.9 (2021-09-24)
@@ -219,10 +219,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) html input pattern fixed for password and user
 * (afuerhoff) getActive function fixed
 * (afuerhoff) dependencies updated
-
-### 1.1.5 (2021-06-03)
-* (afuerhoff) dependencies updated
-* (afuerhoff) checkservice fixed
 
 ## License
 MIT License

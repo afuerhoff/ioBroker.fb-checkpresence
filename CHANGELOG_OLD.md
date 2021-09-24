@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.5 (2021-06-03)
+* (afuerhoff) dependencies updated
+* (afuerhoff) checkservice fixed
+
 ## 1.1.4 (2021-05-11)
 * (afuerhoff) family groups implemented
 * (afuerhoff) compatability mode implemented

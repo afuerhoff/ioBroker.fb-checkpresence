@@ -1,355 +1,188 @@
 {
-    "common": {
-        "name": "fb-checkpresence",
-        "version": "1.1.9",
-        "news": {
-            "1.1.9": {
-                "en": "dependencies updated\nissue #63: getExtIp logging solved\nissue #65: wrong logging in instance > 0 solved\nqr-code WPA2 + WPA3 fixed",
-                "de": "Abhängigkeiten aktualisiert\nProblem #63: GetExtIp-Logging behoben\nProblem #65: Falsche Anmeldung in Instanz > 0 behoben\nqr-Code WPA2 + WPA3 behoben",
-                "ru": "зависимости обновлены \n проблема # 63: ведение журнала getExtIp решено \nпроблема # 65: неверное ведение журнала в экземпляре> 0 решено\nqr-код WPA2 + WPA3 исправлен",
-                "pt": "dependências atualizadas \nproblema nº 63: log getExtIp resolvido\nproblema nº 65: registro incorreto na instância> 0 resolvido \nqr-code WPA2 + WPA3 corrigido",
-                "nl": "afhankelijkheden bijgewerkt\nprobleem #63: getExtIp-logboekregistratie opgelost\nprobleem #65: verkeerde registratie in instantie > 0 opgelost\nqr-code WPA2 + WPA3 opgelost",
-                "fr": "dépendances mises à jour\nproblème n°63 : la journalisation getExtIp est résolue\nproblème n°65 : mauvaise instance de connexion > 0 résolu\nqr-code WPA2 + WPA3 corrigé",
-                "it": "dipendenze aggiornate\nproblema #63: registrazione getExtIp risolta\nproblema #65: registrazione errata nell'istanza > 0 risolto\nqr-code WPA2 + WPA3 risolto",
-                "es": "dependencias actualizadas \n problema # 63: registro getExtIp resuelto \n problema # 65: registro incorrecto en la instancia> 0 resuelto \ncódigo qr WPA2 + WPA3 arreglado",
-                "pl": "zaktualizowano zależności\nproblem #63: rozwiązano logowanie getExtIp\nproblem #65: niepoprawne logowanie w instancji > 0 rozwiązano\nkod qr naprawiony WPA2 + WPA3",
-                "zh-cn": "依赖关系更新\n问题 #63：getExtIp 日志记录已解决\n问题 #65：实例中的错误日志> 0 已解决\nqr-code WPA2 + WPA3 已修复"              },
-            "1.1.8": {
-                "en": "issue#61: units added\nworkaround for 7390 added (missing systemVersion in xml)\ndependencies updated",
-                "de": "Ausgabe Nr. 61: Einheiten hinzugefügt\nWorkaround für 7390 hinzugefügt (fehlende systemVersion in xml)\nAbhängigkeiten aktualisiert",
-                "ru": "выпуск # 61: добавлены юниты\nдобавлен обходной путь для 7390 (отсутствует версия systemVersion в xml)\nзависимости обновлены",
-                "pt": "edição nº 61: unidades adicionadas\nsolução alternativa para 7390 adicionada (systemVersion ausente em xml)\ndependências atualizadas",
-                "nl": "issue#61: eenheden toegevoegd\nworkaround voor 7390 toegevoegd (ontbrekende systemVersion in xml)\nafhankelijkheden bijgewerkt",
-                "fr": "problème n°61 : unités ajoutées\nsolution de contournement pour 7390 ajoutée (systemVersion manquante dans xml)\ndépendances mises à jour",
-                "it": "problema#61: unità aggiunte\nsoluzione alternativa per 7390 aggiunta (systemVersion mancante in xml)\ndipendenze aggiornate",
-                "es": "problema # 61: unidades agregadas\nsolución alternativa para 7390 agregada (falta systemVersion en xml)\ndependencias actualizadas",
-                "pl": "Problem#61: dodano jednostki\ndodano obejście dla 7390 (brak wersji systemVersion w xml)\nzaktualizowano zależności",
-                "zh-cn": "问题#61：添加的单位\n添加了 7390 的解决方法（xml 中缺少 systemVersion）\n依赖项已更新"
-            },
-            "1.1.7": {
-                "en": "message handling optimized\ndependencies updated",
-                "de": "Nachrichtenbehandlung optimiert\nAbhängigkeiten aktualisiert",
-                "ru": "оптимизирована обработка сообщений\nзависимости обновлены",
-                "pt": "tratamento de mensagens otimizado\ndependências atualizadas",
-                "nl": "berichtverwerking geoptimaliseerd\nafhankelijkheden bijgewerkt",
-                "fr": "gestion des messages optimisée\ndépendances mises à jour",
-                "it": "gestione dei messaggi ottimizzata\ndipendenze aggiornate",
-                "es": "manejo de mensajes optimizado\ndependencias actualizadas",
-                "pl": "zoptymalizowana obsługa wiadomości\nzaktualizowano zależności",
-                "zh-cn": "消息处理优化\n依赖项已更新"
-            },
-            "1.1.6": {
-                "en": "html input pattern fixed for password and user\ngetActive function fixed\ndependencies updated",
-                "de": "HTML-Eingabemuster für Passwort und Benutzer korrigiert fixed\ngetActive-Funktion behoben\nAbhängigkeiten aktualisiert",
-                "ru": "шаблон ввода html исправлен для пароля и пользователя\nИсправлена функция getActive\nзависимости обновлены",
-                "pt": "Padrão de entrada html corrigido para senha e usuário\nfunção getActive corrigida\ndependências atualizadas",
-                "nl": "html invoerpatroon opgelost voor wachtwoord en gebruiker\ngetActive-functie opgelost\nafhankelijkheden bijgewerkt",
-                "fr": "modèle d'entrée html corrigé pour le mot de passe et l'utilisateur\nFonction getActive corrigée\ndépendances mises à jour",
-                "it": "modello di input html corretto per password e utente\nFunzione getActive riparata\ndipendenze aggiornate",
-                "es": "patrón de entrada html fijo para contraseña y usuario\nFunción getActive fija\ndependencias actualizadas",
-                "pl": "Naprawiono wzorzec wejściowy html dla hasła i użytkownika\nNaprawiono funkcję getActive\nzaktualizowano zależności",
-                "zh-cn": "为密码和用户固定的 html 输入模式\ngetActive 功能已修复\n依赖项已更新"
-            },
-            "1.1.5": {
-                "en": "dependencies updated\ncheckservice fixed",
-                "de": "Abhängigkeiten aktualisiert\nCheckservice behoben",
-                "ru": "зависимости обновлены\nчексервис исправлен",
-                "pt": "dependências atualizadas\nserviço de verificação corrigido",
-                "nl": "afhankelijkheden bijgewerkt\ncheckservice vast",
-                "fr": "dépendances mises à jour\nservice de contrôle corrigé",
-                "it": "dipendenze aggiornate\nservizio di controllo risolto",
-                "es": "dependencias actualizadas\ncheckservice arreglado",
-                "pl": "zaktualizowano zależności\nnaprawiono usługę sprawdzania",
-                "zh-cn": "依赖项已更新\n检查服务固定"
-            },
-            "1.1.4": {
-                "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated\nQR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nMesh handling optimized",
-                "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert\nQR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nNetzhandhabung optimiert",
-                "ru": "семейные группы реализованы\nреализован режим совместимости\nзависимости обновлены\nдобавлены параметры конфигурации\nоптимизированы диалоговые окна\nпереводы обновлены\nоптимизирована общая структура программы\nреализован фильтр для членов семьи\nобновлена обработка паролей\nдокументация обновлена\nQR-код реализован\nприсутствие setState только если изменено\nправа доступа реализованы\nиспользовать имя для присутствия\nактивные / неактивные устройства\nИсправлена ошибка интервала 10 секунд\nИсправление ошибки в шаблоне формата даты\nРеализован обходной путь SSL (https)\nОптимизирована проверка подключения\nОптимизирована обработка сетки",
-                "pt": "grupos familiares implementados\nmodo de compatibilidade implementado\ndependências atualizadas\nopções de configuração adicionadas\ncaixas de diálogo otimizadas\ntraduções atualizadas\nestrutura geral do programa otimizada\nfiltro para membros da família implementado\ntratamento de senha atualizado\ndocumentação atualizada\nQR-Code implementado\nPresença setState apenas se alterado\ndireitos de acesso implementados\nuse o nome para presença\ndispositivos ativos / inativos\nbug do intervalo 10s corrigido\nPadrão de formato de data de correção de bug\nSolução alternativa SSL (https) implementada\nVerificação de conexão otimizada\nManuseio de malha otimizado",
-                "nl": "familiegroepen geïmplementeerd\ncompatibiliteitsmodus geïmplementeerd\nafhankelijkheden bijgewerkt\nconfiguratie-opties toegevoegd\ndialoogvensters geoptimaliseerd\nvertalingen bijgewerkt\nalgemene programmastructuur geoptimaliseerd\nfilter voor familieleden geïmplementeerd\nwachtwoordverwerking bijgewerkt\ndocumentatie bijgewerkt\nQR-code geïmplementeerd\nsetState aanwezigheid alleen indien gewijzigd\ntoegangsrechten geïmplementeerd\ngebruik naam voor aanwezigheid\nactieve / inactieve apparaten\ninterval 10s bug opgelost\nBugfix dateformat-patroon\nSSL (https) tijdelijke oplossing geïmplementeerd\nVerbindingscontrole geoptimaliseerd\nMesh handling geoptimaliseerd",
-                "fr": "groupes familiaux mis en œuvre\nmode de compatibilité implémenté\ndépendances mises à jour\noptions de configuration ajoutées\nboîtes de dialogue optimisées\ntraductions mises à jour\nstructure générale du programme optimisée\nfiltre pour les membres de la famille implémenté\ngestion des mots de passe mise à jour\ndocumentation mise à jour\nQR-Code implémenté\nsetState présence uniquement en cas de modification\ndroits d'accès mis en œuvre\nutiliser le nom pour la présence\nappareils actifs / inactifs\nCorrection d'un bug d'intervalle 10s\nCorrectif du modèle de format de date\nSolution de contournement SSL (https) mise en œuvre\nContrôle de connexion optimisé\nGestion du maillage optimisée",
-                "it": "gruppi familiari implementati\nmodalità di compatibilità implementata\ndipendenze aggiornate\nopzioni di configurazione aggiunte\nfinestre di dialogo ottimizzate\ntraduzioni aggiornate\nstruttura generale del programma ottimizzata\nfiltro per i membri della famiglia implementato\ngestione della password aggiornata\ndocumentazione aggiornata\nQR-Code implementato\nPresenza setState solo se modificato\ndiritti di accesso implementati\nusa il nome per la presenza\ndispositivi attivi / inattivi\nbug di intervallo 10s corretto\nBugfix dateformat pattern\nSoluzione alternativa SSL (https) implementata\nControllo della connessione ottimizzato\nGestione della rete ottimizzata",
-                "es": "grupos familiares implementados\nmodo de compatibilidad implementado\ndependencias actualizadas\nopciones de configuración agregadas\ncuadros de diálogo optimizados\ntraducciones actualizadas\nestructura general del programa optimizada\nfiltro para miembros de la familia implementado\nmanejo de contraseñas actualizado\ndocumentación actualizada\nQR-Code implementado\nsetState presencia solo si se cambia\nderechos de acceso implementados\nusar el nombre para la presencia\ndispositivos activos / inactivos\nerror de intervalo 10s arreglado\nPatrón de formato de fecha de corrección de errores\nSolución alternativa de SSL (https) implementada\nComprobación de conexión optimizada\nManejo de malla optimizado",
-                "pl": "wprowadzono grupy rodzinne\nzaimplementowano tryb zgodności\nzaktualizowane zależności\ndodane opcje konfiguracyjne\nzoptymalizowane okna dialogowe\nzaktualizowane tłumaczenia\nogólna struktura programu została zoptymalizowana\nfiltr dla członków rodziny zaimplementowany\naktualizacja obsługi hasła\nzaktualizowana dokumentacja\nWdrożono QR-Code\nsetState obecność tylko w przypadku zmiany\nprawa dostępu wdrożone\nużyj nazwy dla obecności\naktywne / nieaktywne urządzenia\nnaprawiony błąd co 10 sekund\nWzorzec formatu daty poprawek\nZaimplementowano obejście SSL (https)\nSprawdzanie połączenia zoptymalizowane\nZoptymalizowana obsługa siatki",
-                "zh-cn": "实施家庭团体\n兼容模式已实施\n依赖关系已更新\n添加了配置选项\n优化对话框\n翻译已更新\n通用程序结构优化\n实现家庭成员的过滤器\n密码处理已更新\n文档更新\n已实施QR码\nsetState仅在更改时存在\n实施访问权限\n使用名称表示存在\n活动/非活动设备\n间隔10秒的错误已修复\n错误修正日期格式模式\n实施SSL（https）解决方法\n连接检查已优化\n优化的网格处理"
-            },
-            "1.1.3": {
-                "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated",
-                "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert",
-                "ru": "семейные группы реализованы\nреализован режим совместимости\nзависимости обновлены\nдобавлены параметры конфигурации\nоптимизированы диалоговые окна\nпереводы обновлены\nоптимизирована общая структура программы\nреализован фильтр для членов семьи\nобновлена обработка паролей\nдокументация обновлена",
-                "pt": "grupos familiares implementados\nmodo de compatibilidade implementado\ndependências atualizadas\nopções de configuração adicionadas\ncaixas de diálogo otimizadas\ntraduções atualizadas\nestrutura geral do programa otimizada\nfiltro para membros da família implementado\ntratamento de senha atualizado\ndocumentação atualizada",
-                "nl": "familiegroepen geïmplementeerd\ncompatibiliteitsmodus geïmplementeerd\nafhankelijkheden bijgewerkt\nconfiguratie-opties toegevoegd\ndialoogvensters geoptimaliseerd\nvertalingen bijgewerkt\nalgemene programmastructuur geoptimaliseerd\nfilter voor familieleden geïmplementeerd\nwachtwoordverwerking bijgewerkt\ndocumentatie bijgewerkt",
-                "fr": "groupes familiaux mis en œuvre\nmode de compatibilité implémenté\ndépendances mises à jour\noptions de configuration ajoutées\nboîtes de dialogue optimisées\ntraductions mises à jour\nstructure générale du programme optimisée\nfiltre pour les membres de la famille implémenté\ngestion des mots de passe mise à jour\ndocumentation mise à jour",
-                "it": "gruppi familiari implementati\nmodalità di compatibilità implementata\ndipendenze aggiornate\nopzioni di configurazione aggiunte\nfinestre di dialogo ottimizzate\ntraduzioni aggiornate\nstruttura generale del programma ottimizzata\nfiltro per i membri della famiglia implementato\ngestione della password aggiornata\ndocumentazione aggiornata",
-                "es": "grupos familiares implementados\nmodo de compatibilidad implementado\ndependencias actualizadas\nopciones de configuración agregadas\ncuadros de diálogo optimizados\ntraducciones actualizadas\nestructura general del programa optimizada\nfiltro para miembros de la familia implementado\nmanejo de contraseñas actualizado\ndocumentación actualizada",
-                "pl": "wprowadzono grupy rodzinne\nzaimplementowano tryb zgodności\nzaktualizowane zależności\ndodane opcje konfiguracyjne\nzoptymalizowane okna dialogowe\nzaktualizowane tłumaczenia\nogólna struktura programu została zoptymalizowana\nfiltr dla członków rodziny zaimplementowany\naktualizacja obsługi hasła\nzaktualizowana dokumentacja",
-                "zh-cn": "实施家庭团体\n兼容模式已实施\n依赖关系已更新\n添加了配置选项\n优化对话框\n翻译已更新\n通用程序结构优化\n实现家庭成员的过滤器\n密码处理已更新\n文档更新"
-            },
-            "1.1.2": {
-                "en": "QR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\ndocumentation edited",
-                "de": "QR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nDokumentation bearbeitet",
-                "ru": "QR-код реализован\nприсутствие setState только при изменении\nправа доступа реализованы\nиспользовать имя для присутствия\nактивные / неактивные устройства\nИсправлена ошибка интервала 10 секунд\nдокументация отредактирована",
-                "pt": "QR-Code implementado\nPresença setState apenas se alterado\ndireitos de acesso implementados\nuse o nome para presença\ndispositivos ativos / inativos\nbug do intervalo 10s corrigido\ndocumentação editada",
-                "nl": "QR-code geïmplementeerd\nsetState aanwezigheid alleen indien gewijzigd\ntoegangsrechten geïmplementeerd\ngebruik naam voor aanwezigheid\nactieve / inactieve apparaten\ninterval 10s bug opgelost\ndocumentatie bewerkt",
-                "fr": "QR-Code implémenté\nsetState présence uniquement en cas de modification\ndroits d'accès mis en œuvre\nutiliser le nom pour la présence\nappareils actifs / inactifs\nCorrection d'un bug d'intervalle 10s\ndocumentation éditée",
-                "it": "QR-Code implementato\nPresenza setState solo se modificato\ndiritti di accesso implementati\nusa il nome per la presenza\ndispositivi attivi / inattivi\nbug dell'intervallo di 10 secondi risolto\ndocumentazione modificata",
-                "es": "QR-Code implementado\nsetState presencia solo si se cambia\nderechos de acceso implementados\nusar el nombre para la presencia\ndispositivos activos / inactivos\nerror de intervalo 10s arreglado\ndocumentación editada",
-                "pl": "Wdrożono QR-Code\nsetState obecność tylko w przypadku zmiany\nprawa dostępu wdrożone\nużyj nazwy dla obecności\naktywne / nieaktywne urządzenia\nnaprawiony błąd co 10 sekund\nzredagowano dokumentację",
-                "zh-cn": "已实施QR码\nsetState仅在更改时存在\n实施访问权限\n使用名称表示存在\n活动/非活动设备\n间隔10秒的错误已修复\n文档编辑"
-            },
-            "1.1.1": {
-                "en": "Configuration optimized\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nDocumentation added\nMesh handling optimized",
-                "de": "Konfiguration optimiert\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nDokumentation hinzugefügt\nNetzhandhabung optimiert",
-                "ru": "Оптимизированная конфигурация\nИсправление ошибки в шаблоне формата даты\nРеализован обходной путь SSL (https)\nОптимизирована проверка подключения\nДобавлена документация\nОптимизирована обработка сетки",
-                "pt": "Configuração otimizada\nPadrão de formato de data de correção de bug\nSolução alternativa SSL (https) implementada\nVerificação de conexão otimizada\nDocumentação adicionada\nManuseio de malha otimizado",
-                "nl": "Configuratie geoptimaliseerd\nBugfix dateformat-patroon\nSSL (https) tijdelijke oplossing geïmplementeerd\nVerbindingscontrole geoptimaliseerd\nDocumentatie toegevoegd\nMesh handling geoptimaliseerd",
-                "fr": "Configuration optimisée\nCorrectif du modèle de format de date\nSolution de contournement SSL (https) mise en œuvre\nContrôle de connexion optimisé\nDocumentation ajoutée\nGestion du maillage optimisée",
-                "it": "Configurazione ottimizzata\nBugfix dateformat pattern\nSoluzione alternativa SSL (https) implementata\nControllo della connessione ottimizzato\nDocumentazione aggiunta\nGestione della rete ottimizzata",
-                "es": "Configuración optimizada\nPatrón de formato de fecha de corrección de errores\nSolución alternativa SSL (https) implementada\nComprobación de conexión optimizada\nDocumentación agregada\nManejo de malla optimizado",
-                "pl": "Konfiguracja zoptymalizowana\nWzorzec formatu daty poprawek\nZaimplementowano obejście SSL (https)\nSprawdzanie połączenia zoptymalizowane\nDokumentacja została dodana\nZoptymalizowana obsługa siatki",
-                "zh-cn": "配置优化\n错误修正日期格式模式\n实施SSL（https）解决方法\n连接检查已优化\n已添加文档\n优化网格处理"
-            },
-            "1.1.0": {
-                "en": "second interval for family members implemented\nmesh info added\nconfiguration validation added\nswitch on, off guest wlan\nswitch on, off internet access of devices \nstructural changes\ncode optimization",
-                "de": "zweites Intervall für Familienmitglieder implementiert\nMesh-Info hinzugefügt\nKonfigurationsvalidierung hinzugefügt\nein- und ausschalten gast wlan\nEin- und Ausschalten des Internetzugangs von Geräten\nStrukturelle Veränderungen\nCodeoptimierung",
-                "ru": "реализован второй интервал для членов семьи\nинформация о сетке добавлена\nдобавлена проверка конфигурации\nвключить, выключить гостевую wlan\nвключить, выключить доступ устройств в Интернет\nструктурные изменения\nоптимизация кода",
-                "pt": "segundo intervalo para membros da família implementado\ninformação de malha adicionada\nvalidação de configuração adicionada\nligar, desligar wlan convidado\nligar, desligar o acesso à Internet dos dispositivos\nmudanças estruturais\notimização de código",
-                "nl": "tweede interval voor gezinsleden geïmplementeerd\nmesh-info toegevoegd\nconfiguratie validatie toegevoegd\ngasten wlan in-, uitschakelen\nin- en uitschakelen van internettoegang van apparaten\nstructurele veranderingen\ncode optimalisatie",
-                "fr": "deuxième intervalle pour les membres de la famille mis en œuvre\ninformations de maillage ajoutées\nvalidation de la configuration ajoutée\nallumer, éteindre le wlan invité\nactiver, désactiver l'accès Internet des appareils\nchangements structurels\noptimisation du code",
-                "it": "secondo intervallo per i membri della famiglia implementato\ninformazioni sulla mesh aggiunte\nconvalida della configurazione aggiunta\naccendere, spegnere la WLAN ospite\naccendere, spegnere l'accesso a Internet dei dispositivi\ncambiamenti strutturali\nottimizzazione del codice",
-                "es": "segundo intervalo para miembros de la familia implementado\ninformación de malla agregada\nvalidación de configuración agregada\nencender, apagar invitado wlan\nencender, apagar el acceso a Internet de los dispositivos\ncambios estructurales\noptimización de código",
-                "pl": "wprowadzono drugi interwał dla członków rodziny\ndodano informacje o siatce\ndodana weryfikacja konfiguracji\nwłącz, wyłącz gości wlan\nwłączanie, wyłączanie dostępu urządzeń do internetu\nzmiany strukturalne\noptymalizacja kodu",
-                "zh-cn": "实施第二次家庭成员间隔\n添加了网格信息\n添加了配置验证\n打开，关闭访客WLAN\n打开，关闭设备的互联网访问\n结构变化\n代码优化"
-            },
-            "1.0.4": {
-                "en": "bugfix json list and guest handling, new object guest.presence",
-                "de": "Bugfix JSON-Liste und Gastbehandlung, neues Objekt guest.presence",
-                "ru": "исправление списка json и обработка гостя, новый объект guest.presence",
-                "pt": "bugfix lista json e manipulação de convidados, novo objeto guest.presence",
-                "nl": "bugfix json lijst en gast afhandeling, nieuw object guest.presence",
-                "fr": "correction de la liste json et gestion des invités, nouvel objet guest.presence",
-                "it": "bugfix json list e gestione guest, nuovo oggetto guest.presence",
-                "es": "lista de errores json y manejo de invitados, nuevo objeto guest.presence",
-                "pl": "naprawiona lista błędów i obsługa gości, nowy obiekt guest.presence",
-                "zh-cn": "错误修正json列表和来宾处理，新对象guest.presence"
-            },
-            "1.0.3": {
-                "en": "bugfix checking mac or ip",
-                "de": "Bugfix Überprüfung Mac oder IP",
-                "ru": "проверка исправления Mac или IP",
-                "pt": "correção de bug verificando mac ou ip",
-                "nl": "bugfix bij het controleren van mac of ip",
-                "fr": "correction de bug vérification mac ou ip",
-                "it": "correzione bug mac o ip",
-                "es": "corrección de errores en mac o ip",
-                "pl": "sprawdzanie poprawek mac lub ip",
-                "zh-cn": "Bugfix检查Mac或IP"
-            },
-            "1.0.2": {
-                "en": "error handling optimized; external ip implemented; check if mac or ip are listed in fritzbox",
-                "de": "Fehlerbehandlung optimiert; externe IP implementiert; Überprüfen Sie, ob Mac oder IP in der Fritzbox aufgeführt sind",
-                "ru": "оптимизирована обработка ошибок; реализован внешний ip; проверьте, есть ли mac или ip в списке fritzbox",
-                "pt": "tratamento de erros otimizado; ip externo implementado; verifique se mac ou ip estão listados no fritzbox",
-                "nl": "foutafhandeling geoptimaliseerd; externe ip geïmplementeerd; controleer of mac of ip in fritzbox staan",
-                "fr": "gestion des erreurs optimisée; IP externe implémentée; vérifier si mac ou ip sont listés dans fritzbox",
-                "it": "gestione degli errori ottimizzata; implementato ip esterno; controlla se mac o ip sono elencati in fritzbox",
-                "es": "manejo de errores optimizado; ip externa implementada; compruebe si mac o ip figuran en fritzbox",
-                "pl": "zoptymalizowana obsługa błędów; zewnętrzny ip wdrożony; sprawdź, czy Mac lub IP są wymienione w polu Fritzbox",
-                "zh-cn": "错误处理得到优化；实施外部ip;检查在fritzbox中是否列出了mac或ip"
-            },
-            "1.0.1": {
-                "en": "error handling optimized\nhistory selection optimized\nre-synchronisation fb-devices implemented",
-                "de": "Fehlerbehandlung optimiert\nVerlaufsauswahl optimiert\nRe-Synchronisation fb-Geräte implementiert",
-                "ru": "оптимизирована обработка ошибок\nоптимизирован выбор истории\nреализована повторная синхронизация fb-устройств",
-                "pt": "tratamento de erros otimizado\nseleção de histórico otimizado\nre-sincronização dispositivos fb implementados",
-                "nl": "foutafhandeling geoptimaliseerd\ngeschiedenis selectie geoptimaliseerd\nhersynchronisatie fb-devices geïmplementeerd",
-                "fr": "gestion des erreurs optimisée\nsélection de l'historique optimisée\nresynchronisation fb-devices implémentés",
-                "it": "gestione errori ottimizzata\nselezione cronologia ottimizzata\nrisincronizzazione dispositivi fb implementati",
-                "es": "manejo de errores optimizado\nselección de historial optimizado\n re-sincronización dispositivos fb implementados",
-                "pl": "obsługa błędów zoptymalizowany\n wybór historii zoptymalizowany\n re-synchronizacja zaimplementowane urządzenia fb",
-                "zh-cn": "错误处理已优化\n历史选择已优化\n重新同步已实现fb设备"
-            },
-            "1.0.0": {
-                "en": "Configuration dialog optimized\nfbdevice speed added\npresent-, absentMembers inserted\nIp address handling optimized\\niobroker functions changed to async\\ninstance.0 dependency fixed\\ndepricated request changed to axios",
-                "de": "Konfigurationsdialog optimiert \nFbGerätegeschwindigkeit hinzugefügt \npresent-, abwesendMitglieder eingefügt \nIp-Adressverarbeitung optimiert \niobroker-Funktionen geändert in asynchrone \ninstanz.0 Abhängigkeit behoben \ndeprizierte Anforderung geändert in Axios",
-                "ru": "Оптимизировано диалоговое окно конфигурации \nfbdevice скорость добавлена \npresent-, absentMembers вставлено \nИз оптимизирована обработка адресов \nИзменено, функции niobroker заменены на асинхронную \ninstance.0 фиксированную зависимость \nПодходящий запрос изменен на axios",
-                "pt": "Caixa de diálogo de configuração otimizada \nf Velocidade do dispositivo adicionada \n presente-, ausenteMembers inseridos \nIp manipulação de endereços funções otimizadas \niobroker alteradas para async \ninstance.0 dependência corrigida \n solicitação solicitada alterada para axios",
-                "nl": "Configuratiedialoog geoptimaliseerd \nfbdapparaat snelheid toegevoegd \npresent-, absentMembers ingevoegd \nIp adresafhandeling geoptimaliseerd \niobroker-functies gewijzigd in asynchroon \ninstantie. 0 afhankelijkheid opgelost \ndepricated verzoek gewijzigd in axios",
-                "fr": "Boîte de dialogue de configuration optimisée \nfbd vitesse du périphérique ajoutée \npresent-, absentMembers insérés \nIp adresse de gestion optimisée \\ les fonctions de niobroker ont été remplacées par async \ninstance.0 dépendance corrigée \nla demande spécifique a été remplacée par axios",
-                "it": "Finestra di dialogo di configurazione ottimizzata \nfbdevice velocità aggiunta \npresent-, absentMembers inseriti \nIp gestione degli indirizzi IP funzioni ottimizzate \niobroker modificate in asincrono \ninstance.0 dipendenza fissa \\ richiesta non modificata modificata in axios",
-                "es": "Diálogo de configuración optimizado \nfb velocidad del dispositivo agregada \npresent-, absentMembers insertó \nEl manejo de la dirección IP optimizado \niobroker las funciones cambiaron a async \ninstance.0 dependencia fija \ndepricated la solicitud cambió a axios",
-                "pl": "Zoptymalizowane okno dialogowe konfiguracji \nfbdodano prędkość urządzenia \np .-, nieobecny Wstawiono członków \nZoptymalizowano obsługę adresów \\ funkcje niobrokera zmieniono na async \ninstance.0 naprawiono zależność \ndopracowane żądanie zmieniono na axios",
-                "zh-cn": "优化配置对话框\\添加nfb设备速度\n现在-，缺席成员插入\nIP地址处理优化\niobroker功能更改为异步\ninstance.0依赖已修复\ndeplicated请求更改为axios"
-            },
-            "0.3.0": {
-                "en": "Documentation optimized\\nlastVal and json table error fixed\\nconnection type added\\ndefault value ipaddress and dateformat changed\\nnew feature fb-devices added\\nerror messages optimized\\n getDeviceInfo failure fixed",
-                "de": "Dokumentation optimiert \nlastVal- und json-Tabellenfehler behoben \nVerbindungstyp hinzugefügt \nStandardwert IP-Adresse und Datumsformat geändert \nNeue Funktion fb-Geräte hinzugefügt \\ Fehlermeldungen optimiert \n Fehler bei getDeviceInfo behoben",
-                "ru": "Оптимизирована документация \nlastVal и исправлена ошибка в таблице json \n Добавлен тип соединения \nЗначение по умолчанию ipaddress и dateformat изменено \n Добавлена новая функция fb-устройств \\ Оптимизированы сообщения об ошибках \n Исправлена ошибка getDeviceInfo",
-                "pt": "Documentação otimizada \nlastVal e erro da tabela json corrigida \\ tipo de conexão adicionado \n valor padrão endereço de ip e formato de data alterados \novo novo recurso fb-devices added \\ mensagens de erro otimizadas \n falha de getDeviceInfo corrigida",
-                "nl": "Documentatie geoptimaliseerd \nlastVal en json table error fixed \nverbindingstype toegevoegd \ndefault waarde ipadres en dateformaat gewijzigd \nnieuwe functie fb-apparaten toegevoegd \nfoutmeldingen geoptimaliseerd \n getDeviceInfo fout opgelost",
-                "fr": "Documentation optimisée \nlastVal et erreur de table json corrigée \ntype de connexion ajouté \n valeur par défaut ipaddress et dateformat modifiés \nnouvelle fonctionnalité fb-devices ajoutés \nmessages d'erreur optimisés \n échec de getDeviceInfo corrigé",
-                "it": "Documentazione ottimizzata \nlastVal errore della tabella json e riparata \\ tipo di connessione aggiunto \\ valore predefinito ipaddress e dataformat modificati \nuova funzionalità fb-devices aggiunti \\ messaggi nerror ottimizzati \n errore getDeviceInfo fisso",
-                "es": "Documentación optimizada \nlastVal y error de tabla json corregido \n tipo de conexión agregado \n valor predeterminado ipaddress y fechaformat cambiado \nnueva característica fb-devices agregados \nerror mensajes optimizados \n getDeviceInfo fallo corregido",
-                "pl": "Zoptymalizowana dokumentacja \n Błąd tabeli Vlast i Json naprawiony \n Dodano typ połączenia \n Wartość domyślna ipaddress i dataformat zmieniono \nnowa funkcja Dodano urządzenia fb \n Zoptymalizowano komunikaty o błędach \n naprawiono błąd getDeviceInfo",
-                "zh-cn": "文档已优化\nlastVal和json表错误已修复\n已添加连接类型\n默认值ipaddress和dateformat已更改\n已添加新功能fb设备\n已优化错误消息\n已修复getDeviceInfo故障"
-            },
-            "0.2.2": {
-                "en": "outdated packages updated, documentation changed, dependency history removed, onstate/objectChange removed, scheduler library removed, ...",
-                "de": "veraltete Pakete aktualisiert, Dokumentation geändert, Abhängigkeitsverlauf entfernt, onstate / objectChange entfernt, Scheduler-Bibliothek entfernt, ...",
-                "ru": "обновлены устаревшие пакеты, изменена документация, удалена история зависимостей, удалено onstate / objectChange, удалена библиотека планировщика, ...",
-                "pt": "pacotes desatualizados atualizados, documentação alterada, histórico de dependências removido, onstate / objectChange removido, biblioteca do agendador removida, ...",
-                "nl": "verouderde pakketten bijgewerkt, documentatie gewijzigd, afhankelijkheidshistorie verwijderd, status / objectVeranderen verwijderd, plannerbibliotheek verwijderd, ...",
-                "fr": "paquets obsolètes mis à jour, documentation modifiée, historique des dépendances supprimé, onstate / objectChange supprimé, bibliothèque de planificateur supprimée, ...",
-                "it": "pacchetti obsoleti aggiornati, documentazione modificata, cronologia delle dipendenze rimossa, onstate / objectChange rimosso, libreria scheduler rimossa, ...",
-                "es": "paquetes obsoletos actualizados, documentación modificada, historial de dependencias eliminado, onstate / objectChange eliminado, biblioteca del planificador eliminada, ...",
-                "pl": "zaktualizowano nieaktualne pakiety, zmieniono dokumentację, usunięto historię zależności, usunięto onstate / objectChange, usunięto bibliotekę harmonogramu, ...",
-                "zh-cn": "更新了过时的程序包，更改了文档，删除了依赖关系历史记录，删除了onstate / objectChange，删除了调度程序库，..."
-            },
-            "0.2.1": {
-                "en": "getGuests issue resolved, lastVal function and debug information optimized",
-                "de": "Problem mit getGuests behoben, Funktion lastVal und Debug-Informationen optimiert",
-                "ru": "Решена проблема с getGhest, оптимизирована функция lastVal и отладочная информация",
-                "pt": "Problema getGuests resolvido, função lastVal e informações de depuração otimizadas",
-                "nl": "getGuests-probleem opgelost, lastVal-functie en foutopsporingsinformatie geoptimaliseerd",
-                "fr": "Problème getGuests résolu, fonction lastVal et informations de débogage optimisées",
-                "it": "problema getGuests risolto, funzione lastVal e informazioni di debug ottimizzate",
-                "es": "Problema de getGuests resuelto, función lastVal e información de depuración optimizada",
-                "pl": "problem getGuests rozwiązany, funkcja lastVal i zoptymalizowane informacje debugowania",
-                "zh-cn": "解决了getGuests问题，优化了lastVal函数和调试信息"
-            },
-            "0.2.0": {
-                "en": "debug and error information optimized, crypto dependency removed, service check and blacklist added",
-                "de": "Debug- und Fehlerinformationen optimiert, Kryptoabhängigkeit entfernt, Service-Check und Blacklist hinzugefügt",
-                "ru": "оптимизирована информация об отладке и ошибках, удалена крипто-зависимость, добавлена проверка сервиса и черный список",
-                "pt": "informações de depuração e erro otimizadas, dependência de criptografia removida, verificação de serviço e lista negra adicionada",
-                "nl": "foutopsporing en foutinformatie geoptimaliseerd, crypto-afhankelijkheid verwijderd, servicecontrole en zwarte lijst toegevoegd",
-                "fr": "informations de débogage et d'erreur optimisées, suppression de la dépendance cryptographique, vérification du service et liste noire ajoutées",
-                "it": "informazioni di debug ed errori ottimizzate, dipendenza da crittografia rimossa, controllo del servizio e lista nera aggiunti",
-                "es": "información de error y depuración optimizada, dependencia de criptografía eliminada, verificación de servicio y lista negra añadida",
-                "pl": "zoptymalizowano informacje o debugowaniu i błędach, usunięto zależność kryptograficzną, dodano kontrolę usługi i czarną listę",
-                "zh-cn": "优化了调试和错误信息，删除了加密依赖性，添加了服务检查和黑名单"
-            },
-            "0.1.0": {
-                "en": "Influxdb added, debug information added",
-                "de": "Influxdb hinzugefügt, Debug-Informationen hinzugefügt",
-                "ru": "Добавлен Influxdb, добавлена отладочная информация",
-                "pt": "Influxdb adicionado, informações de depuração adicionadas",
-                "nl": "Influxdb toegevoegd, foutopsporingsinformatie toegevoegd",
-                "fr": "Influxdb ajouté, informations de débogage ajoutées",
-                "it": "Influxdb aggiunto, informazioni di debug aggiunte",
-                "es": "Influxdb agregado, información de depuración agregada",
-                "pl": "Dodano Influxdb, dodano informacje debugowania",
-                "zh-cn": "添加了Influxdb，添加了调试信息"
-            },
-            "0.0.7": {
-                "en": "invalid date bug resolved. Debug information added. Default values from Date objects changed.",
-                "de": "Fehler mit ungültigem Datum behoben. Debug-Informationen hinzugefügt. Standardwerte von Datumsobjekten geändert.",
-                "ru": "недопустимая ошибка даты устранена. Добавлена отладочная информация. Значения по умолчанию для объектов Date изменены.",
-                "pt": "erro de data inválido resolvido. Informações de depuração adicionadas. Os valores padrão dos objetos Date foram alterados.",
-                "nl": "ongeldige datum bug opgelost. Foutopsporingsinformatie toegevoegd. Standaardwaarden van objecten Date zijn gewijzigd.",
-                "fr": "bug de date invalide résolu. Informations de débogage ajoutées. Les valeurs par défaut des objets Date ont été modifiées.",
-                "it": "bug data non valido risolto. Aggiunte informazioni di debug. Valori predefiniti dagli oggetti Data modificati.",
-                "es": "error de fecha inválido resuelto. Información de depuración añadida. Los valores predeterminados de los objetos de fecha cambiaron.",
-                "pl": "błąd nieprawidłowej daty rozwiązany. Dodano informacje debugowania. Wartości domyślne z obiektów Data uległy zmianie.",
-                "zh-cn": "解决了无效的日期错误。添加了调试信息。 Date对象的默认值已更改。"
-            }
-        },
-        "title": "Fritzbox CheckPresence",
-        "titleLang": {
-            "en": "Fritzbox CheckPresence",
-            "de": "Fritzbox CheckPresence",
-            "ru": "Fritzbox CheckPresence",
-            "pt": "Fritzbox CheckPresence",
-            "nl": "Fritzbox CheckPresence",
-            "fr": "Fritzbox CheckPresence",
-            "it": "Fritzbox CheckPresence",
-            "es": "Fritzbox CheckPresence",
-            "pl": "Fritzbox CheckPresence",
-            "zh-cn": "Fritzbox CheckPresence"
-        },
-        "desc": {
-            "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
-            "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
-            "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
-            "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
-            "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
-            "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
-            "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
-            "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
-            "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
-            "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
-        },
-        "authors": [
-            "Achim Fürhoff <achim.fuerhoff@outlook.de>"
-        ],
-        "keywords": [
-            "ioBroker",
-            "presence",
-            "family",
-            "tr064",
-            "fritz.box",
-            "fritzbox"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "fb-checkpresence.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
-        "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "infrastructure",
-        "connectionType": "local",
-        "dataSource": "poll",
-        "compact": true,
-        "materialize": true,
-        "stopBeforeUpdate": true,
-        "messagebox": true,
-        "dependencies": [
-            {
-                "admin": ">=3.0.0",
-                "js-controller": ">=3.1.0"
-            }
-        ]
+  "common": {
+    "name": "fb-checkpresence",
+    "version": "1.1.10",
+    "news": {
+      "1.1.10": {
+        "en": "dependencies updated",
+        "de": "Abhängigkeiten aktualisiert",
+        "ru": "зависимости обновлены",
+        "pt": "dependências atualizadas",
+        "nl": "afhankelijkheden bijgewerkt",
+        "fr": "dépendances mises à jour",
+        "it": "dipendenze aggiornate",
+        "es": "dependencias actualizadas",
+        "pl": "zaktualizowano zależności",
+        "zh-cn": "依赖项已更新"
+      },
+      "1.1.9": {
+        "en": "dependencies updated\nissue #63: getExtIp logging solved\nissue #65: wrong logging in instance > 0 solved\nqr-code WPA2 + WPA3 fixed",
+        "de": "Abhängigkeiten aktualisiert\nProblem #63: GetExtIp-Logging behoben\nProblem #65: Falsche Anmeldung in Instanz > 0 behoben\nqr-Code WPA2 + WPA3 behoben",
+        "ru": "зависимости обновлены \n проблема # 63: ведение журнала getExtIp решено \nпроблема # 65: неверное ведение журнала в экземпляре> 0 решено\nqr-код WPA2 + WPA3 исправлен",
+        "pt": "dependências atualizadas \nproblema nº 63: log getExtIp resolvido\nproblema nº 65: registro incorreto na instância> 0 resolvido \nqr-code WPA2 + WPA3 corrigido",
+        "nl": "afhankelijkheden bijgewerkt\nprobleem #63: getExtIp-logboekregistratie opgelost\nprobleem #65: verkeerde registratie in instantie > 0 opgelost\nqr-code WPA2 + WPA3 opgelost",
+        "fr": "dépendances mises à jour\nproblème n°63 : la journalisation getExtIp est résolue\nproblème n°65 : mauvaise instance de connexion > 0 résolu\nqr-code WPA2 + WPA3 corrigé",
+        "it": "dipendenze aggiornate\nproblema #63: registrazione getExtIp risolta\nproblema #65: registrazione errata nell'istanza > 0 risolto\nqr-code WPA2 + WPA3 risolto",
+        "es": "dependencias actualizadas \n problema # 63: registro getExtIp resuelto \n problema # 65: registro incorrecto en la instancia> 0 resuelto \ncódigo qr WPA2 + WPA3 arreglado",
+        "pl": "zaktualizowano zależności\nproblem #63: rozwiązano logowanie getExtIp\nproblem #65: niepoprawne logowanie w instancji > 0 rozwiązano\nkod qr naprawiony WPA2 + WPA3",
+        "zh-cn": "依赖关系更新\n问题 #63：getExtIp 日志记录已解决\n问题 #65：实例中的错误日志> 0 已解决\nqr-code WPA2 + WPA3 已修复"
+      },
+      "1.1.8": {
+        "en": "issue#61: units added\nworkaround for 7390 added (missing systemVersion in xml)\ndependencies updated",
+        "de": "Ausgabe Nr. 61: Einheiten hinzugefügt\nWorkaround für 7390 hinzugefügt (fehlende systemVersion in xml)\nAbhängigkeiten aktualisiert",
+        "ru": "выпуск # 61: добавлены юниты\nдобавлен обходной путь для 7390 (отсутствует версия systemVersion в xml)\nзависимости обновлены",
+        "pt": "edição nº 61: unidades adicionadas\nsolução alternativa para 7390 adicionada (systemVersion ausente em xml)\ndependências atualizadas",
+        "nl": "issue#61: eenheden toegevoegd\nworkaround voor 7390 toegevoegd (ontbrekende systemVersion in xml)\nafhankelijkheden bijgewerkt",
+        "fr": "problème n°61 : unités ajoutées\nsolution de contournement pour 7390 ajoutée (systemVersion manquante dans xml)\ndépendances mises à jour",
+        "it": "problema#61: unità aggiunte\nsoluzione alternativa per 7390 aggiunta (systemVersion mancante in xml)\ndipendenze aggiornate",
+        "es": "problema # 61: unidades agregadas\nsolución alternativa para 7390 agregada (falta systemVersion en xml)\ndependencias actualizadas",
+        "pl": "Problem#61: dodano jednostki\ndodano obejście dla 7390 (brak wersji systemVersion w xml)\nzaktualizowano zależności",
+        "zh-cn": "问题#61：添加的单位\n添加了 7390 的解决方法（xml 中缺少 systemVersion）\n依赖项已更新"
+      },
+      "1.1.7": {
+        "en": "message handling optimized\ndependencies updated",
+        "de": "Nachrichtenbehandlung optimiert\nAbhängigkeiten aktualisiert",
+        "ru": "оптимизирована обработка сообщений\nзависимости обновлены",
+        "pt": "tratamento de mensagens otimizado\ndependências atualizadas",
+        "nl": "berichtverwerking geoptimaliseerd\nafhankelijkheden bijgewerkt",
+        "fr": "gestion des messages optimisée\ndépendances mises à jour",
+        "it": "gestione dei messaggi ottimizzata\ndipendenze aggiornate",
+        "es": "manejo de mensajes optimizado\ndependencias actualizadas",
+        "pl": "zoptymalizowana obsługa wiadomości\nzaktualizowano zależności",
+        "zh-cn": "消息处理优化\n依赖项已更新"
+      },
+      "1.1.6": {
+        "en": "html input pattern fixed for password and user\ngetActive function fixed\ndependencies updated",
+        "de": "HTML-Eingabemuster für Passwort und Benutzer korrigiert fixed\ngetActive-Funktion behoben\nAbhängigkeiten aktualisiert",
+        "ru": "шаблон ввода html исправлен для пароля и пользователя\nИсправлена функция getActive\nзависимости обновлены",
+        "pt": "Padrão de entrada html corrigido para senha e usuário\nfunção getActive corrigida\ndependências atualizadas",
+        "nl": "html invoerpatroon opgelost voor wachtwoord en gebruiker\ngetActive-functie opgelost\nafhankelijkheden bijgewerkt",
+        "fr": "modèle d'entrée html corrigé pour le mot de passe et l'utilisateur\nFonction getActive corrigée\ndépendances mises à jour",
+        "it": "modello di input html corretto per password e utente\nFunzione getActive riparata\ndipendenze aggiornate",
+        "es": "patrón de entrada html fijo para contraseña y usuario\nFunción getActive fija\ndependencias actualizadas",
+        "pl": "Naprawiono wzorzec wejściowy html dla hasła i użytkownika\nNaprawiono funkcję getActive\nzaktualizowano zależności",
+        "zh-cn": "为密码和用户固定的 html 输入模式\ngetActive 功能已修复\n依赖项已更新"
+      },
+      "1.1.5": {
+        "en": "dependencies updated\ncheckservice fixed",
+        "de": "Abhängigkeiten aktualisiert\nCheckservice behoben",
+        "ru": "зависимости обновлены\nчексервис исправлен",
+        "pt": "dependências atualizadas\nserviço de verificação corrigido",
+        "nl": "afhankelijkheden bijgewerkt\ncheckservice vast",
+        "fr": "dépendances mises à jour\nservice de contrôle corrigé",
+        "it": "dipendenze aggiornate\nservizio di controllo risolto",
+        "es": "dependencias actualizadas\ncheckservice arreglado",
+        "pl": "zaktualizowano zależności\nnaprawiono usługę sprawdzania",
+        "zh-cn": "依赖项已更新\n检查服务固定"
+      },
+      "1.1.4": {
+        "en": "family groups implemented\ncompatability mode implemented\ndependencies updated\nconfiguration options added\ndialogboxes optimized\ntranslations updated\ngeneral program structure optimized\nfilter for family members implemeted\npassword handling updated\ndocumentation updated\nQR-Code implemented\nsetState presence only if changed\naccess rights implemented\nuse name for presence\nactive / inactive devices\ninterval 10s bug fixed\nBugfix dateformat pattern\nSSL (https) workaround implemented\nConnection check optimized\nMesh handling optimized",
+        "de": "Familiengruppen umgesetzt\nKompatibilitätsmodus implementiert\nAbhängigkeiten aktualisiert\nKonfigurationsoptionen hinzugefügt\nDialogfelder optimiert\nÜbersetzungen aktualisiert\nallgemeine Programmstruktur optimiert\nFilter für Familienmitglieder implementiert\nPasswortbehandlung aktualisiert\nDokumentation aktualisiert\nQR-Code implementiert\nsetState-Präsenz nur bei Änderung\nZugriffsrechte implementiert\nVerwenden Sie den Namen für die Anwesenheit\naktive / inaktive Geräte\nIntervall 10s Fehler behoben\nBugfix Datumsformatmuster\nSSL (https) Workaround implementiert\nVerbindungsprüfung optimiert\nNetzhandhabung optimiert",
+        "ru": "семейные группы реализованы\nреализован режим совместимости\nзависимости обновлены\nдобавлены параметры конфигурации\nоптимизированы диалоговые окна\nпереводы обновлены\nоптимизирована общая структура программы\nреализован фильтр для членов семьи\nобновлена обработка паролей\nдокументация обновлена\nQR-код реализован\nприсутствие setState только если изменено\nправа доступа реализованы\nиспользовать имя для присутствия\nактивные / неактивные устройства\nИсправлена ошибка интервала 10 секунд\nИсправление ошибки в шаблоне формата даты\nРеализован обходной путь SSL (https)\nОптимизирована проверка подключения\nОптимизирована обработка сетки",
+        "pt": "grupos familiares implementados\nmodo de compatibilidade implementado\ndependências atualizadas\nopções de configuração adicionadas\ncaixas de diálogo otimizadas\ntraduções atualizadas\nestrutura geral do programa otimizada\nfiltro para membros da família implementado\ntratamento de senha atualizado\ndocumentação atualizada\nQR-Code implementado\nPresença setState apenas se alterado\ndireitos de acesso implementados\nuse o nome para presença\ndispositivos ativos / inativos\nbug do intervalo 10s corrigido\nPadrão de formato de data de correção de bug\nSolução alternativa SSL (https) implementada\nVerificação de conexão otimizada\nManuseio de malha otimizado",
+        "nl": "familiegroepen geïmplementeerd\ncompatibiliteitsmodus geïmplementeerd\nafhankelijkheden bijgewerkt\nconfiguratie-opties toegevoegd\ndialoogvensters geoptimaliseerd\nvertalingen bijgewerkt\nalgemene programmastructuur geoptimaliseerd\nfilter voor familieleden geïmplementeerd\nwachtwoordverwerking bijgewerkt\ndocumentatie bijgewerkt\nQR-code geïmplementeerd\nsetState aanwezigheid alleen indien gewijzigd\ntoegangsrechten geïmplementeerd\ngebruik naam voor aanwezigheid\nactieve / inactieve apparaten\ninterval 10s bug opgelost\nBugfix dateformat-patroon\nSSL (https) tijdelijke oplossing geïmplementeerd\nVerbindingscontrole geoptimaliseerd\nMesh handling geoptimaliseerd",
+        "fr": "groupes familiaux mis en œuvre\nmode de compatibilité implémenté\ndépendances mises à jour\noptions de configuration ajoutées\nboîtes de dialogue optimisées\ntraductions mises à jour\nstructure générale du programme optimisée\nfiltre pour les membres de la famille implémenté\ngestion des mots de passe mise à jour\ndocumentation mise à jour\nQR-Code implémenté\nsetState présence uniquement en cas de modification\ndroits d'accès mis en œuvre\nutiliser le nom pour la présence\nappareils actifs / inactifs\nCorrection d'un bug d'intervalle 10s\nCorrectif du modèle de format de date\nSolution de contournement SSL (https) mise en œuvre\nContrôle de connexion optimisé\nGestion du maillage optimisée",
+        "it": "gruppi familiari implementati\nmodalità di compatibilità implementata\ndipendenze aggiornate\nopzioni di configurazione aggiunte\nfinestre di dialogo ottimizzate\ntraduzioni aggiornate\nstruttura generale del programma ottimizzata\nfiltro per i membri della famiglia implementato\ngestione della password aggiornata\ndocumentazione aggiornata\nQR-Code implementato\nPresenza setState solo se modificato\ndiritti di accesso implementati\nusa il nome per la presenza\ndispositivi attivi / inattivi\nbug di intervallo 10s corretto\nBugfix dateformat pattern\nSoluzione alternativa SSL (https) implementata\nControllo della connessione ottimizzato\nGestione della rete ottimizzata",
+        "es": "grupos familiares implementados\nmodo de compatibilidad implementado\ndependencias actualizadas\nopciones de configuración agregadas\ncuadros de diálogo optimizados\ntraducciones actualizadas\nestructura general del programa optimizada\nfiltro para miembros de la familia implementado\nmanejo de contraseñas actualizado\ndocumentación actualizada\nQR-Code implementado\nsetState presencia solo si se cambia\nderechos de acceso implementados\nusar el nombre para la presencia\ndispositivos activos / inactivos\nerror de intervalo 10s arreglado\nPatrón de formato de fecha de corrección de errores\nSolución alternativa de SSL (https) implementada\nComprobación de conexión optimizada\nManejo de malla optimizado",
+        "pl": "wprowadzono grupy rodzinne\nzaimplementowano tryb zgodności\nzaktualizowane zależności\ndodane opcje konfiguracyjne\nzoptymalizowane okna dialogowe\nzaktualizowane tłumaczenia\nogólna struktura programu została zoptymalizowana\nfiltr dla członków rodziny zaimplementowany\naktualizacja obsługi hasła\nzaktualizowana dokumentacja\nWdrożono QR-Code\nsetState obecność tylko w przypadku zmiany\nprawa dostępu wdrożone\nużyj nazwy dla obecności\naktywne / nieaktywne urządzenia\nnaprawiony błąd co 10 sekund\nWzorzec formatu daty poprawek\nZaimplementowano obejście SSL (https)\nSprawdzanie połączenia zoptymalizowane\nZoptymalizowana obsługa siatki",
+        "zh-cn": "实施家庭团体\n兼容模式已实施\n依赖关系已更新\n添加了配置选项\n优化对话框\n翻译已更新\n通用程序结构优化\n实现家庭成员的过滤器\n密码处理已更新\n文档更新\n已实施QR码\nsetState仅在更改时存在\n实施访问权限\n使用名称表示存在\n活动/非活动设备\n间隔10秒的错误已修复\n错误修正日期格式模式\n实施SSL（https）解决方法\n连接检查已优化\n优化的网格处理"
+      }
     },
-    "encryptedNative": [
-        "password"
-    ],
-    "protectedNative": [
-        "password"
-    ],
-    "native": {
-        "familymembers": [],
-        "whitelist": [],
-        "ipaddress": "fritz.box",
-        "ssl": true,
-        "interval": 1,
-        "intervalFamily": 60,
-        "delay": 15,
-        "compatibility": true,
-        "history": "",
-        "dateformat": "yyyy.mm.dd HH:MM:ss",
-        "fbdevices": false,
-        "meshinfo": false,
-        "syncfbdevices": false,
-        "guestinfo": true,
-        "qrcode": false,
-        "qrcodecolor": "black",
-        "username": "",
-        "password": "",
-        "enableWl": true
+    "title": "Fritzbox CheckPresence",
+    "titleLang": {
+      "en": "Fritzbox CheckPresence",
+      "de": "Fritzbox CheckPresence",
+      "ru": "Fritzbox CheckPresence",
+      "pt": "Fritzbox CheckPresence",
+      "nl": "Fritzbox CheckPresence",
+      "fr": "Fritzbox CheckPresence",
+      "it": "Fritzbox CheckPresence",
+      "es": "Fritzbox CheckPresence",
+      "pl": "Fritzbox CheckPresence",
+      "zh-cn": "Fritzbox CheckPresence"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
+      "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
+      "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
+      "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
+      "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
+      "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
+      "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
+      "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
+      "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
+      "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
+    },
+    "authors": [
+      "Achim Fürhoff <achim.fuerhoff@outlook.de>"
+    ],
+    "keywords": [
+      "ioBroker",
+      "presence",
+      "family",
+      "tr064",
+      "fritz.box",
+      "fritzbox"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "fb-checkpresence.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
+    "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "infrastructure",
+    "connectionType": "local",
+    "dataSource": "poll",
+    "compact": true,
+    "materialize": true,
+    "stopBeforeUpdate": true,
+    "messagebox": true,
+    "dependencies": [
+      {
+        "admin": ">=3.0.0",
+        "js-controller": ">=3.1.0"
+      }
     ]
+  },
+  "encryptedNative": [
+    "password"
+  ],
+  "protectedNative": [
+    "password"
+  ],
+  "native": {
+    "familymembers": [],
+    "whitelist": [],
+    "ipaddress": "fritz.box",
+    "ssl": true,
+    "interval": 1,
+    "intervalFamily": 60,
+    "delay": 15,
+    "compatibility": true,
+    "history": "",
+    "dateformat": "yyyy.mm.dd HH:MM:ss",
+    "fbdevices": false,
+    "meshinfo": false,
+    "syncfbdevices": false,
+    "guestinfo": true,
+    "qrcode": false,
+    "qrcodecolor": "black",
+    "username": "",
+    "password": "",
+    "enableWl": true
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    }
+  ]
 }
