@@ -201,6 +201,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) dependencies updated
 * (afuerhoff) issue #63: getExtIp logging solved
 * (afuerhoff) issue #65: wrong logging in instance > 0 solved  
+* (afuerhoff) qr-code WPA2 + WPA3 fixed
 
 ### 1.1.8 (2021-09-01)
 * (afuerhoff) issue#61: units added
