@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "fb-checkpresence",
-        "version": "1.1.8",
+        "version": "1.1.9",
         "news": {
+            "1.1.9": {
+                "en": "dependencies updated\nissue #63: getExtIp logging solved\nissue #65: wrong logging in instance > 0 solved\nqr-code WPA2 + WPA3 fixed",
+                "de": "Abhängigkeiten aktualisiert\nProblem #63: GetExtIp-Logging behoben\nProblem #65: Falsche Anmeldung in Instanz > 0 behoben\nqr-Code WPA2 + WPA3 behoben",
+                "ru": "зависимости обновлены \n проблема # 63: ведение журнала getExtIp решено \nпроблема # 65: неверное ведение журнала в экземпляре> 0 решено\nqr-код WPA2 + WPA3 исправлен",
+                "pt": "dependências atualizadas \nproblema nº 63: log getExtIp resolvido\nproblema nº 65: registro incorreto na instância> 0 resolvido \nqr-code WPA2 + WPA3 corrigido",
+                "nl": "afhankelijkheden bijgewerkt\nprobleem #63: getExtIp-logboekregistratie opgelost\nprobleem #65: verkeerde registratie in instantie > 0 opgelost\nqr-code WPA2 + WPA3 opgelost",
+                "fr": "dépendances mises à jour\nproblème n°63 : la journalisation getExtIp est résolue\nproblème n°65 : mauvaise instance de connexion > 0 résolu\nqr-code WPA2 + WPA3 corrigé",
+                "it": "dipendenze aggiornate\nproblema #63: registrazione getExtIp risolta\nproblema #65: registrazione errata nell'istanza > 0 risolto\nqr-code WPA2 + WPA3 risolto",
+                "es": "dependencias actualizadas \n problema # 63: registro getExtIp resuelto \n problema # 65: registro incorrecto en la instancia> 0 resuelto \ncódigo qr WPA2 + WPA3 arreglado",
+                "pl": "zaktualizowano zależności\nproblem #63: rozwiązano logowanie getExtIp\nproblem #65: niepoprawne logowanie w instancji > 0 rozwiązano\nkod qr naprawiony WPA2 + WPA3",
+                "zh-cn": "依赖关系更新\n问题 #63：getExtIp 日志记录已解决\n问题 #65：实例中的错误日志> 0 已解决\nqr-code WPA2 + WPA3 已修复"              },
             "1.1.8": {
                 "en": "issue#61: units added\nworkaround for 7390 added (missing systemVersion in xml)\ndependencies updated",
                 "de": "Ausgabe Nr. 61: Einheiten hinzugefügt\nWorkaround für 7390 hinzugefügt (fehlende systemVersion in xml)\nAbhängigkeiten aktualisiert",
