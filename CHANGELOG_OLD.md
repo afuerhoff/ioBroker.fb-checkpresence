@@ -1,4 +1,26 @@
 # Older changes
+## 1.1.4 (2021-05-11)
+* (afuerhoff) family groups implemented
+* (afuerhoff) compatability mode implemented
+* (afuerhoff) dependencies updated
+* (afuerhoff) configuration options added
+* (afuerhoff) dialogboxes optimized
+* (afuerhoff) translations updated
+* (afuerhoff) general program structure optimized
+* (afuerhoff) filter for family members implemeted
+* (afuerhoff) password handling updated
+* (afuerhoff) documentation updated
+* (afuerhoff) QR-Code implemented
+* (afuerhoff) setState presence only if changed
+* (afuerhoff) access rights implemented
+* (afuerhoff) use name for presence
+* (afuerhoff) active / inactive devices
+* (afuerhoff) interval 10s bug fixed
+* (afuerhoff) Bugfix dateformat pattern
+* (afuerhoff) SSL (https) workaround implemented
+* (afuerhoff) Connection check optimized
+* (afuerhoff) Mesh handling optimized
+
 ## 1.1.3 (2021-03-31)
 * (afuerhoff) family groups implemented
 * (afuerhoff) compatability mode implemented
@@ -18,7 +40,7 @@
 * (afuerhoff) use name for presence
 * (afuerhoff) active / inactive devices
 * (afuerhoff) interval 10s bug fixed
-* (afuerhoff) documentation edited 
+* (afuerhoff) documentation edited
 
 ## 1.1.1 (2020-12-27)
 * (afuerhoff) Configuration optimized
@@ -26,7 +48,7 @@
 * (afuerhoff) SSL (https) workaround implemented
 * (afuerhoff) Connection check optimized
 * (afuerhoff) Documentation added
-* (afuerhoff) Mesh handling optimized 
+* (afuerhoff) Mesh handling optimized
 
 ## 1.1.0 (2020-10-24)
 * (afuerhoff) second interval for family members implemented
@@ -81,10 +103,10 @@
   two fixes from publish review
 
 ## 0.2.1
-* (afuerhoff) getGuests issue resolved, lastVal function and debug information optimized   
+* (afuerhoff) getGuests issue resolved, lastVal function and debug information optimized
 
 ## 0.2.0
-* (afuerhoff) debug and error information optimized, crypto dependency removed, service check and blacklist added   
+* (afuerhoff) debug and error information optimized, crypto dependency removed, service check and blacklist added
 
 ## 0.1.0
 * (afuerhoff) Influxdb added, debug information added
@@ -109,4 +131,3 @@
 
 ## 0.0.1
 * (afuerhoff) initial release
- 
