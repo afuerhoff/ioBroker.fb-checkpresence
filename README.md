@@ -193,10 +193,13 @@ Here you will find information about the history of the current day.
 ## Changelog 
 <!--
     Placeholder for the next version (at the beginning of the line):
-    ## __WORK IN PROGRESS__
+    ### __WORK IN PROGRESS__
     * Did some changes
     * Did some more changes
 -->
+### __WORK IN PROGRESS__
+* (afuerhoff) dependencies updated
+
 ### 1.1.9 (2021-09-24)
 * (afuerhoff) dependencies updated
 * (afuerhoff) issue #63: getExtIp logging solved
