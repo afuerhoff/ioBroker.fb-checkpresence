@@ -128,7 +128,7 @@ class FbCheckpresence extends utils.Adapter {
             html += '<td>' + dataArray[c] + '</td>'; //columns
         }
         html += '</tr>'; //row end
-        dataArray = null;
+        //dataArray = null;
         return html;
     }
 
@@ -145,7 +145,7 @@ class FbCheckpresence extends utils.Adapter {
                 json += '"'  + dataArray[c+1] + '",';
             }
         }
-        dataArray = null;
+        //dataArray = null;
         return json;
     }
 
@@ -178,7 +178,7 @@ class FbCheckpresence extends utils.Adapter {
         }
     }*/
 
-    setStateFiltered(id, options){
+    /*setStateFiltered(id, options){
         try {
             const ind = this.memberStates.findIndex(x => x.id == id);
             if (ind != -1 && this.memberStates[ind].state.val == false && options.val == true){
@@ -199,7 +199,7 @@ class FbCheckpresence extends utils.Adapter {
         } catch (error) {
             this.errorHandler(error, 'setStateFiltered: '); 
         }
-    }
+    }*/
 
     async resyncFbObjects(items){
         try {
@@ -1047,7 +1047,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setStateChangedAsync('blacklist.presence', { val: true, ack: true });
             }else {
                 if(this.config.compatibility == true) this.setState('blacklist', { val: false, ack: true });
-                this.setStateChangedAsync('blacklist.presence', { val: true, ack: true });
+                this.setStateChangedAsync('blacklist.presence', { val: false, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
             jsonWlRow = null;
@@ -1620,15 +1620,15 @@ class FbCheckpresence extends utils.Adapter {
     async checkPresence(){
         try {
             const dnow = new Date(); //Actual date and time for comparison
-            let work = process.hrtime();
-            let timeStr = '';
+            //let work = process.hrtime();
+            //let timeStr = '';
             if(this.Fb.GETPATH === true){ //use of device list for presence if supported
                 await this.Fb.getDeviceList();
                 await this.getAllFbObjects();
             }
-            let time = process.hrtime(work);
-            timeStr += 'time ' + time + 's, ';
-            work = process.hrtime();
+            //let time = process.hrtime(work);
+            //timeStr += 'time ' + time + 's, ';
+            //work = process.hrtime();
 
             let membersFiltered = this.config.familymembers.filter(x => x.enabled == true); //only enabled members
             const memberValues = []; //array for temporary values -> for filtering
@@ -1651,9 +1651,9 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 memberValues.push({oldVal: activeOld, newVal: activeNew, member: member, memberPath: memberPath, memberRow: memberRow, group: group});
             }
-            time = process.hrtime(work);
-            timeStr += time + 's, ';
-            work = process.hrtime();
+            //time = process.hrtime(work);
+            //timeStr += time + 's, ';
+            //work = process.hrtime();
             if (filteringNeeded.length > 0){
                 await this._sleep(this.config.delay * 1000);
                 if(this.Fb.GETPATH === true){
@@ -1668,9 +1668,9 @@ class FbCheckpresence extends utils.Adapter {
                     if(activeNew === false) memberValues[ind].newVal = activeNew;
                 }
             }
-            time = process.hrtime(work);
-            timeStr += time + 's, ';
-            work = process.hrtime();
+            //time = process.hrtime(work);
+            //timeStr += time + 's, ';
+            //work = process.hrtime();
             
             let familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
             for (let g = 0; g < familyGroups.length; g++) {
@@ -1713,7 +1713,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.setState(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
                 this.setState(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
-            time = process.hrtime(work);
+            //time = process.hrtime(work);
             //this.log.info(timeStr + time + 's');
 
             membersFiltered = null;

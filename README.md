@@ -197,6 +197,11 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+
+### __WORK IN PROGRESS__
+* (afuerhoff) depenencies updated
+* (afuerhoff) bugfix blacklist
+
 ### 1.1.10 (2021-09-24)
 * (afuerhoff) dependencies updated
 
