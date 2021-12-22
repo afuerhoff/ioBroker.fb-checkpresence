@@ -1,4 +1,9 @@
 # Older changes
+## 1.1.6 (2021-06-20)
+* (afuerhoff) html input pattern fixed for password and user
+* (afuerhoff) getActive function fixed
+* (afuerhoff) dependencies updated
+
 ## 1.1.5 (2021-06-03)
 * (afuerhoff) dependencies updated
 * (afuerhoff) checkservice fixed
