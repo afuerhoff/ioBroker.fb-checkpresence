@@ -1,0 +1,10 @@
+{
+	"dry": true,
+    "addPlaceholder": true,
+	"verbose": true,
+	"all": false,
+	"plugins": ["iobroker", "license"],
+	"exec": {
+		"before_commit": "echo Hello World!"
+	}
+}
