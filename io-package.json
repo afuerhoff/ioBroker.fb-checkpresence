@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.11",
+    "version": "1.1.12",
     "news": {
+      "1.1.12": {
+        "en": "issue #74: bugfix\ndependencies updated",
+        "de": "Ausgabe #74: Bugfix\nAbhängigkeiten aktualisiert",
+        "ru": "проблема № 74: исправление\nзависимости обновлены",
+        "pt": "problema nº 74: correção de bug\ndependências atualizadas",
+        "nl": "probleem #74: bugfix\nafhankelijkheden bijgewerkt",
+        "fr": "problème n°74 : correction de bugs\ndépendances mises à jour",
+        "it": "problema #74: correzione di bug\ndipendenze aggiornate",
+        "es": "problema #74: corrección de errores\ndependencias actualizadas",
+        "pl": "problem #74: naprawa błędu\nzaktualizowano zależności",
+        "zh-cn": "问题 #74：错误修复\n已更新依赖项"
+      },
       "1.1.11": {
         "en": "depenencies updated\nbugfix blacklist",
         "de": "Abhängigkeiten aktualisiert\nBugfix-Blacklist",
@@ -74,18 +86,6 @@
         "es": "patrón de entrada html fijo para contraseña y usuario\nFunción getActive fija\ndependencias actualizadas",
         "pl": "Naprawiono wzorzec wejściowy html dla hasła i użytkownika\nNaprawiono funkcję getActive\nzaktualizowano zależności",
         "zh-cn": "为密码和用户固定的 html 输入模式\ngetActive 功能已修复\n依赖项已更新"
-      },
-      "1.1.5": {
-        "en": "dependencies updated\ncheckservice fixed",
-        "de": "Abhängigkeiten aktualisiert\nCheckservice behoben",
-        "ru": "зависимости обновлены\nчексервис исправлен",
-        "pt": "dependências atualizadas\nserviço de verificação corrigido",
-        "nl": "afhankelijkheden bijgewerkt\ncheckservice vast",
-        "fr": "dépendances mises à jour\nservice de contrôle corrigé",
-        "it": "dipendenze aggiornate\nservizio di controllo risolto",
-        "es": "dependencias actualizadas\ncheckservice arreglado",
-        "pl": "zaktualizowano zależności\nnaprawiono usługę sprawdzania",
-        "zh-cn": "依赖项已更新\n检查服务固定"
       }
     },
     "title": "Fritzbox CheckPresence",

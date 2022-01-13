@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.7 (2021-06-23)
+* (afuerhoff) message handling optimized
+* (afuerhoff) dependencies updated
+
 ## 1.1.6 (2021-06-20)
 * (afuerhoff) html input pattern fixed for password and user
 * (afuerhoff) getActive function fixed
