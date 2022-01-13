@@ -1457,9 +1457,9 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 presence.val = newActive;
                 const comming1 = await this.getStateAsync(memberPath + '.comming');
-                comming = comming1.val;
+                comming = comming !== null ? comming.toString() : comming1.val;
                 const going1 = await this.getStateAsync(memberPath + '.going');
-                going = going1.val;
+                going = going !== null ? going.toString() : going1.val;
                 if (comming1.val == null) {
                     comming = new Date(curVal.lc);
                     this.setState(memberPath + '.comming', { val: comming.toString(), ack: true });
