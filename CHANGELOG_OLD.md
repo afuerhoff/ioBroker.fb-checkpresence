@@ -1,4 +1,9 @@
 # Older changes
+## 1.1.8 (2021-09-01)
+* (afuerhoff) issue#61: units added
+* (afuerhoff) workaround for 7390 added (missing systemVersion in xml)
+* (afuerhoff) dependencies updated
+
 ## 1.1.7 (2021-06-23)
 * (afuerhoff) message handling optimized
 * (afuerhoff) dependencies updated

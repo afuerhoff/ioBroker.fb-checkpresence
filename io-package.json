@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.12",
+    "version": "1.1.13",
     "news": {
+      "1.1.13": {
+        "en": "issue #73: bugfix",
+        "de": "Ausgabe Nr. 73: Fehlerbehebung",
+        "ru": "проблема №73: исправление",
+        "pt": "problema nº 73: correção de bug",
+        "nl": "probleem #73: bugfix",
+        "fr": "problème n° 73 : correction de bogues",
+        "it": "problema #73: correzione di bug",
+        "es": "problema #73: corrección de errores",
+        "pl": "problem #73: naprawienie błędu",
+        "zh-cn": "问题 #73：错误修复"
+      },
       "1.1.12": {
         "en": "issue #74: bugfix\ndependencies updated",
         "de": "Ausgabe #74: Bugfix\nAbhängigkeiten aktualisiert",
@@ -74,18 +86,6 @@
         "es": "manejo de mensajes optimizado\ndependencias actualizadas",
         "pl": "zoptymalizowana obsługa wiadomości\nzaktualizowano zależności",
         "zh-cn": "消息处理优化\n依赖项已更新"
-      },
-      "1.1.6": {
-        "en": "html input pattern fixed for password and user\ngetActive function fixed\ndependencies updated",
-        "de": "HTML-Eingabemuster für Passwort und Benutzer korrigiert fixed\ngetActive-Funktion behoben\nAbhängigkeiten aktualisiert",
-        "ru": "шаблон ввода html исправлен для пароля и пользователя\nИсправлена функция getActive\nзависимости обновлены",
-        "pt": "Padrão de entrada html corrigido para senha e usuário\nfunção getActive corrigida\ndependências atualizadas",
-        "nl": "html invoerpatroon opgelost voor wachtwoord en gebruiker\ngetActive-functie opgelost\nafhankelijkheden bijgewerkt",
-        "fr": "modèle d'entrée html corrigé pour le mot de passe et l'utilisateur\nFonction getActive corrigée\ndépendances mises à jour",
-        "it": "modello di input html corretto per password e utente\nFunzione getActive riparata\ndipendenze aggiornate",
-        "es": "patrón de entrada html fijo para contraseña y usuario\nFunción getActive fija\ndependencias actualizadas",
-        "pl": "Naprawiono wzorzec wejściowy html dla hasła i użytkownika\nNaprawiono funkcję getActive\nzaktualizowano zależności",
-        "zh-cn": "为密码和用户固定的 html 输入模式\ngetActive 功能已修复\n依赖项已更新"
       }
     },
     "title": "Fritzbox CheckPresence",
