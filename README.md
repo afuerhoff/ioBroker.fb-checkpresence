@@ -197,6 +197,9 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### **WORK IN PROGRESS**
+* (afuerhoff) issue #73: bugfix
+
 ### 1.1.12 (2022-01-13)
 * (afuerhoff) issue #74: bugfix
 * (afuerhoff) dependencies updated
