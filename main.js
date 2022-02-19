@@ -358,6 +358,7 @@ class FbCheckpresence extends utils.Adapter {
             for(let i=0;i<items.length;i++){
                 let hostName = items[i]['HostName'];
                 hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
+
                 const host = fbDevices.filter(x => x._id.replace(`${this.namespace}` + '.fb-devices.','') === hostName);
                 let item = items.filter(x => x.HostName == items[i].HostName);
                 let itemActive = items.filter(x => x.HostName == items[i].HostName && x.Active == '1');
@@ -1106,13 +1107,17 @@ class FbCheckpresence extends utils.Adapter {
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
-                this.setState('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
-                this.setState('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
-                this.setState('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
-                this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
-                this.setState('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
-                this.setState('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
-                if (hosts[i]['data'] != null) this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
+                if (hostName != '') { 
+                    this.setState('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
+                    this.setState('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
+                    this.setState('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
+                    this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
+                    this.setState('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
+                    this.setState('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
+                    if (hosts[i]['data'] != null) this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
+                }else{
+                    this.log.debug('getDeviceInfo: hostname is empty -> mac: ' + mac);
+                }
             }
             jsonRow += ']';
             htmlRow += this.HTML_END;
