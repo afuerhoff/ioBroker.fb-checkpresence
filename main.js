@@ -1860,7 +1860,7 @@ process.on('uncaughtException', function(err) {
     //setConnected(false);
 });
 
-if (module.parent) {
+if (require.main !== module) {
     // Export the constructor in compact mode
     /**
      * @param {Partial<ioBroker.AdapterOptions>} [options={}]
