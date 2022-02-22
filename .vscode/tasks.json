@@ -1,0 +1,105 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "npm update",
+            "type": "shell",
+            "command": "./scripts/npm_update.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "upload adapter",
+            "type": "shell",
+            "command": "./scripts/upload.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "gulp translate",
+            "type": "shell",
+            "command": "./scripts/gulp.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "node.js 10 update",
+            "type": "shell",
+            "command": "./scripts/update_node.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "debug start",
+            "type": "shell",
+            "command": "./scripts/debug.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "create release",
+            "type": "shell",
+            "command": "./scripts/release.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "git init develop branch",
+            "type": "shell",
+            "command": "./scripts/git_init_develop-branch.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "git checkout develop",
+            "type": "shell",
+            "command": "./scripts/git_checkout_develop.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "git close feature",
+            "type": "shell",
+            "command": "./scripts/git_close_feature.sh",
+            "args": [
+                "${input:branch}"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "type": "gulp",
+            "task": "updateReadme",
+            "problemMatcher": [],
+            "label": "gulp: updateReadme"
+        }
+    ],
+    "inputs": [
+        {
+          "type": "promptString",
+          "id": "branch",
+          "description": "branch name",
+          "default": "feature-"
+        }
+    ]    
+}
