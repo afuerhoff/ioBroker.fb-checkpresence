@@ -1026,10 +1026,10 @@ class FbCheckpresence extends utils.Adapter {
                     hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                     if (count == macs.length){
                         this.setState('fb-devices.' + hostName + '.whitelist', { val: true, ack: true });
-                        this.setState('fb-devices.' + hostName + '.blacklist', { val: !wlFound, ack: true });               
+                        this.setState('fb-devices.' + hostName + '.blacklist', { val: false, ack: true });               
                     }else{
                         this.setState('fb-devices.' + hostName + '.whitelist', { val: false, ack: true });
-                        this.setState('fb-devices.' + hostName + '.blacklist', { val: wlFound, ack: true });               
+                        this.setState('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });               
                     }
                 }
                 //host = null;
