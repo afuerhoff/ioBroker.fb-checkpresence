@@ -199,8 +199,10 @@ Here you will find information about the history of the current day.
 -->
 ### **WORK IN PROGRESS**
 * (afuerhoff) dependencies updated
-* (afuerhoff) issue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85): bugfix
-* (afuerhoff) issue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)]: bugfix
+* (afuerhoff) issue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix
+* (afuerhoff) issue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix
+* (afuerhoff) whitelist.html bug fixed
+* (afuerhoff) issue [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix
 
 ### 1.1.13 (2022-01-18)
 * (afuerhoff) issue #73: bugfix

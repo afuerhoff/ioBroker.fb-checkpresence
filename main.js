@@ -994,6 +994,7 @@ class FbCheckpresence extends utils.Adapter {
             let wlCnt = 0;
             let blCnt = 0;
             let jsonWlRow = '[';
+            let htmlWlRow = this.HTML_GUEST;
             let jsonBlRow = '[';
             let htmlBlRow = this.HTML_GUEST;
 
@@ -1004,12 +1005,15 @@ class FbCheckpresence extends utils.Adapter {
                 const wlFound = wl.length > 0 ? true : false;
                 if (wlFound == false && items[i] != null){ //blacklist
                     //deviceType = 'blacklist';
-                    htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
-                    jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
-                    blCnt += 1;
+                    if (items[i]['guest'] == false){
+                        htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
+                        jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
+                        blCnt += 1;
+                    }
                 } 
                 if (wlFound == true ){
                     //deviceType = 'whitelist';
+                    htmlWlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
                     jsonWlRow += this.createJSONTableRow(wlCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
                     wlCnt += 1;
                 }
@@ -1024,24 +1028,28 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     let hostName = items[i]['HostName'];
                     hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
+                    
                     if (count == macs.length){
                         this.setState('fb-devices.' + hostName + '.whitelist', { val: true, ack: true });
                         this.setState('fb-devices.' + hostName + '.blacklist', { val: false, ack: true });               
                     }else{
                         this.setState('fb-devices.' + hostName + '.whitelist', { val: false, ack: true });
-                        this.setState('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });               
+                        if (host[0]['guest'] == false){
+                            this.setState('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });
+                        }               
                     }
                 }
-                //host = null;
             }                
             jsonWlRow += ']';
             jsonBlRow += ']';
             htmlBlRow += this.HTML_END;
+            htmlWlRow += this.HTML_END;
             this.setState('blacklist.count', { val: blCnt, ack: true });
             this.setState('blacklist.listHtml', { val: htmlBlRow, ack: true });
             this.setState('blacklist.listJson', { val: jsonBlRow, ack: true });
             
             this.setState('whitelist.json', { val: jsonWlRow, ack: true });
+            this.setState('whitelist.html', { val: htmlWlRow, ack: true });
             this.setState('whitelist.count', { val: this.config.whitelist.length, ack: true });
             if (blCnt > 0) {
                 if(this.config.compatibility == true) this.setState('blacklist', { val: true, ack: true });
@@ -1054,6 +1062,7 @@ class FbCheckpresence extends utils.Adapter {
             jsonWlRow = null;
             jsonBlRow = null;
             htmlBlRow = null;
+            htmlWlRow = null;
             return true;
         } catch (error) {
             this.log.error('getWlBlInfo: ' + error);
