@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fb-checkpresence",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "description": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
   "author": {
     "name": "Achim Fürhoff",

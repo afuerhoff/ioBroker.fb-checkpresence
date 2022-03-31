@@ -1,4 +1,10 @@
 # Older changes
+## 1.1.9 (2021-09-24)
+* (afuerhoff) dependencies updated
+* (afuerhoff) issue #63: getExtIp logging solved
+* (afuerhoff) issue #65: wrong logging in instance > 0 solved  
+* (afuerhoff) qr-code WPA2 + WPA3 fixed
+
 ## 1.1.8 (2021-09-01)
 * (afuerhoff) issue#61: units added
 * (afuerhoff) workaround for 7390 added (missing systemVersion in xml)

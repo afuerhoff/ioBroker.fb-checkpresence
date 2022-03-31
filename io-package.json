@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.13",
+    "version": "1.1.14",
     "news": {
+      "1.1.14": {
+        "en": "dependencies updated\nissue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix\nissue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix\nwhitelist.html bug fixed\nissue [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix",
+        "de": "Abhängigkeiten aktualisiert\nProblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) Fehlerbehebung\nFehler [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] beheben\nFehler in whitelist.html behoben\nProblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) Fehlerbehebung",
+        "ru": "зависимости обновлены\nпроблема [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) исправление\nпроблема [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] исправление\nисправлена ошибка whitelist.html\nпроблема [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) исправление",
+        "pt": "dependências atualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correção de bug\nproblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correção de bug\nbug whitelist.html corrigido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correção de bug",
+        "nl": "afhankelijkheden bijgewerkt\nprobleem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix\nprobleem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix\nwhitelist.html bug opgelost\nprobleem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix",
+        "fr": "dépendances mises à jour\nproblème [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correction de bogue\nproblème [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correction de bogue\nbogue whitelist.html corrigé\nproblème [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correction de bogue",
+        "it": "dipendenze aggiornate\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correzione di bug\nproblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correzione di bug\nbug whitelist.html corretto\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correzione di bug",
+        "es": "dependencias actualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) corrección de errores\nProblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] corrección de errores\nerror de whitelist.html corregido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) corrección de errores",
+        "pl": "zaktualizowano zależności\nproblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) naprawa błędu\nproblem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] poprawka błędu\nNaprawiono błąd whitelist.html\nproblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) poprawka błędu",
+        "zh-cn": "已更新依赖项\n问题 [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) 错误修复\n问题 [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] 错误修复\nwhitelist.html 错误已修复\n问题 [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) 错误修复"
+      },
       "1.1.13": {
         "en": "issue #73: bugfix",
         "de": "Ausgabe Nr. 73: Fehlerbehebung",
@@ -74,18 +86,6 @@
         "es": "problema # 61: unidades agregadas\nsolución alternativa para 7390 agregada (falta systemVersion en xml)\ndependencias actualizadas",
         "pl": "Problem#61: dodano jednostki\ndodano obejście dla 7390 (brak wersji systemVersion w xml)\nzaktualizowano zależności",
         "zh-cn": "问题#61：添加的单位\n添加了 7390 的解决方法（xml 中缺少 systemVersion）\n依赖项已更新"
-      },
-      "1.1.7": {
-        "en": "message handling optimized\ndependencies updated",
-        "de": "Nachrichtenbehandlung optimiert\nAbhängigkeiten aktualisiert",
-        "ru": "оптимизирована обработка сообщений\nзависимости обновлены",
-        "pt": "tratamento de mensagens otimizado\ndependências atualizadas",
-        "nl": "berichtverwerking geoptimaliseerd\nafhankelijkheden bijgewerkt",
-        "fr": "gestion des messages optimisée\ndépendances mises à jour",
-        "it": "gestione dei messaggi ottimizzata\ndipendenze aggiornate",
-        "es": "manejo de mensajes optimizado\ndependencias actualizadas",
-        "pl": "zoptymalizowana obsługa wiadomości\nzaktualizowano zależności",
-        "zh-cn": "消息处理优化\n依赖项已更新"
       }
     },
     "title": "Fritzbox CheckPresence",

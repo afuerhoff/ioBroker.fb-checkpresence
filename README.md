@@ -197,7 +197,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
+### 1.1.14 (2022-03-31)
 * (afuerhoff) dependencies updated
 * (afuerhoff) issue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix
 * (afuerhoff) issue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix
@@ -217,12 +217,6 @@ Here you will find information about the history of the current day.
 
 ### 1.1.10 (2021-09-24)
 * (afuerhoff) dependencies updated
-
-### 1.1.9 (2021-09-24)
-* (afuerhoff) dependencies updated
-* (afuerhoff) issue #63: getExtIp logging solved
-* (afuerhoff) issue #65: wrong logging in instance > 0 solved  
-* (afuerhoff) qr-code WPA2 + WPA3 fixed
 
 ## License
 MIT License
