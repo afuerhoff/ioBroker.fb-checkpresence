@@ -1005,7 +1005,7 @@ class FbCheckpresence extends utils.Adapter {
                 const wlFound = wl.length > 0 ? true : false;
                 if (wlFound == false && items[i] != null){ //blacklist
                     //deviceType = 'blacklist';
-                    if (items[i]['guest'] == false){
+                    if (items[i]['X_AVM-DE_Guest'] == false){
                         htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
                         jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
                         blCnt += 1;
