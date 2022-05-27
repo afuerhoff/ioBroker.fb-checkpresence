@@ -197,7 +197,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
+### 1.1.15 (2022-05-27)
 * (afuerhoff) issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement
 * (afuerhoff) dependency updated
 * (afuerhoff) issue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added
@@ -219,9 +219,6 @@ Here you will find information about the history of the current day.
 ### 1.1.11 (2021-12-22)
 * (afuerhoff) dependencies updated
 * (afuerhoff) bugfix blacklist
-
-### 1.1.10 (2021-09-24)
-* (afuerhoff) dependencies updated
 
 ## License
 MIT License

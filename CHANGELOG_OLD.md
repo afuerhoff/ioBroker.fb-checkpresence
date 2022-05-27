@@ -1,4 +1,7 @@
 # Older changes
+## 1.1.10 (2021-09-24)
+* (afuerhoff) dependencies updated
+
 ## 1.1.9 (2021-09-24)
 * (afuerhoff) dependencies updated
 * (afuerhoff) issue #63: getExtIp logging solved
