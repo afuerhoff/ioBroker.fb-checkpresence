@@ -305,7 +305,9 @@ class FbCheckpresence extends utils.Adapter {
                 if (cnt2 >= int2){
                     cnt2 = 0;
                     //gthis.log.debug('loopDevices starts');
-                    this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
+                    if (this.config.extip === true){
+                        this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
+                    }
                     if (this.config.guestinfo === true){
                         this.setState('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
                     }
@@ -509,7 +511,8 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration compatibility: ' + this.config.compatibility);            
             this.log.debug('configuration ssl: ' + this.config.ssl);            
             this.log.debug('configuration qr code: ' + this.config.qrcode);            
-            this.log.debug('configuration guest info: ' + this.config.guestinfo);            
+            this.log.debug('configuration guest info: ' + this.config.guestinfo); 
+            this.log.debug('configuration external ip address: ' + this.config.extip);           
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
             //this.log.info('test version: 1.1.3_g');            
@@ -596,6 +599,10 @@ class FbCheckpresence extends utils.Adapter {
             });
             this.setState('reboot', { val: false, ack: true });
             this.setState('reconnect', { val: false, ack: true });
+
+            if (this.config.extip === false){
+                this.setStateChangedAsync('info.extIp', { val: '', ack: true });
+            }
 
             //If history is enbled, check if history adapter is running. 
             if (this.config.history != ''){

@@ -72,8 +72,8 @@
     "aftest": "mocha test/af_test.js --exit",
     "check": "tsc --noEmit -p tsconfig.check.json",
     "lint": "eslint --ext .js,.jsx",
-    "translate": "translate-adapter",
-    "release": "release-script"
+    "release": "release-script",
+    "translate": "translate-adapter"
   },
   "bugs": {
     "url": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues"
