@@ -200,6 +200,7 @@ Here you will find information about the history of the current day.
 ### **WORK IN PROGRESS**
 * (afuerhoff) issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement
 * (afuerhoff) dependency updated
+* (afuerhoff) issue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added
 
 ### 1.1.14 (2022-03-31)
 * (afuerhoff) dependencies updated
