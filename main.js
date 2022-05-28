@@ -527,18 +527,18 @@ class FbCheckpresence extends utils.Adapter {
             let adapterObj = (await this.getForeignObjectAsync(`system.adapter.${this.namespace}`));
             let adapterObjChanged = false; //for changes
             
-            //if interval <= 0 than set to 1
-            if (this.config.interval <= 0) {
-                adapterObj.native.interval = 1;
-                adapterObjChanged = true;
-                this.config.interval = 1;
-                this.log.warn('interval is less than 1. Set to 1 Min.');
-            }
             if (this.config.interval_seconds === false) { //Workaround: Switch interval to seconds
                 this.log.warn('Interval changed to seconds!');
                 adapterObj.native.interval_seconds = true;
                 adapterObj.native.interval = adapterObj.native.interval * 60;
                 adapterObjChanged = true;
+            }
+            //if interval <= 0 than set to 1
+            if (this.config.interval <= 0) {
+                adapterObj.native.interval = 60;
+                adapterObjChanged = true;
+                this.config.interval = 60;
+                this.log.warn('interval is less than 1. Set to 60 s');
             }
 
             //if interval <= 9 than set to 10
