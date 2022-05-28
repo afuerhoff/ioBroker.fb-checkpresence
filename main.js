@@ -499,7 +499,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.stopAdapter();
             }
             //Logging of adapter start
-            this.log.info('start ' + `${this.namespace}` + ': ' + this.Fb.modelName + ' version: ' + this.Fb.version + ' ip-address: "' + this.config.ipaddress + '" - interval devices: ' + this.config.interval + ' min.' + ' - interval members: ' + this.config.intervalFamily + ' s');
+            this.log.info('start ' + `${this.namespace}` + ': ' + this.Fb.modelName + ' version: ' + this.Fb.version + ' ip-address: "' + this.config.ipaddress + '" - interval devices: ' + this.config.interval + ' s' + ' - interval members: ' + this.config.intervalFamily + ' s');
             this.config.username === '' ? this.log.warn('please insert a user for full functionality') : this.log.debug('configuration user: <' + this.config.username + '>');
             this.log.debug('configuration history: <' + this.config.history + '>');
             this.log.debug('configuration dateformat: <' + this.config.dateformat + '>');
@@ -534,8 +534,14 @@ class FbCheckpresence extends utils.Adapter {
                 this.config.interval = 1;
                 this.log.warn('interval is less than 1. Set to 1 Min.');
             }
+            if (this.config.interval_seconds === false) { //Workaround: Switch interval to seconds
+                this.log.warn('Interval changed to seconds!');
+                adapterObj.native.interval_seconds = true;
+                adapterObj.native.interval = adapterObj.native.interval * 60;
+                adapterObjChanged = true;
+            }
 
-            //if interval <= 0 than set to 1
+            //if interval <= 9 than set to 10
             if (this.config.intervalFamily <= 9) {
                 adapterObj.native.intervalFamily = 10;
                 adapterObjChanged = true;
@@ -583,7 +589,7 @@ class FbCheckpresence extends utils.Adapter {
                 await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
             }
 
-            const intDev = this.config.interval * 60;
+            const intDev = this.config.interval;
             const intFamily = this.config.intervalFamily;
             
             if(this.config.compatibility === true) {

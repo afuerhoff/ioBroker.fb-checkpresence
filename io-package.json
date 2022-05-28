@@ -1,189 +1,190 @@
 {
-  "common": {
-    "name": "fb-checkpresence",
-    "version": "1.1.15",
-    "news": {
-      "1.1.15": {
-        "en": "issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement\ndependency updated\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added",
-        "de": "Issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) Verbesserung\nAbhängigkeit aktualisiert\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) Konfigurationsschalter für externe IP-Adresse hinzugefügt",
-        "ru": "проблема [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) улучшение\nзависимость обновлена\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) добавлен переключатель конфигурации для внешнего IP-адреса",
-        "pt": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) aprimoramento\ndependência atualizada\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) switch de configuração para endereço IP externo adicionado",
-        "nl": "probleem [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) verbetering\nafhankelijkheid bijgewerkt\nprobleem [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuratieschakelaar voor extern ip-adres toegevoegd",
-        "fr": "problème [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) amélioration\ndépendance mise à jour\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) commutateur de configuration pour l'adresse IP externe ajoutée",
-        "it": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) miglioramento\ndipendenza aggiornata\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) è stato aggiunto l'interruttore di configurazione per l'indirizzo IP esterno",
-        "es": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) mejora\ndependencia actualizada\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) interruptor de configuración para dirección IP externa agregado",
-        "pl": "problem [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) ulepszenie\nzaktualizowano zależność\nproblem [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) dodany przełącznik konfiguracyjny dla zewnętrznego adresu IP",
-        "zh-cn": "问题 [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) 增强\n依赖更新\n问题 [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) 添加了外部 IP 地址的配置开关"
-      },
-      "1.1.14": {
-        "en": "dependencies updated\nissue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix\nissue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix\nwhitelist.html bug fixed\nissue [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix",
-        "de": "Abhängigkeiten aktualisiert\nProblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) Fehlerbehebung\nFehler [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] beheben\nFehler in whitelist.html behoben\nProblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) Fehlerbehebung",
-        "ru": "зависимости обновлены\nпроблема [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) исправление\nпроблема [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] исправление\nисправлена ошибка whitelist.html\nпроблема [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) исправление",
-        "pt": "dependências atualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correção de bug\nproblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correção de bug\nbug whitelist.html corrigido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correção de bug",
-        "nl": "afhankelijkheden bijgewerkt\nprobleem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix\nprobleem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix\nwhitelist.html bug opgelost\nprobleem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix",
-        "fr": "dépendances mises à jour\nproblème [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correction de bogue\nproblème [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correction de bogue\nbogue whitelist.html corrigé\nproblème [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correction de bogue",
-        "it": "dipendenze aggiornate\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correzione di bug\nproblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correzione di bug\nbug whitelist.html corretto\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correzione di bug",
-        "es": "dependencias actualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) corrección de errores\nProblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] corrección de errores\nerror de whitelist.html corregido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) corrección de errores",
-        "pl": "zaktualizowano zależności\nproblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) naprawa błędu\nproblem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] poprawka błędu\nNaprawiono błąd whitelist.html\nproblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) poprawka błędu",
-        "zh-cn": "已更新依赖项\n问题 [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) 错误修复\n问题 [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] 错误修复\nwhitelist.html 错误已修复\n问题 [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) 错误修复"
-      },
-      "1.1.13": {
-        "en": "issue #73: bugfix",
-        "de": "Ausgabe Nr. 73: Fehlerbehebung",
-        "ru": "проблема №73: исправление",
-        "pt": "problema nº 73: correção de bug",
-        "nl": "probleem #73: bugfix",
-        "fr": "problème n° 73 : correction de bogues",
-        "it": "problema #73: correzione di bug",
-        "es": "problema #73: corrección de errores",
-        "pl": "problem #73: naprawienie błędu",
-        "zh-cn": "问题 #73：错误修复"
-      },
-      "1.1.12": {
-        "en": "issue #74: bugfix\ndependencies updated",
-        "de": "Ausgabe #74: Bugfix\nAbhängigkeiten aktualisiert",
-        "ru": "проблема № 74: исправление\nзависимости обновлены",
-        "pt": "problema nº 74: correção de bug\ndependências atualizadas",
-        "nl": "probleem #74: bugfix\nafhankelijkheden bijgewerkt",
-        "fr": "problème n°74 : correction de bugs\ndépendances mises à jour",
-        "it": "problema #74: correzione di bug\ndipendenze aggiornate",
-        "es": "problema #74: corrección de errores\ndependencias actualizadas",
-        "pl": "problem #74: naprawa błędu\nzaktualizowano zależności",
-        "zh-cn": "问题 #74：错误修复\n已更新依赖项"
-      },
-      "1.1.11": {
-        "en": "depenencies updated\nbugfix blacklist",
-        "de": "Abhängigkeiten aktualisiert\nBugfix-Blacklist",
-        "ru": "зависимости обновлены\nчерный список исправлений",
-        "pt": "dependências atualizadas\nlista negra de correção de bug",
-        "nl": "afhankelijkheden bijgewerkt\nbugfix zwarte lijst",
-        "fr": "dépendances mises à jour\nliste noire de corrections de bugs",
-        "it": "dipendenze aggiornate\nlista nera bugfix",
-        "es": "dependencias actualizadas\nlista negra de corrección de errores",
-        "pl": "zaktualizowano zależności\nczarna lista naprawianych błędów",
-        "zh-cn": "更新依赖\n修正黑名单"
-      },
-      "1.1.10": {
-        "en": "dependencies updated",
-        "de": "Abhängigkeiten aktualisiert",
-        "ru": "зависимости обновлены",
-        "pt": "dependências atualizadas",
-        "nl": "afhankelijkheden bijgewerkt",
-        "fr": "dépendances mises à jour",
-        "it": "dipendenze aggiornate",
-        "es": "dependencias actualizadas",
-        "pl": "zaktualizowano zależności",
-        "zh-cn": "依赖项已更新"
-      },
-      "1.1.9": {
-        "en": "dependencies updated\nissue #63: getExtIp logging solved\nissue #65: wrong logging in instance > 0 solved\nqr-code WPA2 + WPA3 fixed",
-        "de": "Abhängigkeiten aktualisiert\nProblem #63: GetExtIp-Logging behoben\nProblem #65: Falsche Anmeldung in Instanz > 0 behoben\nqr-Code WPA2 + WPA3 behoben",
-        "ru": "зависимости обновлены \n проблема # 63: ведение журнала getExtIp решено \nпроблема # 65: неверное ведение журнала в экземпляре> 0 решено\nqr-код WPA2 + WPA3 исправлен",
-        "pt": "dependências atualizadas \nproblema nº 63: log getExtIp resolvido\nproblema nº 65: registro incorreto na instância> 0 resolvido \nqr-code WPA2 + WPA3 corrigido",
-        "nl": "afhankelijkheden bijgewerkt\nprobleem #63: getExtIp-logboekregistratie opgelost\nprobleem #65: verkeerde registratie in instantie > 0 opgelost\nqr-code WPA2 + WPA3 opgelost",
-        "fr": "dépendances mises à jour\nproblème n°63 : la journalisation getExtIp est résolue\nproblème n°65 : mauvaise instance de connexion > 0 résolu\nqr-code WPA2 + WPA3 corrigé",
-        "it": "dipendenze aggiornate\nproblema #63: registrazione getExtIp risolta\nproblema #65: registrazione errata nell'istanza > 0 risolto\nqr-code WPA2 + WPA3 risolto",
-        "es": "dependencias actualizadas \n problema # 63: registro getExtIp resuelto \n problema # 65: registro incorrecto en la instancia> 0 resuelto \ncódigo qr WPA2 + WPA3 arreglado",
-        "pl": "zaktualizowano zależności\nproblem #63: rozwiązano logowanie getExtIp\nproblem #65: niepoprawne logowanie w instancji > 0 rozwiązano\nkod qr naprawiony WPA2 + WPA3",
-        "zh-cn": "依赖关系更新\n问题 #63：getExtIp 日志记录已解决\n问题 #65：实例中的错误日志> 0 已解决\nqr-code WPA2 + WPA3 已修复"
-      }
+    "common": {
+        "name": "fb-checkpresence",
+        "version": "1.1.15",
+        "news": {
+            "1.1.15": {
+                "en": "issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement\ndependency updated\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added",
+                "de": "Issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) Verbesserung\nAbhängigkeit aktualisiert\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) Konfigurationsschalter für externe IP-Adresse hinzugefügt",
+                "ru": "проблема [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) улучшение\nзависимость обновлена\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) добавлен переключатель конфигурации для внешнего IP-адреса",
+                "pt": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) aprimoramento\ndependência atualizada\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) switch de configuração para endereço IP externo adicionado",
+                "nl": "probleem [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) verbetering\nafhankelijkheid bijgewerkt\nprobleem [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuratieschakelaar voor extern ip-adres toegevoegd",
+                "fr": "problème [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) amélioration\ndépendance mise à jour\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) commutateur de configuration pour l'adresse IP externe ajoutée",
+                "it": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) miglioramento\ndipendenza aggiornata\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) è stato aggiunto l'interruttore di configurazione per l'indirizzo IP esterno",
+                "es": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) mejora\ndependencia actualizada\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) interruptor de configuración para dirección IP externa agregado",
+                "pl": "problem [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) ulepszenie\nzaktualizowano zależność\nproblem [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) dodany przełącznik konfiguracyjny dla zewnętrznego adresu IP",
+                "zh-cn": "问题 [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) 增强\n依赖更新\n问题 [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) 添加了外部 IP 地址的配置开关"
+            },
+            "1.1.14": {
+                "en": "dependencies updated\nissue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix\nissue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix\nwhitelist.html bug fixed\nissue [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix",
+                "de": "Abhängigkeiten aktualisiert\nProblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) Fehlerbehebung\nFehler [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] beheben\nFehler in whitelist.html behoben\nProblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) Fehlerbehebung",
+                "ru": "зависимости обновлены\nпроблема [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) исправление\nпроблема [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] исправление\nисправлена ошибка whitelist.html\nпроблема [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) исправление",
+                "pt": "dependências atualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correção de bug\nproblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correção de bug\nbug whitelist.html corrigido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correção de bug",
+                "nl": "afhankelijkheden bijgewerkt\nprobleem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix\nprobleem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix\nwhitelist.html bug opgelost\nprobleem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix",
+                "fr": "dépendances mises à jour\nproblème [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correction de bogue\nproblème [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correction de bogue\nbogue whitelist.html corrigé\nproblème [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correction de bogue",
+                "it": "dipendenze aggiornate\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) correzione di bug\nproblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] correzione di bug\nbug whitelist.html corretto\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) correzione di bug",
+                "es": "dependencias actualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) corrección de errores\nProblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] corrección de errores\nerror de whitelist.html corregido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) corrección de errores",
+                "pl": "zaktualizowano zależności\nproblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) naprawa błędu\nproblem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] poprawka błędu\nNaprawiono błąd whitelist.html\nproblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) poprawka błędu",
+                "zh-cn": "已更新依赖项\n问题 [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) 错误修复\n问题 [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] 错误修复\nwhitelist.html 错误已修复\n问题 [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) 错误修复"
+            },
+            "1.1.13": {
+                "en": "issue #73: bugfix",
+                "de": "Ausgabe Nr. 73: Fehlerbehebung",
+                "ru": "проблема №73: исправление",
+                "pt": "problema nº 73: correção de bug",
+                "nl": "probleem #73: bugfix",
+                "fr": "problème n° 73 : correction de bogues",
+                "it": "problema #73: correzione di bug",
+                "es": "problema #73: corrección de errores",
+                "pl": "problem #73: naprawienie błędu",
+                "zh-cn": "问题 #73：错误修复"
+            },
+            "1.1.12": {
+                "en": "issue #74: bugfix\ndependencies updated",
+                "de": "Ausgabe #74: Bugfix\nAbhängigkeiten aktualisiert",
+                "ru": "проблема № 74: исправление\nзависимости обновлены",
+                "pt": "problema nº 74: correção de bug\ndependências atualizadas",
+                "nl": "probleem #74: bugfix\nafhankelijkheden bijgewerkt",
+                "fr": "problème n°74 : correction de bugs\ndépendances mises à jour",
+                "it": "problema #74: correzione di bug\ndipendenze aggiornate",
+                "es": "problema #74: corrección de errores\ndependencias actualizadas",
+                "pl": "problem #74: naprawa błędu\nzaktualizowano zależności",
+                "zh-cn": "问题 #74：错误修复\n已更新依赖项"
+            },
+            "1.1.11": {
+                "en": "depenencies updated\nbugfix blacklist",
+                "de": "Abhängigkeiten aktualisiert\nBugfix-Blacklist",
+                "ru": "зависимости обновлены\nчерный список исправлений",
+                "pt": "dependências atualizadas\nlista negra de correção de bug",
+                "nl": "afhankelijkheden bijgewerkt\nbugfix zwarte lijst",
+                "fr": "dépendances mises à jour\nliste noire de corrections de bugs",
+                "it": "dipendenze aggiornate\nlista nera bugfix",
+                "es": "dependencias actualizadas\nlista negra de corrección de errores",
+                "pl": "zaktualizowano zależności\nczarna lista naprawianych błędów",
+                "zh-cn": "更新依赖\n修正黑名单"
+            },
+            "1.1.10": {
+                "en": "dependencies updated",
+                "de": "Abhängigkeiten aktualisiert",
+                "ru": "зависимости обновлены",
+                "pt": "dependências atualizadas",
+                "nl": "afhankelijkheden bijgewerkt",
+                "fr": "dépendances mises à jour",
+                "it": "dipendenze aggiornate",
+                "es": "dependencias actualizadas",
+                "pl": "zaktualizowano zależności",
+                "zh-cn": "依赖项已更新"
+            },
+            "1.1.9": {
+                "en": "dependencies updated\nissue #63: getExtIp logging solved\nissue #65: wrong logging in instance > 0 solved\nqr-code WPA2 + WPA3 fixed",
+                "de": "Abhängigkeiten aktualisiert\nProblem #63: GetExtIp-Logging behoben\nProblem #65: Falsche Anmeldung in Instanz > 0 behoben\nqr-Code WPA2 + WPA3 behoben",
+                "ru": "зависимости обновлены \n проблема # 63: ведение журнала getExtIp решено \nпроблема # 65: неверное ведение журнала в экземпляре> 0 решено\nqr-код WPA2 + WPA3 исправлен",
+                "pt": "dependências atualizadas \nproblema nº 63: log getExtIp resolvido\nproblema nº 65: registro incorreto na instância> 0 resolvido \nqr-code WPA2 + WPA3 corrigido",
+                "nl": "afhankelijkheden bijgewerkt\nprobleem #63: getExtIp-logboekregistratie opgelost\nprobleem #65: verkeerde registratie in instantie > 0 opgelost\nqr-code WPA2 + WPA3 opgelost",
+                "fr": "dépendances mises à jour\nproblème n°63 : la journalisation getExtIp est résolue\nproblème n°65 : mauvaise instance de connexion > 0 résolu\nqr-code WPA2 + WPA3 corrigé",
+                "it": "dipendenze aggiornate\nproblema #63: registrazione getExtIp risolta\nproblema #65: registrazione errata nell'istanza > 0 risolto\nqr-code WPA2 + WPA3 risolto",
+                "es": "dependencias actualizadas \n problema # 63: registro getExtIp resuelto \n problema # 65: registro incorrecto en la instancia> 0 resuelto \ncódigo qr WPA2 + WPA3 arreglado",
+                "pl": "zaktualizowano zależności\nproblem #63: rozwiązano logowanie getExtIp\nproblem #65: niepoprawne logowanie w instancji > 0 rozwiązano\nkod qr naprawiony WPA2 + WPA3",
+                "zh-cn": "依赖关系更新\n问题 #63：getExtIp 日志记录已解决\n问题 #65：实例中的错误日志> 0 已解决\nqr-code WPA2 + WPA3 已修复"
+            }
+        },
+        "title": "Fritzbox CheckPresence",
+        "titleLang": {
+            "en": "Fritzbox CheckPresence",
+            "de": "Fritzbox CheckPresence",
+            "ru": "Fritzbox CheckPresence",
+            "pt": "Fritzbox CheckPresence",
+            "nl": "Fritzbox CheckPresence",
+            "fr": "Fritzbox CheckPresence",
+            "it": "Fritzbox CheckPresence",
+            "es": "Fritzbox CheckPresence",
+            "pl": "Fritzbox CheckPresence",
+            "zh-cn": "Fritzbox CheckPresence"
+        },
+        "desc": {
+            "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
+            "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
+            "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
+            "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
+            "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
+            "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
+            "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
+            "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
+            "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
+            "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
+        },
+        "authors": [
+            "Achim Fürhoff <achim.fuerhoff@outlook.de>"
+        ],
+        "keywords": [
+            "ioBroker",
+            "presence",
+            "family",
+            "tr064",
+            "fritz.box",
+            "fritzbox"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "fb-checkpresence.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
+        "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "infrastructure",
+        "connectionType": "local",
+        "dataSource": "poll",
+        "compact": true,
+        "materialize": true,
+        "stopBeforeUpdate": true,
+        "messagebox": true,
+        "dependencies": [
+            {
+                "admin": ">=3.0.0",
+                "js-controller": ">=3.1.0"
+            }
+        ]
     },
-    "title": "Fritzbox CheckPresence",
-    "titleLang": {
-      "en": "Fritzbox CheckPresence",
-      "de": "Fritzbox CheckPresence",
-      "ru": "Fritzbox CheckPresence",
-      "pt": "Fritzbox CheckPresence",
-      "nl": "Fritzbox CheckPresence",
-      "fr": "Fritzbox CheckPresence",
-      "it": "Fritzbox CheckPresence",
-      "es": "Fritzbox CheckPresence",
-      "pl": "Fritzbox CheckPresence",
-      "zh-cn": "Fritzbox CheckPresence"
-    },
-    "desc": {
-      "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
-      "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
-      "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
-      "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
-      "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
-      "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
-      "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
-      "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
-      "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
-      "zh-cn": "适配器通过fritzbox检查家庭成员的存在。"
-    },
-    "authors": [
-      "Achim Fürhoff <achim.fuerhoff@outlook.de>"
+    "encryptedNative": [
+        "password"
     ],
-    "keywords": [
-      "ioBroker",
-      "presence",
-      "family",
-      "tr064",
-      "fritz.box",
-      "fritzbox"
+    "protectedNative": [
+        "password"
     ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
-    "icon": "fb-checkpresence.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
-    "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "infrastructure",
-    "connectionType": "local",
-    "dataSource": "poll",
-    "compact": true,
-    "materialize": true,
-    "stopBeforeUpdate": true,
-    "messagebox": true,
-    "dependencies": [
-      {
-        "admin": ">=3.0.0",
-        "js-controller": ">=3.1.0"
-      }
+    "native": {
+        "familymembers": [],
+        "whitelist": [],
+        "ipaddress": "fritz.box",
+        "ssl": true,
+        "interval": 1,
+        "interval_seconds": false,
+        "intervalFamily": 60,
+        "delay": 15,
+        "compatibility": true,
+        "history": "",
+        "dateformat": "yyyy.mm.dd HH:MM:ss",
+        "fbdevices": false,
+        "meshinfo": false,
+        "syncfbdevices": false,
+        "guestinfo": true,
+        "qrcode": false,
+        "qrcodecolor": "black",
+        "extip": true,
+        "username": "",
+        "password": "",
+        "enableWl": true
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        }
     ]
-  },
-  "encryptedNative": [
-    "password"
-  ],
-  "protectedNative": [
-    "password"
-  ],
-  "native": {
-    "familymembers": [],
-    "whitelist": [],
-    "ipaddress": "fritz.box",
-    "ssl": true,
-    "interval": 1,
-    "intervalFamily": 60,
-    "delay": 15,
-    "compatibility": true,
-    "history": "",
-    "dateformat": "yyyy.mm.dd HH:MM:ss",
-    "fbdevices": false,
-    "meshinfo": false,
-    "syncfbdevices": false,
-    "guestinfo": true,
-    "qrcode": false,
-    "qrcodecolor": "black",
-    "extip": true,
-    "username": "",
-    "password": "",
-    "enableWl": true
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    }
-  ]
 }
