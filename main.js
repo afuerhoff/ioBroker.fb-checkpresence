@@ -182,7 +182,7 @@ class FbCheckpresence extends utils.Adapter {
         try {
             const ind = this.memberStates.findIndex(x => x.id == id);
             if (ind != -1 && this.memberStates[ind].state.val == false && options.val == true){
-                if (this.setStateChangedAsync(id, options)) this.log.info('0 ' + id + ' ' + options.val);
+                if (this.setStateChanged(id, options)) this.log.info('0 ' + id + ' ' + options.val);
                 this.memberStates[ind].state.val = options.val;
                 return;
             }       
@@ -192,7 +192,7 @@ class FbCheckpresence extends utils.Adapter {
                 return;
             }       
             if (ind != -1 &&  this.memberStates[ind].state.val == false && options.val == false){
-                if (this.setStateChangedAsync(id, options)) this.log.info('2 ' + id + ' ' + options.val);
+                if (this.setStateChanged(id, options)) this.log.info('2 ' + id + ' ' + options.val);
                 this.memberStates[ind].state.val = options.val;
                 return;
             }       
@@ -272,11 +272,11 @@ class FbCheckpresence extends utils.Adapter {
     async connCheck(){
         try {
             if (await this.Fb.connectionCheck()){
-                this.setState('info.connection', { val: true, ack: true });
+                this.setStateChanged('info.connection', { val: true, ack: true });
             }else{
-                this.setState('info.connection', { val: false, ack: true });
+                this.setStateChanged('info.connection', { val: false, ack: true });
             }
-            this.setState('info.lastUpdate', { val: (new Date()).toString(), ack: true });
+            this.setStateChanged('info.lastUpdate', { val: (new Date()).toString(), ack: true });
         } catch (error) {
             this.errorHandler(error, 'connCheck: '); 
         }
@@ -306,13 +306,13 @@ class FbCheckpresence extends utils.Adapter {
                     cnt2 = 0;
                     //gthis.log.debug('loopDevices starts');
                     if (this.config.extip === true){
-                        this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
+                        this.setStateChanged('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
                     }
                     if (this.config.guestinfo === true){
-                        this.setState('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
+                        this.setStateChanged('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
                     }
                     if (this.config.qrcode === true){
-                        this.setState('guest.wlanQR', { val: await this.Fb.getGuestQR(), ack: true });
+                        this.setStateChanged('guest.wlanQR', { val: await this.Fb.getGuestQR(), ack: true });
                     }
                     if (this.Fb.GETPATH != null && this.Fb.GETPATH == true && this.config.fbdevices == true){
                         this.checkDevices();
@@ -337,14 +337,14 @@ class FbCheckpresence extends utils.Adapter {
 
     setDeviceStates() {
         const deviceList = this.Fb.deviceList;
-        if(this.config.compatibility == true) this.setState('devices', { val: deviceList.length, ack: true });
-        this.setState('fb-devices.count', { val: deviceList.length, ack: true });
+        if(this.config.compatibility == true) this.setStateChanged('devices', { val: deviceList.length, ack: true });
+        this.setStateChanged('fb-devices.count', { val: deviceList.length, ack: true });
         let inActiveHosts = deviceList.filter(host => host.Active == '0');
-        this.setState('fb-devices.inactive', { val: inActiveHosts.length, ack: true });
+        this.setStateChanged('fb-devices.inactive', { val: inActiveHosts.length, ack: true });
         inActiveHosts = null;
         let activeHosts = deviceList.filter(host => host.Active == '1');
-        this.setState('fb-devices.active', { val: activeHosts.length, ack: true });
-        if(this.config.compatibility == true) this.setState('activeDevices', { val: activeHosts.length, ack: true });
+        this.setStateChanged('fb-devices.active', { val: activeHosts.length, ack: true });
+        if(this.config.compatibility == true) this.setStateChanged('activeDevices', { val: activeHosts.length, ack: true });
         activeHosts = null;
     }
     
@@ -607,7 +607,7 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('reconnect', { val: false, ack: true });
 
             if (this.config.extip === false){
-                this.setStateChangedAsync('info.extIp', { val: '', ack: true });
+                this.setStateChanged('info.extIp', { val: '', ack: true });
             }
 
             //If history is enbled, check if history adapter is running. 
@@ -854,7 +854,7 @@ class FbCheckpresence extends utils.Adapter {
             const enabledMeshInfo = this.config.meshinfo;
             const ch = await this.getChannelsOfAsync(); //get all channels
             
-            if (mesh) this.setState('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
+            if (mesh) this.setStateChanged('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
             for (let i = 0; i < hosts.length; i++) {
                 const hostName = hosts[i]['hn'];
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
@@ -867,7 +867,7 @@ class FbCheckpresence extends utils.Adapter {
                             meshdevice = mesh.find(el => el.device_name === hosts[i]['hnOrg']);
                         }
                         if (meshdevice != null) { //host in the meshlist
-                            this.setState('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
+                            this.setStateChanged('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
                             
                             //delete old interfaces
                             for (const c in hostCh) {
@@ -894,11 +894,11 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                         await this.delObjectAsync(hostCh[c]._id);
                                     }else{
-                                        this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
-                                        this.setState(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
-                                        this.setState(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
-                                        this.setState(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
-                                        this.setState(hostCh[c]._id + '.link', { val: '', ack: true });
+                                        this.setStateChanged('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
+                                        this.setStateChanged(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
+                                        this.setStateChanged(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
+                                        this.setStateChanged(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
+                                        this.setStateChanged(hostCh[c]._id + '.link', { val: '', ack: true });
                                     }
                                 }
                             }
@@ -929,7 +929,7 @@ class FbCheckpresence extends utils.Adapter {
                                 const ifNewName = ifName == '' ? ifType : ifName;
                                 if (interfaceName == '') interfaceName = ifType;
 
-                                this.setState('fb-devices.' + hostName + '.' + ifNewName + '.name', { val: ifName, ack: true });
+                                this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.name', { val: ifName, ack: true });
                                 
                                 if (nInterface['node_links'].length > 0){ //filter empty interfaces
                                     let link = '';
@@ -952,19 +952,19 @@ class FbCheckpresence extends utils.Adapter {
                                             data_rate_rx = Math.round(nodelinks['cur_data_rate_rx'] / 1000);
                                             data_rate_tx = Math.round(nodelinks['cur_data_rate_tx'] / 1000);
                                         }
-                                        this.setState('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: Math.round(nodelinks['rx_rcpi']), ack: true });
-                                        this.setState('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
-                                        this.setState('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
+                                        this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: Math.round(nodelinks['rx_rcpi']), ack: true });
+                                        this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
+                                        this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
                                     }
-                                    this.setState('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: link, ack: true });
+                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: link, ack: true });
                                 }else{
                                     //Interface without links
-                                    this.setState('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: '', ack: true });
-                                    this.setState('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: 0, ack: true });
-                                    this.setState('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: 0, ack: true });
-                                    this.setState('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: 0, ack: true });
+                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: '', ack: true });
+                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: 0, ack: true });
+                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: 0, ack: true });
+                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: 0, ack: true });
                                 }
-                                this.setState('fb-devices.' + hostName + '.' + ifNewName + '.type', { val: ifType, ack: true });
+                                this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.type', { val: ifType, ack: true });
                             }
                         }else{ //host not in meshlist
                             for (const c in hostCh) {
@@ -981,11 +981,11 @@ class FbCheckpresence extends utils.Adapter {
                                     await this.delObjectAsync(hostCh[c]._id);
                                 }else{ //old channel 
                                     //this.log.info('test1');
-                                    this.setState('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
-                                    this.setState(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
-                                    this.setState(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
-                                    this.setState(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
-                                    this.setState(hostCh[c]._id + '.link', { val: '', ack: true });
+                                    this.setStateChanged('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
+                                    this.setStateChanged(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
+                                    this.setStateChanged(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
+                                    this.setStateChanged(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
+                                    this.setStateChanged(hostCh[c]._id + '.link', { val: '', ack: true });
                                     //this.log.info('test2');
                                 }
                             }
@@ -1043,12 +1043,12 @@ class FbCheckpresence extends utils.Adapter {
                     hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                     
                     if (count == macs.length){
-                        this.setState('fb-devices.' + hostName + '.whitelist', { val: true, ack: true });
-                        this.setState('fb-devices.' + hostName + '.blacklist', { val: false, ack: true });               
+                        this.setStateChanged('fb-devices.' + hostName + '.whitelist', { val: true, ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.blacklist', { val: false, ack: true });               
                     }else{
-                        this.setState('fb-devices.' + hostName + '.whitelist', { val: false, ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.whitelist', { val: false, ack: true });
                         if (host[0]['guest'] == false){
-                            this.setState('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });
+                            this.setStateChanged('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });
                         }               
                     }
                 }
@@ -1057,19 +1057,19 @@ class FbCheckpresence extends utils.Adapter {
             jsonBlRow += ']';
             htmlBlRow += this.HTML_END;
             htmlWlRow += this.HTML_END;
-            this.setState('blacklist.count', { val: blCnt, ack: true });
-            this.setState('blacklist.listHtml', { val: htmlBlRow, ack: true });
-            this.setState('blacklist.listJson', { val: jsonBlRow, ack: true });
+            this.setStateChanged('blacklist.count', { val: blCnt, ack: true });
+            this.setStateChanged('blacklist.listHtml', { val: htmlBlRow, ack: true });
+            this.setStateChanged('blacklist.listJson', { val: jsonBlRow, ack: true });
             
-            this.setState('whitelist.json', { val: jsonWlRow, ack: true });
-            this.setState('whitelist.html', { val: htmlWlRow, ack: true });
-            this.setState('whitelist.count', { val: this.config.whitelist.length, ack: true });
+            this.setStateChanged('whitelist.json', { val: jsonWlRow, ack: true });
+            this.setStateChanged('whitelist.html', { val: htmlWlRow, ack: true });
+            this.setStateChanged('whitelist.count', { val: this.config.whitelist.length, ack: true });
             if (blCnt > 0) {
-                if(this.config.compatibility == true) this.setState('blacklist', { val: true, ack: true });
-                this.setStateChangedAsync('blacklist.presence', { val: true, ack: true });
+                if(this.config.compatibility == true) this.setStateChanged('blacklist', { val: true, ack: true });
+                this.setStateChanged('blacklist.presence', { val: true, ack: true });
             }else {
-                if(this.config.compatibility == true) this.setState('blacklist', { val: false, ack: true });
-                this.setStateChangedAsync('blacklist.presence', { val: false, ack: true });
+                if(this.config.compatibility == true) this.setStateChanged('blacklist', { val: false, ack: true });
+                this.setStateChanged('blacklist.presence', { val: false, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
             jsonWlRow = null;
@@ -1131,13 +1131,13 @@ class FbCheckpresence extends utils.Adapter {
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
                 if (hostName != '') { 
-                    this.setState('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
-                    this.setState('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
-                    this.setState('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
-                    this.setState('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
-                    this.setState('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
-                    this.setState('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
-                    if (hosts[i]['data'] != null) this.setState('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
+                    this.setStateChanged('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
+                    this.setStateChanged('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
+                    this.setStateChanged('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
+                    this.setStateChanged('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
+                    this.setStateChanged('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
+                    this.setStateChanged('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
+                    if (hosts[i]['data'] != null) this.setStateChanged('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
                 }else{
                     this.log.debug('getDeviceInfo: hostname is empty -> mac: ' + mac);
                 }
@@ -1150,21 +1150,21 @@ class FbCheckpresence extends utils.Adapter {
             jsonFbDevInactive += ']';
             
             //this.setState('fb-devices.count', { val: items.length, ack: true });
-            this.setState('fb-devices.json', { val: jsonFbDevices, ack: true });
-            this.setState('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
-            this.setState('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
-            this.setState('fb-devices.html', { val: htmlFbDevices, ack: true });
+            this.setStateChanged('fb-devices.json', { val: jsonFbDevices, ack: true });
+            this.setStateChanged('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
+            this.setStateChanged('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
+            this.setStateChanged('fb-devices.html', { val: htmlFbDevices, ack: true });
             //this.setState('fb-devices.active', { val: activeCnt, ack: true });
             //this.setState('fb-devices.inactive', { val: inactiveCnt, ack: true });
 
             if (this.config.guestinfo == true) {
-                this.setState('guest.listHtml', { val: htmlRow, ack: true });
-                this.setState('guest.listJson', { val: jsonRow, ack: true });
-                this.setState('guest.presentGuests', { val: guests, ack: true });
-                this.setState('guest.count', { val: guestCnt, ack: true });
+                this.setStateChanged('guest.listHtml', { val: htmlRow, ack: true });
+                this.setStateChanged('guest.listJson', { val: jsonRow, ack: true });
+                this.setStateChanged('guest.presentGuests', { val: guests, ack: true });
+                this.setStateChanged('guest.count', { val: guestCnt, ack: true });
                 const val = guestCnt > 0 ? true : false;
-                this.setStateChangedAsync('guest.presence', { val: val, ack: true });
-                if(this.config.compatibility == true) this.setState('guest', { val: val, ack: true });
+                this.setStateChanged('guest.presence', { val: val, ack: true });
+                if(this.config.compatibility == true) this.setStateChanged('guest', { val: val, ack: true });
             }
             this.log.debug('getDeviceInfo activeCnt: '+ activeCnt);
             return true;
@@ -1429,18 +1429,18 @@ class FbCheckpresence extends utils.Adapter {
                 //calculation of '.since'
                 const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
                 if (curVal.val == true){
-                    this.setState(memberPath + '.present.since', { val: diff, ack: true });
-                    this.setState(memberPath + '.absent.since', { val: 0, ack: true });
+                    this.setStateChanged(memberPath + '.present.since', { val: diff, ack: true });
+                    this.setStateChanged(memberPath + '.absent.since', { val: 0, ack: true });
                 }
                 if (curVal.val == false){
-                    this.setState(memberPath + '.absent.since', { val: diff, ack: true });
-                    this.setState(memberPath + '.present.since', { val: 0, ack: true });
+                    this.setStateChanged(memberPath + '.absent.since', { val: diff, ack: true });
+                    this.setStateChanged(memberPath + '.present.since', { val: 0, ack: true });
                 }
                 //analyse member presence
                 
-                this.setStateChangedAsync(memberPath + '.presence', { val: newActive, ack: true });
+                this.setStateChanged(memberPath + '.presence', { val: newActive, ack: true });
                 //this.setStateIfNotEqual(memberPath + '.presence', { val: newActive, ack: true });
-                if ( memberRow.group== '' && this.config.compatibility === true) this.setStateChangedAsync(memberPath, { val: newActive, ack: true });
+                if ( memberRow.group== '' && this.config.compatibility === true) this.setStateChanged(memberPath, { val: newActive, ack: true });
                 //if ( memberRow.group== '' && this.config.compatibility === true) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
 
                 if (newActive == true){ //member = true
@@ -1455,13 +1455,13 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == false){ //signal changing to true
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        this.setState(memberPath + '.comming', { val: dnow.toString(), ack: true });
+                        this.setStateChanged(memberPath + '.comming', { val: dnow.toString(), ack: true });
                         comming = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to true');
-                        if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: true, ack: true });
-                        this.setStateChangedAsync(memberPath + '.presence', { val: true, ack: true });
+                        if (memberPath.group == '' && this.config.compatibility === true) this.setStateChanged(memberPath, { val: true, ack: true });
+                        this.setStateChanged(memberPath + '.presence', { val: true, ack: true });
                     }
                 }else{ //member = false
                     presence.all = false;
@@ -1474,13 +1474,13 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == true){ //signal changing to false
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        this.setState(memberPath + '.going', { val: dnow.toString(), ack: true });
+                        this.setStateChanged(memberPath + '.going', { val: dnow.toString(), ack: true });
                         going = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to false');
-                        if (memberPath.group == '' && this.config.compatibility === true) this.setState(memberPath, { val: false, ack: true });
-                        this.setStateChangedAsync(memberPath + '.presence', { val: false, ack: true });
+                        if (memberPath.group == '' && this.config.compatibility === true) this.setStateChanged(memberPath, { val: false, ack: true });
+                        this.setStateChanged(memberPath + '.presence', { val: false, ack: true });
                     }
                 }
                 presence.val = newActive;
@@ -1490,11 +1490,11 @@ class FbCheckpresence extends utils.Adapter {
                 going = going !== null ? going.toString() : going1.val;
                 if (comming1.val == null) {
                     comming = new Date(curVal.lc);
-                    this.setState(memberPath + '.comming', { val: comming.toString(), ack: true });
+                    this.setStateChanged(memberPath + '.comming', { val: comming.toString(), ack: true });
                 }
                 if (going1.val == null) {
                     going = new Date(curVal.lc);
-                    this.setState(memberPath + '.going', { val: going.toString(), ack: true });
+                    this.setStateChanged(memberPath + '.going', { val: going.toString(), ack: true });
                 }
                 this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, this.config.dateformat), 'Geht', dateFormat(going, this.config.dateformat)]);
                 this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, this.config.dateformat), dateFormat(going, this.config.dateformat)]);
@@ -1575,13 +1575,13 @@ class FbCheckpresence extends utils.Adapter {
                             }
                             present -= absent;
                             
-                            this.setState(memberPath + '.present.sum_day', { val: present, ack: true });
-                            this.setState(memberPath + '.absent.sum_day', { val: absent, ack: true });
+                            this.setStateChanged(memberPath + '.present.sum_day', { val: present, ack: true });
+                            this.setStateChanged(memberPath + '.absent.sum_day', { val: absent, ack: true });
 
                             jsonHistory += ']';
                             htmlHistory += this.HTML_END;
-                            this.setState(memberPath + '.history', { val: jsonHistory, ack: true });
-                            this.setState(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
+                            this.setStateChanged(memberPath + '.history', { val: jsonHistory, ack: true });
+                            this.setStateChanged(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
 
                         } catch (err) {
                             throw Error(err);
@@ -1590,10 +1590,10 @@ class FbCheckpresence extends utils.Adapter {
                         this.log.info('History from ' + memb + ' not enabled');
                     }
                 }else{//history enabled
-                    this.setState(memberPath + '.history', { val: 'disabled', ack: true });
-                    this.setState(memberPath + '.historyHtml', { val: 'disabled', ack: true });
-                    this.setState(memberPath + '.present.sum_day', { val: -1, ack: true });
-                    this.setState(memberPath + '.absent.sum_day', { val: -1, ack: true });
+                    this.setStateChanged(memberPath + '.history', { val: 'disabled', ack: true });
+                    this.setStateChanged(memberPath + '.historyHtml', { val: 'disabled', ack: true });
+                    this.setStateChanged(memberPath + '.present.sum_day', { val: -1, ack: true });
+                    this.setStateChanged(memberPath + '.absent.sum_day', { val: -1, ack: true });
                 }
             }else{
                 this.log.warn('can not get active state from member ' + member);
@@ -1641,7 +1641,7 @@ class FbCheckpresence extends utils.Adapter {
             }
         }
         items = null;
-        this.setState(memberPath + '.speed', { val: parseInt(speed), ack: true });
+        this.setStateChanged(memberPath + '.speed', { val: parseInt(speed), ack: true });
         //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.speed', { val: speed, ack: true });
     }
 
@@ -1730,16 +1730,16 @@ class FbCheckpresence extends utils.Adapter {
                 //group states
                 this.jsonTab += ']';
                 this.htmlTab += this.HTML_END;
-                this.setState(memberPath + 'json', { val: this.jsonTab, ack: true });
-                this.setState(memberPath + 'html', { val: this.htmlTab, ack: true });
-                this.setState(memberPath + 'presenceAll', { val: presence.all, ack: true });
-                this.setState(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
-                this.setState(memberPath + 'presence', { val: presence.one, ack: true });
-                this.setState(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
-                this.setState(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
-                this.setState(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
-                this.setState(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
-                this.setState(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
+                this.setStateChanged(memberPath + 'json', { val: this.jsonTab, ack: true });
+                this.setStateChanged(memberPath + 'html', { val: this.htmlTab, ack: true });
+                this.setStateChanged(memberPath + 'presenceAll', { val: presence.all, ack: true });
+                this.setStateChanged(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
+                this.setStateChanged(memberPath + 'presence', { val: presence.one, ack: true });
+                this.setStateChanged(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
+                this.setStateChanged(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
+                this.setStateChanged(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
+                this.setStateChanged(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
+                this.setStateChanged(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
             //time = process.hrtime(work);
             //this.log.info(timeStr + time + 's');
@@ -1820,16 +1820,16 @@ class FbCheckpresence extends utils.Adapter {
 
                 this.jsonTab += ']';
                 this.htmlTab += this.HTML_END;
-                this.setState(memberPath + 'json', { val: this.jsonTab, ack: true });
-                this.setState(memberPath + 'html', { val: this.htmlTab, ack: true });
-                this.setState(memberPath + 'presenceAll', { val: presence.all, ack: true });
-                this.setState(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
-                this.setState(memberPath + 'presence', { val: presence.one, ack: true });
-                this.setState(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
-                this.setState(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
-                this.setState(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
-                this.setState(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
-                this.setState(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
+                this.setStateChanged(memberPath + 'json', { val: this.jsonTab, ack: true });
+                this.setStateChanged(memberPath + 'html', { val: this.htmlTab, ack: true });
+                this.setStateChanged(memberPath + 'presenceAll', { val: presence.all, ack: true });
+                this.setStateChanged(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
+                this.setStateChanged(memberPath + 'presence', { val: presence.one, ack: true });
+                this.setStateChanged(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
+                this.setStateChanged(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
+                this.setStateChanged(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
+                this.setStateChanged(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
+                this.setStateChanged(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
 
             membersFiltered = null;
