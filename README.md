@@ -198,7 +198,9 @@ Here you will find information about the history of the current day.
     * Did some more changes
 -->
 ### **WORK IN PROGRESS**
-* (afuerhoff) issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Interval change from minutes to seconds
+* (afuerhoff) issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds
+* (afuerhoff) issue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed
+* (afuerhoff) issue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices
 
 ### 1.1.15 (2022-05-27)
 * (afuerhoff) issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement
