@@ -511,22 +511,22 @@ $(document).ready(function(){
             x.checked = true;
         }
     });   
-    $('#guestinfo').change(function() 
+    /*$('#guestinfo').change(function() 
     {
         if(this.checked == true)
         {
             const x = document.getElementById('fbdevices');
             x.checked = true;
         }
-    });   
+    });*/
     $('#fbdevices').change(function() 
     {
         if(this.checked == false)
         {
             let x = document.getElementById('meshinfo');
             x.checked = false;
-            x = document.getElementById('guestinfo');
-            x.checked = false;
+            //x = document.getElementById('guestinfo');
+            //x.checked = false;
         }
     });
     $('.collapsible').collapsible();

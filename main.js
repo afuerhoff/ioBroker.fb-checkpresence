@@ -252,15 +252,17 @@ class FbCheckpresence extends utils.Adapter {
 
     async checkDevices(){
         try {
-            await this.Fb.getDeviceList();
-            if (this.Fb.deviceList) {
-                this.setDeviceStates();
-                await this.getAllFbObjects();
-                if (this.hosts) {
-                    if (this.config.enableWl == true) await this.getWlBlInfo();
-                    if (this.config.fbdevices == true) await this.getDeviceInfo();
-                    if (this.Fb.GETMESHPATH != null && this.Fb.GETMESHPATH == true && this.config.meshinfo == true) await this.Fb.getMeshList();
-                    if (this.Fb.meshList && this.config.meshinfo == true) await this.getMeshInfo();
+            if (this.config.fbdevices === true || this.config.guestinfo === true){
+                await this.Fb.getDeviceList();
+                if (this.Fb.deviceList) {
+                    if(this.config.fbdevices === true) this.setDeviceStates();
+                    await this.getAllFbObjects();
+                    if (this.hosts) {
+                        if (this.config.enableWl == true) await this.getWlBlInfo();
+                        await this.getDeviceInfo();
+                        if (this.Fb.GETMESHPATH != null && this.Fb.GETMESHPATH == true && this.config.meshinfo == true) await this.Fb.getMeshList();
+                        if (this.Fb.meshList && this.config.meshinfo == true) await this.getMeshInfo();
+                    }
                 }
             }
             this.Fb.deviceList = null;
@@ -314,7 +316,7 @@ class FbCheckpresence extends utils.Adapter {
                     if (this.config.qrcode === true){
                         this.setStateChanged('guest.wlanQR', { val: await this.Fb.getGuestQR(), ack: true });
                     }
-                    if (this.Fb.GETPATH != null && this.Fb.GETPATH == true && this.config.fbdevices == true){
+                    if (this.Fb.GETPATH != null && this.Fb.GETPATH == true){
                         this.checkDevices();
                     }
                     /*const used = process.memoryUsage();
@@ -607,7 +609,7 @@ class FbCheckpresence extends utils.Adapter {
             this.setState('reconnect', { val: false, ack: true });
 
             if (this.config.extip === false){
-                this.setStateChanged('info.extIp', { val: '', ack: true });
+                //this.setStateChanged('info.extIp', { val: '', ack: true });
             }
 
             //If history is enbled, check if history adapter is running. 
@@ -1130,16 +1132,18 @@ class FbCheckpresence extends utils.Adapter {
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
-                if (hostName != '') { 
-                    this.setStateChanged('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
-                    this.setStateChanged('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
-                    this.setStateChanged('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
-                    this.setStateChanged('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
-                    this.setStateChanged('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
-                    this.setStateChanged('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
-                    if (hosts[i]['data'] != null) this.setStateChanged('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
-                }else{
-                    this.log.debug('getDeviceInfo: hostname is empty -> mac: ' + mac);
+                if (this.config.fbdevices === true){
+                    if (hostName != '') {
+                        this.setStateChanged('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
+                        if (hosts[i]['data'] != null) this.setStateChanged('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
+                    }else{
+                        this.log.debug('getDeviceInfo: hostname is empty -> mac: ' + mac);
+                    }
                 }
             }
             jsonRow += ']';
@@ -1149,15 +1153,13 @@ class FbCheckpresence extends utils.Adapter {
             jsonFbDevActive += ']';
             jsonFbDevInactive += ']';
             
-            //this.setState('fb-devices.count', { val: items.length, ack: true });
-            this.setStateChanged('fb-devices.json', { val: jsonFbDevices, ack: true });
-            this.setStateChanged('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
-            this.setStateChanged('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
-            this.setStateChanged('fb-devices.html', { val: htmlFbDevices, ack: true });
-            //this.setState('fb-devices.active', { val: activeCnt, ack: true });
-            //this.setState('fb-devices.inactive', { val: inactiveCnt, ack: true });
-
-            if (this.config.guestinfo == true) {
+            if (this.config.fbdevices === true){
+                this.setStateChanged('fb-devices.json', { val: jsonFbDevices, ack: true });
+                this.setStateChanged('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
+                this.setStateChanged('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
+                this.setStateChanged('fb-devices.html', { val: htmlFbDevices, ack: true });
+            }
+            if (this.config.guestinfo === true) {
                 this.setStateChanged('guest.listHtml', { val: htmlRow, ack: true });
                 this.setStateChanged('guest.listJson', { val: jsonRow, ack: true });
                 this.setStateChanged('guest.presentGuests', { val: guests, ack: true });
