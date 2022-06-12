@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.11 (2021-12-22)
+* (afuerhoff) dependencies updated
+* (afuerhoff) bugfix blacklist
+
 ## 1.1.10 (2021-09-24)
 * (afuerhoff) dependencies updated
 
