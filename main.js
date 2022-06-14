@@ -56,7 +56,7 @@ class FbCheckpresence extends utils.Adapter {
         this.allDevices = [];
         this.adapterStates = [];
         this.memberStates = [];
-        this.historyAlive = false;
+        this.historyAlive = {val:'false'}; //false;
         this.hosts = null;
         this.jsonTab;
         this.htmlTab;
