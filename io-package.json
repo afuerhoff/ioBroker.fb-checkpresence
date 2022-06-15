@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.16",
+    "version": "1.1.17",
     "news": {
+      "1.1.17": {
+        "en": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object\nlog optimized",
+        "de": "ausgabe [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinierte Geschichte Al-Objekt\nlog optimiert",
+        "ru": "выпуск [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix неопределенная история Живой объект\nлог оптимизирован",
+        "pt": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinida history Objeto Alive\nlog otimizado",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling: Levend object\nquality over quantity (qoq) releases vertaling:",
+        "fr": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined history Objet passif\nlog optimisé",
+        "it": "numero [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix cronologia non definita Oggetto vivo\nlog ottimizzato",
+        "es": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinited history Objeto vivo\nlog optimizado",
+        "pl": "(#126(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bug (ang.). Alive object\ndziennik optymistyczny",
+        "zh-cn": "问题[第126号](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/126) 活性目标\na. 优化逻辑"
+      },
       "1.1.16": {
         "en": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fixed: info.extip was set without existing object",
         "de": "ausgabe [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Hauptintervall von Minuten in Sekunden geändert\nausgabe [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Nur wenn sie sich geändert haben\nausgabe [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos from fbdevices\nfehler in v1.1.15 behoben: info.extip wurde ohne vorhandenes objekt eingestellt",
@@ -74,18 +86,6 @@
         "es": "dependencias actualizadas\nlista negra de corrección de errores",
         "pl": "zaktualizowano zależności\nczarna lista naprawianych błędów",
         "zh-cn": "更新依赖\n修正黑名单"
-      },
-      "1.1.10": {
-        "en": "dependencies updated",
-        "de": "Abhängigkeiten aktualisiert",
-        "ru": "зависимости обновлены",
-        "pt": "dependências atualizadas",
-        "nl": "afhankelijkheden bijgewerkt",
-        "fr": "dépendances mises à jour",
-        "it": "dipendenze aggiornate",
-        "es": "dependencias actualizadas",
-        "pl": "zaktualizowano zależności",
-        "zh-cn": "依赖项已更新"
       }
     },
     "title": "Fritzbox CheckPresence",

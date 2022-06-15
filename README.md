@@ -197,7 +197,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
+### 1.1.17 (2022-06-15)
 * (afuerhoff) issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object
 * (afuerhoff) log optimized
 
@@ -221,10 +221,6 @@ Here you will find information about the history of the current day.
 
 ### 1.1.13 (2022-01-18)
 * (afuerhoff) issue #73: bugfix
-
-### 1.1.12 (2022-01-13)
-* (afuerhoff) issue #74: bugfix
-* (afuerhoff) dependencies updated
 
 ## License
 MIT License
