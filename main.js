@@ -1093,6 +1093,7 @@ class FbCheckpresence extends utils.Adapter {
             let guestCnt = 0;
             let guests = '';
             let activeCnt = 0;
+            let activeVpnCnt = 0;
             let inactiveCnt = 0;
             let htmlRow = this.HTML_GUEST;
             let htmlFbDevices = this.HTML_FB;
@@ -1100,6 +1101,7 @@ class FbCheckpresence extends utils.Adapter {
             let jsonFbDevices = '[';
             let jsonFbDevActive = '[';
             let jsonFbDevInactive = '[';
+            let jsonFbDevActiveVPN = '[';
 
             if (!hosts) return false;
             
@@ -1118,6 +1120,10 @@ class FbCheckpresence extends utils.Adapter {
                     jsonFbDevInactive += this.createJSONTableRow(inactiveCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
                     inactiveCnt += 1;
                 }
+                if (hosts[i]['data']['X_AVM-DE_VPN'] == 1){ // active vpn devices
+                    jsonFbDevActiveVPN += this.createJSONTableRow(activeVpnCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'VPN', hosts[i]['data'['X_AVM-DE_VPN']], 'Type', deviceType]);
+                    activeVpnCnt += 1;
+                }
                 if (hosts[i]['data'] != null && hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
                     htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
                     jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'disabled', disabled]);
@@ -1133,6 +1139,8 @@ class FbCheckpresence extends utils.Adapter {
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
+                const vpn = hosts[i]['data']['X_AVM-DE_VPN'] != undefined ? hosts[i]['data']['X_AVM-DE_VPN'] === 1 ? true : false : '';
+
                 if (this.config.fbdevices === true){
                     if (hostName != '') {
                         this.setStateChanged('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
@@ -1141,6 +1149,7 @@ class FbCheckpresence extends utils.Adapter {
                         this.setStateChanged('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
                         this.setStateChanged('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
                         this.setStateChanged('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
+                        this.setStateChanged('fb-devices.' + hostName + '.vpn', { val: vpn, ack: true });
                         if (hosts[i]['data'] != null) this.setStateChanged('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
                     }else{
                         this.log.debug('getDeviceInfo: hostname is empty -> mac: ' + mac);
@@ -1153,12 +1162,14 @@ class FbCheckpresence extends utils.Adapter {
             jsonFbDevices += ']';
             jsonFbDevActive += ']';
             jsonFbDevInactive += ']';
-            
+            jsonFbDevActiveVPN += ']';
+
             if (this.config.fbdevices === true){
                 this.setStateChanged('fb-devices.json', { val: jsonFbDevices, ack: true });
                 this.setStateChanged('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
                 this.setStateChanged('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
                 this.setStateChanged('fb-devices.html', { val: htmlFbDevices, ack: true });
+                this.setStateChanged('fb-devices.jsonActiveVPN', { val: jsonFbDevActiveVPN, ack: true });
             }
             if (this.config.guestinfo === true) {
                 this.setStateChanged('guest.listHtml', { val: htmlRow, ack: true });

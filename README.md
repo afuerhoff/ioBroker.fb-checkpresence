@@ -197,6 +197,9 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### **WORK IN PROGRESS**
+* (afuerhoff) issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added
+
 ### 1.1.17 (2022-06-15)
 * (afuerhoff) issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object
 * (afuerhoff) log optimized
