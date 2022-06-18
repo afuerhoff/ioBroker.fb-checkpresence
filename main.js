@@ -258,6 +258,7 @@ class FbCheckpresence extends utils.Adapter {
                     if(this.config.fbdevices === true) this.setDeviceStates();
                     await this.getAllFbObjects();
                     if (this.hosts) {
+                        this.log.warn('devicelist2: ' + JSON.stringify(this.hosts));
                         if (this.config.enableWl == true) await this.getWlBlInfo();
                         await this.getDeviceInfo();
                         if (this.Fb.GETMESHPATH != null && this.Fb.GETMESHPATH == true && this.config.meshinfo == true) await this.Fb.getMeshList();
