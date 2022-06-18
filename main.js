@@ -12,6 +12,7 @@ const dateFormat = require('dateformat');
 // own libraries
 const fb = require('./lib/fb');
 const obj = require('./lib/objects');
+//const dateFormat = require('./lib/dateformat');
 
 class Warn extends Error {
     constructor(message) {
@@ -1102,6 +1103,8 @@ class FbCheckpresence extends utils.Adapter {
             let jsonFbDevActive = '[';
             let jsonFbDevInactive = '[';
             let jsonFbDevActiveVPN = '[';
+            let disabled = false;
+            let vpn = false;
 
             if (!hosts) return false;
             
@@ -1109,9 +1112,22 @@ class FbCheckpresence extends utils.Adapter {
             for (let i = 0; i < hosts.length; i++) {
                 if (this.enabled == false) break;
                 let deviceType = '-';
-                const disabled = hosts[i]['data'] != null ? hosts[i]['data']['X_AVM-DE_Disallow'] : '';
-                if (hosts[i]['data'] != null && hosts[i]['data']['X_AVM-DE_Guest'] == 1){
-                    deviceType = 'guest';
+                if (hosts[i]['data'] != null){
+                    if (hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
+                        htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
+                        jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'disabled', disabled]);
+                        guests += guests == '' ? hosts[i]['hn'] : ', ' + hosts[i]['hn'];
+                        this.log.debug('getDeviceInfo active guest: ' + hosts[i]['hn'] + ' ' + hosts[i]['ip'] + ' ' + hosts[i]['mac']);
+                        guestCnt += 1;
+                    }    
+                    vpn = hosts[i]['data']['X_AVM-DE_VPN'] === true ? true : false;
+                    disabled = hosts[i]['data']['X_AVM-DE_Disallow'] === 1 ? true : false;
+                    if (hosts[i]['data']['X_AVM-DE_Guest'] == 1){
+                        deviceType = 'guest';
+                    }
+                }else{
+                    disabled = null;
+                    vpn = null;
                 }
                 if (hosts[i]['active'] == 1){ // active devices
                     jsonFbDevActive += this.createJSONTableRow(activeCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
@@ -1120,16 +1136,10 @@ class FbCheckpresence extends utils.Adapter {
                     jsonFbDevInactive += this.createJSONTableRow(inactiveCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
                     inactiveCnt += 1;
                 }
-                if (hosts[i]['data']['X_AVM-DE_VPN'] == 1){ // active vpn devices
-                    jsonFbDevActiveVPN += this.createJSONTableRow(activeVpnCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'VPN', hosts[i]['data'['X_AVM-DE_VPN']], 'Type', deviceType]);
+                
+                if (vpn === true){ // active vpn devices
+                    jsonFbDevActiveVPN += this.createJSONTableRow(activeVpnCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'VPN', vpn, 'Type', deviceType]);
                     activeVpnCnt += 1;
-                }
-                if (hosts[i]['data'] != null && hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
-                    htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
-                    jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'disabled', disabled]);
-                    guests += guests == '' ? hosts[i]['hn'] : ', ' + hosts[i]['hn'];
-                    this.log.debug('getDeviceInfo active guest: ' + hosts[i]['hn'] + ' ' + hosts[i]['ip'] + ' ' + hosts[i]['mac']);
-                    guestCnt += 1;
                 }
                 htmlFbDevices += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac'], hosts[i]['active'], deviceType]);
                 jsonFbDevices += this.createJSONTableRow(i, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
@@ -1139,7 +1149,6 @@ class FbCheckpresence extends utils.Adapter {
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
-                const vpn = hosts[i]['data']['X_AVM-DE_VPN'] != undefined ? hosts[i]['data']['X_AVM-DE_VPN'] === 1 ? true : false : '';
 
                 if (this.config.fbdevices === true){
                     if (hostName != '') {
