@@ -259,7 +259,7 @@ class FbCheckpresence extends utils.Adapter {
                     if(this.config.fbdevices === true) this.setDeviceStates();
                     await this.getAllFbObjects();
                     if (this.hosts) {
-                        this.log.warn('devicelist2: ' + JSON.stringify(this.hosts));
+                        //this.log.warn('devicelist2: ' + JSON.stringify(this.hosts));
                         if (this.config.enableWl == true) await this.getWlBlInfo();
                         await this.getDeviceInfo();
                         if (this.Fb.GETMESHPATH != null && this.Fb.GETMESHPATH == true && this.config.meshinfo == true) await this.Fb.getMeshList();
@@ -289,7 +289,8 @@ class FbCheckpresence extends utils.Adapter {
     async loop(cnt1, cnt2, int1, int2) {
         while(this.enabled === true){
             this.tout = setTimeout(() => {
-                this.log.error('cycle error! Please restart the adapter');
+                this.log.error('cycle error! Adapter restarted');
+                this.startAdapter();
             }, 300000);
             let time = null;
             let work = null;
@@ -480,6 +481,16 @@ class FbCheckpresence extends utils.Adapter {
             await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
         } catch (error) {
             this.errorHandler(error, 'stopAdapter: '); 
+        }
+    }
+
+    async startAdapter(){
+        try {
+            const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+            adapterObj.common.enabled = true;  // Adapter ausschalten
+            await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+        } catch (error) {
+            this.errorHandler(error, 'startAdapter: '); 
         }
     }
 
