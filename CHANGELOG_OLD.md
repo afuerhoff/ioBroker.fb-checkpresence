@@ -1,4 +1,7 @@
 # Older changes
+## 1.1.13 (2022-01-18)
+* (afuerhoff) issue #73: bugfix
+
 ## 1.1.12 (2022-01-13)
 * (afuerhoff) issue #74: bugfix
 * (afuerhoff) dependencies updated

@@ -197,7 +197,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
+### 1.1.18 (2022-07-04)
 * (afuerhoff) issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added
 * (afuerhoff) issue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error
 
@@ -222,9 +222,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) issue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix
 * (afuerhoff) whitelist.html bug fixed
 * (afuerhoff) issue [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix
-
-### 1.1.13 (2022-01-18)
-* (afuerhoff) issue #73: bugfix
 
 ## License
 MIT License

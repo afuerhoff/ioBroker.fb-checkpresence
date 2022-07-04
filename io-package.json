@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.17",
+    "version": "1.1.18",
     "news": {
+      "1.1.18": {
+        "en": "issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\nissue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error",
+        "de": "ausgabe #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices Zustände für vpn-Verbindung hinzugefügt\nausgabe #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Neustart Adapter nach Zyklusfehler",
+        "ru": "выпуск #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices состояния для подключения vpn добавлено\nвыпуск #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезагрузите адаптер после ошибки цикла",
+        "pt": "(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices estados para conexão vpn adicionado\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Reinicie o adaptador após o erro do ciclo",
+        "nl": "_ FBI staat voor vpn connectie toegevoegd\nquality over Quantity (QoQ) Releases Vertaling: Herstart adapter na cyclusfout",
+        "fr": "issue #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices états pour la connexion vpn ajouté\n#[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptateur de démarrage après erreur de cycle",
+        "it": "numero[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices stati per connessione vpn aggiunto\nnumero #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Riavviare l'adattatore dopo l'errore del ciclo",
+        "es": "cuestión #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptador reinicio después del error ciclo",
+        "pl": "#67(https:/github.com/afuerhoff/ioBrokerfb-checkpresence/67) (ang.). Współzałożycielskie stany vpn dodane do połączenia\n#128(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) (ang.). Restart adapter po błędzie cyklowego",
+        "zh-cn": "问题编号:[67](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/67) fbdevics State for vpn联系\n问题编号:[128](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/128) 在周期错误之后重新启动适应行动"
+      },
       "1.1.17": {
         "en": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object\nlog optimized",
         "de": "ausgabe [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinierte Geschichte Al-Objekt\nlog optimiert",
@@ -74,18 +86,6 @@
         "es": "problema #74: corrección de errores\ndependencias actualizadas",
         "pl": "problem #74: naprawa błędu\nzaktualizowano zależności",
         "zh-cn": "问题 #74：错误修复\n已更新依赖项"
-      },
-      "1.1.11": {
-        "en": "depenencies updated\nbugfix blacklist",
-        "de": "Abhängigkeiten aktualisiert\nBugfix-Blacklist",
-        "ru": "зависимости обновлены\nчерный список исправлений",
-        "pt": "dependências atualizadas\nlista negra de correção de bug",
-        "nl": "afhankelijkheden bijgewerkt\nbugfix zwarte lijst",
-        "fr": "dépendances mises à jour\nliste noire de corrections de bugs",
-        "it": "dipendenze aggiornate\nlista nera bugfix",
-        "es": "dependencias actualizadas\nlista negra de corrección de errores",
-        "pl": "zaktualizowano zależności\nczarna lista naprawianych błędów",
-        "zh-cn": "更新依赖\n修正黑名单"
       }
     },
     "title": "Fritzbox CheckPresence",
