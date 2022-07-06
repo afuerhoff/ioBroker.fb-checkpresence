@@ -370,61 +370,89 @@ class FbCheckpresence extends utils.Adapter {
                 let item = items.filter(x => x.HostName == items[i].HostName);
                 let itemActive = items.filter(x => x.HostName == items[i].HostName && x.Active == '1');
                 if (!host || host.length == 0){ //new devices
-                    const device = {
-                        status: 'new',
-                        dp: 'fb-devices.' + hostName,
-                        hn: hostName,
-                        hnOrg: items[i]['HostName'],
-                        mac: items[i]['MACAddress'],
-                        ip: items[i]['IPAddress'],
-                        active: items[i]['Active'] == 1 ? true : false,
-                        data: items[i],
-                        interfaceType: items[i]['InterfaceType'],
-                        speed: parseInt(items[i]['X_AVM-DE_Speed']),
-                        guest: items[i]['X_AVM-DE_Guest'] == 0 ? false : true
-                    };
-                    hosts.push(device);
-                }
-                if (!item || item.length == 1){
-                    const device = {
-                        status: 'unchanged',
-                        dp: 'fb-devices.' + hostName,
-                        hn: hostName,
-                        hnOrg: items[i]['HostName'],
-                        mac: items[i]['MACAddress'],
-                        ip: items[i]['IPAddress'],
-                        active: items[i]['Active'] == 1 ? true : false,
-                        data: items[i],
-                        interfaceType: items[i]['InterfaceType'],
-                        speed: parseInt(items[i]['X_AVM-DE_Speed']),
-                        guest: items[i]['X_AVM-DE_Guest'] == 0 ? false : true
-                    };
-                    hosts.push(device);
-                }
-                if (!item || item.length > 1){
-                    let mac = '';
-                    let ip = '';
-                    let active = false;
-                    for (let it = 0; it < item.length; it++){
-                        mac += mac == '' ? item[it].MACAddress : ', ' + item[it].MACAddress;
-                        ip += ip == '' ? item[it].IPAddress : ', ' + item[it].IPAddress;
+                    if (!item || item.length == 1){
+                        const device = {
+                            status: 'new',
+                            dp: 'fb-devices.' + hostName,
+                            hn: hostName,
+                            hnOrg: items[i]['HostName'],
+                            mac: items[i]['MACAddress'],
+                            ip: items[i]['IPAddress'],
+                            active: items[i]['Active'] == 1 ? true : false,
+                            data: items[i],
+                            interfaceType: items[i]['InterfaceType'],
+                            speed: parseInt(items[i]['X_AVM-DE_Speed']),
+                            guest: items[i]['X_AVM-DE_Guest'] == 0 ? false : true
+                        };
+                        hosts.push(device);
                     }
-                    if (itemActive && itemActive.length > 0) active = true;
-                    const device = {
-                        status: 'unchanged',
-                        dp: 'fb-devices.' + hostName,
-                        hn: hostName,
-                        hnOrg: items[i]['HostName'],
-                        mac: mac,
-                        ip: ip,
-                        active: active,
-                        data: active == true ? itemActive[0] : items[i],
-                        interfaceType: active == true ? itemActive[0]['InterfaceType'] : items[i]['InterfaceType'],
-                        speed: active == true ? parseInt(itemActive[0]['X_AVM-DE_Speed']) : parseInt(items[i]['X_AVM-DE_Speed']),
-                        guest: active == true ? itemActive[0]['X_AVM-DE_Guest'] == 0 ? false : true : items[i]['X_AVM-DE_Guest'] == 0 ? false : true
-                    };
-                    const temp = hosts.filter(x => x.hn == hostName);
-                    if (temp.length == 0) hosts.push(device);
+                    if (!item || item.length > 1){
+                        let mac = '';
+                        let ip = '';
+                        let active = false;
+                        for (let it = 0; it < item.length; it++){
+                            mac += mac == '' ? item[it].MACAddress : ', ' + item[it].MACAddress;
+                            ip += ip == '' ? item[it].IPAddress : ', ' + item[it].IPAddress;
+                        }
+                        if (itemActive && itemActive.length > 0) active = true;
+                        const device = {
+                            status: 'unchanged',
+                            dp: 'fb-devices.' + hostName,
+                            hn: hostName,
+                            hnOrg: items[i]['HostName'],
+                            mac: mac,
+                            ip: ip,
+                            active: active,
+                            data: active == true ? itemActive[0] : items[i],
+                            interfaceType: active == true ? itemActive[0]['InterfaceType'] : items[i]['InterfaceType'],
+                            speed: active == true ? parseInt(itemActive[0]['X_AVM-DE_Speed']) : parseInt(items[i]['X_AVM-DE_Speed']),
+                            guest: active == true ? itemActive[0]['X_AVM-DE_Guest'] == 0 ? false : true : items[i]['X_AVM-DE_Guest'] == 0 ? false : true
+                        };
+                        const temp = hosts.filter(x => x.hn == hostName);
+                        if (temp.length == 0) hosts.push(device);
+                    }
+                }else{
+                    if (!item || item.length == 1){
+                        const device = {
+                            status: 'unchanged',
+                            dp: 'fb-devices.' + hostName,
+                            hn: hostName,
+                            hnOrg: items[i]['HostName'],
+                            mac: items[i]['MACAddress'],
+                            ip: items[i]['IPAddress'],
+                            active: items[i]['Active'] == 1 ? true : false,
+                            data: items[i],
+                            interfaceType: items[i]['InterfaceType'],
+                            speed: parseInt(items[i]['X_AVM-DE_Speed']),
+                            guest: items[i]['X_AVM-DE_Guest'] == 0 ? false : true
+                        };
+                        hosts.push(device);
+                    }
+                    if (!item || item.length > 1){
+                        let mac = '';
+                        let ip = '';
+                        let active = false;
+                        for (let it = 0; it < item.length; it++){
+                            mac += mac == '' ? item[it].MACAddress : ', ' + item[it].MACAddress;
+                            ip += ip == '' ? item[it].IPAddress : ', ' + item[it].IPAddress;
+                        }
+                        if (itemActive && itemActive.length > 0) active = true;
+                        const device = {
+                            status: 'unchanged',
+                            dp: 'fb-devices.' + hostName,
+                            hn: hostName,
+                            hnOrg: items[i]['HostName'],
+                            mac: mac,
+                            ip: ip,
+                            active: active,
+                            data: active == true ? itemActive[0] : items[i],
+                            interfaceType: active == true ? itemActive[0]['InterfaceType'] : items[i]['InterfaceType'],
+                            speed: active == true ? parseInt(itemActive[0]['X_AVM-DE_Speed']) : parseInt(items[i]['X_AVM-DE_Speed']),
+                            guest: active == true ? itemActive[0]['X_AVM-DE_Guest'] == 0 ? false : true : items[i]['X_AVM-DE_Guest'] == 0 ? false : true
+                        };
+                        const temp = hosts.filter(x => x.hn == hostName);
+                        if (temp.length == 0) hosts.push(device);
+                    }
                 }
                 item = null;
                 itemActive = null;
@@ -646,6 +674,7 @@ class FbCheckpresence extends utils.Adapter {
                 await this.Fb.getDeviceList();
                 if (this.Fb.deviceList != null){
                     await this.getAllFbObjects();
+                    this.log.warn('devicelist2: ' + JSON.stringify(this.hosts));
                     const res = await obj.createFbDeviceObjects(this, this.adapterStates, this.hosts, this.enabled);
                     if (res === true) this.log.info('createFbDeviceObjects finished successfully');
                 }else{
