@@ -197,7 +197,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
+### 1.1.19 (2022-07-08)
 * (afuerhoff) issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice
 
 ### 1.1.18 (2022-07-04)
@@ -218,13 +218,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement
 * (afuerhoff) dependency updated
 * (afuerhoff) issue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added
-
-### 1.1.14 (2022-03-31)
-* (afuerhoff) dependencies updated
-* (afuerhoff) issue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix
-* (afuerhoff) issue [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] bugfix
-* (afuerhoff) whitelist.html bug fixed
-* (afuerhoff) issue [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) bugfix
 
 ## License
 MIT License
