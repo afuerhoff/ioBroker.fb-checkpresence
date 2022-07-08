@@ -67,6 +67,7 @@ class FbCheckpresence extends utils.Adapter {
         this.tout = null;
         this.suppressMesg = false;
         this.suppressArr = [];
+        this.triggerActive = false;
     }
 
     errorHandler(error, title){
@@ -842,6 +843,18 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 switch (obj.command) {
+                    case 'triggerPresence':{
+                        if (this.triggerActive === false){
+                            this.triggerActive = true;
+                            await this.checkPresence();
+                            await this._sleep(10000);
+                            this.triggerActive = false;
+                            reply(true);
+                        }else{
+                            reply(false);
+                        }
+                        return true;
+                    }
                     case 'getDevices':{
                         this.allDevices = [];
                         let onlyActive, reread;

@@ -197,6 +197,9 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### **WORK IN PROGRESS**
+* (afuerhoff) issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand
+
 ### 1.1.19 (2022-07-08)
 * (afuerhoff) issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice
 
