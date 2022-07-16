@@ -304,7 +304,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (cnt1 >= int1){
                     cnt1 = 0;
                     //gthis.log.info('loopFamily starts');
-                    await this.checkPresence();
+                    await this.checkPresence(false);
                     time = process.hrtime(work);
                     this.log.debug('loop family ends after ' + time + ' s');
                 }
@@ -846,7 +846,7 @@ class FbCheckpresence extends utils.Adapter {
                     case 'triggerPresence':{
                         if (this.triggerActive === false){
                             this.triggerActive = true;
-                            await this.checkPresence();
+                            await this.checkPresence(true);
                             await this._sleep(10000);
                             this.triggerActive = false;
                             reply(true);
@@ -1721,7 +1721,7 @@ class FbCheckpresence extends utils.Adapter {
         //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.speed', { val: speed, ack: true });
     }
 
-    async checkPresence(){
+    async checkPresence(trigger){
         try {
             const dnow = new Date(); //Actual date and time for comparison
             //let work = process.hrtime();
@@ -1796,7 +1796,7 @@ class FbCheckpresence extends utils.Adapter {
                     const memberRow = groupMembers[k].memberRow; //Row from family members table
                     if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
                         const newActive = groupMembers[k].newVal;
-                        //this.log.info('newActive1 ' + memberRow.familymember + ' ' + newActive);
+                        if (trigger === true) this.log.info('triggerPresence: State ' + memberRow.familymember + ' ' + newActive);
                         if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
                         if (newActive != null) this.getMemberSpeed(memberRow);
                     }
