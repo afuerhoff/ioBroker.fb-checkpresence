@@ -541,7 +541,7 @@ function beforeOpen(){
         $('#tabDevices input[type=checkbox]').each(function () {
             const row = $(this).closest('tr')[0];
             const mac = $(row).data('macaddress');
-            const ip = $(row).data('ipaddress');
+            const ip = $(row).data('ip');
             const dn = $(row).data('familymember');
             //const usage = $(row).data('usage');
             if (mac && mac == fm[i].macaddress && fm[i].usage === 'MAC' && fm[i].enabled === true){
@@ -550,7 +550,7 @@ function beforeOpen(){
             if (ip && ip == fm[i].ipaddress && fm[i].usage === 'IP' && fm[i].enabled === true){
                 $(this).prop('checked', true);
             }
-            if (dn && dn == fm[i].familymember && mac && mac == fm[i].macaddress && fm[i].usage === 'Hostname' && fm[i].enabled === true){
+            if (dn && dn == fm[i].devicename && mac && mac == fm[i].macaddress && fm[i].usage === 'Hostname' && fm[i].enabled === true){
                 $(this).prop('checked', true);
             }
         });
