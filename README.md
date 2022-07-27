@@ -5,7 +5,6 @@
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fb-checkpresence.svg)](https://www.npmjs.com/package/iobroker.fb-checkpresence)
 ![Number of Installations (latest)](https://iobroker.live/badges/fb-checkpresence-installed.svg)
 ![Number of Installations (stable)](https://iobroker.live/badges/fb-checkpresence-stable.svg)
-[![Dependency Status](https://img.shields.io/david/afuerhoff/iobroker.fb-checkpresence.svg)](https://david-dm.org/afuerhoff/iobroker.fb-checkpresence)
 [![Known Vulnerabilities](https://snyk.io/test/github/afuerhoff/ioBroker.fb-checkpresence/badge.svg)](https://snyk.io/test/github/afuerhoff/ioBroker.fb-checkpresence)
 [![NPM](https://nodei.co/npm/iobroker.fb-checkpresence.png?downloads=true)](https://nodei.co/npm/iobroker.fb-checkpresence/)
 
@@ -78,8 +77,7 @@ In this case the adapter tries to connect without https.
 
 ### Interval
 You have separate intervals for family members and Fritzbox devices.
-The interval for Fritzbox devices can be configured from 1 to 59 minutes. Normally a value between 1 and 5 minutes is an optimal interval to read the fritzbox data. Family members could be configured from 10s to 600s. Every new cycle starts if the previous cycle 
-is finished.
+The interval for Fritzbox devices can be configured from 10s to 3600s. Normally a value between 60 and 300 seconds is an optimal interval to read the fritzbox data. Family members could be configured from 10s to 600s. Every new cycle starts if the previous cycle is finished.
 
 ### Filter time
 If the filter time is greater than 0s the state of a family member is checked twice (after the filter time) if the state is changing to false. If the state is true the state is immediate set.  
@@ -121,6 +119,17 @@ You can also enable the filtering for a member. If the state is true the state c
 If the state is in both cases false then the state changes to false. Otherwise it does not change.
 
 To get the speed information in the objects you have to select fb-devices option.
+
+### Manually trigger presence
+In javascript you can trigger the presence manually. When you send the message to the adapter 
+every new message is blocked for 10 seconds. You receive a negative result (false) if the message is blocked.
+True if the message is received from the adapter. 
+`
+sendTo('fb-checkpresence.0', 'triggerPresence', {}
+    , function (result) {
+        log(result, 'info');
+});
+`
 
 ### Whitelist settings
 In the white list you can insert every known device. Any unknown devices are listed in the blacklist object. 
