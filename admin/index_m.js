@@ -549,15 +549,12 @@ function beforeOpen(){
                 $(this).prop('checked', false);
             }
             if (mac && mac == fm[i].macaddress && fm[i].usage === 'MAC' && fm[i].enabled === true){
-                alert(' ' + fm[i].devicename + ' ' + fm[i].enabled);
                 $(this).prop('checked', true);
             }
             if (ip && ip == fm[i].ipaddress && fm[i].usage === 'IP' && fm[i].enabled === true){
-                alert(' ' + fm[i].devicename + ' ' + fm[i].enabled);
                 $(this).prop('checked', true);
             }
             if (dn && dn == fm[i].devicename && mac && mac == fm[i].macaddress && fm[i].usage === 'Hostname' && fm[i].enabled === true){
-                alert(' ' + fm[i].devicename + ' ' + fm[i].enabled);
                 $(this).prop('checked', true);
             }
         });
