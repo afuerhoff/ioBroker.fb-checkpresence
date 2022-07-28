@@ -7,12 +7,12 @@
 const utils = require('@iobroker/adapter-core');
 
 // load your modules here, e.g.:
-const dateFormat = require('dateformat');
+//const dateFormat = require('dateformat');
 
 // own libraries
 const fb = require('./lib/fb');
 const obj = require('./lib/objects');
-//const dateFormat = require('./lib/dateformat');
+const dateFormat = require('./lib/dateformat');
 
 class Warn extends Error {
     constructor(message) {
