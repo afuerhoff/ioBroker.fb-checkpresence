@@ -544,7 +544,7 @@ class FbCheckpresence extends utils.Adapter {
             }
             //Logging of adapter start
             this.log.info('start ' + `${this.namespace}` + ': ' + this.Fb.modelName + ' version: ' + this.Fb.version + ' ip-address: "' + this.config.ipaddress + '" - interval devices: ' + this.config.interval + ' s' + ' - interval members: ' + this.config.intervalFamily + ' s');
-            this.config.username === '' ? this.log.warn('please insert a user for full functionality') : this.log.debug('configuration user: <' + this.config.username + '>');
+            this.config.username === '' || this.config.username === null ? this.log.warn('please insert a user for full functionality') : this.log.debug('configuration user: <' + this.config.username + '>');
             this.log.debug('configuration history: <' + this.config.history + '>');
             this.log.debug('configuration dateformat: <' + this.config.dateformat + '>');
             this.log.debug('configuration familymembers count: ' + membersFiltered.length);
