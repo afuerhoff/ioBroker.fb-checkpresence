@@ -134,9 +134,9 @@ function dlgError(text){
         '<div class="modal-footer">' + 
             '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
         '</div>';
-    $('#dlgDevices').append(content);
+    $('#dlgDevices').html(content);
     $('#dlgDevices').modal();
-    $('#dlgWL').append(content);
+    $('#dlgWL').html(content);
     $('#dlgWL').modal();
 }
 
@@ -194,7 +194,7 @@ function dlgDevices(arr, title, id){
             '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
         '</div>';
 
-    $(id).append(dialogDevices);
+    $(id).html(dialogDevices);
     $(id).modal({dismissible: false});
 }
 
@@ -255,7 +255,7 @@ function dlgWl(arr, title, id){
             '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
         '</div>';
 
-    $(id).append(dialogWl);
+    $(id).html(dialogWl);
     $(id).modal({dismissible: false,});
 }
 
