@@ -17,6 +17,13 @@ You must fill in the name of the family member and the mac-address (or ip-addres
 The comment is optional and you can enable or disable the family member. 
 The datapoint is based on the member name.
 
+### Used open source code
+#### npm dateformat v4.5.3
+(c)  2007-2009 Steven Levithan <stevenlevithan.com>
+npm: https://www.npmjs.com/package/dateformat
+github: https://github.com/felixge/node-dateformat
+license: MIT
+
 ### Adapter pre conditions
 For the correct function you have to install a history adapter. You can choose
 one of the following adapters:
