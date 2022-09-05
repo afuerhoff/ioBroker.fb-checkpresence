@@ -213,6 +213,9 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### __WORK IN PROGRESS__
+* (afuerhoff) dependencies updated
+
 ### 1.1.20 (2022-09-05)
 * (afuerhoff) issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand
 * (afuerhoff) issue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed
