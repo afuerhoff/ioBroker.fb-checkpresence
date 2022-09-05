@@ -213,7 +213,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### __WORK IN PROGRESS__
+### 1.1.21 (2022-09-05)
 * (afuerhoff) dependencies updated
 
 ### 1.1.20 (2022-09-05)
@@ -232,12 +232,6 @@ Here you will find information about the history of the current day.
 ### 1.1.17 (2022-06-15)
 * (afuerhoff) issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object
 * (afuerhoff) log optimized
-
-### 1.1.16 (2022-06-12)
-* (afuerhoff) issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds
-* (afuerhoff) issue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed
-* (afuerhoff) issue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices
-* (afuerhoff) bug in v1.1.15 fixed: info.extip was set without existing object
 
 ## License
 MIT License
