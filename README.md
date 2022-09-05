@@ -213,7 +213,7 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
+### 1.1.20 (2022-09-05)
 * (afuerhoff) issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand
 * (afuerhoff) issue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed
 * (afuerhoff) issue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Add family members dialogbox fixed
@@ -235,11 +235,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) issue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed
 * (afuerhoff) issue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices
 * (afuerhoff) bug in v1.1.15 fixed: info.extip was set without existing object
-
-### 1.1.15 (2022-05-27)
-* (afuerhoff) issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement
-* (afuerhoff) dependency updated
-* (afuerhoff) issue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added
 
 ## License
 MIT License

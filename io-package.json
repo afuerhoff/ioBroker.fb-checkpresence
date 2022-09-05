@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.19",
+    "version": "1.1.20",
     "news": {
+      "1.1.20": {
+        "en": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Add family members dialogbox fixed\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Dateformat library changed",
+        "de": "ausgabe [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) Kraftaktualisierung auf Nachfrage\nausgabe [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Familienmitglieder fest hinzufügen\nausgabe [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Fügen Sie Familienmitglieder Dialogbox fest\nausgabe [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Datenbank geändert",
+        "ru": "выпуск [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) обновление силы по требованию\nвыпуск [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Добавить членов семьи исправлены\nвыпуск [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Добавить членов семьи dialogbox Fixed\nвыпуск [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Датаформатная библиотека изменена",
+        "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) atualização de força na demanda\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Adicionar membros da família fixos\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Adicionar família membros caixa de diálogo fixo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Biblioteca de dataformato alterada",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling: Vertaling:\n_ Voeg familieleden aan\nquality over Quantity (QoQ) Releases Vertaling: Voeg familieleden dialogbox vast\nquality over Quantity (QoQ) Releases Vertaling: Datumbibliotheek veranderde",
+        "fr": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) mise à jour de la force sur la demande\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Ajouter la boîte de dialogue des membres de la famille\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La bibliothèque Dateformat a changé",
+        "it": "emissione [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) aggiornamento forza su richiesta\nemissione [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Aggiungi i membri della famiglia fisso\nnumero [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Aggiungi i membri della famiglia finestra di dialogo fisso\nnumero [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Libreria formato data cambiato",
+        "es": "[#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) actualización de la fuerza sobre la demanda\n[#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Agregar miembros de la familia fijos\n[#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Agregar a los miembros de la familia cuadro de diálogo fijo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La biblioteca Dateformat cambió",
+        "pl": "(#136(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) (ang.). aktualizacja\n(#139(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139). członkowie rodziny Add\n(#140(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) (ang.). Strona internetowa rodziny\n(#129(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) (ang.). Biblioteka zmienna",
+        "zh-cn": "问题[第136条](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/136) 需求最新情况\n问题[第139](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/139) 增加家庭固定成员\n问题[第140条](http://github.com/afuerhoff/ioBroker.fb- 核对presence/issues/140) 增加家庭口号固定装置\n问题[第129条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/129) 事实图书馆的改变"
+      },
       "1.1.19": {
         "en": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice",
         "de": "ausgabe [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) Gästegerät zweimal aufgeführt",
@@ -74,18 +86,6 @@
         "es": "dependencias actualizadas\nproblema [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) corrección de errores\nProblema [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] corrección de errores\nerror de whitelist.html corregido\nproblema [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) corrección de errores",
         "pl": "zaktualizowano zależności\nproblem [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) naprawa błędu\nproblem [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] poprawka błędu\nNaprawiono błąd whitelist.html\nproblem [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) poprawka błędu",
         "zh-cn": "已更新依赖项\n问题 [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) 错误修复\n问题 [[#91](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/91)] 错误修复\nwhitelist.html 错误已修复\n问题 [#92](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/92) 错误修复"
-      },
-      "1.1.13": {
-        "en": "issue #73: bugfix",
-        "de": "Ausgabe Nr. 73: Fehlerbehebung",
-        "ru": "проблема №73: исправление",
-        "pt": "problema nº 73: correção de bug",
-        "nl": "probleem #73: bugfix",
-        "fr": "problème n° 73 : correction de bogues",
-        "it": "problema #73: correzione di bug",
-        "es": "problema #73: corrección de errores",
-        "pl": "problem #73: naprawienie błędu",
-        "zh-cn": "问题 #73：错误修复"
       }
     },
     "titleLang": {

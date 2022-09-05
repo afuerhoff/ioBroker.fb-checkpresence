@@ -1,4 +1,9 @@
 # Older changes
+## 1.1.15 (2022-05-27)
+* (afuerhoff) issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement
+* (afuerhoff) dependency updated
+* (afuerhoff) issue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added
+
 ## 1.1.14 (2022-03-31)
 * (afuerhoff) dependencies updated
 * (afuerhoff) issue [#85](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/85) bugfix
