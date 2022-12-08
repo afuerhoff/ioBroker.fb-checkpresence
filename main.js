@@ -74,18 +74,16 @@ class FbCheckpresence extends utils.Adapter {
         //if(adapter === null) adapter = this;
         if (typeof error === 'string') {
             if (error.name === undefined || error.message === undefined){
-                this.log.warn(title + ' ' + JSON.stringify(error));
+                this.log.warn(title); // + ' ' + JSON.stringify(error));
             }else{
                 this.log.warn(title + ' ' + error.name + ': ' + error.message);
             }
-            //this.log.warn(title + error.name + ' ' + error.message);
         }
         else if (typeof error === 'object')
         {
             if (error instanceof TypeError) {
-                //this.log.error(title + ' ' + error.name + ': ' + error.message);
                 if (error.name === undefined || error.message === undefined){
-                    this.log.warn(title + ' ' + JSON.stringify(error));
+                    this.log.warn(title); // + ' ' + JSON.stringify(error));
                 }else{
                     this.log.warn(title + ' ' + error.name + ': ' + error.message);
                 }
@@ -99,23 +97,14 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 if (error.message != 'NoSuchEntryInArray' && !error.message.includes('EHOSTUNREACH')){
                     if (error.name === undefined || error.message === undefined){
-                        this.log.warn(title + ' ' + JSON.stringify(error));
+                        this.log.warn(title); // + ' ' + JSON.stringify(error));
                     }else{
                         this.log.warn(title + ' ' + error.name + ': ' + error.message);
                     }
                 }
             }else{
-                this.log.warn(title + ' ' + error.name + ': ' + JSON.stringify(error));
+                this.log.warn(title + ' ' + error.name + ': ' + error.message);
             }
-        }
-    }
-
-    showError(errorMsg) {
-        if (this.errorCnt < this.errorCntMax) {
-            this.errorCnt+=1;
-            this.log.error(errorMsg);
-        } else {
-            this.log.debug('maximum error count reached! Error messages are suppressed');
         }
     }
 
@@ -163,45 +152,6 @@ class FbCheckpresence extends utils.Adapter {
             this.errorHandler(error, 'getAdapterState: '); 
         }
     }
-
-    /*setStateIfNotEqual(id, options){
-        try {
-            let ind = this.adapterStates.findIndex(x => x.id == id);
-            if (ind != -1 &&  this.adapterStates[ind].state.val != options.val){
-                this.setState(id, options);
-                this.adapterStates[ind].state.val = options.val;
-                ind = 0;
-                return true;
-            }else{
-                return false;
-            }
-        } catch (error) {
-            this.errorHandler(error, 'setStateIfNotEqual: '); 
-        }
-    }*/
-
-    /*setStateFiltered(id, options){
-        try {
-            const ind = this.memberStates.findIndex(x => x.id == id);
-            if (ind != -1 && this.memberStates[ind].state.val == false && options.val == true){
-                if (this.setStateChanged(id, options)) this.log.info('0 ' + id + ' ' + options.val);
-                this.memberStates[ind].state.val = options.val;
-                return;
-            }       
-            if (ind != -1 &&  this.memberStates[ind].state.val == true && options.val == false){
-                this.memberStates[ind].state.val =  options.val;  
-                this.log.info('1 ' + id + ' ' + options.val);
-                return;
-            }       
-            if (ind != -1 &&  this.memberStates[ind].state.val == false && options.val == false){
-                if (this.setStateChanged(id, options)) this.log.info('2 ' + id + ' ' + options.val);
-                this.memberStates[ind].state.val = options.val;
-                return;
-            }       
-        } catch (error) {
-            this.errorHandler(error, 'setStateFiltered: '); 
-        }
-    }*/
 
     async resyncFbObjects(items){
         try {
@@ -277,11 +227,11 @@ class FbCheckpresence extends utils.Adapter {
     async connCheck(){
         try {
             if (await this.Fb.connectionCheck()){
-                this.setStateChanged('info.connection', { val: true, ack: true });
+                await this.setStateChangedAsync('info.connection', { val: true, ack: true });
             }else{
-                this.setStateChanged('info.connection', { val: false, ack: true });
+                await this.setStateChangedAsync('info.connection', { val: false, ack: true });
             }
-            this.setStateChanged('info.lastUpdate', { val: (new Date()).toString(), ack: true });
+            await this.setStateChangedAsync('info.lastUpdate', { val: (new Date()).toString(), ack: true });
         } catch (error) {
             this.errorHandler(error, 'connCheck: '); 
         }
@@ -303,32 +253,24 @@ class FbCheckpresence extends utils.Adapter {
                 cnt1 < cnt2 && cnt1 >= int1 ? await this.connCheck() : cnt2 >= int2 ? await this.connCheck() : null;  
                 if (cnt1 >= int1){
                     cnt1 = 0;
-                    //gthis.log.info('loopFamily starts');
                     await this.checkPresence(false);
                     time = process.hrtime(work);
                     this.log.debug('loop family ends after ' + time + ' s');
                 }
                 if (cnt2 >= int2){
                     cnt2 = 0;
-                    //gthis.log.debug('loopDevices starts');
                     if (this.config.extip === true){
-                        this.setStateChanged('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
+                        await this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
                     }
                     if (this.config.guestinfo === true){
-                        this.setStateChanged('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
+                        await this.setStateChangedAsync('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
                     }
                     if (this.config.qrcode === true){
-                        this.setStateChanged('guest.wlanQR', { val: await this.Fb.getGuestQR(), ack: true });
+                        await this.setStateChangedAsync('guest.wlanQR', { val: await this.Fb.getGuestQR(), ack: true });
                     }
                     if (this.Fb.GETPATH != null && this.Fb.GETPATH == true){
                         this.checkDevices();
                     }
-                    /*const used = process.memoryUsage();
-                    let mesg = '';
-                    for (const key in used) {
-                        mesg += `${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB | `; 
-                    }                
-                    this.log.info(mesg);*/
                     time = process.hrtime(work);
                     this.log.debug('loop main ends after ' + time + ' s');
                 }
@@ -341,17 +283,21 @@ class FbCheckpresence extends utils.Adapter {
         }            
     }
 
-    setDeviceStates() {
-        const deviceList = this.Fb.deviceList;
-        if(this.config.compatibility == true) this.setStateChanged('devices', { val: deviceList.length, ack: true });
-        this.setStateChanged('fb-devices.count', { val: deviceList.length, ack: true });
-        let inActiveHosts = deviceList.filter(host => host.Active == '0');
-        this.setStateChanged('fb-devices.inactive', { val: inActiveHosts.length, ack: true });
-        inActiveHosts = null;
-        let activeHosts = deviceList.filter(host => host.Active == '1');
-        this.setStateChanged('fb-devices.active', { val: activeHosts.length, ack: true });
-        if(this.config.compatibility == true) this.setStateChanged('activeDevices', { val: activeHosts.length, ack: true });
-        activeHosts = null;
+    async setDeviceStates() {
+        try {
+            const deviceList = this.Fb.deviceList;
+            if(this.config.compatibility == true) await this.setStateChangedAsync('devices', { val: deviceList.length, ack: true });
+            await this.setStateChangedAsync('fb-devices.count', { val: deviceList.length, ack: true });
+            let inActiveHosts = deviceList.filter(host => host.Active == '0');
+            await this.setStateChangedAsync('fb-devices.inactive', { val: inActiveHosts.length, ack: true });
+            inActiveHosts = null;
+            let activeHosts = deviceList.filter(host => host.Active == '1');
+            await this.setStateChangedAsync('fb-devices.active', { val: activeHosts.length, ack: true });
+            if(this.config.compatibility == true) await this.setStateChangedAsync('activeDevices', { val: activeHosts.length, ack: true });
+            activeHosts = null;
+        } catch (error) {
+            this.errorHandler(error, 'setDeviceStates: '); 
+        }
     }
     
     async getAllFbObjects(){
@@ -644,14 +590,14 @@ class FbCheckpresence extends utils.Adapter {
             //Create global objects
             await obj.createGlobalObjects(this, this.adapterStates, this.HTML+this.HTML_END, this.HTML_GUEST+this.HTML_END, this.enabled);
 
-            this.Fb.suportedServices.forEach(element => {
-                this.setState('info.' + element.id, { val: element.enabled, ack: true });
+            this.Fb.suportedServices.forEach(async element => {
+                await this.setStateAsync('info.' + element.id, { val: element.enabled, ack: true });
             });
-            this.setState('reboot', { val: false, ack: true });
-            this.setState('reconnect', { val: false, ack: true });
+            await this.setStateAsync('reboot', { val: false, ack: true });
+            await this.setStateAsync('reconnect', { val: false, ack: true });
 
             if (this.config.extip === false){
-                //this.setStateChanged('info.extIp', { val: '', ack: true });
+                //await this.setStateChangedAsync('info.extIp', { val: '', ack: true });
             }
 
             //If history is enbled, check if history adapter is running. 
@@ -714,9 +660,10 @@ class FbCheckpresence extends utils.Adapter {
             this.tout && clearTimeout(this.tout);
             this.setState('info.connection', { val: false, ack: true });
             this.log.info('cleaned everything up ...');
-            setTimeout(callback, 3000);
+            callback && callback();
+            //setTimeout(callback, 1000);
         } catch (e) {
-            this.log.error('onUnload: ' + e);
+            this.log.error('onUnload: ' + e.name + ' ' + e.message);
             callback && callback();
         }
     }
@@ -834,6 +781,7 @@ class FbCheckpresence extends utils.Adapter {
      */
     async onMessage(obj) {
         try {
+            this.log.debug(`[MSSG] Received: ${JSON.stringify(obj)}`);
             if (!obj) return;
             if (typeof obj === 'object' && obj.message) {
                 const gthis = this;
@@ -844,6 +792,7 @@ class FbCheckpresence extends utils.Adapter {
 
                 switch (obj.command) {
                     case 'triggerPresence':{
+                        gthis.log.info('triggerPresence');
                         if (this.triggerActive === false){
                             this.triggerActive = true;
                             await this.checkPresence(true);
@@ -896,8 +845,8 @@ class FbCheckpresence extends utils.Adapter {
                 if (obj.callback) this.sendTo(obj.from, obj.command, obj.message, obj.callback);
                 return true;    
             }
-        } catch (e) {
-            this.showError('onMessage: '+e.message);
+        } catch (error) {
+            this.log.error('onMessage: ' + error.message);
         }
     }
 
@@ -911,7 +860,7 @@ class FbCheckpresence extends utils.Adapter {
             const enabledMeshInfo = this.config.meshinfo;
             const ch = await this.getChannelsOfAsync(); //get all channels
             
-            if (mesh) this.setStateChanged('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
+            if (mesh) await this.setStateChangedAsync('fb-devices.mesh', { val: JSON.stringify(mesh), ack: true });
             for (let i = 0; i < hosts.length; i++) {
                 const hostName = hosts[i]['hn'];
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
@@ -924,7 +873,7 @@ class FbCheckpresence extends utils.Adapter {
                             meshdevice = mesh.find(el => el.device_name === hosts[i]['hnOrg']);
                         }
                         if (meshdevice != null) { //host in the meshlist
-                            this.setStateChanged('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
+                            await this.setStateChangedAsync('fb-devices.' + hostName + '.meshstate', { val: true, ack: true });
                             
                             //delete old interfaces
                             for (const c in hostCh) {
@@ -951,11 +900,11 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                         await this.delObjectAsync(hostCh[c]._id);
                                     }else{
-                                        this.setStateChanged('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
-                                        this.setStateChanged(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
-                                        this.setStateChanged(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
-                                        this.setStateChanged(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
-                                        this.setStateChanged(hostCh[c]._id + '.link', { val: '', ack: true });
+                                        await this.setStateChangedAsync('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
+                                        await this.setStateChangedAsync(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
+                                        await this.setStateChangedAsync(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
+                                        await this.setStateChangedAsync(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
+                                        await this.setStateChangedAsync(hostCh[c]._id + '.link', { val: '', ack: true });
                                     }
                                 }
                             }
@@ -986,7 +935,7 @@ class FbCheckpresence extends utils.Adapter {
                                 const ifNewName = ifName == '' ? ifType : ifName;
                                 if (interfaceName == '') interfaceName = ifType;
 
-                                this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.name', { val: ifName, ack: true });
+                                await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.name', { val: ifName, ack: true });
                                 
                                 if (nInterface['node_links'].length > 0){ //filter empty interfaces
                                     let link = '';
@@ -1009,19 +958,19 @@ class FbCheckpresence extends utils.Adapter {
                                             data_rate_rx = Math.round(nodelinks['cur_data_rate_rx'] / 1000);
                                             data_rate_tx = Math.round(nodelinks['cur_data_rate_tx'] / 1000);
                                         }
-                                        this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: Math.round(nodelinks['rx_rcpi']), ack: true });
-                                        this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
-                                        this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
+                                        await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: Math.round(nodelinks['rx_rcpi']), ack: true });
+                                        await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: data_rate_rx, ack: true });
+                                        await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: data_rate_tx, ack: true });
                                     }
-                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: link, ack: true });
+                                    await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: link, ack: true });
                                 }else{
                                     //Interface without links
-                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: '', ack: true });
-                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: 0, ack: true });
-                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: 0, ack: true });
-                                    this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: 0, ack: true });
+                                    await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.link', { val: '', ack: true });
+                                    await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.rx_rcpi', { val: 0, ack: true });
+                                    await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_rx', { val: 0, ack: true });
+                                    await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.cur_data_rate_tx', { val: 0, ack: true });
                                 }
-                                this.setStateChanged('fb-devices.' + hostName + '.' + ifNewName + '.type', { val: ifType, ack: true });
+                                await this.setStateChangedAsync('fb-devices.' + hostName + '.' + ifNewName + '.type', { val: ifType, ack: true });
                             }
                         }else{ //host not in meshlist
                             for (const c in hostCh) {
@@ -1038,11 +987,11 @@ class FbCheckpresence extends utils.Adapter {
                                     await this.delObjectAsync(hostCh[c]._id);
                                 }else{ //old channel 
                                     //this.log.info('test1');
-                                    this.setStateChanged('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
-                                    this.setStateChanged(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
-                                    this.setStateChanged(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
-                                    this.setStateChanged(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
-                                    this.setStateChanged(hostCh[c]._id + '.link', { val: '', ack: true });
+                                    await this.setStateChangedAsync('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
+                                    await this.setStateChangedAsync(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
+                                    await this.setStateChangedAsync(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
+                                    await this.setStateChangedAsync(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
+                                    await this.setStateChangedAsync(hostCh[c]._id + '.link', { val: '', ack: true });
                                     //this.log.info('test2');
                                 }
                             }
@@ -1100,12 +1049,12 @@ class FbCheckpresence extends utils.Adapter {
                     hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                     
                     if (count == macs.length){
-                        this.setStateChanged('fb-devices.' + hostName + '.whitelist', { val: true, ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.blacklist', { val: false, ack: true });               
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.whitelist', { val: true, ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.blacklist', { val: false, ack: true });               
                     }else{
-                        this.setStateChanged('fb-devices.' + hostName + '.whitelist', { val: false, ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.whitelist', { val: false, ack: true });
                         if (host[0]['guest'] == false){
-                            this.setStateChanged('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });
+                            await this.setStateChangedAsync('fb-devices.' + hostName + '.blacklist', { val: true, ack: true });
                         }               
                     }
                 }
@@ -1114,19 +1063,19 @@ class FbCheckpresence extends utils.Adapter {
             jsonBlRow += ']';
             htmlBlRow += this.HTML_END;
             htmlWlRow += this.HTML_END;
-            this.setStateChanged('blacklist.count', { val: blCnt, ack: true });
-            this.setStateChanged('blacklist.listHtml', { val: htmlBlRow, ack: true });
-            this.setStateChanged('blacklist.listJson', { val: jsonBlRow, ack: true });
+            await this.setStateChangedAsync('blacklist.count', { val: blCnt, ack: true });
+            await this.setStateChangedAsync('blacklist.listHtml', { val: htmlBlRow, ack: true });
+            await this.setStateChangedAsync('blacklist.listJson', { val: jsonBlRow, ack: true });
             
-            this.setStateChanged('whitelist.json', { val: jsonWlRow, ack: true });
-            this.setStateChanged('whitelist.html', { val: htmlWlRow, ack: true });
-            this.setStateChanged('whitelist.count', { val: this.config.whitelist.length, ack: true });
+            await this.setStateChangedAsync('whitelist.json', { val: jsonWlRow, ack: true });
+            await this.setStateChangedAsync('whitelist.html', { val: htmlWlRow, ack: true });
+            await this.setStateChangedAsync('whitelist.count', { val: this.config.whitelist.length, ack: true });
             if (blCnt > 0) {
-                if(this.config.compatibility == true) this.setStateChanged('blacklist', { val: true, ack: true });
-                this.setStateChanged('blacklist.presence', { val: true, ack: true });
+                if(this.config.compatibility == true) await this.setStateChangedAsync('blacklist', { val: true, ack: true });
+                await this.setStateChangedAsync('blacklist.presence', { val: true, ack: true });
             }else {
-                if(this.config.compatibility == true) this.setStateChanged('blacklist', { val: false, ack: true });
-                this.setStateChanged('blacklist.presence', { val: false, ack: true });
+                if(this.config.compatibility == true) await this.setStateChangedAsync('blacklist', { val: false, ack: true });
+                await this.setStateChangedAsync('blacklist.presence', { val: false, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
             jsonWlRow = null;
@@ -1135,7 +1084,7 @@ class FbCheckpresence extends utils.Adapter {
             htmlWlRow = null;
             return true;
         } catch (error) {
-            this.log.error('getWlBlInfo: ' + error);
+            this.errorHandler(error, 'getWlBlInfo');
             return false;            
         }
     }
@@ -1203,16 +1152,16 @@ class FbCheckpresence extends utils.Adapter {
                 const mac = hosts[i]['mac'] != undefined ? hosts[i]['mac'] : '';
                 const ip = hosts[i]['ip'] != undefined ? hosts[i]['ip'] : '';
 
-                if (this.config.fbdevices === true){
+                if (this.config.fbdevices === true && this.enabled == true){
                     if (hostName != '') {
-                        this.setStateChanged('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
-                        this.setStateChanged('fb-devices.' + hostName + '.vpn', { val: vpn, ack: true });
-                        if (hosts[i]['data'] != null) this.setStateChanged('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.interfacetype', { val: hosts[i]['interfaceType'], ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.speed', { val: parseInt(hosts[i]['speed']), ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.guest', { val: hosts[i]['guest'], ack: true });
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.vpn', { val: vpn, ack: true });
+                        if (hosts[i]['data'] != null) await this.setStateChangedAsync('fb-devices.' + hostName + '.disabled', { val: hosts[i]['data']['X_AVM-DE_Disallow'] == 0 ? false : true, ack: true });
                     }else{
                         this.log.debug('getDeviceInfo: hostname is empty -> mac: ' + mac);
                     }
@@ -1226,26 +1175,26 @@ class FbCheckpresence extends utils.Adapter {
             jsonFbDevInactive += ']';
             jsonFbDevActiveVPN += ']';
 
-            if (this.config.fbdevices === true){
-                this.setStateChanged('fb-devices.json', { val: jsonFbDevices, ack: true });
-                this.setStateChanged('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
-                this.setStateChanged('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
-                this.setStateChanged('fb-devices.html', { val: htmlFbDevices, ack: true });
-                this.setStateChanged('fb-devices.jsonActiveVPN', { val: jsonFbDevActiveVPN, ack: true });
+            if (this.config.fbdevices === true && this.enabled == true){
+                await this.setStateChangedAsync('fb-devices.json', { val: jsonFbDevices, ack: true });
+                await this.setStateChangedAsync('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
+                await this.setStateChangedAsync('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
+                await this.setStateChangedAsync('fb-devices.html', { val: htmlFbDevices, ack: true });
+                await this.setStateChangedAsync('fb-devices.jsonActiveVPN', { val: jsonFbDevActiveVPN, ack: true });
             }
-            if (this.config.guestinfo === true) {
-                this.setStateChanged('guest.listHtml', { val: htmlRow, ack: true });
-                this.setStateChanged('guest.listJson', { val: jsonRow, ack: true });
-                this.setStateChanged('guest.presentGuests', { val: guests, ack: true });
-                this.setStateChanged('guest.count', { val: guestCnt, ack: true });
+            if (this.config.guestinfo === true && this.enabled == true) {
+                await this.setStateChangedAsync('guest.listHtml', { val: htmlRow, ack: true });
+                await this.setStateChangedAsync('guest.listJson', { val: jsonRow, ack: true });
+                await this.setStateChangedAsync('guest.presentGuests', { val: guests, ack: true });
+                await this.setStateChangedAsync('guest.count', { val: guestCnt, ack: true });
                 const val = guestCnt > 0 ? true : false;
-                this.setStateChanged('guest.presence', { val: val, ack: true });
-                if(this.config.compatibility == true) this.setStateChanged('guest', { val: val, ack: true });
+                await this.setStateChangedAsync('guest.presence', { val: val, ack: true });
+                if(this.config.compatibility == true) await this.setStateChangedAsync('guest', { val: val, ack: true });
             }
             this.log.debug('getDeviceInfo activeCnt: '+ activeCnt);
             return true;
         } catch (error) {
-            this.log.error('getDeviceInfo: ' + error);
+            this.errorHandler(error, 'getDeviceInfo');
             return false;
         }
     }
@@ -1505,18 +1454,18 @@ class FbCheckpresence extends utils.Adapter {
                 //calculation of '.since'
                 const diff = Math.round((dnow - new Date(curVal.lc))/1000/60);
                 if (curVal.val == true){
-                    this.setStateChanged(memberPath + '.present.since', { val: diff, ack: true });
-                    this.setStateChanged(memberPath + '.absent.since', { val: 0, ack: true });
+                    await this.setStateChangedAsync(memberPath + '.present.since', { val: diff, ack: true });
+                    await this.setStateChangedAsync(memberPath + '.absent.since', { val: 0, ack: true });
                 }
                 if (curVal.val == false){
-                    this.setStateChanged(memberPath + '.absent.since', { val: diff, ack: true });
-                    this.setStateChanged(memberPath + '.present.since', { val: 0, ack: true });
+                    await this.setStateChangedAsync(memberPath + '.absent.since', { val: diff, ack: true });
+                    await this.setStateChangedAsync(memberPath + '.present.since', { val: 0, ack: true });
                 }
                 //analyse member presence
                 
-                this.setStateChanged(memberPath + '.presence', { val: newActive, ack: true });
+                await this.setStateChangedAsync(memberPath + '.presence', { val: newActive, ack: true });
                 //this.setStateIfNotEqual(memberPath + '.presence', { val: newActive, ack: true });
-                if ( memberRow.group== '' && this.config.compatibility === true) this.setStateChanged(memberPath, { val: newActive, ack: true });
+                if ( memberRow.group== '' && this.config.compatibility === true) await this.setStateChangedAsync(memberPath, { val: newActive, ack: true });
                 //if ( memberRow.group== '' && this.config.compatibility === true) this.setStateIfNotEqual(memberPath, { val: newActive, ack: true });
 
                 if (newActive == true){ //member = true
@@ -1531,13 +1480,13 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == false){ //signal changing to true
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        this.setStateChanged(memberPath + '.comming', { val: dnow.toString(), ack: true });
+                        await this.setStateChangedAsync(memberPath + '.comming', { val: dnow.toString(), ack: true });
                         comming = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to true');
-                        if (memberPath.group == '' && this.config.compatibility === true) this.setStateChanged(memberPath, { val: true, ack: true });
-                        this.setStateChanged(memberPath + '.presence', { val: true, ack: true });
+                        if (memberPath.group == '' && this.config.compatibility === true) await this.setStateChangedAsync(memberPath, { val: true, ack: true });
+                        await this.setStateChangedAsync(memberPath + '.presence', { val: true, ack: true });
                     }
                 }else{ //member = false
                     presence.all = false;
@@ -1550,13 +1499,13 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == true){ //signal changing to false
                         this.log.info('newActive ' + member + ' ' + newActive);
-                        this.setStateChanged(memberPath + '.going', { val: dnow.toString(), ack: true });
+                        await this.setStateChangedAsync(memberPath + '.going', { val: dnow.toString(), ack: true });
                         going = dnow;
                     }
                     if (curVal.val == null){
                         this.log.warn('Member value is null! Value set to false');
-                        if (memberPath.group == '' && this.config.compatibility === true) this.setStateChanged(memberPath, { val: false, ack: true });
-                        this.setStateChanged(memberPath + '.presence', { val: false, ack: true });
+                        if (memberPath.group == '' && this.config.compatibility === true) await this.setStateChangedAsync(memberPath, { val: false, ack: true });
+                        await this.setStateChangedAsync(memberPath + '.presence', { val: false, ack: true });
                     }
                 }
                 presence.val = newActive;
@@ -1566,11 +1515,11 @@ class FbCheckpresence extends utils.Adapter {
                 going = going !== null ? going.toString() : going1.val;
                 if (comming1.val == null) {
                     comming = new Date(curVal.lc);
-                    this.setStateChanged(memberPath + '.comming', { val: comming.toString(), ack: true });
+                    await this.setStateChangedAsync(memberPath + '.comming', { val: comming.toString(), ack: true });
                 }
                 if (going1.val == null) {
                     going = new Date(curVal.lc);
-                    this.setStateChanged(memberPath + '.going', { val: going.toString(), ack: true });
+                    await this.setStateChangedAsync(memberPath + '.going', { val: going.toString(), ack: true });
                 }
                 this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, this.config.dateformat), 'Geht', dateFormat(going, this.config.dateformat)]);
                 this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, this.config.dateformat), dateFormat(going, this.config.dateformat)]);
@@ -1651,13 +1600,13 @@ class FbCheckpresence extends utils.Adapter {
                             }
                             present -= absent;
                             
-                            this.setStateChanged(memberPath + '.present.sum_day', { val: present, ack: true });
-                            this.setStateChanged(memberPath + '.absent.sum_day', { val: absent, ack: true });
+                            await this.setStateChangedAsync(memberPath + '.present.sum_day', { val: present, ack: true });
+                            await this.setStateChangedAsync(memberPath + '.absent.sum_day', { val: absent, ack: true });
 
                             jsonHistory += ']';
                             htmlHistory += this.HTML_END;
-                            this.setStateChanged(memberPath + '.history', { val: jsonHistory, ack: true });
-                            this.setStateChanged(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
+                            await this.setStateChangedAsync(memberPath + '.history', { val: jsonHistory, ack: true });
+                            await this.setStateChangedAsync(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
 
                         } catch (err) {
                             throw Error(err);
@@ -1666,10 +1615,10 @@ class FbCheckpresence extends utils.Adapter {
                         this.log.info('History from ' + memb + ' not enabled');
                     }
                 }else{//history enabled
-                    this.setStateChanged(memberPath + '.history', { val: 'disabled', ack: true });
-                    this.setStateChanged(memberPath + '.historyHtml', { val: 'disabled', ack: true });
-                    this.setStateChanged(memberPath + '.present.sum_day', { val: -1, ack: true });
-                    this.setStateChanged(memberPath + '.absent.sum_day', { val: -1, ack: true });
+                    await this.setStateChangedAsync(memberPath + '.history', { val: 'disabled', ack: true });
+                    await this.setStateChangedAsync(memberPath + '.historyHtml', { val: 'disabled', ack: true });
+                    await this.setStateChangedAsync(memberPath + '.present.sum_day', { val: -1, ack: true });
+                    await this.setStateChangedAsync(memberPath + '.absent.sum_day', { val: -1, ack: true });
                 }
             }else{
                 this.log.warn('can not get active state from member ' + member);
@@ -1680,45 +1629,49 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
 
-    getMemberSpeed(memberRow){
-        const hosts = this.hosts;
-        if (hosts === null) return null;
-        const member = memberRow.familymember; 
-        let memberPath = '';
-        if (this.config.compatibility === true){
-            memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
-        } else {
-            memberPath = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
-        }
-        //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
-        //const memberPath2 = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
-        
-        let speed = 0;
-        let items = null;
-        if (memberRow.usage == 'Hostname' && hosts != null){
-            items = hosts.filter(x => x.hn == memberRow.devicename);
-            const itemsActive = items.filter(x => x.active == '1');
-            if (items && items.length == 0) speed = 0;
-            if (items && items.length == 1) speed = items[0].speed;
-            if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
-        }else{
-            if (memberRow.usage == 'IP'){
-                items = hosts.filter(x => x.ip == memberRow.ipaddress);
+    async getMemberSpeed(memberRow){
+        try {
+            const hosts = this.hosts;
+            if (hosts === null) return null;
+            const member = memberRow.familymember; 
+            let memberPath = '';
+            if (this.config.compatibility === true){
+                memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
+            } else {
+                memberPath = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
+            }
+            //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
+            //const memberPath2 = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
+            
+            let speed = 0;
+            let items = null;
+            if (memberRow.usage == 'Hostname' && hosts != null){
+                items = hosts.filter(x => x.hn == memberRow.devicename);
                 const itemsActive = items.filter(x => x.active == '1');
                 if (items && items.length == 0) speed = 0;
                 if (items && items.length == 1) speed = items[0].speed;
                 if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
             }else{
-                items = hosts.filter(x => x.mac == memberRow.macaddress);
-                const itemsActive = items.filter(x => x.active == '1');
-                if (items && items.length == 0) speed = 0;
-                if (items && items.length == 1) speed = items[0].speed;
-                if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
+                if (memberRow.usage == 'IP'){
+                    items = hosts.filter(x => x.ip == memberRow.ipaddress);
+                    const itemsActive = items.filter(x => x.active == '1');
+                    if (items && items.length == 0) speed = 0;
+                    if (items && items.length == 1) speed = items[0].speed;
+                    if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
+                }else{
+                    items = hosts.filter(x => x.mac == memberRow.macaddress);
+                    const itemsActive = items.filter(x => x.active == '1');
+                    if (items && items.length == 0) speed = 0;
+                    if (items && items.length == 1) speed = items[0].speed;
+                    if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
+                }
             }
+            items = null;
+            await this.setStateChangedAsync(memberPath + '.speed', { val: parseInt(speed), ack: true });
+            //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.speed', { val: speed, ack: true });
+        } catch (error) {
+            this.errorHandler(error, 'getMemberSpeed: ');
         }
-        items = null;
-        this.setStateChanged(memberPath + '.speed', { val: parseInt(speed), ack: true });
-        //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.speed', { val: speed, ack: true });
     }
 
     async checkPresence(trigger){
@@ -1806,16 +1759,16 @@ class FbCheckpresence extends utils.Adapter {
                 //group states
                 this.jsonTab += ']';
                 this.htmlTab += this.HTML_END;
-                this.setStateChanged(memberPath + 'json', { val: this.jsonTab, ack: true });
-                this.setStateChanged(memberPath + 'html', { val: this.htmlTab, ack: true });
-                this.setStateChanged(memberPath + 'presenceAll', { val: presence.all, ack: true });
-                this.setStateChanged(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
-                this.setStateChanged(memberPath + 'presence', { val: presence.one, ack: true });
-                this.setStateChanged(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
-                this.setStateChanged(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
-                this.setStateChanged(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
-                this.setStateChanged(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
-                this.setStateChanged(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
+                await this.setStateChangedAsync(memberPath + 'json', { val: this.jsonTab, ack: true });
+                await this.setStateChangedAsync(memberPath + 'html', { val: this.htmlTab, ack: true });
+                await this.setStateChangedAsync(memberPath + 'presenceAll', { val: presence.all, ack: true });
+                await this.setStateChangedAsync(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
+                await this.setStateChangedAsync(memberPath + 'presence', { val: presence.one, ack: true });
+                await this.setStateChangedAsync(memberPath + 'absence', { val: presence.oneAbsence, ack: true });
+                await this.setStateChangedAsync(memberPath + 'absentMembers', { val: presence.absentMembers, ack: true });
+                await this.setStateChangedAsync(memberPath + 'presentMembers', { val: presence.presentMembers, ack: true });
+                await this.setStateChangedAsync(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
+                await this.setStateChangedAsync(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
             //time = process.hrtime(work);
             //this.log.info(timeStr + time + 's');
@@ -1838,23 +1791,13 @@ class FbCheckpresence extends utils.Adapter {
     }  
 }
 
-process.on('SIGINT', function() {
-    console.log('process_on');
-    //stopAll();
-    //stopProxy();
-    //setConnected(false);
-});
+//process.on('SIGINT', function() {
+    //console.log('process_on');
+//});
 
-process.on('uncaughtException', function(err) {
-    console.log('process_on: ' + err.toString());
-    //console.log('Exception: ' + err + '/' + err.toString());
-    /*if (adapter && adapter.log) {
-        adapter.log.warn('Exception: ' + err);
-    }*/
-    //stopAll();
-    //stopProxy();
-    //setConnected(false);
-});
+//process.on('uncaughtException', function(err) {
+    //console.log('process_on: ' + err.toString());
+//});
 
 if (require.main !== module) {
     // Export the constructor in compact mode
