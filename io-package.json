@@ -137,6 +137,7 @@
     "compact": true,
     "materialize": true,
     "stopBeforeUpdate": true,
+    "stopTimeout": 1000,
     "messagebox": true,
     "dependencies": [
       {
