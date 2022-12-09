@@ -1792,11 +1792,11 @@ class FbCheckpresence extends utils.Adapter {
 }
 
 //process.on('SIGINT', function() {
-    //console.log('process_on');
+//console.log('process_on');
 //});
 
 //process.on('uncaughtException', function(err) {
-    //console.log('process_on: ' + err.toString());
+//console.log('process_on: ' + err.toString());
 //});
 
 if (require.main !== module) {
