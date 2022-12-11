@@ -694,14 +694,13 @@ class FbCheckpresence extends utils.Adapter {
                 if (id == `${this.namespace}` + '.guest.wlan' && this.Fb.SETENABLE == true && state.ack === false && this.Fb.WLAN3INFO ===true && this.config.guestinfo === true){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     const val = state.val ? '1' : '0';
-                    const soapResult = {data: null};
-                    await this.Fb.soapAction('/upnp/control/wlanconfig3', 'urn:dslforum-org:service:' + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', val]], soapResult);
+                    const soapResult = await this.Fb.soapAction('/upnp/control/wlanconfig3', 'urn:dslforum-org:service:' + 'WLANConfiguration:3', 'SetEnable', [[1, 'NewEnable', val]]);
                     //if (guestwlan['status'] == 200 || guestwlan['result'] == true) {
-                    if (soapResult && soapResult.data) {
+                    if (soapResult) {
                         await this.Fb.getGuestWlan(id, this.config.qrcode);
                         //if(state.val == wlanStatus) this.setState('guest.wlan', { val: wlanStatus, ack: true });
                     }else{
-                        throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult.data)};
+                        throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult)};
                     }
                 }
 
@@ -711,27 +710,25 @@ class FbCheckpresence extends utils.Adapter {
                     const ipaddress = await this.getStateAsync(ipId);
                     const val = state.val ? '1' : '0';
                     this.log.info('ip ' + JSON.stringify(ipaddress.val) + ' ' + val);
-                    const soapResult = {data: null};
-                    await this.Fb.soapAction('/upnp/control/x_hostfilter', 'urn:dslforum-org:service:' + 'X_AVM-DE_HostFilter:1', 'DisallowWANAccessByIP', [[1, 'NewIPv4Address', ipaddress.val],[2, 'NewDisallow', val]], soapResult);
-                    if (soapResult && soapResult.data) {
+                    const soapResult = await this.Fb.soapAction('/upnp/control/x_hostfilter', 'urn:dslforum-org:service:' + 'X_AVM-DE_HostFilter:1', 'DisallowWANAccessByIP', [[1, 'NewIPv4Address', ipaddress.val],[2, 'NewDisallow', val]]);
+                    if (soapResult) {
                         const wanaccess = await this.Fb.getWanAccess(ipaddress);
                         if (wanaccess !== null) this.setState(id, { val: wanaccess, ack: true });
                     }else{
-                        throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult.data)};
+                        throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult)};
                     }
                 }
 
                 if (id == `${this.namespace}` + '.reboot' && this.Fb.REBOOT === true){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
-                        const soapResult = {data: null};
-                        await this.Fb.soapAction('/upnp/control/deviceconfig', 'urn:dslforum-org:service:' + 'DeviceConfig:1', 'Reboot', null, soapResult);
+                        const soapResult = await this.Fb.soapAction('/upnp/control/deviceconfig', 'urn:dslforum-org:service:' + 'DeviceConfig:1', 'Reboot', null);
                         //if (reboot['status'] == 200 || reboot['result'] == true) {
-                        if (soapResult && soapResult.data) {
+                        if (soapResult) {
                             this.setState(`${this.namespace}` + '.reboot', { val: false, ack: true });
                         }else{
                             this.setState(`${this.namespace}` + '.reboot', { val: false, ack: true });
-                            throw Error('reboot failure! ' + JSON.stringify(soapResult.data));
+                            throw Error('reboot failure! ' + JSON.stringify(soapResult));
                         }
                     }
                 }
@@ -739,13 +736,13 @@ class FbCheckpresence extends utils.Adapter {
                 if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
-                        const soapResult = {data: null};
+                        let soapResult = null;
                         if(this.Fb.RECONNECT && this.Fb.RECONNECT == true && this.Fb.connection == '1.WANPPPConnection.1'){
-                            await this.Fb.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null, soapResult);
+                            soapResult = await this.Fb.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null);
                         }else{
-                            await this.Fb.soapAction('/upnp/control/wanipconnection1', 'urn:dslforum-org:service:' + 'WANIPConnection:1', 'ForceTermination', null, soapResult);
+                            soapResult = await this.Fb.soapAction('/upnp/control/wanipconnection1', 'urn:dslforum-org:service:' + 'WANIPConnection:1', 'ForceTermination', null);
                         }
-                        if (soapResult && soapResult.data) {
+                        if (soapResult) {
                             this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
                         }else{
                             this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
@@ -1325,10 +1322,9 @@ class FbCheckpresence extends utils.Adapter {
                 switch (memberRow.usage) {
                     case 'MAC':
                         if (mac != ''){
-                            const soapResult = {data: null};
-                            await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]], soapResult);
-                            if(soapResult && soapResult.data) {
-                                active = soapResult.data['NewActive'] == 1 ? true : false;
+                            const soapResult = await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'GetSpecificHostEntry', [[1, 'NewMACAddress', memberRow.macaddress]]);
+                            if(soapResult) {
+                                active = soapResult['NewActive'] == 1 ? true : false;
                             }
                         }else{
                             if (mesg[0].suppress === false){
@@ -1344,9 +1340,8 @@ class FbCheckpresence extends utils.Adapter {
                         break;
                     case 'IP':
                         if (this.Fb.GETBYIP == true && ip != ''){
-                            const soapResult = {data: null};
-                            await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]], soapResult);
-                            if(soapResult && soapResult.data) active = soapResult.data['NewActive'] == 1 ? true : false;
+                            const soapResult = await this.Fb.soapAction('/upnp/control/hosts', 'urn:dslforum-org:service:' + 'Hosts:1', 'X_AVM-DE_GetSpecificHostEntryByIP', [[1, 'NewIPAddress', memberRow.ipaddress]]);
+                            if(soapResult) active = soapResult['NewActive'] == 1 ? true : false;
                         }else{
                             if (memberRow.ipaddress == '') {
                                 if (mesg[0].suppress === false){
