@@ -1,197 +1,197 @@
 {
-    "common": {
-        "name": "fb-checkpresence",
-        "version": "1.1.21",
-        "news": {
-            "1.1.21": {
-                "en": "dependencies updated",
-                "de": "aktualisierte abhängigkeiten",
-                "ru": "зависимости обновлены",
-                "pt": "dependências atualizadas",
-                "nl": "afhankelijkheid geüpdateerd",
-                "fr": "dépendances mises à jour",
-                "it": "dipendenze aggiornate",
-                "es": "dependencias actualizadas",
-                "pl": "aktualizacja",
-                "zh-cn": "b. 更新的依赖",
-                "uk": "залежності оновлено"
-            },
-            "1.1.20": {
-                "en": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Add family members dialogbox fixed\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Dateformat library changed",
-                "de": "ausgabe [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) Kraftaktualisierung auf Nachfrage\nausgabe [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Familienmitglieder fest hinzufügen\nausgabe [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Fügen Sie Familienmitglieder Dialogbox fest\nausgabe [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Datenbank geändert",
-                "ru": "выпуск [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) обновление силы по требованию\nвыпуск [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Добавить членов семьи исправлены\nвыпуск [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Добавить членов семьи dialogbox Fixed\nвыпуск [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Датаформатная библиотека изменена",
-                "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) atualização de força na demanda\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Adicionar membros da família fixos\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Adicionar família membros caixa de diálogo fixo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Biblioteca de dataformato alterada",
-                "nl": "quality over Quantity (QoQ) Releases Vertaling: Vertaling:\n_ Voeg familieleden aan\nquality over Quantity (QoQ) Releases Vertaling: Voeg familieleden dialogbox vast\nquality over Quantity (QoQ) Releases Vertaling: Datumbibliotheek veranderde",
-                "fr": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) mise à jour de la force sur la demande\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Ajouter la boîte de dialogue des membres de la famille\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La bibliothèque Dateformat a changé",
-                "it": "emissione [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) aggiornamento forza su richiesta\nemissione [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Aggiungi i membri della famiglia fisso\nnumero [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Aggiungi i membri della famiglia finestra di dialogo fisso\nnumero [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Libreria formato data cambiato",
-                "es": "[#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) actualización de la fuerza sobre la demanda\n[#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Agregar miembros de la familia fijos\n[#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Agregar a los miembros de la familia cuadro de diálogo fijo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La biblioteca Dateformat cambió",
-                "pl": "(#136(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) (ang.). aktualizacja\n(#139(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139). członkowie rodziny Add\n(#140(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) (ang.). Strona internetowa rodziny\n(#129(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) (ang.). Biblioteka zmienna",
-                "zh-cn": "问题[第136条](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/136) 需求最新情况\n问题[第139](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/139) 增加家庭固定成员\n问题[第140条](http://github.com/afuerhoff/ioBroker.fb- 核对presence/issues/140) 增加家庭口号固定装置\n问题[第129条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/129) 事实图书馆的改变",
-                "uk": "проблема [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) примусове оновлення на вимогу\nпроблема [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Додавання членів сім’ї виправлено\nпроблема [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Виправлено діалогове вікно додавання членів сім’ї\nпроблема [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Бібліотеку формату дати змінено"
-            },
-            "1.1.19": {
-                "en": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice",
-                "de": "ausgabe [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) Gästegerät zweimal aufgeführt",
-                "ru": "выпуск [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостевой аппарат, перечисленный дважды",
-                "pt": "[#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137)) dispositivo de convidado listado duas vezes",
-                "nl": "quality over Quantity (QoQ) Releases Vertaling: Gast apparaat twee keer geregistreerd",
-                "fr": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositif invité classé deux fois",
-                "it": "emissione [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositivo ospite elencato due volte",
-                "es": "[#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositivo invitado lista dos veces",
-                "pl": "(#137(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) (ang.). urządzenie gościnne dwukrotnie",
-                "zh-cn": "问题[第137条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/137) 目 录",
-                "uk": "проблема [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостьовий пристрій у списку двічі"
-            },
-            "1.1.18": {
-                "en": "issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\nissue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error",
-                "de": "ausgabe #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices Zustände für vpn-Verbindung hinzugefügt\nausgabe #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Neustart Adapter nach Zyklusfehler",
-                "ru": "выпуск #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices состояния для подключения vpn добавлено\nвыпуск #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезагрузите адаптер после ошибки цикла",
-                "pt": "(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices estados para conexão vpn adicionado\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Reinicie o adaptador após o erro do ciclo",
-                "nl": "_ FBI staat voor vpn connectie toegevoegd\nquality over Quantity (QoQ) Releases Vertaling: Herstart adapter na cyclusfout",
-                "fr": "issue #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices états pour la connexion vpn ajouté\n#[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptateur de démarrage après erreur de cycle",
-                "it": "numero[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices stati per connessione vpn aggiunto\nnumero #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Riavviare l'adattatore dopo l'errore del ciclo",
-                "es": "cuestión #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptador reinicio después del error ciclo",
-                "pl": "#67(https:/github.com/afuerhoff/ioBrokerfb-checkpresence/67) (ang.). Współzałożycielskie stany vpn dodane do połączenia\n#128(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) (ang.). Restart adapter po błędzie cyklowego",
-                "zh-cn": "问题编号:[67](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/67) fbdevics State for vpn联系\n问题编号:[128](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/128) 在周期错误之后重新启动适应行动",
-                "uk": "проблема [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) Додано стан fbdevices для підключення vpn\nпроблема [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезапустіть адаптер після помилки циклу"
-            },
-            "1.1.17": {
-                "en": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object\nlog optimized",
-                "de": "ausgabe [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinierte Geschichte Al-Objekt\nlog optimiert",
-                "ru": "выпуск [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix неопределенная история Живой объект\nлог оптимизирован",
-                "pt": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinida history Objeto Alive\nlog otimizado",
-                "nl": "quality over Quantity (QoQ) Releases Vertaling: Levend object\nquality over quantity (qoq) releases vertaling:",
-                "fr": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined history Objet passif\nlog optimisé",
-                "it": "numero [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix cronologia non definita Oggetto vivo\nlog ottimizzato",
-                "es": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinited history Objeto vivo\nlog optimizado",
-                "pl": "(#126(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bug (ang.). Alive object\ndziennik optymistyczny",
-                "zh-cn": "问题[第126号](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/126) 活性目标\na. 优化逻辑",
-                "uk": "проблема [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) виправлено помилку невизначений об’єкт historyAlive\nжурнал оптимізований"
-            },
-            "1.1.16": {
-                "en": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fixed: info.extip was set without existing object",
-                "de": "ausgabe [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Hauptintervall von Minuten in Sekunden geändert\nausgabe [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Nur wenn sie sich geändert haben\nausgabe [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos from fbdevices\nfehler in v1.1.15 behoben: info.extip wurde ohne vorhandenes objekt eingestellt",
-                "ru": "выпуск [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Основной интервал изменен с минут до секунд\nвыпуск [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) государства устанавливают только если они изменили\nвыпуск [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nошибка в v1.1.15 исправлена: info.extip был установлен без существующего объекта",
-                "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) O intervalo principal mudou de minutos para segundos\n[#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) os Estados apenas se alteraram\n[#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 corrigido: info.extip foi definido sem objeto existente",
-                "nl": "quality over Quantity (QoQ) Releases Vertaling: Hoofdinterval veranderde van minuten tot seconde\nquality over Quantity (QoQ) Releases Vertaling: Amerika alleen als ze veranderen\nquality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
-                "fr": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) L'intervalle principal est passé de minutes à secondes\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) États établis seulement s ' ils ont changé\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124)\nbug dans v1.1.15 corrigé: info.extip a été défini sans objet existant",
-                "it": "emissione [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Intervallo principale cambiato da minuti a secondi\nemissione [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Stati fissati solo se modificati\nemissione [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fisso: info.extip è stato impostato senza oggetto esistente",
-                "es": "[#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) El intervalo principal cambió de minutos a segundos\n[#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Estados fijados sólo si cambian\n[#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug en v1.1.15 fijo: info.extip se estableció sin el objeto existente",
-                "pl": "(#111(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) (ang.). Przebieg główny zmienia się od minut do sekundy\n(#123(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Stany Zjednoczone ustawiały się tylko wtedy, gdy zmienili się\n(#124(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) gościninfos decoupled from fbcessdevice\nuruchomiono błędy v1.1.15: info.extip został ustawiony bez istniejącego obiektu",
-                "zh-cn": "问题[第111](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/111) 主要间隔从分钟改为第二期。\n问题[第123](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/123) 只有国家改变这些规则,才能建立国家。\n问题[第124号](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/124) 客座fo decoed from fbdevices\nb v1.1.15 固定值:以无现有目标为主。",
-                "uk": "проблема [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Основний інтервал змінено з хвилин на секунди\nпроблема [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Стани встановлюються, лише якщо вони змінені\nпроблема [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos відокремлено від fbdevices\nвиправлено помилку у v1.1.15: info.extip було встановлено без існуючого об’єкта"
-            },
-            "1.1.15": {
-                "en": "issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) enhancement\ndependency updated\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuration switch for external ip address added",
-                "de": "Issue [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) Verbesserung\nAbhängigkeit aktualisiert\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) Konfigurationsschalter für externe IP-Adresse hinzugefügt",
-                "ru": "проблема [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) улучшение\nзависимость обновлена\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) добавлен переключатель конфигурации для внешнего IP-адреса",
-                "pt": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) aprimoramento\ndependência atualizada\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) switch de configuração para endereço IP externo adicionado",
-                "nl": "probleem [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) verbetering\nafhankelijkheid bijgewerkt\nprobleem [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) configuratieschakelaar voor extern ip-adres toegevoegd",
-                "fr": "problème [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) amélioration\ndépendance mise à jour\nissue [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) commutateur de configuration pour l'adresse IP externe ajoutée",
-                "it": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) miglioramento\ndipendenza aggiornata\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) è stato aggiunto l'interruttore di configurazione per l'indirizzo IP esterno",
-                "es": "problema [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) mejora\ndependencia actualizada\nproblema [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) interruptor de configuración para dirección IP externa agregado",
-                "pl": "problem [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) ulepszenie\nzaktualizowano zależność\nproblem [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) dodany przełącznik konfiguracyjny dla zewnętrznego adresu IP",
-                "zh-cn": "问题 [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) 增强\n依赖更新\n问题 [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) 添加了外部 IP 地址的配置开关",
-                "uk": "проблема [#110](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/110) покращення\nзалежність оновлено\nпроблема [#115] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/115) додано перемикач конфігурації для зовнішньої IP-адреси"
-            }
-        },
-        "titleLang": {
-            "en": "Fritzbox CheckPresence",
-            "de": "Fritzbox CheckPresence",
-            "ru": "Fritzbox CheckPresence",
-            "pt": "Fritzbox CheckPresence",
-            "nl": "Fritzbox CheckPresence",
-            "fr": "Fritzbox CheckPresence",
-            "it": "Fritzbox CheckPresence",
-            "es": "Fritzbox CheckPresence",
-            "pl": "Fritzbox CheckPresence",
-            "zh-cn": "Fritzbox CheckPresence",
-            "uk": "Fritzbox CheckPresence"
-        },
-        "desc": {
-            "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
-            "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
-            "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
-            "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
-            "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
-            "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
-            "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
-            "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
-            "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
-            "zh-cn": "适配器通过fritzbox检查家庭成员的存在。",
-            "uk": "Адаптер перевіряє присутність членів сім'ї над fritzbox. Необхідно вказати ім'я члена сім'ї та mac-адресу використовуваного пристрою. Коментар необов’язковий, і ви можете ввімкнути або вимкнути члена сім’ї. Точка даних на основі імені члена."
-        },
-        "authors": [
-            "Achim Fürhoff <achim.fuerhoff@outlook.de>"
-        ],
-        "keywords": [
-            "presence",
-            "family",
-            "tr064",
-            "fritz.box",
-            "fritzbox"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "fb-checkpresence.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
-        "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "infrastructure",
-        "connectionType": "local",
-        "dataSource": "poll",
-        "compact": true,
-        "materialize": true,
-        "stopBeforeUpdate": true,
-        "stopTimeout": 1000,
-        "messagebox": true,
-        "dependencies": [
-            {
-                "js-controller": ">=3.3.22"
-            }
-        ]
+  "common": {
+    "name": "fb-checkpresence",
+    "version": "1.1.22",
+    "news": {
+      "1.1.22": {
+        "en": "axios updated\nerror handling optimized",
+        "de": "axios aktualisiert\nfehlerbehandlung optimiert",
+        "ru": "axios обновлено\nобработка ошибок оптимизирована",
+        "pt": "axios atualizados\nmanipulação de erros otimizado",
+        "nl": "quality over quantity (qoq) releases vertaling:\nerror omgaan met optimistisch",
+        "fr": "axios mis à jour\nmaniement d'erreur optimisé",
+        "it": "axios aggiornato\ngestione degli errori ottimizzata",
+        "es": "axios actualizados\nmanejo de errores optimizado",
+        "pl": "axios updated\nobsługa błędów optymalizowała",
+        "uk": "axios оновлений\nоптимізація обробки помилок",
+        "zh-cn": "a 更新的基准\n处理错误的优化"
+      },
+      "1.1.21": {
+        "en": "dependencies updated",
+        "de": "aktualisierte abhängigkeiten",
+        "ru": "зависимости обновлены",
+        "pt": "dependências atualizadas",
+        "nl": "afhankelijkheid geüpdateerd",
+        "fr": "dépendances mises à jour",
+        "it": "dipendenze aggiornate",
+        "es": "dependencias actualizadas",
+        "pl": "aktualizacja",
+        "zh-cn": "b. 更新的依赖",
+        "uk": "залежності оновлено"
+      },
+      "1.1.20": {
+        "en": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Add family members dialogbox fixed\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Dateformat library changed",
+        "de": "ausgabe [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) Kraftaktualisierung auf Nachfrage\nausgabe [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Familienmitglieder fest hinzufügen\nausgabe [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Fügen Sie Familienmitglieder Dialogbox fest\nausgabe [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Datenbank geändert",
+        "ru": "выпуск [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) обновление силы по требованию\nвыпуск [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Добавить членов семьи исправлены\nвыпуск [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Добавить членов семьи dialogbox Fixed\nвыпуск [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Датаформатная библиотека изменена",
+        "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) atualização de força na demanda\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Adicionar membros da família fixos\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Adicionar família membros caixa de diálogo fixo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Biblioteca de dataformato alterada",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling: Vertaling:\n_ Voeg familieleden aan\nquality over Quantity (QoQ) Releases Vertaling: Voeg familieleden dialogbox vast\nquality over Quantity (QoQ) Releases Vertaling: Datumbibliotheek veranderde",
+        "fr": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) mise à jour de la force sur la demande\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Ajouter la boîte de dialogue des membres de la famille\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La bibliothèque Dateformat a changé",
+        "it": "emissione [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) aggiornamento forza su richiesta\nemissione [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Aggiungi i membri della famiglia fisso\nnumero [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Aggiungi i membri della famiglia finestra di dialogo fisso\nnumero [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Libreria formato data cambiato",
+        "es": "[#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) actualización de la fuerza sobre la demanda\n[#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Agregar miembros de la familia fijos\n[#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Agregar a los miembros de la familia cuadro de diálogo fijo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La biblioteca Dateformat cambió",
+        "pl": "(#136(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) (ang.). aktualizacja\n(#139(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139). członkowie rodziny Add\n(#140(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) (ang.). Strona internetowa rodziny\n(#129(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) (ang.). Biblioteka zmienna",
+        "zh-cn": "问题[第136条](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/136) 需求最新情况\n问题[第139](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/139) 增加家庭固定成员\n问题[第140条](http://github.com/afuerhoff/ioBroker.fb- 核对presence/issues/140) 增加家庭口号固定装置\n问题[第129条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/129) 事实图书馆的改变",
+        "uk": "проблема [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) примусове оновлення на вимогу\nпроблема [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Додавання членів сім’ї виправлено\nпроблема [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Виправлено діалогове вікно додавання членів сім’ї\nпроблема [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Бібліотеку формату дати змінено"
+      },
+      "1.1.19": {
+        "en": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice",
+        "de": "ausgabe [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) Gästegerät zweimal aufgeführt",
+        "ru": "выпуск [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостевой аппарат, перечисленный дважды",
+        "pt": "[#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137)) dispositivo de convidado listado duas vezes",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling: Gast apparaat twee keer geregistreerd",
+        "fr": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositif invité classé deux fois",
+        "it": "emissione [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositivo ospite elencato due volte",
+        "es": "[#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositivo invitado lista dos veces",
+        "pl": "(#137(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) (ang.). urządzenie gościnne dwukrotnie",
+        "zh-cn": "问题[第137条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/137) 目 录",
+        "uk": "проблема [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостьовий пристрій у списку двічі"
+      },
+      "1.1.18": {
+        "en": "issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\nissue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error",
+        "de": "ausgabe #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices Zustände für vpn-Verbindung hinzugefügt\nausgabe #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Neustart Adapter nach Zyklusfehler",
+        "ru": "выпуск #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices состояния для подключения vpn добавлено\nвыпуск #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезагрузите адаптер после ошибки цикла",
+        "pt": "(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices estados para conexão vpn adicionado\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Reinicie o adaptador após o erro do ciclo",
+        "nl": "_ FBI staat voor vpn connectie toegevoegd\nquality over Quantity (QoQ) Releases Vertaling: Herstart adapter na cyclusfout",
+        "fr": "issue #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices états pour la connexion vpn ajouté\n#[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptateur de démarrage après erreur de cycle",
+        "it": "numero[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices stati per connessione vpn aggiunto\nnumero #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Riavviare l'adattatore dopo l'errore del ciclo",
+        "es": "cuestión #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptador reinicio después del error ciclo",
+        "pl": "#67(https:/github.com/afuerhoff/ioBrokerfb-checkpresence/67) (ang.). Współzałożycielskie stany vpn dodane do połączenia\n#128(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) (ang.). Restart adapter po błędzie cyklowego",
+        "zh-cn": "问题编号:[67](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/67) fbdevics State for vpn联系\n问题编号:[128](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/128) 在周期错误之后重新启动适应行动",
+        "uk": "проблема [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) Додано стан fbdevices для підключення vpn\nпроблема [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезапустіть адаптер після помилки циклу"
+      },
+      "1.1.17": {
+        "en": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object\nlog optimized",
+        "de": "ausgabe [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinierte Geschichte Al-Objekt\nlog optimiert",
+        "ru": "выпуск [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix неопределенная история Живой объект\nлог оптимизирован",
+        "pt": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinida history Objeto Alive\nlog otimizado",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling: Levend object\nquality over quantity (qoq) releases vertaling:",
+        "fr": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined history Objet passif\nlog optimisé",
+        "it": "numero [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix cronologia non definita Oggetto vivo\nlog ottimizzato",
+        "es": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinited history Objeto vivo\nlog optimizado",
+        "pl": "(#126(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bug (ang.). Alive object\ndziennik optymistyczny",
+        "zh-cn": "问题[第126号](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/126) 活性目标\na. 优化逻辑",
+        "uk": "проблема [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) виправлено помилку невизначений об’єкт historyAlive\nжурнал оптимізований"
+      },
+      "1.1.16": {
+        "en": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fixed: info.extip was set without existing object",
+        "de": "ausgabe [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Hauptintervall von Minuten in Sekunden geändert\nausgabe [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Nur wenn sie sich geändert haben\nausgabe [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos from fbdevices\nfehler in v1.1.15 behoben: info.extip wurde ohne vorhandenes objekt eingestellt",
+        "ru": "выпуск [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Основной интервал изменен с минут до секунд\nвыпуск [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) государства устанавливают только если они изменили\nвыпуск [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nошибка в v1.1.15 исправлена: info.extip был установлен без существующего объекта",
+        "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) O intervalo principal mudou de minutos para segundos\n[#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) os Estados apenas se alteraram\n[#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 corrigido: info.extip foi definido sem objeto existente",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling: Hoofdinterval veranderde van minuten tot seconde\nquality over Quantity (QoQ) Releases Vertaling: Amerika alleen als ze veranderen\nquality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
+        "fr": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) L'intervalle principal est passé de minutes à secondes\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) États établis seulement s ' ils ont changé\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124)\nbug dans v1.1.15 corrigé: info.extip a été défini sans objet existant",
+        "it": "emissione [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Intervallo principale cambiato da minuti a secondi\nemissione [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Stati fissati solo se modificati\nemissione [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fisso: info.extip è stato impostato senza oggetto esistente",
+        "es": "[#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) El intervalo principal cambió de minutos a segundos\n[#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Estados fijados sólo si cambian\n[#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug en v1.1.15 fijo: info.extip se estableció sin el objeto existente",
+        "pl": "(#111(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) (ang.). Przebieg główny zmienia się od minut do sekundy\n(#123(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Stany Zjednoczone ustawiały się tylko wtedy, gdy zmienili się\n(#124(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) gościninfos decoupled from fbcessdevice\nuruchomiono błędy v1.1.15: info.extip został ustawiony bez istniejącego obiektu",
+        "zh-cn": "问题[第111](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/111) 主要间隔从分钟改为第二期。\n问题[第123](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/123) 只有国家改变这些规则,才能建立国家。\n问题[第124号](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/124) 客座fo decoed from fbdevices\nb v1.1.15 固定值:以无现有目标为主。",
+        "uk": "проблема [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Основний інтервал змінено з хвилин на секунди\nпроблема [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Стани встановлюються, лише якщо вони змінені\nпроблема [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos відокремлено від fbdevices\nвиправлено помилку у v1.1.15: info.extip було встановлено без існуючого об’єкта"
+      }
     },
-    "encryptedNative": [
-        "password"
-    ],
-    "protectedNative": [
-        "password"
-    ],
-    "native": {
-        "familymembers": [],
-        "whitelist": [],
-        "ipaddress": "fritz.box",
-        "ssl": true,
-        "interval": 1,
-        "interval_seconds": false,
-        "intervalFamily": 60,
-        "delay": 15,
-        "compatibility": true,
-        "history": "",
-        "dateformat": "yyyy.mm.dd HH:MM:ss",
-        "fbdevices": false,
-        "meshinfo": false,
-        "syncfbdevices": false,
-        "guestinfo": true,
-        "qrcode": false,
-        "qrcodecolor": "black",
-        "extip": true,
-        "username": "",
-        "password": "",
-        "enableWl": true
+    "titleLang": {
+      "en": "Fritzbox CheckPresence",
+      "de": "Fritzbox CheckPresence",
+      "ru": "Fritzbox CheckPresence",
+      "pt": "Fritzbox CheckPresence",
+      "nl": "Fritzbox CheckPresence",
+      "fr": "Fritzbox CheckPresence",
+      "it": "Fritzbox CheckPresence",
+      "es": "Fritzbox CheckPresence",
+      "pl": "Fritzbox CheckPresence",
+      "zh-cn": "Fritzbox CheckPresence",
+      "uk": "Fritzbox CheckPresence"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "The adapter checks the presence of family members over the fritzbox. You must fill in the name of the family member and the mac-address of the used device. The comment is optional and you can enable or disable the family member. The datapoint based on the member name.",
+      "de": "Der Adapter prüft die Anwesenheit von Familienmitgliedern über die Fritzbox. ",
+      "ru": "Адаптер проверяет присутствие членов семьи через fritzbox. ",
+      "pt": "O adaptador verifica a presença de membros da família sobre o fritzbox. ",
+      "nl": "De adapter controleert de aanwezigheid van familieleden via de fritzbox. ",
+      "fr": "L'adaptateur vérifie la présence de membres de la famille sur la fritzbox. ",
+      "it": "L'adattatore controlla la presenza dei membri della famiglia sul fritzbox. ",
+      "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
+      "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
+      "zh-cn": "适配器通过fritzbox检查家庭成员的存在。",
+      "uk": "Адаптер перевіряє присутність членів сім'ї над fritzbox. Необхідно вказати ім'я члена сім'ї та mac-адресу використовуваного пристрою. Коментар необов’язковий, і ви можете ввімкнути або вимкнути члена сім’ї. Точка даних на основі імені члена."
+    },
+    "authors": [
+      "Achim Fürhoff <achim.fuerhoff@outlook.de>"
+    ],
+    "keywords": [
+      "presence",
+      "family",
+      "tr064",
+      "fritz.box",
+      "fritzbox"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "fb-checkpresence.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
+    "readme": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "infrastructure",
+    "connectionType": "local",
+    "dataSource": "poll",
+    "compact": true,
+    "materialize": true,
+    "stopBeforeUpdate": true,
+    "stopTimeout": 1000,
+    "messagebox": true,
+    "dependencies": [
+      {
+        "js-controller": ">=3.3.22"
+      }
     ]
+  },
+  "encryptedNative": [
+    "password"
+  ],
+  "protectedNative": [
+    "password"
+  ],
+  "native": {
+    "familymembers": [],
+    "whitelist": [],
+    "ipaddress": "fritz.box",
+    "ssl": true,
+    "interval": 1,
+    "interval_seconds": false,
+    "intervalFamily": 60,
+    "delay": 15,
+    "compatibility": true,
+    "history": "",
+    "dateformat": "yyyy.mm.dd HH:MM:ss",
+    "fbdevices": false,
+    "meshinfo": false,
+    "syncfbdevices": false,
+    "guestinfo": true,
+    "qrcode": false,
+    "qrcodecolor": "black",
+    "extip": true,
+    "username": "",
+    "password": "",
+    "enableWl": true
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    }
+  ]
 }

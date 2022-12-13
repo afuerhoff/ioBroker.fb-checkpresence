@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.17 (2022-06-15)
+* (afuerhoff) issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object
+* (afuerhoff) log optimized
+
 ## 1.1.16 (2022-06-12)
 * (afuerhoff) issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds
 * (afuerhoff) issue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed
