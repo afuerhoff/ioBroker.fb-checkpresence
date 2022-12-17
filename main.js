@@ -308,11 +308,14 @@ class FbCheckpresence extends utils.Adapter {
             let hosts = [];
             let devices = await this.getDevicesAsync();
             let fbDevices = devices.filter(x => x._id.includes(`${this.namespace}` + '.fb-devices.'));
-
             for(let i=0;i<items.length;i++){
                 let hostName = items[i]['HostName'];
                 hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
-
+                if (hostName === null || hostName == ''){
+                    this.log.warn('devicelist: ' + JSON.stringify(items));
+                    this.log.warn('getAllFbObjects: Hostname is empty: ' + items[i]['MACAddress']);
+                    continue;
+                }
                 const host = fbDevices.filter(x => x._id.replace(`${this.namespace}` + '.fb-devices.','') === hostName);
                 let item = items.filter(x => x.HostName == items[i].HostName);
                 let itemActive = items.filter(x => x.HostName == items[i].HostName && x.Active == '1');
