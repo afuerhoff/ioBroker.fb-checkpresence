@@ -312,8 +312,9 @@ class FbCheckpresence extends utils.Adapter {
                 let hostName = items[i]['HostName'];
                 hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 if (hostName === null || hostName == ''){
-                    this.log.warn('devicelist: ' + JSON.stringify(items));
-                    this.log.warn('getAllFbObjects: Hostname is empty: ' + items[i]['MACAddress']);
+                    //this.log.warn('devicelist: ' + JSON.stringify(items));
+                    //this.log.warn('fb-devices: ' + JSON.stringify(fbDevices));
+                    this.log.warn('getAllFbObjects: Hostname of fritzbox device ' + items[i]['MACAddress'] + ' is empty!');
                     continue;
                 }
                 const host = fbDevices.filter(x => x._id.replace(`${this.namespace}` + '.fb-devices.','') === hostName);

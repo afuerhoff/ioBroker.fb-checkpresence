@@ -213,6 +213,9 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
+### **WORK IN PROGRESS**
+* (afuerhoff) fb devices with empty hostname are ignored 
+
 ### 1.1.22 (2022-12-13)
 * (afuerhoff) axios updated
 * (afuerhoff) error handling optimized
