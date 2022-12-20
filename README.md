@@ -213,8 +213,8 @@ Here you will find information about the history of the current day.
     * Did some changes
     * Did some more changes
 -->
-### **WORK IN PROGRESS**
-* (afuerhoff) fb devices with empty hostname are ignored 
+### 1.1.23 (2022-12-20)
+* (afuerhoff) fb devices with empty hostname are ignored
 
 ### 1.1.22 (2022-12-13)
 * (afuerhoff) axios updated
@@ -231,10 +231,6 @@ Here you will find information about the history of the current day.
 
 ### 1.1.19 (2022-07-08)
 * (afuerhoff) issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice
-
-### 1.1.18 (2022-07-04)
-* (afuerhoff) issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added
-* (afuerhoff) issue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error
 
 ## License
 MIT License

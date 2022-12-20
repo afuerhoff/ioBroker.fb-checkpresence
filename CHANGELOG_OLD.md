@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.18 (2022-07-04)
+* (afuerhoff) issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added
+* (afuerhoff) issue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error
+
 ## 1.1.17 (2022-06-15)
 * (afuerhoff) issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object
 * (afuerhoff) log optimized

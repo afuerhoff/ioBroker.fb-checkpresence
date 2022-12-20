@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.22",
+    "version": "1.1.23",
     "news": {
+      "1.1.23": {
+        "en": "fb devices with empty hostname are ignored",
+        "de": "fb geräte mit leerem hostname werden ignoriert",
+        "ru": "fb устройства с пустым именем хоста игнорируются",
+        "pt": "dispositivos fb com nome de host vazio são ignorados",
+        "nl": "fb apparaten met lege naam worden genegeerd",
+        "fr": "fb appareils avec nom d'hôte vide sont ignorés",
+        "it": "i dispositivi fb con nome host vuoto vengono ignorati",
+        "es": "fb dispositivos con nombre de host vacío son ignorados",
+        "pl": "urządzenia z pustą nazwą hosta są ignorowane",
+        "uk": "fb пристрої з порожнім хостом ігноруються",
+        "zh-cn": "被忽视有空落的装置"
+      },
       "1.1.22": {
         "en": "axios updated\nerror handling optimized",
         "de": "axios aktualisiert\nfehlerbehandlung optimiert",
@@ -80,19 +93,6 @@
         "pl": "(#126(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bug (ang.). Alive object\ndziennik optymistyczny",
         "zh-cn": "问题[第126号](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/126) 活性目标\na. 优化逻辑",
         "uk": "проблема [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) виправлено помилку невизначений об’єкт historyAlive\nжурнал оптимізований"
-      },
-      "1.1.16": {
-        "en": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Main interval changed from minutes to seconds\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) States set only if they changed\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fixed: info.extip was set without existing object",
-        "de": "ausgabe [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Hauptintervall von Minuten in Sekunden geändert\nausgabe [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Nur wenn sie sich geändert haben\nausgabe [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos from fbdevices\nfehler in v1.1.15 behoben: info.extip wurde ohne vorhandenes objekt eingestellt",
-        "ru": "выпуск [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Основной интервал изменен с минут до секунд\nвыпуск [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) государства устанавливают только если они изменили\nвыпуск [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nошибка в v1.1.15 исправлена: info.extip был установлен без существующего объекта",
-        "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) O intervalo principal mudou de minutos para segundos\n[#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) os Estados apenas se alteraram\n[#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 corrigido: info.extip foi definido sem objeto existente",
-        "nl": "quality over Quantity (QoQ) Releases Vertaling: Hoofdinterval veranderde van minuten tot seconde\nquality over Quantity (QoQ) Releases Vertaling: Amerika alleen als ze veranderen\nquality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
-        "fr": "issue [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) L'intervalle principal est passé de minutes à secondes\nissue [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) États établis seulement s ' ils ont changé\nissue [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124)\nbug dans v1.1.15 corrigé: info.extip a été défini sans objet existant",
-        "it": "emissione [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Intervallo principale cambiato da minuti a secondi\nemissione [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Stati fissati solo se modificati\nemissione [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug in v1.1.15 fisso: info.extip è stato impostato senza oggetto esistente",
-        "es": "[#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) El intervalo principal cambió de minutos a segundos\n[#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Estados fijados sólo si cambian\n[#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos decoupled from fbdevices\nbug en v1.1.15 fijo: info.extip se estableció sin el objeto existente",
-        "pl": "(#111(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) (ang.). Przebieg główny zmienia się od minut do sekundy\n(#123(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Stany Zjednoczone ustawiały się tylko wtedy, gdy zmienili się\n(#124(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) gościninfos decoupled from fbcessdevice\nuruchomiono błędy v1.1.15: info.extip został ustawiony bez istniejącego obiektu",
-        "zh-cn": "问题[第111](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/111) 主要间隔从分钟改为第二期。\n问题[第123](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/123) 只有国家改变这些规则,才能建立国家。\n问题[第124号](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/124) 客座fo decoed from fbdevices\nb v1.1.15 固定值:以无现有目标为主。",
-        "uk": "проблема [#111](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/111) Основний інтервал змінено з хвилин на секунди\nпроблема [#123](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/123) Стани встановлюються, лише якщо вони змінені\nпроблема [#124](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/124) guestinfos відокремлено від fbdevices\nвиправлено помилку у v1.1.15: info.extip було встановлено без існуючого об’єкта"
       }
     },
     "titleLang": {
