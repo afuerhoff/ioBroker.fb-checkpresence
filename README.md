@@ -207,15 +207,10 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog 
-<!--
-    Placeholder for the next version (at the beginning of the line):
-    ### __WORK IN PROGRESS__
-    * Did some changes
-    * Did some more changes
--->
+
 ### **WORK IN PROGRESS**
-* (afuerhoff) axios updated to 1.2.1
-* (afuerhoff) CancelToken as option implemented
+* (afuerhoff) axios updated
+* (afuerhoff) CancelToken as option implemented. For node versions less than 16
 
 ### 1.1.23 (2022-12-20)
 * (afuerhoff) fb devices with empty hostname are ignored
