@@ -2,6 +2,7 @@ name: Test and Release
 
 # Run this job on all pushes and pull requests
 # as well as tags with a semantic version
+# https://github.com/ioBroker/create-adapter/blob/master/docs/updates/20210913_shared_testing_workflows.md
 on:
   push:
     branches:
