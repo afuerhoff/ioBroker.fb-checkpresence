@@ -206,9 +206,8 @@ Here you will find information when the family member arrives or leaving home.
 ### Object member.history, member.historyHtml
 Here you will find information about the history of the current day. 
 
-## Changelog 
-
-### **WORK IN PROGRESS**
+## Changelog
+### 1.1.24 (2022-12-22)
 * (afuerhoff) axios updated
 * (afuerhoff) CancelToken as option implemented. For node versions less than 16
 
@@ -227,9 +226,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) issue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed
 * (afuerhoff) issue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Add family members dialogbox fixed
 * (afuerhoff) issue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Dateformat library changed
-
-### 1.1.19 (2022-07-08)
-* (afuerhoff) issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice
 
 ## License
 MIT License

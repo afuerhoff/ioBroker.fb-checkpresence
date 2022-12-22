@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.23",
+    "version": "1.1.24",
     "news": {
+      "1.1.24": {
+        "en": "axios updated\nCancelToken as option implemented. For node versions less than 16",
+        "de": "axios aktualisiert\nCancelToken als Option implementiert. Für Knotenversionen kleiner als 16",
+        "ru": "axios обновлено\nОтменитьТокен как вариант реализован. Для нодовых версий менее 16",
+        "pt": "axios atualizados\nCancelToken como opção implementada. Para versões node menos de 16",
+        "nl": "quality over quantity (qoq) releases vertaling:\nAnnuleer Token als optie. Voor nodeversie minder dan 16",
+        "fr": "axios mis à jour\nAnnulerToken comme option mise en œuvre. Pour les versions node inférieures à 16",
+        "it": "axios aggiornato\nCancelToken come opzione implementata. Per versioni nodi inferiori a 16",
+        "es": "axios actualizados\nCancelToken como opción implementada. Para versiones de nodos menos de 16",
+        "pl": "axios updated\nCancelToken jako opcja wdrożona. Dla węzłów mniej niż 16",
+        "uk": "axios оновлений\nСкасувати Для версій вузлів менше 16",
+        "zh-cn": "a 更新的基准\n堪培松作为执行的选择。 无纸"
+      },
       "1.1.23": {
         "en": "fb devices with empty hostname are ignored",
         "de": "fb geräte mit leerem hostname werden ignoriert",
@@ -80,19 +93,6 @@
         "pl": "#67(https:/github.com/afuerhoff/ioBrokerfb-checkpresence/67) (ang.). Współzałożycielskie stany vpn dodane do połączenia\n#128(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) (ang.). Restart adapter po błędzie cyklowego",
         "zh-cn": "问题编号:[67](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/67) fbdevics State for vpn联系\n问题编号:[128](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/128) 在周期错误之后重新启动适应行动",
         "uk": "проблема [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) Додано стан fbdevices для підключення vpn\nпроблема [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезапустіть адаптер після помилки циклу"
-      },
-      "1.1.17": {
-        "en": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined historyAlive object\nlog optimized",
-        "de": "ausgabe [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinierte Geschichte Al-Objekt\nlog optimiert",
-        "ru": "выпуск [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix неопределенная история Живой объект\nлог оптимизирован",
-        "pt": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinida history Objeto Alive\nlog otimizado",
-        "nl": "quality over Quantity (QoQ) Releases Vertaling: Levend object\nquality over quantity (qoq) releases vertaling:",
-        "fr": "issue [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefined history Objet passif\nlog optimisé",
-        "it": "numero [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix cronologia non definita Oggetto vivo\nlog ottimizzato",
-        "es": "[#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bugfix undefinited history Objeto vivo\nlog optimizado",
-        "pl": "(#126(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) bug (ang.). Alive object\ndziennik optymistyczny",
-        "zh-cn": "问题[第126号](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/126) 活性目标\na. 优化逻辑",
-        "uk": "проблема [#126](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/126) виправлено помилку невизначений об’єкт historyAlive\nжурнал оптимізований"
       }
     },
     "titleLang": {

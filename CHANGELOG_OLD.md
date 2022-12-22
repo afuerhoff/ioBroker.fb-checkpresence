@@ -1,4 +1,7 @@
 # Older changes
+## 1.1.19 (2022-07-08)
+* (afuerhoff) issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice
+
 ## 1.1.18 (2022-07-04)
 * (afuerhoff) issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added
 * (afuerhoff) issue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error
