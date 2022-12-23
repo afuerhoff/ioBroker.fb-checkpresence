@@ -31,6 +31,7 @@ function checkConnectionOfAdapter(cb, counter) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 function checkValueOfState(id, value, cb, counter) {
     counter = counter || 0;
     if (counter > 20) {
@@ -53,6 +54,7 @@ function checkValueOfState(id, value, cb, counter) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 function sendTo(target, command, message, callback) {
     onStateChanged = function (id, state) {
         if (id === 'messagebox.system.adapter.test.0') {
@@ -87,6 +89,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 
             await setup.setAdapterConfig(config.common, config.native);
 
+            // eslint-disable-next-line no-unused-vars
             setup.startController(true, (id, obj) => { }, function (id, state) {
                 if (onStateChanged) onStateChanged(id, state);
             },
@@ -98,9 +101,9 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         });
     });
 
-/*
+    /*
     ENABLE THIS WHEN ADAPTER RUNS IN DEAMON MODE TO CHECK THAT IT HAS STARTED SUCCESSFULLY
-*/
+    */
     it('Test ' + adapterShortName + ' adapter: Check if adapter started', function (done) {
         this.timeout(60000);
         checkConnectionOfAdapter(function (res) {
@@ -119,7 +122,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         });
     });
 
-/*
+    /*
     PUT YOUR OWN TESTS HERE USING
     it('Testname', function ( done) {
         ...
