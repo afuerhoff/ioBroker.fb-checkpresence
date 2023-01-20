@@ -312,9 +312,10 @@ class FbCheckpresence extends utils.Adapter {
                 let hostName = items[i]['HostName'];
                 hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 if (hostName === null || hostName == ''){
-                    //this.log.warn('devicelist: ' + JSON.stringify(items));
-                    //this.log.warn('fb-devices: ' + JSON.stringify(fbDevices));
-                    this.log.warn('getAllFbObjects: Hostname of fritzbox device ' + items[i]['MACAddress'] + ' is empty!');
+                    if (this.suppressMesg === false) {
+                        this.log.warn('getAllFbObjects: Hostname of fritzbox device ' + items[i]['MACAddress'] + ' is empty!');
+                        this.suppressMesg = true;
+                    }
                     continue;
                 }
                 const host = fbDevices.filter(x => x._id.replace(`${this.namespace}` + '.fb-devices.','') === hostName);
@@ -1226,7 +1227,6 @@ class FbCheckpresence extends utils.Adapter {
                                 active = host[0].active;
                                 //this.log.info('getActive ' + host[0].hn + ' ' + host[0].mac + ' ' + host[0].active);
                             }else{
-                                //if (this.suppressMesg == false){
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
                                         if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ipaddress === memberRow.ip && x.hostname === memberRow.devicename){
@@ -1234,12 +1234,10 @@ class FbCheckpresence extends utils.Adapter {
                                             return x;
                                         }
                                     });
-                                    //this.suppressMesg = true;
                                     throw new Warn('The configured mac-address for member ' + member + ' was not found in the fritzbox. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
-                            //if (this.suppressMesg == false){
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
                                     if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
@@ -1247,7 +1245,6 @@ class FbCheckpresence extends utils.Adapter {
                                         return x;
                                     }
                                 });
-                                //this.suppressMesg = true;
                                 throw new Warn('The configured mac-address for member ' + member + ' is empty. Please insert a valid mac-address!');
                             }
                         }
@@ -1260,7 +1257,6 @@ class FbCheckpresence extends utils.Adapter {
                                 active = host[0].active; 
                                 //this.log.info('getActive ' + host[0].hn + ' ' + host[0].ip + ' ' + host[0].active);
                             }else{
-                                //if (this.suppressMesg == false){
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
                                         if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
@@ -1268,12 +1264,10 @@ class FbCheckpresence extends utils.Adapter {
                                             return x;
                                         }
                                     });
-                                    //this.suppressMesg = true;
                                     throw new Warn('The configured mac-address for member ' + member + ' was not found in the fritzbox. Please insert a valid mac-address!');
                                 }
                             }
                         }else{
-                            //if (this.suppressMesg == false){
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
                                     if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
@@ -1281,7 +1275,6 @@ class FbCheckpresence extends utils.Adapter {
                                         return x;
                                     }
                                 });
-                                //this.suppressMesg = true;
                                 throw new Warn('The configured ip-address for ' + member + ' is empty. Please insert a valid ip-address!');
                             }
                         }
@@ -1293,7 +1286,6 @@ class FbCheckpresence extends utils.Adapter {
                                 active = host[0].active; 
                                 //this.log.info('getActive ' + host[0].hn + ' ' + host[0].mac + ' ' + host[0].active);
                             }else{
-                                //if (this.suppressMesg == false){
                                 if (mesg[0].suppress === false){
                                     mesg = this.suppressArr.filter(function(x){
                                         if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
@@ -1301,12 +1293,10 @@ class FbCheckpresence extends utils.Adapter {
                                             return x;
                                         }
                                     });
-                                    //this.suppressMesg = true;
                                     throw Error('The configured hostname for member ' + member + ' was not found in the fritzbox. Please insert a valid hostname!');
                                 }
                             }
                         }else{
-                            //if (this.suppressMesg == false){
                             if (mesg[0].suppress === false){
                                 mesg = this.suppressArr.filter(function(x){
                                     if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
@@ -1314,7 +1304,6 @@ class FbCheckpresence extends utils.Adapter {
                                         return x;
                                     }
                                 });
-                                //this.suppressMesg = true;
                                 throw Error('The configured hostname for ' + member + ' is empty. Please insert a valid hostname!');
                             }
                         }
@@ -1361,7 +1350,6 @@ class FbCheckpresence extends utils.Adapter {
                         }
                         break;
                     case 'Hostname':
-                        //if (this.suppressMesg == false){
                         if (mesg[0].suppress === false){
                             mesg = this.suppressArr.filter(function(x){
                                 if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
@@ -1369,7 +1357,6 @@ class FbCheckpresence extends utils.Adapter {
                                     return x;
                                 }
                             });
-                            //this.suppressMesg = true;
                             throw Error('The feature hostname is not supported for ' + member + '!');
                         }
                         break;
