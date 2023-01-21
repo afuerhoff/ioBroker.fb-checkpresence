@@ -66,6 +66,7 @@ class FbCheckpresence extends utils.Adapter {
         this.Fb = null;
         this.tout = null;
         this.suppressMesg = false;
+        this.suppressMesgEmptyHostname = false;
         this.suppressArr = [];
         this.triggerActive = false;
     }
@@ -312,9 +313,10 @@ class FbCheckpresence extends utils.Adapter {
                 let hostName = items[i]['HostName'];
                 hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 if (hostName === null || hostName == ''){
-                    if (this.suppressMesg === false) {
+                    if (this.suppressMesgEmptyHostname === false) {
                         this.log.warn('getAllFbObjects: Hostname of fritzbox device ' + items[i]['MACAddress'] + ' is empty!');
-                        this.suppressMesg = true;
+                        this.log.warn('getAllFbObjects: To delete this device in the fritzbox please add the device manually in the fritzbox with a hostname and the shown mac-address. After a reboot you can hopefully delete the device.');
+                        this.suppressMesgEmptyHostname = true;
                     }
                     continue;
                 }

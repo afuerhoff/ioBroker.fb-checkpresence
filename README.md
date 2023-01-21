@@ -208,6 +208,7 @@ Here you will find information about the history of the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
+* (afuerhoff) Warning message empty hostname optimized. Issue [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)
 
 ### 1.1.24 (2022-12-22)
 * (afuerhoff) axios updated
