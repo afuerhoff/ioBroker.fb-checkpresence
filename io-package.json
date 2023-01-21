@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.24",
+    "version": "1.1.25",
     "news": {
+      "1.1.25": {
+        "en": "Warning message empty hostname optimized. Issue [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "de": "Warnmeldung leeren Hostname optimiert. Ausgabe [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "ru": "Предупреждение сообщение пустое имя хоста оптимизировано. Номер [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "pt": "Mensagem de aviso nome de host vazio otimizado. Edição [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "nl": "Waarschuwingsbericht, lege gastnaam optimaal. Quality over Quantity (QoQ) Releases Vertaling:",
+        "fr": "Message d'avertissement nom d'hôte vide optimisé. Question [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "it": "Messaggio di avvertimento nome host vuoto ottimizzato. Numero [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "es": "Mensaje de advertencia hostname vacío optimizado. Cuestión [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "pl": "Wiadomość o pustym hostname. Numer (#180(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
+        "uk": "Попередження повідомлення порожній hostname оптимізовано. Випуск [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/180)",
+        "zh-cn": "警告讯息是光明的。 问题[第180](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/180)"
+      },
       "1.1.24": {
         "en": "axios updated\nCancelToken as option implemented. For node versions less than 16",
         "de": "axios aktualisiert\nCancelToken als Option implementiert. Für Knotenversionen kleiner als 16",
@@ -80,19 +93,6 @@
         "pl": "(#137(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) (ang.). urządzenie gościnne dwukrotnie",
         "zh-cn": "问题[第137条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/137) 目 录",
         "uk": "проблема [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостьовий пристрій у списку двічі"
-      },
-      "1.1.18": {
-        "en": "issue [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\nissue [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Restart adapter after cycle error",
-        "de": "ausgabe #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices Zustände für vpn-Verbindung hinzugefügt\nausgabe #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Neustart Adapter nach Zyklusfehler",
-        "ru": "выпуск #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices состояния для подключения vpn добавлено\nвыпуск #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезагрузите адаптер после ошибки цикла",
-        "pt": "(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices estados para conexão vpn adicionado\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Reinicie o adaptador após o erro do ciclo",
-        "nl": "_ FBI staat voor vpn connectie toegevoegd\nquality over Quantity (QoQ) Releases Vertaling: Herstart adapter na cyclusfout",
-        "fr": "issue #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices états pour la connexion vpn ajouté\n#[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptateur de démarrage après erreur de cycle",
-        "it": "numero[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices stati per connessione vpn aggiunto\nnumero #[128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Riavviare l'adattatore dopo l'errore del ciclo",
-        "es": "cuestión #[67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) fbdevices states for vpn connection added\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Adaptador reinicio después del error ciclo",
-        "pl": "#67(https:/github.com/afuerhoff/ioBrokerfb-checkpresence/67) (ang.). Współzałożycielskie stany vpn dodane do połączenia\n#128(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) (ang.). Restart adapter po błędzie cyklowego",
-        "zh-cn": "问题编号:[67](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/67) fbdevics State for vpn联系\n问题编号:[128](http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/128) 在周期错误之后重新启动适应行动",
-        "uk": "проблема [#67](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/67) Додано стан fbdevices для підключення vpn\nпроблема [#128](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/128) Перезапустіть адаптер після помилки циклу"
       }
     },
     "titleLang": {
