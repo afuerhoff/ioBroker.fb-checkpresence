@@ -75,7 +75,7 @@ class FbCheckpresence extends utils.Adapter {
         //if(adapter === null) adapter = this;
         if (typeof error === 'string') {
             if (error.name === undefined || error.message === undefined){
-                this.log.warn(title); // + ' ' + JSON.stringify(error));
+                this.log.warn(title + ' ' + error); // + ' ' + JSON.stringify(error));
             }else{
                 this.log.warn(title + ' ' + error.name + ': ' + error.message);
             }
@@ -1368,8 +1368,12 @@ class FbCheckpresence extends utils.Adapter {
             }
             return active;
         } catch(error){
-            this.errorHandler(error, 'getActive ' + member + ': ');
-            return null;
+            if (error.name.includes('NoSuchEntryInArray')){
+                this.errorHandler('Cannot find device in fritzbox', 'getActive ' + member + ': ');
+            }else{
+                this.errorHandler(error, 'getActive' + member + ': ');
+            }
+            return false;
         }
     }
 
