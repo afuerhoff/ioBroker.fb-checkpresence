@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.25",
+    "version": "1.1.26",
     "news": {
+      "1.1.26": {
+        "en": "Wrong default settings in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios parameter in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\ndependencies updated",
+        "de": "Falsche Standardeinstellungen in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios Parameter in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\naktualisierte abhängigkeiten",
+        "ru": "Неправильные настройки по умолчанию в io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nНеправильный параметр Axios в getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\nзависимости обновлены",
+        "pt": "Definições padrão erradas em io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nParâmetro errado do Axios no getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresença/edições/197)\ndependências atualizadas",
+        "nl": "Verkeerde default settings in io-package\nVerkeerde Axios parameter in getMeshList [Ghtub,com/afuerhoff/Broker\nafhankelijkheid geüpdateerd",
+        "fr": "Paramètres erronés par défaut dans io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios paramètre in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\ndépendances mises à jour",
+        "it": "Impostazioni di default in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nParametro Axios sbagliato in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\ndipendenze aggiornate",
+        "es": "Ajustes predeterminados incorrectos en io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nParámetro incorrecto de Axios en getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\ndependencias actualizadas",
+        "pl": "Bad default settings in io-package.json #188(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188) (ang.)\nBad Axios parametr in getMeshList #197 (https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197) (ang.)\naktualizacja",
+        "uk": "Параметри за замовчуванням в io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios параметр в getMeshList [#197] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\nоновлені залежності",
+        "zh-cn": "瓦伦格的缺勤环境[#188]\nWrong Axios para参数 to Mesh List [#197] (https://github.com/afuerhoff/ioBroker.fb-rappresence/issues/197)\nb. 更新的依赖"
+      },
       "1.1.25": {
         "en": "Warning message empty hostname optimized. Issue [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
         "de": "Warnmeldung leeren Hostname optimiert. Ausgabe [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
@@ -80,19 +93,6 @@
         "pl": "(#136(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) (ang.). aktualizacja\n(#139(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139). członkowie rodziny Add\n(#140(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) (ang.). Strona internetowa rodziny\n(#129(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) (ang.). Biblioteka zmienna",
         "zh-cn": "问题[第136条](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/136) 需求最新情况\n问题[第139](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/139) 增加家庭固定成员\n问题[第140条](http://github.com/afuerhoff/ioBroker.fb- 核对presence/issues/140) 增加家庭口号固定装置\n问题[第129条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/129) 事实图书馆的改变",
         "uk": "проблема [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) примусове оновлення на вимогу\nпроблема [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Додавання членів сім’ї виправлено\nпроблема [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Виправлено діалогове вікно додавання членів сім’ї\nпроблема [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Бібліотеку формату дати змінено"
-      },
-      "1.1.19": {
-        "en": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) guest device listed twice",
-        "de": "ausgabe [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) Gästegerät zweimal aufgeführt",
-        "ru": "выпуск [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостевой аппарат, перечисленный дважды",
-        "pt": "[#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137)) dispositivo de convidado listado duas vezes",
-        "nl": "quality over Quantity (QoQ) Releases Vertaling: Gast apparaat twee keer geregistreerd",
-        "fr": "issue [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositif invité classé deux fois",
-        "it": "emissione [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositivo ospite elencato due volte",
-        "es": "[#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) dispositivo invitado lista dos veces",
-        "pl": "(#137(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) (ang.). urządzenie gościnne dwukrotnie",
-        "zh-cn": "问题[第137条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/137) 目 录",
-        "uk": "проблема [#137](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/137) гостьовий пристрій у списку двічі"
       }
     },
     "titleLang": {
