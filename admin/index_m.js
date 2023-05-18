@@ -149,8 +149,8 @@ function dlgDevices(arr, title, id){
         tableBodyDevices += 
             '<tr class="add-device" ' +
                 'data-macaddress="' + (element.mac || '') + '" ' +
-                'data-familymember="' + (element.name || '').replace(/"/g, '\"') + '" ' +
-                'data-ip="' + (element.ip || '').replace(/"/g, '\"') + '">' +
+                'data-familymember="' + (element.name || '').replace(/"/g, '\\"') + '" ' +
+                'data-ip="' + (element.ip || '').replace(/"/g, '\\"') + '">' +
                 '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkFM"' + chkVal2 + ' /><span></span></label></td>' +
                 '<td>' + element.name + '</td>' +
                 '<td class="center">' + element.mac + '</td>' +
@@ -213,7 +213,7 @@ function dlgWl(arr, title, id){
         tableBodyWl += 
             '<tr ' +
                 'data-white_macaddress="' + (element.mac || '') + '" ' +
-                'data-white_device="' + (element.name || '').replace(/"/g, '\"') + '">' +
+                'data-white_device="' + (element.name || '').replace(/"/g, '\\"') + '">' +
                 '<td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkWL"' + chkVal + ' /><span></span></label></td>' +
                 '<td>' + element.name + '</td>' +
                 '<td class="center">' + element.mac + '</td>' +
