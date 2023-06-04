@@ -140,7 +140,7 @@ function dlgError(text){
     $('#dlgWL').modal();
 }
 
-function dlgDevices(arr, title, id){
+function dlgDevicesOld(arr, title, id){
     let tableBodyDevices = '';
     arr.forEach(function (element) {
         const chkVal2 = '';
@@ -197,6 +197,67 @@ function dlgDevices(arr, title, id){
     $(id).html(dialogDevices);
     $(id).modal({dismissible: false});
 }
+
+function dlgDevices(arr, title, id) {
+    const tableRows = arr.map(function (element) {
+        const chkVal2 = '';
+
+        // onMessage -> allDevices name, mac, ip -> see main.js
+        return `
+            <tr class="add-device"
+                data-macaddress="${element.mac || ''}"
+                data-familymember="${(element.name || '').replace(/"/g, '\"')}"
+                data-ip="${(element.ip || '').replace(/"/g, '\"')}">
+                <td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkFM"${chkVal2} /><span></span></label></td>
+                <td>${element.name}</td>
+                <td class="center">${element.mac}</td>
+                <td class="center">${element.ip}</td>
+            </tr>`;
+    });
+
+    const tableBodyDevices = tableRows.join('');
+
+    const dialogDevices = `
+        <div class="modal-header">
+            <h6 class="dlgTitle"><span class="translate">${_(title)}</span></h6>
+            <div class="input-field inline">
+                <i id="icon" class="material-icons prefix">search</i>
+                <button id="btnResetSearch" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>
+                <input id="searchDevice" name="search" class="validate searchInput" type="text" onkeyup="search(event)">
+                <label class="searchLabel" for="searchDevice">${_('Search for device')}..</label>
+            </div>
+            <div>
+                <table class="fm">
+                    <thead>
+                        <tr class="header">
+                            <th class="valign-wrapper header"><label class="header"><input type="checkbox" class="cb filled-in header" id="select-all" onclick="select-all(event)"><span></span></label></th>
+                            <th class="header left-align">Hostname</th>
+                            <th class="header center-align">${_('Mac-address')}</th>
+                            <th class="header center-align">${_('Ip-address')}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div>
+                <table class="fm" id="tabDevices">
+                    <tbody>
+                        ${tableBodyDevices}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-set" id="save"><i class="large material-icons left">add</i><span class="translate">${_('Add')}</span></a>
+            <a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">${_('Close')}</span></a>
+        </div>`;
+
+    $(id).html(dialogDevices);
+    $(id).modal({dismissible: false});
+}
+
+
 
 function dlgWl(arr, title, id){
     let tableBodyWl = '';
