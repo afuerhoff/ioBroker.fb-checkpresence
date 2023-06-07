@@ -113,32 +113,22 @@ class FbCheckpresence extends utils.Adapter {
         return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
-    createHTMLTableRow (dataArray) {
-        let html = '';
-        html += '<tr>'; //new row
-        for(let c=0; c < dataArray.length; c++){
-            html += '<td>' + dataArray[c] + '</td>'; //columns
-        }
-        html += '</tr>'; //row end
-        //dataArray = null;
-        return html;
+    createHTMLTableRow(dataArray) {
+        return '<tr>' + dataArray.map(data => '<td>' + data + '</td>').join('') + '</tr>';
     }
-
+    
     createJSONTableRow(cnt, dataArray) {
-        let json = '{';
-        if (cnt != 0){
-            json = ',{';
+        let json = '';
+        if (cnt > 0) {
+            json += ',';
         }
-        for(let c=0; c < dataArray.length; c=c+2){
-            json += '"'  + dataArray[c] + '":';
-            if (c == dataArray.length-2){
-                json += '"'  + dataArray[c+1] + '"}';
-            }else{
-                json += '"'  + dataArray[c+1] + '",';
+        for (let c = 0; c < dataArray.length; c += 2) {
+            json += '"' + dataArray[c] + '":"' + dataArray[c + 1] + '"';
+            if (c < dataArray.length - 2) {
+                json += ',';
             }
         }
-        //dataArray = null;
-        return json;
+        return '{' + json + '}';
     }
 
     getAdapterState(id){
@@ -1620,51 +1610,37 @@ class FbCheckpresence extends utils.Adapter {
             this.errorHandler(error, 'calcMemberAttributes: ');
         }
     }
-
-    async getMemberSpeed(memberRow){
+     
+    async getMemberSpeed(memberRow) {
         try {
             const hosts = this.hosts;
-            if (hosts === null) return null;
-            const member = memberRow.familymember; 
-            let memberPath = '';
-            if (this.config.compatibility === true){
-                memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
-            } else {
-                memberPath = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
-            }
-            //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member; 
-            //const memberPath2 = memberRow.group == '' ? 'familyMembers.' + member : 'familyMembers.' + memberRow.group + '.' + member; 
-            
-            let speed = 0;
-            let items = null;
-            if (memberRow.usage == 'Hostname' && hosts != null){
-                items = hosts.filter(x => x.hn == memberRow.devicename);
-                const itemsActive = items.filter(x => x.active == '1');
-                if (items && items.length == 0) speed = 0;
-                if (items && items.length == 1) speed = items[0].speed;
-                if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
-            }else{
-                if (memberRow.usage == 'IP'){
-                    items = hosts.filter(x => x.ip == memberRow.ipaddress);
-                    const itemsActive = items.filter(x => x.active == '1');
-                    if (items && items.length == 0) speed = 0;
-                    if (items && items.length == 1) speed = items[0].speed;
-                    if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
-                }else{
-                    items = hosts.filter(x => x.mac == memberRow.macaddress);
-                    const itemsActive = items.filter(x => x.active == '1');
-                    if (items && items.length == 0) speed = 0;
-                    if (items && items.length == 1) speed = items[0].speed;
-                    if (items && items.length > 1 && itemsActive && itemsActive.length > 0) speed = itemsActive[0].speed;
+            if (!hosts) return null;
+      
+            const { familymember, group, usage, devicename, ipaddress, macaddress } = memberRow;
+            const memberPath = this.config.compatibility
+                ? (group === '' ? familymember : `familyMembers.${group}.${familymember}`)
+                : (group === '' ? `familyMembers.${familymember}` : `familyMembers.${group}.${familymember}`);
+      
+            const items = hosts.filter(item => {
+                switch (usage) {
+                    case 'Hostname':
+                        return item.hn === devicename;
+                    case 'IP':
+                        return item.ip === ipaddress;
+                    default:
+                        return item.mac === macaddress;
                 }
-            }
-            items = null;
-            await this.setStateChangedAsync(memberPath + '.speed', { val: parseInt(speed), ack: true });
-            //if (memberRow.group == '' && this.config.compatibility == false) this.setState(memberPath2 + '.speed', { val: speed, ack: true });
+            });
+      
+            const speed = items.length > 0
+                ? (items.find(item => item.active === '1') || items[0]).speed
+                : 0;
+      
+            await this.setStateChangedAsync(`${memberPath}.speed`, { val: parseInt(speed), ack: true });
         } catch (error) {
             this.errorHandler(error, 'getMemberSpeed: ');
         }
-    }
+    }      
 
     async checkPresence(trigger){
         try {
