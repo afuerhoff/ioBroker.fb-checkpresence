@@ -92,6 +92,15 @@
             "task": "updateReadme",
             "problemMatcher": [],
             "label": "gulp: updateReadme"
+        },
+        {
+            "type": "npm",
+            "script": "release-minor",
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "label": "npm: release-minor",
+            "detail": "release-script minor --yes"
         }
     ],
     "inputs": [
