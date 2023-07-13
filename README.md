@@ -209,7 +209,6 @@ Here you will find information about the history of the current day.
 ## Changelog
 ### **WORK IN PROGRESS**
 * (afuerhoff) dependencies updated
-* (afuerhoff) codeQL optimization
 * (afuerhoff) mesh link added to family members [#206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)
 
 ### 1.1.26 (2023-04-06)
