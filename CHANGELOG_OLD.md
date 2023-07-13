@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.22 (2022-12-13)
+* (afuerhoff) axios updated
+* (afuerhoff) error handling optimized
+
 ## 1.1.21 (2022-09-05)
 * (afuerhoff) dependencies updated
 

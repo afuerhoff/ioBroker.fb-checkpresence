@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.1.26",
+    "version": "1.2.0",
     "news": {
+      "1.2.0": {
+        "en": "dependencies updated\nmesh link added to family members [#206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
+        "de": "aktualisierte abhängigkeiten\nnetzverbindung zu Familienmitgliedern #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
+        "ru": "зависимости обновлены\nсетчатая ссылка добавлена к членам семьи #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
+        "pt": "dependências atualizadas\nlink de malha adicionado aos membros da família #[206](https://github.com/afuerhoff/ioBroker.fb-checkence/issues/206)",
+        "nl": "afhankelijkheid geüpdateerd\nquality over Quantity (QoQ) Releases Vertaling:",
+        "fr": "dépendances mises à jour\nmesh link added to family members #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
+        "it": "dipendenze aggiornate\nlink aggiunto ai membri della famiglia #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
+        "es": "dependencias actualizadas\nmesh link added to family members #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
+        "pl": "aktualizacja\nsieć łączy się z członkami rodziny (206)(https:/github.com/afuerhoff/ioBroker.fb-presence/issues/206)",
+        "uk": "оновлені залежності\nпосилання сітки до членів сім'ї #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/206)",
+        "zh-cn": "b. 更新的依赖\n我与家人联系(http://github.com/afuerhoff/ioBroker.fb- 检查/issues/206)"
+      },
       "1.1.26": {
         "en": "Wrong default settings in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios parameter in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\ndependencies updated",
         "de": "Falsche Standardeinstellungen in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios Parameter in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\naktualisierte abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "aktualizacja",
         "zh-cn": "b. 更新的依赖",
         "uk": "залежності оновлено"
-      },
-      "1.1.20": {
-        "en": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) force update on demand\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Add family members dialogbox fixed\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Dateformat library changed",
-        "de": "ausgabe [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) Kraftaktualisierung auf Nachfrage\nausgabe [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Familienmitglieder fest hinzufügen\nausgabe [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Fügen Sie Familienmitglieder Dialogbox fest\nausgabe [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Datenbank geändert",
-        "ru": "выпуск [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) обновление силы по требованию\nвыпуск [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Добавить членов семьи исправлены\nвыпуск [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Добавить членов семьи dialogbox Fixed\nвыпуск [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Датаформатная библиотека изменена",
-        "pt": "(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) atualização de força na demanda\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Adicionar membros da família fixos\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Adicionar família membros caixa de diálogo fixo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Biblioteca de dataformato alterada",
-        "nl": "quality over Quantity (QoQ) Releases Vertaling: Vertaling:\n_ Voeg familieleden aan\nquality over Quantity (QoQ) Releases Vertaling: Voeg familieleden dialogbox vast\nquality over Quantity (QoQ) Releases Vertaling: Datumbibliotheek veranderde",
-        "fr": "issue [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) mise à jour de la force sur la demande\nissue [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Add family members fixed\nissue [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Ajouter la boîte de dialogue des membres de la famille\nissue [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La bibliothèque Dateformat a changé",
-        "it": "emissione [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) aggiornamento forza su richiesta\nemissione [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Aggiungi i membri della famiglia fisso\nnumero [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Aggiungi i membri della famiglia finestra di dialogo fisso\nnumero [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Libreria formato data cambiato",
-        "es": "[#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) actualización de la fuerza sobre la demanda\n[#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Agregar miembros de la familia fijos\n[#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Agregar a los miembros de la familia cuadro de diálogo fijo\n[#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) La biblioteca Dateformat cambió",
-        "pl": "(#136(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) (ang.). aktualizacja\n(#139(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139). członkowie rodziny Add\n(#140(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) (ang.). Strona internetowa rodziny\n(#129(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) (ang.). Biblioteka zmienna",
-        "zh-cn": "问题[第136条](http://github.com/afuerhoff/ioBroker.fb-idpresence/issues/136) 需求最新情况\n问题[第139](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/139) 增加家庭固定成员\n问题[第140条](http://github.com/afuerhoff/ioBroker.fb- 核对presence/issues/140) 增加家庭口号固定装置\n问题[第129条](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/129) 事实图书馆的改变",
-        "uk": "проблема [#136](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/136) примусове оновлення на вимогу\nпроблема [#139](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/139) Додавання членів сім’ї виправлено\nпроблема [#140](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/140) Виправлено діалогове вікно додавання членів сім’ї\nпроблема [#129](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/129) Бібліотеку формату дати змінено"
       }
     },
     "titleLang": {
