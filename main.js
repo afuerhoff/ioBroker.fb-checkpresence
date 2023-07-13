@@ -1656,7 +1656,7 @@ class FbCheckpresence extends utils.Adapter {
             // Durchlaufe alle States im System, die zum Adapter gehören
             const states = await this.getStatesAsync(pattern);
             for (const id in states) {
-                if (states.hasOwnProperty(id)) {
+                if (Object.prototype.hasOwnProperty.call(states, id)) {
                     const stateObj = states[id];
                     if (id.includes(gesuchterZustandsname)){
                         return stateObj.val;
