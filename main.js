@@ -775,7 +775,7 @@ class FbCheckpresence extends utils.Adapter {
      */
     async onMessage(obj) {
         try {
-            this.log.debug(`[MSSG] Received: ${JSON.stringify(obj)}`);
+            //this.log.debug(`[MSSG] Received: ${JSON.stringify(obj)}`);
             if (!obj) return;
             if (typeof obj === 'object' && obj.message) {
                 const gthis = this;
@@ -833,7 +833,7 @@ class FbCheckpresence extends utils.Adapter {
                         reply(this.allDevices);
                         return true;}
                     default:
-                        this.log.warn('Unknown command: ' + obj.command);
+                        //this.log.warn('Unknown command: ' + obj.command);
                         break;
                 }
                 if (obj.callback) this.sendTo(obj.from, obj.command, obj.message, obj.callback);
@@ -1611,7 +1611,7 @@ class FbCheckpresence extends utils.Adapter {
         }
     }
      
-    async getMemberSpeed(memberRow) {
+    async getMemberPropertiesFromFBDevices(memberRow) {
         try {
             const hosts = this.hosts;
             if (!hosts) return null;
@@ -1631,16 +1631,43 @@ class FbCheckpresence extends utils.Adapter {
                         return item.mac === macaddress;
                 }
             });
-      
+            
+            //speed property
             const speed = items.length > 0
                 ? (items.find(item => item.active === '1') || items[0]).speed
                 : 0;
       
             await this.setStateChangedAsync(`${memberPath}.speed`, { val: parseInt(speed), ack: true });
+
+            //link property
+            const link = await this.findStateInStructure(`${this.namespace}.fb-devices.${memberPath}`, 'link');
+            await this.setStateChangedAsync(`${memberPath}.link`, { val: link, ack: true });
+
         } catch (error) {
-            this.errorHandler(error, 'getMemberSpeed: ');
+            this.errorHandler(error, 'getMemberPropertiesFromFBDevices: ');
         }
-    }      
+    }
+    
+    // Funktion zum Suchen des Zustands in der Objektstruktur
+    async findStateInStructure(startObjekt, gesuchterZustandsname) {
+        try {
+            const device = startObjekt.replace('.familyMembers', '');
+            const pattern = device + '.*';
+            // Durchlaufe alle States im System, die zum Adapter gehören
+            const states = await this.getStatesAsync(pattern);
+            for (const id in states) {
+                if (states.hasOwnProperty(id)) {
+                    const stateObj = states[id];
+                    if (id.includes(gesuchterZustandsname)){
+                        return stateObj.val;
+                    }
+                }
+            }
+            return '';
+        } catch (error) {
+            this.errorHandler(error, 'findStateInStructure: ');
+        }
+    }
 
     async checkPresence(trigger){
         try {
@@ -1719,7 +1746,7 @@ class FbCheckpresence extends utils.Adapter {
                         const newActive = groupMembers[k].newVal;
                         if (trigger === true) this.log.info('triggerPresence: State ' + memberRow.familymember + ' ' + newActive);
                         if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
-                        if (newActive != null) this.getMemberSpeed(memberRow);
+                        if (newActive != null) this.getMemberPropertiesFromFBDevices(memberRow);
                     }
                 }
                 if (this.enabled == false) break; //cancel if disabled over unload
