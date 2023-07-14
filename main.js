@@ -1640,7 +1640,7 @@ class FbCheckpresence extends utils.Adapter {
             await this.setStateChangedAsync(`${memberPath}.speed`, { val: parseInt(speed), ack: true });
 
             //link property
-            const link = await this.findStateInStructure(`${this.namespace}.fb-devices.${memberPath}`, 'link');
+            const link = await this.findStateInStructure(`${this.namespace}.fb-devices.${devicename}`, 'link');
             await this.setStateChangedAsync(`${memberPath}.link`, { val: link, ack: true });
 
         } catch (error) {

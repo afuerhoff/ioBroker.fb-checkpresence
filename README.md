@@ -207,6 +207,9 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (afuerhoff) bug fixed property link   
+
 ### 1.2.0 (2023-07-13)
 * (afuerhoff) dependencies updated
 * (afuerhoff) mesh link added to family members [#206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)
