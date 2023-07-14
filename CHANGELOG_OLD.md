@@ -1,4 +1,7 @@
 # Older changes
+## 1.1.23 (2022-12-20)
+* (afuerhoff) fb devices with empty hostname are ignored
+
 ## 1.1.22 (2022-12-13)
 * (afuerhoff) axios updated
 * (afuerhoff) error handling optimized

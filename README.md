@@ -207,8 +207,8 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
-### **WORK IN PROGRESS**
-* (afuerhoff) bug fixed property link   
+### 1.2.1 (2023-07-14)
+* (afuerhoff) bug fixed property link
 
 ### 1.2.0 (2023-07-13)
 * (afuerhoff) dependencies updated
@@ -225,9 +225,6 @@ Here you will find information about the history of the current day.
 ### 1.1.24 (2022-12-22)
 * (afuerhoff) axios updated
 * (afuerhoff) CancelToken as option implemented. For node versions less than 16
-
-### 1.1.23 (2022-12-20)
-* (afuerhoff) fb devices with empty hostname are ignored
 
 ## License
 MIT License

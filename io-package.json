@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "news": {
+      "1.2.1": {
+        "en": "bug fixed property link",
+        "de": "fehler behobene eigenschaft link",
+        "ru": "ошибка фиксированная ссылка на недвижимость",
+        "pt": "link de propriedade corrigida",
+        "nl": "quality over quantity (qoq) releases vertaling:",
+        "fr": "bug fixed property link",
+        "it": "bug link di proprietà fisso",
+        "es": "error de propiedad fijo",
+        "pl": "link",
+        "uk": "виправлено помилку",
+        "zh-cn": "b 固定财产连接"
+      },
       "1.2.0": {
         "en": "dependencies updated\nmesh link added to family members [#206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
         "de": "aktualisierte abhängigkeiten\nnetzverbindung zu Familienmitgliedern #[206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)",
@@ -80,19 +93,6 @@
         "pl": "axios updated\nobsługa błędów optymalizowała",
         "uk": "axios оновлений\nоптимізація обробки помилок",
         "zh-cn": "a 更新的基准\n处理错误的优化"
-      },
-      "1.1.21": {
-        "en": "dependencies updated",
-        "de": "aktualisierte abhängigkeiten",
-        "ru": "зависимости обновлены",
-        "pt": "dependências atualizadas",
-        "nl": "afhankelijkheid geüpdateerd",
-        "fr": "dépendances mises à jour",
-        "it": "dipendenze aggiornate",
-        "es": "dependencias actualizadas",
-        "pl": "aktualizacja",
-        "zh-cn": "b. 更新的依赖",
-        "uk": "залежності оновлено"
       }
     },
     "titleLang": {
