@@ -43,8 +43,7 @@ function checkValueOfState(id, value, cb, counter) {
         if (err) console.error(err);
         if (value === null && !state) {
             if (cb) cb();
-        } else
-        if (state && (value === undefined || state.val === value)) {
+        } else if (state && (value === undefined || state.val === value)) {
             if (cb) cb();
         } else {
             setTimeout(function () {
