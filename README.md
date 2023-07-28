@@ -209,6 +209,7 @@ Here you will find information about the history of the current day.
 ## Changelog
 ### **WORK IN PROGRESS**
 * (afuerhoff) bug fixed json tables [#215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)
+* (afuerhoff) link feature optimized. See #206
 
 ### 1.2.1 (2023-07-14)
 * (afuerhoff) bug fixed property link
