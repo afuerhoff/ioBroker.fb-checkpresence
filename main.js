@@ -119,16 +119,18 @@ class FbCheckpresence extends utils.Adapter {
     
     createJSONTableRow(cnt, dataArray) {
         let json = '';
-        if (cnt > 0) {
-            json += ',';
-        }
         for (let c = 0; c < dataArray.length; c += 2) {
             json += '"' + dataArray[c] + '":"' + dataArray[c + 1] + '"';
             if (c < dataArray.length - 2) {
                 json += ',';
             }
         }
-        return '{' + json + '}';
+        if (cnt > 0) {
+            json = ',{' + json + '}';
+        }else{
+            json = '{' + json + '}';
+        }
+        return json;
     }
 
     getAdapterState(id){
@@ -1658,7 +1660,7 @@ class FbCheckpresence extends utils.Adapter {
             for (const id in states) {
                 if (Object.prototype.hasOwnProperty.call(states, id)) {
                     const stateObj = states[id];
-                    if (id.includes(gesuchterZustandsname)){
+                    if (id.includes(gesuchterZustandsname) && stateObj.val){
                         return stateObj.val;
                     }
                 }
