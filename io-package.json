@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "news": {
+      "1.2.2": {
+        "en": "bug fixed json tables [#215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nlink feature optimized. See #206",
+        "de": "fehler behobene json Tabellen #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nlink-Feature optimiert. Vgl",
+        "ru": "баг фиксированные json таблицы #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nфункция ссылки оптимизирована. См #206",
+        "pt": "bug corrigido tabelas json #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresença/edições/215)\nrecurso de link otimizado. Ver #206",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling:\nverbinding optimaal. #206",
+        "fr": "bug fixed json tables #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfonction de lien optimisé. Voir #206",
+        "it": "#[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunzione di collegamento ottimizzato. Vedere",
+        "es": "bug fixed json tables #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunción de enlace optimizada. See #206",
+        "pl": "tablice jsonowe #215 (https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunkcja łącza optymalizowana. Zobacz #206",
+        "uk": "[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/215)\nфункція посилання оптимізована. Бачити #206",
+        "zh-cn": "bugixson表格(http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/215)\n联系是优化的。 见第206号行动。"
+      },
       "1.2.1": {
         "en": "bug fixed property link",
         "de": "fehler behobene eigenschaft link",
@@ -80,19 +93,6 @@
         "pl": "urządzenia z pustą nazwą hosta są ignorowane",
         "uk": "fb пристрої з порожнім хостом ігноруються",
         "zh-cn": "被忽视有空落的装置"
-      },
-      "1.1.22": {
-        "en": "axios updated\nerror handling optimized",
-        "de": "axios aktualisiert\nfehlerbehandlung optimiert",
-        "ru": "axios обновлено\nобработка ошибок оптимизирована",
-        "pt": "axios atualizados\nmanipulação de erros otimizado",
-        "nl": "quality over quantity (qoq) releases vertaling:\nerror omgaan met optimistisch",
-        "fr": "axios mis à jour\nmaniement d'erreur optimisé",
-        "it": "axios aggiornato\ngestione degli errori ottimizzata",
-        "es": "axios actualizados\nmanejo de errores optimizado",
-        "pl": "axios updated\nobsługa błędów optymalizowała",
-        "uk": "axios оновлений\nоптимізація обробки помилок",
-        "zh-cn": "a 更新的基准\n处理错误的优化"
       }
     },
     "titleLang": {

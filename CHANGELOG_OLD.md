@@ -1,4 +1,8 @@
 # Older changes
+## 1.1.24 (2022-12-22)
+* (afuerhoff) axios updated
+* (afuerhoff) CancelToken as option implemented. For node versions less than 16
+
 ## 1.1.23 (2022-12-20)
 * (afuerhoff) fb devices with empty hostname are ignored
 
