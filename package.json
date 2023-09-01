@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.8",
-    "axios": "^1.4.0",
+    "axios": "^1.5.0",
     "qr-image": "^3.2.0",
     "xml2js": "^0.6.2"
   },
