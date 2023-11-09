@@ -1,6 +1,6 @@
 ![Logo](admin/fb-checkpresence.png)
 # ioBroker.fb-checkpresence
-[![GitHub license](https://img.shields.io/github/license/afuerhoff/iobroker.fb-checkpresence)]
+![GitHub license](https://img.shields.io/github/license/afuerhoff/iobroker.fb-checkpresence)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fb-checkpresence.svg)](https://www.npmjs.com/package/iobroker.fb-checkpresence)
 ![GitHub repo size](https://img.shields.io/github/repo-size/afuerhoff/iobroker.fb-checkpresence)
 
@@ -11,6 +11,7 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/afuerhoff/ioBroker.fb-checkpresence/badge.svg)](https://snyk.io/test/github/afuerhoff/ioBroker.fb-checkpresence)
 
 [![NPM](https://nodei.co/npm/iobroker.fb-checkpresence.png?downloads=true)](https://nodei.co/npm/iobroker.fb-checkpresence/)
+
 ![Number of Installations (latest)](https://iobroker.live/badges/fb-checkpresence-installed.svg)
 ![Stable version](https://iobroker.live/badges/fb-checkpresence-stable.svg)
 [![Latest NPM version](https://img.shields.io/npm/v/iobroker.fb-checkpresence.svg)](https://www.npmjs.com/package/iobroker.fb-checkpresence)
