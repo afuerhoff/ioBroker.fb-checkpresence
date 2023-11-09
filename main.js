@@ -117,22 +117,6 @@ class FbCheckpresence extends utils.Adapter {
         return '<tr>' + dataArray.map(data => '<td>' + data + '</td>').join('') + '</tr>';
     }
     
-    createJSONTableRow(cnt, dataArray) {
-        let json = '';
-        for (let c = 0; c < dataArray.length; c += 2) {
-            json += '"' + dataArray[c] + '":"' + dataArray[c + 1] + '"';
-            if (c < dataArray.length - 2) {
-                json += ',';
-            }
-        }
-        if (cnt > 0) {
-            json = ',{' + json + '}';
-        }else{
-            json = '{' + json + '}';
-        }
-        return json;
-    }
-
     getAdapterState(id){
         try {
             const ind = this.adapterStates.findIndex(x => x.id == id);
@@ -1092,15 +1076,15 @@ class FbCheckpresence extends utils.Adapter {
             let guestCnt = 0;
             let guests = '';
             let activeCnt = 0;
-            let activeVpnCnt = 0;
-            let inactiveCnt = 0;
+            //let activeVpnCnt = 0;
+            //let inactiveCnt = 0;
             let htmlRow = this.HTML_GUEST;
             let htmlFbDevices = this.HTML_FB;
-            let jsonRow = '[';
-            let jsonFbDevices = '[';
-            let jsonFbDevActive = '[';
-            let jsonFbDevInactive = '[';
-            let jsonFbDevActiveVPN = '[';
+            const jsonRow = [];
+            const jsonFbDevices = [];
+            const jsonFbDevActive = [];
+            const jsonFbDevInactive = [];
+            const jsonFbDevActiveVPN = [];
             let disabled = false;
             let vpn = false;
 
@@ -1113,7 +1097,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (hosts[i]['data'] != null){
                     if (hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
                         htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
-                        jsonRow += this.createJSONTableRow(guestCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'disabled', disabled]);
+                        jsonRow.push ({'HostnameTest2': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'disabled': disabled});
                         guests += guests == '' ? hosts[i]['hn'] : ', ' + hosts[i]['hn'];
                         this.log.debug('getDeviceInfo active guest: ' + hosts[i]['hn'] + ' ' + hosts[i]['ip'] + ' ' + hosts[i]['mac']);
                         guestCnt += 1;
@@ -1128,19 +1112,17 @@ class FbCheckpresence extends utils.Adapter {
                     vpn = null;
                 }
                 if (hosts[i]['active'] == 1){ // active devices
-                    jsonFbDevActive += this.createJSONTableRow(activeCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
+                    jsonFbDevActive.push ({'HostnameTest': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                     activeCnt += 1;
                 }else{
-                    jsonFbDevInactive += this.createJSONTableRow(inactiveCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
-                    inactiveCnt += 1;
+                    jsonFbDevInactive.push ({'HostnameTest': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                 }
                 
                 if (vpn === true){ // active vpn devices
-                    jsonFbDevActiveVPN += this.createJSONTableRow(activeVpnCnt, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'VPN', vpn, 'Type', deviceType]);
-                    activeVpnCnt += 1;
+                    jsonFbDevActiveVPN.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'VPN': vpn, 'Type': deviceType});
                 }
                 htmlFbDevices += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac'], hosts[i]['active'], deviceType]);
-                jsonFbDevices += this.createJSONTableRow(i, ['Hostname', hosts[i]['hn'], 'IP-Address', hosts[i]['ip'], 'MAC-Address', hosts[i]['mac'], 'Active', hosts[i]['active'], 'Type', deviceType, 'Disabled', disabled]);
+                jsonFbDevices.push ({'HostnameTest': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                 
                 const hostName = hosts[i]['hn'];
                 //if (hostName.includes('MyFRITZ!App')) this.log.info('hostname: ' + hostName + ' ' + hosts[i].active);
@@ -1163,24 +1145,19 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
             }
-            jsonRow += ']';
             htmlRow += this.HTML_END;
             htmlFbDevices += this.HTML_END;
-            jsonFbDevices += ']';
-            jsonFbDevActive += ']';
-            jsonFbDevInactive += ']';
-            jsonFbDevActiveVPN += ']';
 
             if (this.config.fbdevices === true && this.enabled == true){
-                await this.setStateChangedAsync('fb-devices.json', { val: jsonFbDevices, ack: true });
-                await this.setStateChangedAsync('fb-devices.jsonActive', { val: jsonFbDevActive, ack: true });
-                await this.setStateChangedAsync('fb-devices.jsonInactive', { val: jsonFbDevInactive, ack: true });
+                await this.setStateChangedAsync('fb-devices.json', { val: JSON.stringify(jsonFbDevices), ack: true });
+                await this.setStateChangedAsync('fb-devices.jsonActive', { val: JSON.stringify(jsonFbDevActive), ack: true });
+                await this.setStateChangedAsync('fb-devices.jsonInactive', { val: JSON.stringify(jsonFbDevInactive), ack: true });
                 await this.setStateChangedAsync('fb-devices.html', { val: htmlFbDevices, ack: true });
-                await this.setStateChangedAsync('fb-devices.jsonActiveVPN', { val: jsonFbDevActiveVPN, ack: true });
+                await this.setStateChangedAsync('fb-devices.jsonActiveVPN', { val: JSON.stringify(jsonFbDevActiveVPN), ack: true });
             }
             if (this.config.guestinfo === true && this.enabled == true) {
                 await this.setStateChangedAsync('guest.listHtml', { val: htmlRow, ack: true });
-                await this.setStateChangedAsync('guest.listJson', { val: jsonRow, ack: true });
+                await this.setStateChangedAsync('guest.listJson', { val: JSON.stringify(jsonRow), ack: true });
                 await this.setStateChangedAsync('guest.presentGuests', { val: guests, ack: true });
                 await this.setStateChangedAsync('guest.count', { val: guestCnt, ack: true });
                 const val = guestCnt > 0 ? true : false;
