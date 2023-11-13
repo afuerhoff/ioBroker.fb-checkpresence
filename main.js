@@ -990,11 +990,11 @@ class FbCheckpresence extends utils.Adapter {
         try {
             const hosts = this.hosts;
             const items = this.Fb.deviceList;
-            let wlCnt = 0;
+            //let wlCnt = 0;
             let blCnt = 0;
-            let jsonWlRow = [];
+            const jsonWlRow = [];
             let htmlWlRow = this.HTML_GUEST;
-            let jsonBlRow = [];
+            const jsonBlRow = [];
             let htmlBlRow = this.HTML_GUEST;
 
             for (let i = 0; i < items.length; i++) {
@@ -1016,7 +1016,7 @@ class FbCheckpresence extends utils.Adapter {
                     htmlWlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
                     //jsonWlRow += this.createJSONTableRow(wlCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
                     jsonWlRow.push ({'Hostname': items[i]['HostName'], 'IP-Address': items[i]['IPAddress'], 'MAC-Address': items[i]['MACAddress']});                        
-                    wlCnt += 1;
+                    //wlCnt += 1;
                 }
                 
                 const host = hosts.filter(x => x.hnOrg == items[i]['HostName']); //find fb-device
@@ -1507,11 +1507,11 @@ class FbCheckpresence extends utils.Adapter {
                             const result = await this.getHistoryTable(this, memb, historyPath, start, end);
                             if (!result) throw Error('Can not get history items of member ' + memb);
                             let htmlHistory = this.HTML_HISTORY;
-                            let jsonHistory = [];
+                            const jsonHistory = [];
                             let bfirstFalse = false;
                             let firstFalse = midnight;
                             this.log.debug('history ' + memb + ' cntHistory: ' + result.result.length);
-                            let cnt = 0;
+                            //let cnt = 0;
                             
                             let i = 0;
                             for (let iv = 0; iv < result.result.length; iv++) {
@@ -1527,7 +1527,7 @@ class FbCheckpresence extends utils.Adapter {
                                     htmlHistory += this.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hTime, this.config.dateformat)]);
                                     //jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hTime, this.config.dateformat)]);
                                     jsonHistory.push ({'Active': result.result[i].val, 'Date': dateFormat(hTime, this.config.dateformat)});                        
-                                    cnt += 1;
+                                    //cnt += 1;
                                     if (hTime >= midnight.getTime()){
                                         if (lastVal == null){
                                             //if no lastVal exists
