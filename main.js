@@ -992,9 +992,9 @@ class FbCheckpresence extends utils.Adapter {
             const items = this.Fb.deviceList;
             let wlCnt = 0;
             let blCnt = 0;
-            let jsonWlRow = '[';
+            let jsonWlRow = [];
             let htmlWlRow = this.HTML_GUEST;
-            let jsonBlRow = '[';
+            let jsonBlRow = [];
             let htmlBlRow = this.HTML_GUEST;
 
             for (let i = 0; i < items.length; i++) {
@@ -1006,14 +1006,16 @@ class FbCheckpresence extends utils.Adapter {
                     //deviceType = 'blacklist';
                     if (items[i]['X_AVM-DE_Guest'] == false){
                         htmlBlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
-                        jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
+                        //jsonBlRow += this.createJSONTableRow(blCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
+                        jsonBlRow.push ({'Hostname': items[i]['HostName'], 'IP-Address': items[i]['IPAddress'], 'MAC-Address': items[i]['MACAddress']});                        
                         blCnt += 1;
                     }
                 } 
                 if (wlFound == true ){
                     //deviceType = 'whitelist';
                     htmlWlRow += this.createHTMLTableRow([items[i]['HostName'], items[i]['IPAddress'], items[i]['MACAddress']]);
-                    jsonWlRow += this.createJSONTableRow(wlCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
+                    //jsonWlRow += this.createJSONTableRow(wlCnt, ['Hostname', items[i]['HostName'], 'IP-Address', items[i]['IPAddress'], 'MAC-Address', items[i]['MACAddress']]);
+                    jsonWlRow.push ({'Hostname': items[i]['HostName'], 'IP-Address': items[i]['IPAddress'], 'MAC-Address': items[i]['MACAddress']});                        
                     wlCnt += 1;
                 }
                 
@@ -1039,15 +1041,15 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
             }                
-            jsonWlRow += ']';
-            jsonBlRow += ']';
+            //jsonWlRow += ']';
+            //jsonBlRow += ']';
             htmlBlRow += this.HTML_END;
             htmlWlRow += this.HTML_END;
             await this.setStateChangedAsync('blacklist.count', { val: blCnt, ack: true });
             await this.setStateChangedAsync('blacklist.listHtml', { val: htmlBlRow, ack: true });
-            await this.setStateChangedAsync('blacklist.listJson', { val: jsonBlRow, ack: true });
+            await this.setStateChangedAsync('blacklist.listJson', { val: JSON.stringify(jsonBlRow), ack: true });
             
-            await this.setStateChangedAsync('whitelist.json', { val: jsonWlRow, ack: true });
+            await this.setStateChangedAsync('whitelist.json', { val: JSON.stringify(jsonWlRow), ack: true });
             await this.setStateChangedAsync('whitelist.html', { val: htmlWlRow, ack: true });
             await this.setStateChangedAsync('whitelist.count', { val: this.config.whitelist.length, ack: true });
             if (blCnt > 0) {
@@ -1058,8 +1060,8 @@ class FbCheckpresence extends utils.Adapter {
                 await this.setStateChangedAsync('blacklist.presence', { val: false, ack: true });
             }
             this.log.debug('getWlBlInfo blCnt: '+ blCnt);
-            jsonWlRow = null;
-            jsonBlRow = null;
+            //jsonWlRow = null;
+            //jsonBlRow = null;
             htmlBlRow = null;
             htmlWlRow = null;
             return true;
@@ -1482,7 +1484,8 @@ class FbCheckpresence extends utils.Adapter {
                     going = new Date(curVal.lc);
                     await this.setStateChangedAsync(memberPath + '.going', { val: going.toString(), ack: true });
                 }
-                this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, this.config.dateformat), 'Geht', dateFormat(going, this.config.dateformat)]);
+                this.jsonTab.push ({'Name': member, 'Active': newActive, 'Kommt': dateFormat(comming, this.config.dateformat), 'Geht': dateFormat(going, this.config.dateformat)});                        
+                //this.jsonTab += this.createJSONTableRow(index, ['Name', member, 'Active', newActive, 'Kommt', dateFormat(comming, this.config.dateformat), 'Geht', dateFormat(going, this.config.dateformat)]);
                 this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, this.config.dateformat), dateFormat(going, this.config.dateformat)]);
             }else{
                 throw Error('object ' + member + ' does not exist!');
@@ -1504,7 +1507,7 @@ class FbCheckpresence extends utils.Adapter {
                             const result = await this.getHistoryTable(this, memb, historyPath, start, end);
                             if (!result) throw Error('Can not get history items of member ' + memb);
                             let htmlHistory = this.HTML_HISTORY;
-                            let jsonHistory = '[';
+                            let jsonHistory = [];
                             let bfirstFalse = false;
                             let firstFalse = midnight;
                             this.log.debug('history ' + memb + ' cntHistory: ' + result.result.length);
@@ -1522,7 +1525,8 @@ class FbCheckpresence extends utils.Adapter {
                                     //const hdate = dateFormat(new Date(result.result[i].ts), this.config.dateformat);
                                     const hTime = new Date(result.result[i].ts);
                                     htmlHistory += this.createHTMLTableRow([(result.result[i].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(hTime, this.config.dateformat)]);
-                                    jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hTime, this.config.dateformat)]);
+                                    //jsonHistory += this.createJSONTableRow(cnt, ['Active', result.result[i].val, 'Date', dateFormat(hTime, this.config.dateformat)]);
+                                    jsonHistory.push ({'Active': result.result[i].val, 'Date': dateFormat(hTime, this.config.dateformat)});                        
                                     cnt += 1;
                                     if (hTime >= midnight.getTime()){
                                         if (lastVal == null){
@@ -1564,9 +1568,9 @@ class FbCheckpresence extends utils.Adapter {
                             await this.setStateChangedAsync(memberPath + '.present.sum_day', { val: present, ack: true });
                             await this.setStateChangedAsync(memberPath + '.absent.sum_day', { val: absent, ack: true });
 
-                            jsonHistory += ']';
+                            //jsonHistory += ']';
                             htmlHistory += this.HTML_END;
-                            await this.setStateChangedAsync(memberPath + '.history', { val: jsonHistory, ack: true });
+                            await this.setStateChangedAsync(memberPath + '.history', { val: JSON.stringify(jsonHistory), ack: true });
                             await this.setStateChangedAsync(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
 
                         } catch (err) {
@@ -1715,7 +1719,7 @@ class FbCheckpresence extends utils.Adapter {
                     memberPath = group == '' ? 'familyMembers.' : 'familyMembers.' + group + '.'; 
                 }
 
-                this.jsonTab = '[';
+                this.jsonTab = [];
                 this.htmlTab = this.HTML;
                 const presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false,  presentCount: 0, absentCount: 0};
                 for (let k = 0; k < groupMembers.length; k++) { //loop over enabled family members
@@ -1731,9 +1735,9 @@ class FbCheckpresence extends utils.Adapter {
                 if (this.enabled == false) break; //cancel if disabled over unload
 
                 //group states
-                this.jsonTab += ']';
+                //this.jsonTab += ']';
                 this.htmlTab += this.HTML_END;
-                await this.setStateChangedAsync(memberPath + 'json', { val: this.jsonTab, ack: true });
+                await this.setStateChangedAsync(memberPath + 'json', { val: JSON.stringify(this.jsonTab), ack: true });
                 await this.setStateChangedAsync(memberPath + 'html', { val: this.htmlTab, ack: true });
                 await this.setStateChangedAsync(memberPath + 'presenceAll', { val: presence.all, ack: true });
                 await this.setStateChangedAsync(memberPath + 'absenceAll', { val: presence.allAbsence, ack: true });
