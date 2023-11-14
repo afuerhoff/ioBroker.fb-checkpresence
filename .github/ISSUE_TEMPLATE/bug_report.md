@@ -1,32 +1,86 @@
----
-name: Bug report
-about: Something is not working as it should
-title: ''
-labels: ''
-assignees: ''
----
+name: Bug Report
+description: Something is not working as it should
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this report!
 
-**Describe the bug**  
-A clear and concise description of what the bug is.
+  - type: checkboxes
+    id: checked-other-issues
+    attributes:
+      label: No existing issues.
+      description: By submitting this issue, you confirm, that you have checked the existing issues for your problem.
+      options:
+        - label: There is no existing issue for my problem.
+          required: true
 
-**To Reproduce**  
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '...'
-3. Scroll down to '....'
-4. See error
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
 
-**Expected behavior**  
-A clear and concise description of what you expected to happen.
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: false
 
-**Screenshots & Logfiles**  
-If applicable, add screenshots and logfiles to help explain your problem.
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: false
 
-**Versions:**  
- - Adapter version: <adapter-version>
- - JS-Controller version: <js-controller-version> <!-- determine this with `iobroker -v` on the console -->
- - Node version: <node-version> <!-- determine this with `node -v` on the console -->
- - Operating system: <os-name>
+  - type: textarea
+    attributes:
+      label: Screenshots & Logfiles
+      description: If applicable, add screenshots and logfiles to help explain your problem.
+    validations:
+      required: false
 
-**Additional context**  
-Add any other context about the problem here.
+  - type: input
+    attributes:
+      label: Adapter version
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: js-controller version
+      description: determine this with "iobroker -v" on the console
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Node version
+      description: determine this with "node -v" on the console
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Operating system
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false

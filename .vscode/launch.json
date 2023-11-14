@@ -7,10 +7,8 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch ioBroker Adapter",
-			"skipFiles": [
-				"<node_internals>/**"
-			],
+			"name": "Launch ioBroker Adapter for debug",
+			"skipFiles": ["<node_internals>/**"],
 			"args": ["--debug", "0"],
 			"program": "node_modules/iobroker.fb-checkpresence/main.js",
 			"cwd": "${workspaceFolder}/.dev-server/default"
@@ -18,10 +16,18 @@
 		{
 			"type": "node",
 			"request": "attach",
-			"name": "An den Prozess anfügen", // Name, der im VSCode Auswahlmenü neben dem grünen Play angezeigt wird
-			"address": "127.0.0.1", // Adresse, an dem der node.js Prozess läuft (bei Remote Debug, der Remote-Rechner)
-			"port": 9229 // Port, auf dem der node.js Debugger lauscht, der mit node --debug-brk ... gestartet wird
-		}
+			"name": "anfügen an ioBroker", // Name, der im VSCode Auswahlmenü neben dem grünen Play angezeigt wird
+            //"args": ["--debug", "0"],
+            //"stopOnEntry": true, // - break immediately when the program launches			"address": "127.0.0.1", // Adresse, an dem der node.js Prozess läuft (bei Remote Debug, der Remote-Rechner)
+            //"program": "node_modules/iobroker.fb-checkpresence/main.js", // executable or file to run when launching the debugger
+            "cwd": "${workspaceFolder}/.dev-server/default", // current working directory for finding dependencies and other files
+            "skipFiles": ["<node_internals>/**"],
+            "outputCapture": "std", // https://github.com/ioBroker/dev-docs/issues/35
+			"port": 22426, // Port, auf dem der node.js Debugger lauscht, der mit node --debug-brk ... gestartet wird
+			"localRoot": "${workspaceFolder}",
+			"remoteRoot": "${workspaceFolder}/.dev-server/default/node_modules/${workspaceFolderBasename}",
+			"smartStep": true,
+		},
 		{
 			"type": "node",
 			"request": "launch",
@@ -30,6 +36,6 @@
 			"args": ["--debug", "0"],
 			"program": "node_modules/iobroker.fb-checkpresence/main.js>",
 			"cwd": "${workspaceFolder}/.dev-server/default"
-		  }		
+		}			
 	]
 }
