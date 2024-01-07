@@ -1182,7 +1182,7 @@ class FbCheckpresence extends utils.Adapter {
             const mac = memberRow.macaddress;
             const ip = memberRow.ipaddress;
             const deviceName = memberRow.devicename;
-            let active = null;
+            let active = false;
             let host = null;
             let mesg = this.suppressArr.filter(function(x){
                 if (x.name ===  memberRow.familymember && x.mac === memberRow.macaddress && x.ip === memberRow.ipaddress && x.hostname === memberRow.devicename){
