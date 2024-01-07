@@ -219,6 +219,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) Readme updated
 * (afuerhoff) function jsontables optimized
 * (afuerhoff) non existent members set to false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)
+* (afuerhoff) optimization of log message [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)
 
 ### 1.2.2 (2023-07-28)
 * (afuerhoff) bug fixed json tables [#215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)

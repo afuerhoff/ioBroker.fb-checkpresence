@@ -566,8 +566,9 @@ class FbCheckpresence extends utils.Adapter {
             const intFamily = this.config.intervalFamily;
             
             if(this.config.compatibility === true) {
-                this.log.warn('In an future version some states are not more existent. Please use compatibility = false to switch to the new handling of the states!');
-                this.log.warn('You should then manually delete the old states!');
+                this.log.warn('In a future version some states are not more existent. Please disable the compatibility mode in the adapter settings by unchecking the box.');
+                this.log.warn('With this change in the adapter settings the new folder familyMembers will be created');
+                this.log.warn('Then you should manually delete the old family member data points!');
             }
 
             //Create global objects
