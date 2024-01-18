@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "news": {
+      "1.2.3": {
+        "en": "Readme updated\nfunction jsontables optimized\nnon existent members set to false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimization of log message [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "de": "Reader aktualisiert\nfunktion jsontables optimiert\nnicht existentielle Mitglieder auf false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimierung der Log-Nachricht [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "ru": "Читать дальше\nфункция jsontables оптимизирована\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\nоптимизация сообщения журнала [#240] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "pt": "Readme atualizado\njsontables função otimizada\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\notimização da mensagem de log [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "nl": "Readme bijgewerkt\nfunctie jsontables geoptimaliseerd\nniet-bestaande leden ingesteld op valse [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimalisatie van logbericht [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "fr": "Lire mise à jour\nfonction jsontables optimisé\nmembres inexistants fixés à faux [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimisation du message journal [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "it": "Readme aggiornato\nfunzione jsontables ottimizzato\nmembri non esistenti fissati a false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\nottimizzazione del messaggio di log [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "es": "Readme updated\nfunción jsontables optimizados\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimización del mensaje de registro [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
+        "pl": "Readme zaktualizowany\nzoptymalizowana funkcja jsontables\nw załączniku II wprowadza się następujące zmiany:\nw związku z tym Komisja uważa, że nie ma potrzeby wprowadzania zmian do rozporządzenia wykonawczego (UE) nr 540 / 2011",
+        "uk": "Читати далі\nфункція jsontables оптимізована\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/253)\n[#240] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/240)",
+        "zh-cn": "更新我\n函数 jsonables 优化\n(https://github.com/afuerhoff/ioBroker.fb-check presence/issues/253)\n优化日志信息[#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)"
+      },
       "1.2.2": {
         "en": "bug fixed json tables [#215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nlink feature optimized. See #206",
         "de": "fehler behobene json Tabellen #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nlink-Feature optimiert. Vgl",
@@ -80,19 +93,6 @@
         "pl": "axios updated\nCancelToken jako opcja wdrożona. Dla węzłów mniej niż 16",
         "uk": "axios оновлений\nСкасувати Для версій вузлів менше 16",
         "zh-cn": "a 更新的基准\n堪培松作为执行的选择。 无纸"
-      },
-      "1.1.23": {
-        "en": "fb devices with empty hostname are ignored",
-        "de": "fb geräte mit leerem hostname werden ignoriert",
-        "ru": "fb устройства с пустым именем хоста игнорируются",
-        "pt": "dispositivos fb com nome de host vazio são ignorados",
-        "nl": "fb apparaten met lege naam worden genegeerd",
-        "fr": "fb appareils avec nom d'hôte vide sont ignorés",
-        "it": "i dispositivi fb con nome host vuoto vengono ignorati",
-        "es": "fb dispositivos con nombre de host vacío son ignorados",
-        "pl": "urządzenia z pustą nazwą hosta są ignorowane",
-        "uk": "fb пристрої з порожнім хостом ігноруються",
-        "zh-cn": "被忽视有空落的装置"
       }
     },
     "titleLang": {

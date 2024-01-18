@@ -1,4 +1,7 @@
 # Older changes
+## 1.1.25 (2023-01-21)
+* (afuerhoff) Warning message empty hostname optimized. Issue [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)
+
 ## 1.1.24 (2022-12-22)
 * (afuerhoff) axios updated
 * (afuerhoff) CancelToken as option implemented. For node versions less than 16
