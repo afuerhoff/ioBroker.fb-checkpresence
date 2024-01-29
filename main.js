@@ -1414,7 +1414,7 @@ class FbCheckpresence extends utils.Adapter {
     
 
     async calcMemberAttributesNew(memberRow, index, newActive, dnow, presence){
-        const member = memberRow.familymember;
+        const member = memberRow.familymember; //name of member
         let memberPath = '';
         let historyPath = '';
         let dPoint = null;
@@ -1431,15 +1431,18 @@ class FbCheckpresence extends utils.Adapter {
             dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath + '.presence');
             historyPath = memberRow.group == '' ? 'familyMembers.' + member + '.presence' : 'familyMembers.' + memberRow.group + '.' + member + '.presence';
         }
+        await this.setStateChangedAsync(memberPath + '.presence', { val: newActive, ack: true });
+
+        //History is alive and enabled
         if (this.config.history != '' && this.historyAlive.val === true){
             if (dPoint.common.custom != undefined && dPoint.common.custom[this.config.history].enabled == true){
                 const memberID = `${this.namespace}` + '.' + historyPath;
                 const filterTime = 1000 * this.config.delay; //in seconds
                 const days = 21;
-                this.log.info('ID ' + memberID);
+                //this.log.info('ID ' + memberID);
                 //Startzeit für den aktuellen Tag festlegen
-                const midnight = new Date(); 
-                midnight.setHours(0,0,0,0);
+                const midnight = new Date();
+                midnight.setHours(0, 0, 0, 0);
                 const midnightTime = midnight.getTime(); //current date midnight
             
                 //Startdate 21 Tage in die Vergangenheit legen -> Parameter days
@@ -1447,18 +1450,14 @@ class FbCheckpresence extends utils.Adapter {
                 const startDate = new Date(midnight); 
                 startDate.setDate(startDate.getDate() - days);
                 
-                const currentTime = new Date().getTime(); //current date current time
-                const dtDay = Math.round((currentTime - midnightTime)); //in ms
-                /*log('currentTime: ' + new Date(currentTime), 'info');
-                log('midnight: ' + midnight, 'info');
-                log('startDate: ' + startDate, 'info');
-                log('dtDay: ' + dtDay/1000/60 + ' min', 'info');*/
+                const currentTime = dnow.getTime(); //current date current time
+                //const dtDay = Math.round((currentTime - midnightTime)); //in ms
                 
                 let pr = 0;
-                let prSince = 0;
                 let ab = 0;
-                let abSince = 0;
-            
+                let htmlHistory = this.HTML_HISTORY;
+                const jsonHistory = [];
+
                 //history data of the current day
                 //let histData = await getHistoryData(member, midnightTime, currentTime, 5000);
             
@@ -1468,97 +1467,134 @@ class FbCheckpresence extends utils.Adapter {
                 
                 //const limit = histData.result.length*24*60*60*1000/(currentTime-midnightTime)*days+500;
                 //log('Limit: ' + limit, 'info');
+                const currentVal = await this.getStateAsync(memberID);
                 const histData = await this.getHistoryData(memberID, startDate.getTime(), currentTime, 5000);
                 if (!histData) {
-                    //log('history of family member is null', 'info');
+                    this.log.warn('history of family member is empty: ' + memberID, 'info');
+                    //await this.setStateChangedAsync(memberPath + '.presence', { val: !valPresence, ack: true });
+                    //await this._sleep(1000);
+                    //await this.setStateChangedAsync(memberPath + '.presence', { val: valPresence, ack: true });
                 }else{
                     const cntHistData = histData.result.length;
+                    this.log.warn(memberID + ' cnt History:' + cntHistData);
                     let lastWert = null;
                     
-                    /*log('history cntDay: ' + cntHistData, 'info');
-                    log('history start: ' + new Date(histData.result[0].ts), 'info');
-                    log('history end: ' + new Date(histData.result[cntHistData-1].ts), 'info');*/
-            
                     //calculation of presence and absence since
-                    let comming = null;
-                    let going = null;
                     let t1 = currentTime;
-                    const val1 = await this.getStateAsync(member);
+                    let v1 = currentVal;
                     const historyArr = [];
+                    const historyArrFiltered = [];
                     
-                    //Filtering and last value
+                    //Filtering short spikes
                     for (let ih = cntHistData-1; ih > -1; ih--) {
                         const t2 = new Date(histData.result[ih].ts).getTime();
-                        //log(new Date(t2) + ' ' + histData.result[ih].val);
+                        const v2 = histData.result[ih].val;
                         const dt2 = Math.round(t1 - t2);
-                        if (dt2 > filterTime) historyArr.unshift(histData.result[ih]);
+                        if (dt2 > filterTime) {
+                            if (lastWert === null) lastWert = v2;
+                            historyArr.unshift(histData.result[ih]);
+                        }
                         t1 = t2;
                     }
-                    lastWert = historyArr[historyArr.length-1].val;
+
+                    //Filtering double values
+                    v1 = null;
+                    for (let ih = 0; ih < historyArr.length; ih++) {
+                        const v2 = historyArr[ih].val;
+                        if (v1 !== v2) {
+                            historyArrFiltered.unshift(historyArr[ih]);
+                            v1 = v2;
+                        } 
+                    }
+
+                    lastWert = historyArrFiltered[0].val;
+                    this.log.warn('last Wert ' + new Date( historyArrFiltered[0].ts) + ' ' +  lastWert);
                     await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: lastWert, ack: true });
 
-                    //log('FilteredArrayLength: ' + historyArr.length);
-                    //log('FilteredArrayCurrent: ' + new Date(historyArr[historyArr.length-1].ts));
-                    //log('FilteredArrayEnd: ' + new Date(historyArr[0].ts));
-            
-                    //log('lastwert: ' + lastWert);
-                    //log('lastwert presence: ' + historyArr[historyArr.length-1].val + ' ts: ' + new Date(historyArr[historyArr.length-1].ts));
-                    
-                    // Calculation of absence and presence this day
-                    /*t1 = currentTime;
-                    for (let ih = historyArr.length - 1; ih > -1; ih--) {
-                        const historyEntry = historyArr[ih];
-                        const entryTime = new Date(historyEntry.ts).getTime();
-                        if (entryTime < midnight) break;
-                        const dt = Math.round(t1 - entryTime);
-                        const isPresence = historyEntry.val === true;
-                        isPresence ? pr += dt : ab += dt;
-                        lastWert = historyEntry.val;
-                        t1 = entryTime;
-                    }*/
-            
                     //calculation of absence and presence this day
                     t1 = currentTime;
-                    for(let ih = historyArr.length-1; ih > -1; ih--){
-                        if (new Date(historyArr[ih].ts) < midnight ) break;
-                        const t2 = new Date(historyArr[ih].ts).getTime();
-                        const wert = historyArr[ih].val;
+                    for(let ih = 0; ih < historyArrFiltered.length; ih++){
+                        const t2 = new Date(historyArrFiltered[ih].ts).getTime();
+                        this.log.warn('Date: ' + new Date(t2));
+                        htmlHistory += this.createHTMLTableRow([(historyArrFiltered[ih].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(t2, this.config.dateformat)]);
+                        jsonHistory.push ({'Active': historyArrFiltered[ih].val, 'Date': dateFormat(new Date(historyArrFiltered[ih].ts), this.config.dateformat)});                        
+
+                        const wert = historyArrFiltered[ih].val;
                         const dt = Math.round(t1 - t2);
-                        wert === true ? pr = pr + dt : ab = ab + dt;
                         lastWert = wert;
+                        if (t2 < midnightTime) break;
+                        if (wert === true){
+                            pr = pr + dt;
+                            this.log.warn(ih + ' pr: ' + Math.round(pr/60/1000));
+                        }
+                        if (wert === false){
+                            ab = ab + dt;
+                            this.log.warn(ih + 'ab: ' + Math.round(ab/60/1000));
+                        }
                         t1 = t2;
                     }
                     const dt =  Math.round(t1 - midnightTime);
+                    const dtSum =  Math.round(currentTime - midnightTime);
                     lastWert === true ? pr = pr + dt : ab = ab + dt;
-                    ab = dtDay - pr;
+                    this.log.warn('pr: ' + Math.round(pr/60/1000));
+                    this.log.warn('ab: ' + Math.round(ab/60/1000));
+                    this.log.warn('day sum: ' + Math.round(dtSum/60/1000));
             
                     //calculation of comming and going and since
                     t1 = currentTime;
                     let flagBreak = false;
-                    lastWert = val1.val;
+                    lastWert = currentVal.val;
+                    let comming = null;
+                    let going = null;
+
                     //const jsonHistory = [];
-                    for(let ih = historyArr.length-1; ih > -1; ih--){
+                    const valChanged = false;
+                    for(let ih = 0; ih < historyArrFiltered.length; ih++){
+                        //this.log.warn('val: ' + historyArr[ih].val + ' ' + new Date(historyArr[ih].ts));
                         //jsonHistory.push ({'Active': historyArr[ih].val, 'Date': dateFormat(hTimhistoryArr[ih].ts, this.config.dateformat)});                        
-                        const t2 = new Date(historyArr[ih].ts).getTime();
-                        const wert = historyArr[ih].val;
+                        const t2 = new Date(historyArrFiltered[ih].ts).getTime();
+                        const wert = historyArrFiltered[ih].val;
+                        this.log.warn('Filtered: ' + new Date(t2) + ' ' + wert);
                         const dt = Math.round(currentTime - t2);
-                        if (lastWert !== wert){
-                            wert === true ? going === null ? going = t1 : null : comming === null ? comming = t1 : null;
+                        if (wert === true && comming === null) {
+                            comming = t2;
+                            await this.setStateChangedAsync(memberPath + '.comming', { val: new Date(comming).toString(), ack: true });
+                            if (flagBreak === false){
+                                await this.setStateChangedAsync(memberPath + '.present.since', { val: Math.round(dt/60/1000), ack: true });
+                                await this.setStateChangedAsync(memberPath + '.absent.since', { val: Math.round(0/60/1000), ack: true });        
+                                flagBreak = true;
+                            }
+                            this.log.warn('comming: ' + new Date(comming), 'info');
                         }
-                        if (lastWert !== wert && flagBreak === false){
-                            wert === false ? prSince = dt : abSince = dt;
-                            flagBreak = true;
-                            //break;
+                        if (wert === false && going === null) {
+                            going = t2;
+                            await this.setStateChangedAsync(memberPath + '.going', { val: new Date(going).toString(), ack: true });
+                            if (flagBreak === false){
+                                await this.setStateChangedAsync(memberPath + '.absent.since', { val: Math.round(dt/60/1000), ack: true });        
+                                await this.setStateChangedAsync(memberPath + '.present.since', { val: Math.round(0/60/1000), ack: true });
+                                flagBreak = true;
+                            }   
+                            this.log.warn('going: ' + new Date(going), 'info');
                         }
-                        lastWert = wert;
                         t1 = t2;
                     }
-            
-                    //log('minutes cnt: ' + Math.round(dtDay/60/1000), 'info');
-                    //log('history present.sum_day: ' + Math.round(pr/60/1000) + ' present.since: ' + Math.round(prSince/60/1000), 'info');
-                    //log('history absent.sum_day: ' + Math.round(ab/60/1000) + ' absent.since: ' + Math.round(abSince/60/1000), 'info');
-                    //log('comming: ' + new Date(comming), 'info');
-                    //log('going: ' + new Date(going), 'info');
+                    if (!valChanged) {
+                        if(lastWert){
+                            comming = new Date(historyArrFiltered[0].ts).getTime();
+                            going = new Date(historyArrFiltered[0].ts).getTime();
+                        }else{
+                            comming = new Date(historyArrFiltered[0].ts).getTime();
+                            going = new Date(historyArrFiltered[0].ts).getTime();
+                        }
+                    }
+                    await this.setStateChangedAsync(memberPath + '.present.sum_day', { val: Math.round(pr/60/1000), ack: true });
+                    await this.setStateChangedAsync(memberPath + '.absent.sum_day', { val: Math.round(ab/60/1000), ack: true });
+                    htmlHistory += this.HTML_END;
+                    await this.setStateChangedAsync(memberPath + '.history', { val: JSON.stringify(jsonHistory), ack: true });
+                    await this.setStateChangedAsync(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
+
+                    this.jsonTab.push ({'Name': member, 'Active': newActive, 'Kommt': dateFormat(comming, this.config.dateformat), 'Geht': dateFormat(going, this.config.dateformat)});                        
+                    this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, this.config.dateformat), dateFormat(going, this.config.dateformat)]);
                 }
             }
         }
@@ -1747,7 +1783,6 @@ class FbCheckpresence extends utils.Adapter {
                             await this.setStateChangedAsync(memberPath + '.present.sum_day', { val: present, ack: true });
                             await this.setStateChangedAsync(memberPath + '.absent.sum_day', { val: absent, ack: true });
 
-                            //jsonHistory += ']';
                             htmlHistory += this.HTML_END;
                             await this.setStateChangedAsync(memberPath + '.history', { val: JSON.stringify(jsonHistory), ack: true });
                             await this.setStateChangedAsync(memberPath + '.historyHtml', { val: htmlHistory, ack: true });
@@ -1834,15 +1869,10 @@ class FbCheckpresence extends utils.Adapter {
     async checkPresence(trigger){
         try {
             const dnow = new Date(); //Actual date and time for comparison
-            //let work = process.hrtime();
-            //let timeStr = '';
             if(this.Fb.GETPATH === true){ //use of device list for presence if supported
                 await this.Fb.getDeviceList();
                 await this.getAllFbObjects();
             }
-            //let time = process.hrtime(work);
-            //timeStr += 'time ' + time + 's, ';
-            //work = process.hrtime();
 
             let membersFiltered = this.config.familymembers.filter(x => x.enabled == true); //only enabled members
             const memberValues = []; //array for temporary values -> for filtering
@@ -1865,9 +1895,6 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 memberValues.push({oldVal: activeOld, newVal: activeNew, member: member, memberPath: memberPath, memberRow: memberRow, group: group});
             }
-            //time = process.hrtime(work);
-            //timeStr += time + 's, ';
-            //work = process.hrtime();
             if (filteringNeeded.length > 0){
                 await this._sleep(this.config.delay * 1000);
                 if(this.Fb.GETPATH === true){
@@ -1882,9 +1909,6 @@ class FbCheckpresence extends utils.Adapter {
                     if(activeNew === false) memberValues[ind].newVal = activeNew;
                 }
             }
-            //time = process.hrtime(work);
-            //timeStr += time + 's, ';
-            //work = process.hrtime();
             
             let familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
             for (let g = 0; g < familyGroups.length; g++) {
@@ -1907,15 +1931,14 @@ class FbCheckpresence extends utils.Adapter {
                     if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
                         const newActive = groupMembers[k].newVal;
                         if (trigger === true) this.log.info('triggerPresence: State ' + memberRow.familymember + ' ' + newActive);
-                        if (newActive != null) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
-                        //if (this.config.newfilter) await this.calcMemberAttributesNew(memberRow, k, newActive, dnow, presence);
+                        if (newActive != null && !this.config.newfilter) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
+                        if (newActive != null && this.config.newfilter) await this.calcMemberAttributesNew(memberRow, k, newActive, dnow, presence);
                         if (newActive != null) this.getMemberPropertiesFromFBDevices(memberRow);
                     }
                 }
                 if (this.enabled == false) break; //cancel if disabled over unload
 
                 //group states
-                //this.jsonTab += ']';
                 this.htmlTab += this.HTML_END;
                 await this.setStateChangedAsync(memberPath + 'json', { val: JSON.stringify(this.jsonTab), ack: true });
                 await this.setStateChangedAsync(memberPath + 'html', { val: this.htmlTab, ack: true });
@@ -1928,8 +1951,6 @@ class FbCheckpresence extends utils.Adapter {
                 await this.setStateChangedAsync(memberPath + 'presentCount', { val: presence.presentCount, ack: true });
                 await this.setStateChangedAsync(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
-            //time = process.hrtime(work);
-            //this.log.info(timeStr + time + 's');
 
             membersFiltered = null;
             familyGroups = null;
