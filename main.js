@@ -1432,6 +1432,28 @@ class FbCheckpresence extends utils.Adapter {
             historyPath = memberRow.group == '' ? 'familyMembers.' + member + '.presence' : 'familyMembers.' + memberRow.group + '.' + member + '.presence';
         }
         await this.setStateChangedAsync(memberPath + '.presence', { val: newActive, ack: true });
+        if ( memberRow.group== '' && this.config.compatibility === true) await this.setStateChangedAsync(memberPath, { val: newActive, ack: true });
+        if (newActive == true){ //member = true
+            //memberActive = true;
+            presence.one = true;
+            presence.allAbsence = false;
+            presence.presentCount += 1;
+            if (presence.presentMembers == '') {
+                presence.presentMembers += member;
+            }else{
+                presence.presentMembers += ', ' + member;
+            }
+        }else{
+            presence.all = false;
+            presence.oneAbsence = true;
+            presence.absentCount += 1;
+            if (presence.absentMembers == '') {
+                presence.absentMembers += member;
+            }else{
+                presence.absentMembers += ', ' + member;
+            }
+        }
+        presence.val = newActive;
 
         //History is alive and enabled
         if (this.config.history != '' && this.historyAlive.val === true){
