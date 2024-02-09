@@ -488,7 +488,6 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug('configuration external ip address: ' + this.config.extip);           
             this.log.debug('configuration filter delay: ' + this.config.delay);            
 
-            //this.log.info('test version: 1.1.3_g');            
             const mesg = this.Fb.connection == null ? '-' : this.Fb.connection;
             this.log.info('configuration default connection: ' + mesg);            
 
@@ -967,13 +966,11 @@ class FbCheckpresence extends utils.Adapter {
                                     }
                                     await this.delObjectAsync(hostCh[c]._id);
                                 }else{ //old channel 
-                                    //this.log.info('test1');
                                     await this.setStateChangedAsync('fb-devices.' + hostName + '.meshstate', { val: false, ack: true });
                                     await this.setStateChangedAsync(hostCh[c]._id + '.cur_data_rate_rx', { val: 0, ack: true });
                                     await this.setStateChangedAsync(hostCh[c]._id + '.cur_data_rate_tx', { val: 0, ack: true });
                                     await this.setStateChangedAsync(hostCh[c]._id + '.rx_rcpi', { val: 0, ack: true });
                                     await this.setStateChangedAsync(hostCh[c]._id + '.link', { val: '', ack: true });
-                                    //this.log.info('test2');
                                 }
                             }
                         }
@@ -1100,7 +1097,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (hosts[i]['data'] != null){
                     if (hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
                         htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
-                        jsonRow.push ({'HostnameTest2': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'disabled': disabled});
+                        jsonRow.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'disabled': disabled});
                         guests += guests == '' ? hosts[i]['hn'] : ', ' + hosts[i]['hn'];
                         this.log.debug('getDeviceInfo active guest: ' + hosts[i]['hn'] + ' ' + hosts[i]['ip'] + ' ' + hosts[i]['mac']);
                         guestCnt += 1;
@@ -1115,17 +1112,17 @@ class FbCheckpresence extends utils.Adapter {
                     vpn = null;
                 }
                 if (hosts[i]['active'] == 1){ // active devices
-                    jsonFbDevActive.push ({'HostnameTest': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
+                    jsonFbDevActive.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                     activeCnt += 1;
                 }else{
-                    jsonFbDevInactive.push ({'HostnameTest': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
+                    jsonFbDevInactive.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                 }
                 
                 if (vpn === true){ // active vpn devices
                     jsonFbDevActiveVPN.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'VPN': vpn, 'Type': deviceType});
                 }
                 htmlFbDevices += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac'], hosts[i]['active'], deviceType]);
-                jsonFbDevices.push ({'HostnameTest': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
+                jsonFbDevices.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                 
                 const hostName = hosts[i]['hn'];
                 //if (hostName.includes('MyFRITZ!App')) this.log.info('hostname: ' + hostName + ' ' + hosts[i].active);
