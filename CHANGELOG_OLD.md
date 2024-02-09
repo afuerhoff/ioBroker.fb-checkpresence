@@ -1,4 +1,9 @@
 # Older changes
+## 1.1.26 (2023-04-06)
+* (afuerhoff) Wrong default settings in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)
+* (afuerhoff) Wrong Axios parameter in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)
+* (afuerhoff) dependencies updated
+
 ## 1.1.25 (2023-01-21)
 * (afuerhoff) Warning message empty hostname optimized. Issue [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)
 

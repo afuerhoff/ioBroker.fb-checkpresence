@@ -215,7 +215,7 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.2.4 (2024-02-09)
 * (afuerhoff) test code deleted [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)
 * (afuerhoff) dependencies updated
 
@@ -235,11 +235,6 @@ Here you will find information about the history of the current day.
 ### 1.2.0 (2023-07-13)
 * (afuerhoff) dependencies updated
 * (afuerhoff) mesh link added to family members [#206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)
-
-### 1.1.26 (2023-04-06)
-* (afuerhoff) Wrong default settings in io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)
-* (afuerhoff) Wrong Axios parameter in getMeshList [#197](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)
-* (afuerhoff) dependencies updated
 
 ## License
 MIT License
