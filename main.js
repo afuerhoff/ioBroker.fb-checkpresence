@@ -1509,7 +1509,7 @@ class FbCheckpresence extends utils.Adapter {
                         const t2 = new Date(histData.result[ih].ts).getTime();
                         const v2 = histData.result[ih].val;
                         const dt2 = Math.round(t1 - t2);
-                        if (dt2 > filterTime) {
+                        if (dt2 > filterTime || v2 === true) {
                             if (lastWert === null) lastWert = v2;
                             historyArr.unshift(histData.result[ih]);
                         }
