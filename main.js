@@ -1456,7 +1456,10 @@ class FbCheckpresence extends utils.Adapter {
         if (this.config.history != '' && this.historyAlive.val === true){
             if (dPoint.common.custom != undefined && dPoint.common.custom[this.config.history].enabled == true){
                 const memberID = `${this.namespace}` + '.' + historyPath;
-                const filterTime = 1000 * this.config.delay; //in seconds
+                let filterTime = 0;
+                if (memberRow.usefilter === true){
+                    filterTime = 1000 * this.config.delay; //in seconds
+                }
                 const days = 21;
                 //this.log.info('ID ' + memberID);
                 //Startzeit für den aktuellen Tag festlegen
@@ -1909,7 +1912,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 const activeOld = this.getAdapterState(memberPath + member + '.presence');
                 const activeNew = await this.getActive(memberRow);
-                if (activeNew === false && activeOld != activeNew && memberRow.usefilter === true){
+                if (activeNew === false && activeOld != activeNew && memberRow.usefilter === true && !this.config.newfilter){
                     filteringNeeded.push({oldVal: activeOld, newVal: activeNew, member: member, memberPath: memberPath, memberRow: memberRow, group: group});
                 }
                 memberValues.push({oldVal: activeOld, newVal: activeNew, member: member, memberPath: memberPath, memberRow: memberRow, group: group});
