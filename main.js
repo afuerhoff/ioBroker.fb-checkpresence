@@ -1553,11 +1553,11 @@ class FbCheckpresence extends utils.Adapter {
                         t1 = t2;
                     }
                     const dt =  Math.round(t1 - midnightTime);
-                    const dtSum =  Math.round(currentTime - midnightTime);
+                    //const dtSum =  Math.round(currentTime - midnightTime);
                     lastWert === true ? pr = pr + dt : ab = ab + dt;
-                    this.log.warn('pr: ' + Math.round(pr/60/1000));
-                    this.log.warn('ab: ' + Math.round(ab/60/1000));
-                    this.log.warn('day sum: ' + Math.round(dtSum/60/1000));
+                    //this.log.warn('pr: ' + Math.round(pr/60/1000));
+                    //this.log.warn('ab: ' + Math.round(ab/60/1000));
+                    //this.log.warn('day sum: ' + Math.round(dtSum/60/1000));
             
                     //calculation of comming and going and since
                     t1 = currentTime;
@@ -1573,7 +1573,7 @@ class FbCheckpresence extends utils.Adapter {
                         //jsonHistory.push ({'Active': historyArr[ih].val, 'Date': dateFormat(hTimhistoryArr[ih].ts, this.config.dateformat)});                        
                         const t2 = new Date(historyArrFiltered[ih].ts).getTime();
                         const wert = historyArrFiltered[ih].val;
-                        this.log.warn('Filtered: ' + new Date(t2) + ' ' + wert);
+                        //this.log.warn('Filtered: ' + new Date(t2) + ' ' + wert);
                         const dt = Math.round(currentTime - t2);
                         if (wert === true && comming === null) {
                             comming = t2;
