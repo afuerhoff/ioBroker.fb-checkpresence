@@ -131,7 +131,12 @@
       "fritz.box",
       "fritzbox"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "type": "free",
+      "link": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/blob/master/LICENSE",
+      "license": "MIT"
+    },
+    "tier": 3,
     "platform": "Javascript/Node.js",
     "main": "main.js",
     "icon": "fb-checkpresence.png",
