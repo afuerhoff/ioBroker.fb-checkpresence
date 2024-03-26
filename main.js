@@ -1532,7 +1532,7 @@ class FbCheckpresence extends utils.Adapter {
                     lastWert = historyArrFiltered[0].val;
                     //this.log.warn('last Wert ' + new Date( historyArrFiltered[0].ts) + ' ' +  lastWert);
                     if (memberRow.usefilter === true){
-                        if (currentVal === true) lastWert = currentVal;
+                        if (newActive === true) lastWert = newActive;
                         await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: lastWert, ack: true });
                     }else{
                         await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: newActive, ack: true });
