@@ -1495,7 +1495,7 @@ class FbCheckpresence extends utils.Adapter {
                     //await this.setStateChangedAsync(memberPath + '.presence', { val: valPresence, ack: true });
                 }else{
                     const cntHistData = histData.result.length;
-                    this.log.warn(memberID + ' cnt History:' + cntHistData);
+                    //this.log.warn(memberID + ' cnt History:' + cntHistData);
                     let lastWert = null;
                     
                     //calculation of presence and absence since
@@ -1527,14 +1527,14 @@ class FbCheckpresence extends utils.Adapter {
                     }
 
                     lastWert = historyArrFiltered[0].val;
-                    this.log.warn('last Wert ' + new Date( historyArrFiltered[0].ts) + ' ' +  lastWert);
+                    //this.log.warn('last Wert ' + new Date( historyArrFiltered[0].ts) + ' ' +  lastWert);
                     await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: lastWert, ack: true });
 
                     //calculation of absence and presence this day
                     t1 = currentTime;
                     for(let ih = 0; ih < historyArrFiltered.length; ih++){
                         const t2 = new Date(historyArrFiltered[ih].ts).getTime();
-                        this.log.warn('Date: ' + new Date(t2));
+                        //this.log.warn('Date: ' + new Date(t2));
                         htmlHistory += this.createHTMLTableRow([(historyArrFiltered[ih].val ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(t2, this.config.dateformat)]);
                         jsonHistory.push ({'Active': historyArrFiltered[ih].val, 'Date': dateFormat(new Date(historyArrFiltered[ih].ts), this.config.dateformat)});                        
 
@@ -1544,11 +1544,11 @@ class FbCheckpresence extends utils.Adapter {
                         if (t2 < midnightTime) break;
                         if (wert === true){
                             pr = pr + dt;
-                            this.log.warn(ih + ' pr: ' + Math.round(pr/60/1000));
+                            //this.log.warn(ih + ' pr: ' + Math.round(pr/60/1000));
                         }
                         if (wert === false){
                             ab = ab + dt;
-                            this.log.warn(ih + 'ab: ' + Math.round(ab/60/1000));
+                            //this.log.warn(ih + 'ab: ' + Math.round(ab/60/1000));
                         }
                         t1 = t2;
                     }
@@ -1583,7 +1583,7 @@ class FbCheckpresence extends utils.Adapter {
                                 await this.setStateChangedAsync(memberPath + '.absent.since', { val: Math.round(0/60/1000), ack: true });        
                                 flagBreak = true;
                             }
-                            this.log.warn('comming: ' + new Date(comming), 'info');
+                            //this.log.warn('comming: ' + new Date(comming), 'info');
                         }
                         if (wert === false && going === null) {
                             going = t2;
@@ -1593,7 +1593,7 @@ class FbCheckpresence extends utils.Adapter {
                                 await this.setStateChangedAsync(memberPath + '.present.since', { val: Math.round(0/60/1000), ack: true });
                                 flagBreak = true;
                             }   
-                            this.log.warn('going: ' + new Date(going), 'info');
+                            //this.log.warn('going: ' + new Date(going), 'info');
                         }
                         t1 = t2;
                     }
