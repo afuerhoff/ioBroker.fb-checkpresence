@@ -169,6 +169,7 @@
     "interval_seconds": true,
     "intervalFamily": 60,
     "delay": 15,
+    "newfilter": false,
     "compatibility": true,
     "history": "",
     "dateformat": "yyyy.mm.dd HH:MM:ss",

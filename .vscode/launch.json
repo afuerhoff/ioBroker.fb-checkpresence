@@ -2,7 +2,22 @@
 	// Verwendet IntelliSense zum Ermitteln möglicher Attribute.
 	// Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
 	// Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
-	"version": "0.2.0",
+	{
+		"version": "0.2.0",
+		"configurations": [
+		  {
+			"type": "node",
+			"request": "launch",
+			"name": "Launch ioBroker Adapter",
+			"skipFiles": ["<node_internals>/**"],
+			"args": ["--debug", "0"],
+			"program": "node_modules/iobroker.fb-checkpresence/main.js",
+			"cwd": "${workspaceFolder}/.dev-server/default"
+		  }
+		]
+	}
+
+	/*"version": "0.2.0",
 	"configurations": [
 		{
 			"type": "node",
@@ -38,4 +53,4 @@
 			"cwd": "${workspaceFolder}/.dev-server/default"
 		}			
 	]
-}
+}*/
