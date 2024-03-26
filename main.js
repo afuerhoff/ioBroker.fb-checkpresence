@@ -1531,8 +1531,11 @@ class FbCheckpresence extends utils.Adapter {
 
                     lastWert = historyArrFiltered[0].val;
                     //this.log.warn('last Wert ' + new Date( historyArrFiltered[0].ts) + ' ' +  lastWert);
-                    await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: lastWert, ack: true });
-
+                    if (memberRow.usefilter === true){
+                        await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: lastWert, ack: true });
+                    }else{
+                        await this.setStateChangedAsync(memberPath + '.presenceFiltered', { val: newActive, ack: true });
+                    }
                     //calculation of absence and presence this day
                     t1 = currentTime;
                     for(let ih = 0; ih < historyArrFiltered.length; ih++){
