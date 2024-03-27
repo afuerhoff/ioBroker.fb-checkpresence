@@ -567,8 +567,10 @@ $(document).ready(function(){
     $('#newfilter').change(function() 
     {
         const x = document.getElementById('history');
-        
-        if(x.value == 'disabled') this.checked = false;
+        if(x.selectedIndex === 0){
+            alert('Please choose HISTORY Adapter first! Option could not be selected');
+            this.checked = false;
+        }
     });
 
     $('#meshinfo').change(function() 
