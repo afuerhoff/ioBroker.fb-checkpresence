@@ -564,6 +564,13 @@ $(document).ready(function(){
     //includeHTML();
     document.getElementById('buttonadd').addEventListener('click', beforeOpen);
 
+    $('#newfilter').change(function() 
+    {
+        const x = document.getElementById('history');
+        
+        if(x.options[x.selectedIndex].value === 'disabled') this.checked = false;
+    }
+
     $('#meshinfo').change(function() 
     {
         if(this.checked == true)
