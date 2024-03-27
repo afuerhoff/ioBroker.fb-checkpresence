@@ -568,8 +568,8 @@ $(document).ready(function(){
     {
         const x = document.getElementById('history');
         
-        if(x.options[x.selectedIndex].value === 'disabled') this.checked = false;
-    }
+        if(x.value == 'disabled') this.checked = false;
+    });
 
     $('#meshinfo').change(function() 
     {
