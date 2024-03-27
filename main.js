@@ -1415,6 +1415,8 @@ class FbCheckpresence extends utils.Adapter {
         let memberPath = '';
         let historyPath = '';
         let dPoint = null;
+
+        //In Abhängigkeit der Kompatibilitätseinstellung, wird der Pfad zu den Datenpunkten ausgewählt
         if (this.config.compatibility === true){
             memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member;
             historyPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member + '.presence';
@@ -1428,8 +1430,10 @@ class FbCheckpresence extends utils.Adapter {
             dPoint = await this.getObjectAsync(`${this.namespace}` + '.' + memberPath + '.presence');
             historyPath = memberRow.group == '' ? 'familyMembers.' + member + '.presence' : 'familyMembers.' + memberRow.group + '.' + member + '.presence';
         }
+
         await this.setStateChangedAsync(memberPath + '.presence', { val: newActive, ack: true });
         if ( memberRow.group== '' && this.config.compatibility === true) await this.setStateChangedAsync(memberPath, { val: newActive, ack: true });
+        
         if (newActive == true){ //member = true
             //memberActive = true;
             presence.one = true;
@@ -1623,6 +1627,8 @@ class FbCheckpresence extends utils.Adapter {
                     this.htmlTab += this.createHTMLTableRow([member, (newActive ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>' : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>'), dateFormat(comming, this.config.dateformat), dateFormat(going, this.config.dateformat)]);
                 }
             }
+        }else{
+            this.log.warn('New filter function: History is not enabled! Function was not used! Some datapoints were not calculated!');
         }
     }
 
