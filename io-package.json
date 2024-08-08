@@ -149,7 +149,7 @@
     "dataSource": "poll",
     "compact": true,
     "adminUI": {
-      "config": "html"
+      "config": "materialize"
     },
     "stopBeforeUpdate": true,
     "stopTimeout": 1000,
