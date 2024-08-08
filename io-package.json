@@ -138,7 +138,6 @@
     },
     "tier": 3,
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "fb-checkpresence.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/afuerhoff/ioBroker.fb-checkpresence/master/admin/fb-checkpresence.png",
@@ -149,13 +148,15 @@
     "connectionType": "local",
     "dataSource": "poll",
     "compact": true,
-    "materialize": true,
+    "adminUI": {
+      "config": "html"
+    },
     "stopBeforeUpdate": true,
     "stopTimeout": 1000,
     "messagebox": true,
     "dependencies": [
       {
-        "js-controller": ">=3.3.22"
+        "js-controller": ">=5.0.19"
       }
     ]
   },

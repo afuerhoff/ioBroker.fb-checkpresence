@@ -222,6 +222,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) new filter function implemented
 * (afuerhoff) node >=18
 * (afuerhoff) dependencies updated
+* (afuerhoff) repository checker issues fixed
 
 ### 1.2.4 (2024-02-09)
 * (afuerhoff) test code deleted [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)
