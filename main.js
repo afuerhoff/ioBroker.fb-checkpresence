@@ -1102,7 +1102,7 @@ class FbCheckpresence extends utils.Adapter {
                         this.log.debug('getDeviceInfo active guest: ' + hosts[i]['hn'] + ' ' + hosts[i]['ip'] + ' ' + hosts[i]['mac']);
                         guestCnt += 1;
                     }    
-                    vpn = hosts[i]['data']['X_AVM-DE_VPN'] === 1 ? true : false;
+                    vpn = hosts[i]['data']['X_AVM-DE_VPN'] === '1' ? true : false;
                     disabled = hosts[i]['data']['X_AVM-DE_Disallow'] === 1 ? true : false;
                     if (hosts[i]['data']['X_AVM-DE_Guest'] == 1){
                         deviceType = 'guest';
