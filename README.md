@@ -223,6 +223,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) node >=18
 * (afuerhoff) dependencies updated
 * (afuerhoff) repository checker issues fixed
+* (afuerhoff) issue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)
 
 ### 1.2.4 (2024-02-09)
 * (afuerhoff) test code deleted [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)
