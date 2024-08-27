@@ -1132,6 +1132,7 @@ class FbCheckpresence extends utils.Adapter {
 
                 if (this.config.fbdevices === true && this.enabled == true){
                     if (hostName != '') {
+                        await this.setStateChangedAsync('fb-devices.' + hostName + '.devicename', { val: hostName, ack: true });
                         await this.setStateChangedAsync('fb-devices.' + hostName + '.macaddress', { val: mac, ack: true });
                         await this.setStateChangedAsync('fb-devices.' + hostName + '.ipaddress', { val: ip, ack: true });
                         await this.setStateChangedAsync('fb-devices.' + hostName + '.active', { val: hosts[i]['active'], ack: true });
