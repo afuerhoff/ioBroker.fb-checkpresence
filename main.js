@@ -183,7 +183,7 @@ class FbCheckpresence extends utils.Adapter {
         try {
             if (this.config.fbdevices === true || this.config.guestinfo === true){
                 await this.Fb.getDeviceList();
-                if (this.Fb.deviceList) {
+                if (this.Fb && this.Fb.deviceList) {
                     if(this.config.fbdevices === true) this.setDeviceStates();
                     await this.getAllFbObjects();
                     if (this.hosts) {
@@ -720,7 +720,7 @@ class FbCheckpresence extends utils.Adapter {
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
                         let soapResult = null;
-                        if(this.Fb.RECONNECT && this.Fb.RECONNECT == true && this.Fb.connection == '1.WANPPPConnection.1'){
+                        if(this.Fb && this.Fb.RECONNECT && this.Fb.RECONNECT == true && this.Fb.connection == '1.WANPPPConnection.1'){
                             soapResult = await this.Fb.soapAction('/upnp/control/wanpppconn1', 'urn:dslforum-org:service:' + 'WANPPPConnection:1', 'ForceTermination', null);
                         }else{
                             soapResult = await this.Fb.soapAction('/upnp/control/wanipconnection1', 'urn:dslforum-org:service:' + 'WANIPConnection:1', 'ForceTermination', null);
@@ -798,7 +798,7 @@ class FbCheckpresence extends utils.Adapter {
                         }
                         this.allDevices.onlyActive = onlyActive;
 
-                        if (this.Fb.GETPATH && this.Fb.GETPATH == true){
+                        if (this.Fb && this.Fb.GETPATH && this.Fb.GETPATH == true){
                             await this.Fb.getDeviceList();
                             if (this.Fb.deviceList == null){
                                 reply(this.allDevices);
@@ -1095,7 +1095,7 @@ class FbCheckpresence extends utils.Adapter {
                 if (this.enabled == false) break;
                 let deviceType = '-';
                 if (hosts[i]['data'] != null){
-                    if (hosts[i]['data']['X_AVM-DE_Guest'] == 1 && hosts[i]['active'] == 1){ //active guests
+                    if (hosts[i]['data']['X_AVM-DE_Guest'] === '1' && hosts[i]['active'] === true){ //active guests
                         htmlRow += this.createHTMLTableRow([hosts[i]['hn'], hosts[i]['ip'], hosts[i]['mac']]); //guests table
                         jsonRow.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'disabled': disabled});
                         guests += guests == '' ? hosts[i]['hn'] : ', ' + hosts[i]['hn'];
@@ -1103,15 +1103,15 @@ class FbCheckpresence extends utils.Adapter {
                         guestCnt += 1;
                     }    
                     vpn = hosts[i]['data']['X_AVM-DE_VPN'] === '1' ? true : false;
-                    disabled = hosts[i]['data']['X_AVM-DE_Disallow'] === 1 ? true : false;
-                    if (hosts[i]['data']['X_AVM-DE_Guest'] == 1){
+                    disabled = hosts[i]['data']['X_AVM-DE_Disallow'] === '1' ? true : false;
+                    if (hosts[i]['data']['X_AVM-DE_Guest'] === '1'){
                         deviceType = 'guest';
                     }
                 }else{
                     disabled = null;
                     vpn = null;
                 }
-                if (hosts[i]['active'] == 1){ // active devices
+                if (hosts[i]['active'] === true){ // active devices
                     jsonFbDevActive.push ({'Hostname': hosts[i]['hn'], 'IP-Address': hosts[i]['ip'], 'MAC-Address': hosts[i]['mac'], 'Active': hosts[i]['active'], 'Type': deviceType, 'Disabled': disabled});
                     activeCnt += 1;
                 }else{
@@ -1902,7 +1902,7 @@ class FbCheckpresence extends utils.Adapter {
     async checkPresence(trigger){
         try {
             const dnow = new Date(); //Actual date and time for comparison
-            if(this.Fb.GETPATH === true){ //use of device list for presence if supported
+            if(this.Fb && this.Fb.GETPATH === true){ //use of device list for presence if supported
                 await this.Fb.getDeviceList();
                 await this.getAllFbObjects();
             }
@@ -1930,7 +1930,7 @@ class FbCheckpresence extends utils.Adapter {
             }
             if (filteringNeeded.length > 0){
                 await this._sleep(this.config.delay * 1000);
-                if(this.Fb.GETPATH === true){
+                if(this.Fb && this.Fb.GETPATH === true){
                     await this.Fb.getDeviceList();
                     await this.getAllFbObjects();
                 }
@@ -1945,7 +1945,7 @@ class FbCheckpresence extends utils.Adapter {
             
             let familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
             for (let g = 0; g < familyGroups.length; g++) {
-                if (this.enabled == false) break; //cancel if disabled over unload
+                if (this.enabled === false) break; //cancel if disabled over unload
                 const group = familyGroups[g];
                 const groupMembers = memberValues.filter(x => x.group == group);
                 let memberPath = '';
@@ -1959,9 +1959,9 @@ class FbCheckpresence extends utils.Adapter {
                 this.htmlTab = this.HTML;
                 const presence = {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false,  presentCount: 0, absentCount: 0};
                 for (let k = 0; k < groupMembers.length; k++) { //loop over enabled family members
-                    if (this.enabled == false) break; //cancel if disabled over unload
+                    if (this.enabled === false) break; //cancel if disabled over unload
                     const memberRow = groupMembers[k].memberRow; //Row from family members table
-                    if (this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
+                    if (this.Fb && this.Fb.GETBYMAC == true){ //member enabled in configuration settings and service is supported
                         const newActive = groupMembers[k].newVal;
                         if (trigger === true) this.log.info('triggerPresence: State ' + memberRow.familymember + ' ' + newActive);
                         if (newActive != null && !this.config.newfilter) await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
@@ -1985,8 +1985,8 @@ class FbCheckpresence extends utils.Adapter {
                 await this.setStateChangedAsync(memberPath + 'absentCount', { val: presence.absentCount, ack: true });
             }
 
-            membersFiltered = null;
-            familyGroups = null;
+            //membersFiltered = null;
+            //familyGroups = null;
             return true;
         } catch (error) {
             this.errorHandler(error, 'checkPresence: '); 

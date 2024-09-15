@@ -69,7 +69,8 @@
     "release-patch": "release-script patch --yes",
     "release-minor": "release-script minor --yes",
     "release-major": "release-script major --yes",
-    "translate": "translate-adapter"
+    "translate": "translate-adapter",
+    "devserver:debug": "dev-server debug --wait"
   },
   "bugs": {
     "url": "https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues"
