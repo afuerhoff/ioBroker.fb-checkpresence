@@ -219,7 +219,7 @@ Here you will find information about the history of the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
-* (afuerhoff) new filter function implemented
+* (afuerhoff) new filter function implemented (experimental)
 * (afuerhoff) node >=18
 * (afuerhoff) dependencies updated
 * (afuerhoff) repository checker issues fixed

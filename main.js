@@ -1907,7 +1907,7 @@ class FbCheckpresence extends utils.Adapter {
                 await this.getAllFbObjects();
             }
 
-            let membersFiltered = this.config.familymembers.filter(x => x.enabled == true); //only enabled members
+            const membersFiltered = this.config.familymembers.filter(x => x.enabled == true); //only enabled members
             const memberValues = []; //array for temporary values -> for filtering
             const filteringNeeded = [];
             //get presence from all members
@@ -1943,7 +1943,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
             }
             
-            let familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
+            const familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
             for (let g = 0; g < familyGroups.length; g++) {
                 if (this.enabled === false) break; //cancel if disabled over unload
                 const group = familyGroups[g];
