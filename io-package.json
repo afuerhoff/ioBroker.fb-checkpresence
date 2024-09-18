@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "news": {
+      "1.2.5": {
+        "en": "new filter function implemented (experimental)\nnode >=18\ndependencies updated\nrepository checker issues fixed\nissue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' as state added [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "de": "neue filterfunktion implementiert (experimental)\nknoten >=18\naktualisierte abhängigkeiten\nrepository checker probleme behoben\nproblem behoben [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n„Devicename“ als Zustand hinzugefügt [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "ru": "реализована новая функция фильтра (экспериментальная)\nузел >=18\nобновленная информация о зависимостях\nвопросы репозитория\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n[#299] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "pt": "nova função de filtro implementada (experimental)\nnode >18\ndependências atualizadas\nproblemas do verificador do repositório corrigido\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' como estado adicionado [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "nl": "nieuwe filterfunctie geïmplementeerd (experimenteel)\nknooppunt\nafhankelijkheden bijgewerkt\nrepository checker problemen opgelost\nissue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresentce/issues/294)\n'devicename' als status toegevoegd [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "fr": "nouvelle fonction de filtre implémentée (expérimental)\nnoeud >=18\ndépendances mises à jour\nproblèmes de contrôle du dépôt corrigés\nnuméro corrigé [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n«devicename» comme état ajouté [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "it": "nuova funzione filtro implementata (sperimentale)\n>=18\ndipendenze aggiornate\nrepository checker numeri fissi\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' come stato aggiunto [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "es": "nueva función de filtro implementada (experimental)\nnodo\ndependencias actualizadas\nrepositorio problemas de control fijo\n[#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' as state added [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
+        "pl": "wdrożona nowa funkcja filtra (eksperymentalna)\nwęzeł > = 18\nzaktualizowane zależności\nstałe problemy z sprawdzaniem repozytorium\nrozporządzenie Parlamentu Europejskiego i Rady (UE) nr 1303 / 2013 z dnia 11 grudnia 2013 r. ustanawiające instrument \"Łącząc Europę\" (Dz.U. L 347 z 20.12.2013, s. 671)\n\"devicename\" as state added [# 299] (https: / / github.com / afuerhoff / ioBroker.fb- checkexperience / issues / 299)",
+        "uk": "впроваджена нова функція фільтра (експериментально)\nвершина >=18\nоновлені залежності\nрепозиторійні питання перевірки\n[#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/294)\n'devicename' як держава додано [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/299)",
+        "zh-cn": "已执行的新过滤功能(实验性)\n节点 qq18\n更新依赖关系\n固定的仓库检查器问题\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294) 互联网档案馆的存檔,存档日期2013-12-04\n“devicename”作为状态添加 [# 299] (https://github.com/afuerhoff/ioBroker.fb-check presence/issues/299)"
+      },
       "1.2.4": {
         "en": "test code deleted [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)\ndependencies updated",
         "de": "testcode gelöscht [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)\naktualisierte abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "Bad default settings in io-package.json #188(https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188) (ang.)\nBad Axios parametr in getMeshList #197 (https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197) (ang.)\naktualizacja",
         "uk": "Параметри за замовчуванням в io-package.json [#188](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/188)\nWrong Axios параметр в getMeshList [#197] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/197)\nоновлені залежності",
         "zh-cn": "瓦伦格的缺勤环境[#188]\nWrong Axios para参数 to Mesh List [#197] (https://github.com/afuerhoff/ioBroker.fb-rappresence/issues/197)\nb. 更新的依赖"
-      },
-      "1.1.25": {
-        "en": "Warning message empty hostname optimized. Issue [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "de": "Warnmeldung leeren Hostname optimiert. Ausgabe [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "ru": "Предупреждение сообщение пустое имя хоста оптимизировано. Номер [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "pt": "Mensagem de aviso nome de host vazio otimizado. Edição [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "nl": "Waarschuwingsbericht, lege gastnaam optimaal. Quality over Quantity (QoQ) Releases Vertaling:",
-        "fr": "Message d'avertissement nom d'hôte vide optimisé. Question [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "it": "Messaggio di avvertimento nome host vuoto ottimizzato. Numero [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "es": "Mensaje de advertencia hostname vacío optimizado. Cuestión [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "pl": "Wiadomość o pustym hostname. Numer (#180(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/180)",
-        "uk": "Попередження повідомлення порожній hostname оптимізовано. Випуск [#180](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/180)",
-        "zh-cn": "警告讯息是光明的。 问题[第180](http://github.com/afuerhoff/ioBroker.fb- 检查/issues/180)"
       }
     },
     "titleLang": {
