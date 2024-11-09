@@ -674,6 +674,7 @@ class FbCheckpresence extends utils.Adapter {
     async onStateChange(id, state) {
         try {
             if (state) {
+                //Enable/disable Guest WLAN
                 if (id == `${this.namespace}` + '.guest.wlan' && this.Fb.SETENABLE == true && state.ack === false && this.Fb.WLAN3INFO ===true && this.config.guestinfo === true){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     const val = state.val ? '1' : '0';
@@ -686,22 +687,39 @@ class FbCheckpresence extends utils.Adapter {
                         throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult)};
                     }
                 }
-
-                if (id.includes('disabled') && state.ack === false && this.Fb.DISALLOWWANACCESSBYIP === true && this.Fb.GETWANACCESSBYIP === true){
+                
+                //Enable/disable Internet
+                if (id.includes('disabled') && !state.ack && this.Fb.DISALLOWWANACCESSBYIP && this.Fb.GETWANACCESSBYIP){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-                    const ipId = id.replace('.disabled', '') + '.ipaddress';
+
+                    // IP-Adresse des Geräts holen
+                    const ipId = `${id.replace('.disabled', '')}.ipaddress`;
                     const ipaddress = await this.getStateAsync(ipId);
                     const val = state.val ? '1' : '0';
-                    this.log.info('ip ' + JSON.stringify(ipaddress.val) + ' ' + val);
+
+                    if (!ipaddress || ipaddress.val === '') {
+                        throw { name: `onStateChange ${id}`, message: 'Cannot change state. IP address is empty!' };
+                    }
+
                     const soapResult = await this.Fb.soapAction('/upnp/control/x_hostfilter', 'urn:dslforum-org:service:' + 'X_AVM-DE_HostFilter:1', 'DisallowWANAccessByIP', [[1, 'NewIPv4Address', ipaddress.val],[2, 'NewDisallow', val]]);
-                    if (soapResult) {
-                        const wanaccess = await this.Fb.getWanAccess(ipaddress);
-                        if (wanaccess !== null) this.setState(id, { val: wanaccess, ack: true });
+                    
+                    if (!soapResult) {
+                        throw { name: `onStateChange ${id}`, message: 'Cannot change state: ' + JSON.stringify(soapResult) };
+                    }
+                    
+                    // Kurz warten und Zugriffsstatus überprüfen
+                    await this._sleep(1000);
+                    const newDisallow = await this.Fb.getWanAccess(ipaddress) !== '0';
+                    
+                    if (newDisallow === state.val){
+                        this.setState(id, { val: newDisallow, ack: true });
+                        this.log.info(`state ${id} changed: ${state.val} (ack = true)`);
                     }else{
-                        throw {name: `onStateChange ${id}`, message: 'Can not change state' + JSON.stringify(soapResult)};
+                        this.log.warn(`state ${id} changed: ${state.val} (ack = false)`);
                     }
                 }
 
+                //Reboot Fritzbox
                 if (id == `${this.namespace}` + '.reboot' && this.Fb.REBOOT === true){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
@@ -716,6 +734,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
 
+                //Reconnect
                 if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true){
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true){
@@ -733,16 +752,10 @@ class FbCheckpresence extends utils.Adapter {
                         }
                     }
                 }
-            }
-
-            /*if (state) {
-                // The state was changed
-                this.log.info(`system.adapter.${this.namespace}`);
-                this.log.info(`state2 ${id} changed: ${state.val} (ack = ${state.ack})`);
             } else {
                 // The state was deleted
                 this.log.debug(`state ${id} deleted`);
-            }*/
+            }
         } catch (error) {
             if (error.message == 'DisconnectInProgress'){
                 this.setState(`${this.namespace}` + '.reconnect', { val: false, ack: true });
