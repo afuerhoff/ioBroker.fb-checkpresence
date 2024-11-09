@@ -220,6 +220,7 @@ Here you will find information about the history of the current day.
 ## Changelog
 ### **WORK IN PROGRESS**
 * (afuerhoff) dependencies updated
+* (afuerhoff) DisAllowWanAccess optimized
 
 ### 1.2.5 (2024-09-18)
 * (afuerhoff) new filter function implemented (experimental)
