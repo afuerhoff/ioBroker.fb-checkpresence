@@ -1,4 +1,7 @@
 # Older changes
+## 1.2.1 (2023-07-14)
+* (afuerhoff) bug fixed property link
+
 ## 1.2.0 (2023-07-13)
 * (afuerhoff) dependencies updated
 * (afuerhoff) mesh link added to family members [#206](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/206)
