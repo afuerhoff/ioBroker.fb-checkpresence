@@ -129,7 +129,7 @@ function dlgError(text){
             '<h6 class="dlgErrorTitle"><span>' + _('Error') + '</span></h6>' +
         '</div>' + 
         '<div class="modal-content">' +
-            '<p class="errorText">' + _(text) + '</p>' + 
+            '<p class="dlgErrorText">' + _(text) + '</p>' + 
         '</div>' + 
         '<div class="modal-footer">' + 
             '<a class="btnDlg modal-action modal-close waves-effect waves-green btn-small btn-close"><i class="large material-icons left">close</i><span class="translate">' + _('Close') + '</span></a>' +                            
@@ -162,7 +162,7 @@ function dlgDevicesOld(arr, title, id){
         '<div class="modal-header">' + 
             '<h6 class="dlgTitle"><span class="translate">' + _(title) + '</span></h6>' +
             '<div class="input-field inline">' + 
-                '<i id="icon" class="material-icons prefix">search</i>' + 
+                '<i id="searchIcon" class="material-icons prefix">search</i>' + 
                 '<button id="btnResetSearch" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>' +
                 '<input id="searchDevice" name="search" class="validate searchInput" type="text" onkeyup="search(event)">'  + 
                 '<label class="searchLabel" for="searchDevice">' + _('Search for device') + '..' + '</label>' +
@@ -221,7 +221,7 @@ function dlgDevices(arr, title, id) {
         <div class="modal-header">
             <h6 class="dlgTitle"><span class="translate">${_(title)}</span></h6>
             <div class="input-field inline">
-                <i id="icon" class="material-icons prefix">search</i>
+                <i id="searchIcon" class="material-icons prefix">search</i>
                 <button id="btnResetSearch" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>
                 <input id="searchDevice" name="search" class="validate searchInput" type="text" onkeyup="search(event)">
                 <label class="searchLabel" for="searchDevice">${_('Search for device')}..</label>
@@ -285,13 +285,13 @@ function dlgWl(arr, title, id){
         '<div class="modal-header">' + 
             '<h6 class="dlgTitle"><span class="translate">' + _(title) + '</span></h6>' +
             '<div class="input-field inline">' + 
-                '<i id="icon" class="material-icons prefix">search</i>' + 
-                '<button id="btnResetSearchWl" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>' +
+                '<i id="searchIcon" class="material-icons prefix">search</i>' + 
+                '<button id="btnResetSearchWL" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>' +
                 '<input id="searchWL" name="search" class="validate searchInput" type="text" onkeyup="search(event)">'  + 
                 '<label class="searchLabel" for="searchWL">' + _('Search for device') + '..' + '</label>' +
             '</div>' +
             '<div>' + 
-                '<table class="fm">' + 
+                '<table class="wl">' + 
                     '<thead>' + 
                         '<tr class="header">' +
                             '<th class="header valign-wrapper"><label><input type="checkbox" class="filled-in" id="select-all2" onclick="select-all(event)"/><span></span></label></th>' + 
@@ -304,7 +304,7 @@ function dlgWl(arr, title, id){
         '</div>' +
         '<div class="modal-content col s12 translate">' + 
             '<div>' + 
-                '<table class="fm" id="tabWl">' + 
+                '<table class="wl" id="tabWl">' + 
                     '<tbody>' +
                         tableBodyWl +
                     '</tbody>' +

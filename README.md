@@ -218,6 +218,9 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (afuerhoff) bugfix [#319](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/319)
+
 ### 1.2.6 (2024-11-14)
 * (afuerhoff) dependencies updated
 * (afuerhoff) DisAllowWanAccess optimized
