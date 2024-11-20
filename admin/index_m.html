@@ -174,23 +174,23 @@
 					</div>
 					
 					<div class="row">
-						<div class="col s3 m6 l4 input-field tooltip textfield-tooltip">	
+						<div class="col s6 m6 l4 input-field tooltip textfield-tooltip">	
 							<input type="text" class="value validate" id="ipaddress" required 
 								pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|([a-zA-Z][\w.-]*)$"/>
 							<label for="ipaddress" class="translate">IP Fritzbox</label>
 							<span class="tooltiptext translate">tooltipIp</span>
 						</div>
-						<div class="col s3 m6 l3 input-field tooltip textfield-tooltip">	
+						<div class="col s6 m6 l3 input-field tooltip textfield-tooltip">	
 							<input type="text" class="value validate" maxlength="32" id="username" pattern="^[a-zA-Z][a-zA-Z0-9 _,.\-]{0,31}$"/>
 							<label for="username" class="translate">Username</label>
 							<span class="tooltiptext translate">tooltipUser</span>
 						</div>
-						<div class="col s2 m6 l3 input-field tooltip textfield-tooltip">
+						<div class="col s6 m6 l3 input-field tooltip textfield-tooltip">
 							<input type="password" class="value validate" id="password" pattern="^[a-zA-Z0-9 _\-!&quot;#$%&'()*+,./:;&lt;=>?@[\]^`{|}~]{1,32}$"/>
 							<label for="password">Password</label>
 							<span class="tooltiptext translate">tooltipPw</span>
 						</div>				
-						<div class="col s2 m2 l2 input-field tooltip checkbox-tooltip">	
+						<div class="col 6 m2 l2 input-field tooltip checkbox-tooltip">	
 							<input type="checkbox" class="value" id="ssl"/>
 							<label for="ssl" class="translate">ssl</label>
 							<span class="tooltiptext translate">tooltipSslv0</span>
@@ -198,7 +198,7 @@
 					</div>
 
 					<div class="row">
-						<div class="col s2 m4 l4 input-field tooltip textfield-tooltip">
+						<div class="col s6 m4 l4 input-field tooltip textfield-tooltip">
 							<select class="value" id="history">
 								<!--option value="" disabled selected class="translate">Choose your option</option-->
 								<!--option value="" class="translate">disabled</option>
@@ -209,12 +209,12 @@
 							<label for history class="translate">Select history adapter</label>
 							<span class="tooltiptext translate">tooltipHistory</span>
 						</div>
-						<div class="col s3 m4 l4 input-field tooltip textfield-tooltip">	
+						<div class="col s6 m4 l4 input-field tooltip textfield-tooltip">	
 							<input type="text" class="value validate" id="dateformat" pattern="^[dmyhHMNosSlLtTWZUC:\.\-,/' ]+$"/>
 							<label for="ipaddress" class="translate">Date format</label>
 							<span class="tooltiptext translate">tooltipDateformat</span>
 						</div>
-						<div class="col s3 m4 l4 input-field tooltip textfield-tooltip">
+						<div class="col s6 m4 l4 input-field tooltip textfield-tooltip">
 							<input type="number" class="value validate" min="10" max="3600" step="1" id="interval" required pattern="[1-5][0-9]?"/>
 							<label for="interval" class="translate">polling interval in seconds</label>
 							<span class="tooltiptext translate">tooltipIntervalv0</span>
@@ -222,17 +222,17 @@
 					</div>
 
 					<div class="row">
-						<div class="col s3 m4 l4 input-field tooltip checkbox-tooltip">	
+						<div class="col s6 m4 l4 input-field tooltip checkbox-tooltip">	
 							<input type="checkbox" class="value" id="fbdevices"/>
 							<label for="fbdevices" class="translate">create FB-Devices</label>
 							<span class="tooltiptext translate">tooltipFbdevices</span>
 					  	</div>
-						  <div class="col s3 m4 l4 input-field tooltip checkbox-tooltip">
+						  <div class="col s6 m4 l4 input-field tooltip checkbox-tooltip">
 							<input type="checkbox" class="value" id="meshinfo"/>
 							<label for="meshinfo" class="translate">create mesh info</label>
 							<span class="tooltiptext translate">tooltipMesh</span>
 					  	</div>
-						<div class="col s3 m4 l4 input-field tooltip checkbox-tooltip">	
+						<div class="col s6 m4 l4 input-field tooltip checkbox-tooltip">	
 							<input type="checkbox" class="value" id="syncfbdevices"/>
 							<label for="syncfbdevices" class="translate">synchronize FB-Devices (once)</label>
 							<span class="tooltiptext translate">tooltipFbsync</span>
@@ -240,17 +240,17 @@
 					</div>
 
 					<div class="row">
-						<div class="col s3 m4 l4 input-field tooltip checkbox-tooltip">	
+						<div class="col s6 m4 l4 input-field tooltip checkbox-tooltip">	
 							<input type="checkbox" class="value" id="guestinfo"/>
 							<label for="guestinfo" class="translate">guest</label>
 							<span class="tooltiptext translate">tooltipGuest</span>
 					  	</div>
-						<div class="col s3 m4 l4 input-field tooltip checkbox-tooltip">	
+						<div class="col s6 m4 l4 input-field tooltip checkbox-tooltip">	
 							<input type="checkbox" class="value" id="qrcode"/>
 							<label for="qrcode" class="translate">qrcode</label>
 							<span class="tooltiptext translate">tooltipQR</span>
 					  	</div>
-						  <div class="col s3 m4 l4 input-field tooltip textfield-tooltip">	
+						  <div class="col s6 m4 l4 input-field tooltip textfield-tooltip">	
 							<input type="text" class="value validate" id="qrcodecolor"/>
 							<label for="qrcodecolor" class="translate">QR code color</label>
 							<span class="tooltiptext translate">tooltipQRColor</span>
@@ -258,7 +258,7 @@
 					</div>
 
 					<div class="row">
-						<div class="col s3 m4 l4 input-field tooltip checkbox-tooltip">	
+						<div class="col s6 m4 l4 input-field tooltip checkbox-tooltip">	
 							<input type="checkbox" class="value" id="extip"/>
 							<label for="extip" class="translate">external ip address</label>
 							<span class="tooltiptext translate">tooltipExtip</span>
@@ -355,12 +355,12 @@
 								<label for="delay" class="translate">filter time in seconds</label>
 								<span class="tooltiptext translate">tooltipDelayv0</span>
 							</div>
-							<div class="col s6 m6 l3 input-field tooltip checkbox-tooltip">
+							<div class="col s12 m6 l3 input-field tooltip checkbox-tooltip">
 								<input type="checkbox" class="value" id="newfilter"/>
 								<label for="newfilter" class="translate">new filter function</label>
 								<span class="tooltiptext translate">tooltipNewFilterv0</span>
 							</div>
-							<div class="col s6 m6 l3 input-field tooltip checkbox-tooltip">
+							<div class="col s12 m6 l3 input-field tooltip checkbox-tooltip">
 								<input type="checkbox" class="value" id="compatibility"/>
 								<label for="compatibility" class="translate">compatibility</label>
 								<span class="tooltiptext translate">tooltipCompatibilityv0</span>
@@ -451,16 +451,16 @@
 					
 					<div id="whitevalues">
 						<div id="rowBtnWl" class="row">
+							<div class="col s12 m4 l4 input-field tooltip checkbox-tooltip">
+								<input type="checkbox" class="value" id="enableWl"/>
+								<label for="enableWl" class="translate">Enable whitelist</label>
+								<span class="tooltiptext translate">tooltipWlv0</span>
+							</div>
 							<div class="input-field">
 								<a class="left btnAdmin btn-floating waves-effect waves-light table-button-add"><i class="material-icons">add</i></a>
 							</div>
 							<div class="input-field">
 								<a id="buttonaddwl" class="left btnAdmin btn waves-effect waves-light modal-trigger translate blue" href="#dlgWL">Add a device</a>
-							</div>
-							<div class="col s7 m4 l4 input-field tooltip checkbox-tooltip">
-								<input type="checkbox" class="value" id="enableWl"/>
-								<label for="enableWl" class="translate">Enable whitelist</label>
-								<span class="tooltiptext translate">tooltipWlv0</span>
 							</div>
 						</div>
 						<div class="">
