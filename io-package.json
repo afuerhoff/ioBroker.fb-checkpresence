@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.2.7",
+    "version": "1.2.8",
     "news": {
+      "1.2.8": {
+        "en": "bugfix configuration\ndependencies updated",
+        "de": "bugfix konfiguration\naktualisierte abhängigkeiten",
+        "ru": "конфигурация исправления\nобновленная информация о зависимостях",
+        "pt": "configuração do bugfix\ndependências atualizadas",
+        "nl": "bugfix configuratie\nafhankelijkheden bijgewerkt",
+        "fr": "configuration du correctif\ndépendances mises à jour",
+        "it": "configurazione bugfix\ndipendenze aggiornate",
+        "es": "configuración de bugfix\ndependencias actualizadas",
+        "pl": "konfiguracja bugfix\nzaktualizowane zależności",
+        "uk": "налаштування помилок\nоновлені залежності",
+        "zh-cn": "错误修正配置\n更新依赖关系"
+      },
       "1.2.7": {
         "en": "bugfix [#319](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/319)",
         "de": "bugfix [#319](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/319)",
@@ -80,19 +93,6 @@
         "pl": "tablice jsonowe #215 (https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunkcja łącza optymalizowana. Zobacz #206",
         "uk": "[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/215)\nфункція посилання оптимізована. Бачити #206",
         "zh-cn": "bugixson表格(http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/215)\n联系是优化的。 见第206号行动。"
-      },
-      "1.2.1": {
-        "en": "bug fixed property link",
-        "de": "fehler behobene eigenschaft link",
-        "ru": "ошибка фиксированная ссылка на недвижимость",
-        "pt": "link de propriedade corrigida",
-        "nl": "quality over quantity (qoq) releases vertaling:",
-        "fr": "bug fixed property link",
-        "it": "bug link di proprietà fisso",
-        "es": "error de propiedad fijo",
-        "pl": "link",
-        "uk": "виправлено помилку",
-        "zh-cn": "b 固定财产连接"
       }
     },
     "titleLang": {
