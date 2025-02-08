@@ -275,6 +275,7 @@ class FbCheckpresence extends utils.Adapter {
                     cnt2 = 0;
                     if (this.config.extip === true) {
                         await this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
+                        await this.setStateChangedAsync('info.extIpv6', { val: await this.Fb.getExtIpv6(), ack: true });
                     }
                     if (this.config.guestinfo === true) {
                         await this.setStateChangedAsync('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
