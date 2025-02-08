@@ -13,5 +13,7 @@
 			],
 			"url": "https://raw.githubusercontent.com/ioBroker/adapter-react-v5/main/schemas/jsonConfig.json"
 		}
-	]
+	],
+	"typescript.validate.enable": false,
+	"eslint.useFlatConfig": true
 }

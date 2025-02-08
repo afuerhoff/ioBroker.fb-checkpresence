@@ -218,6 +218,8 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
+### **WORK IN PROGRESS**
+
 ### 1.2.8 (2024-11-20)
 * (afuerhoff) bugfix configuration
 * (afuerhoff) dependencies updated
