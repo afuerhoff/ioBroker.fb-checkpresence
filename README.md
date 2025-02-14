@@ -218,7 +218,7 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.3.0 (2025-02-14)
 * (afuerhoff) dependencies updated
 * (afuerhoff) eslint setup changed
 * (afuerhoff) ipv6 ip-address and prefix added
@@ -241,10 +241,6 @@ Here you will find information about the history of the current day.
 * (afuerhoff) repository checker issues fixed
 * (afuerhoff) issue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)
 * (afuerhoff) 'devicename' as state added [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)
-
-### 1.2.4 (2024-02-09)
-* (afuerhoff) test code deleted [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)
-* (afuerhoff) dependencies updated
 
 ## License
 MIT License

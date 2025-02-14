@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.2.8",
+    "version": "1.3.0",
     "news": {
+      "1.3.0": {
+        "en": "dependencies updated\neslint setup changed\nipv6 ip-address and prefix added",
+        "de": "aktualisierte abhängigkeiten\neslint setup geändert\nipv6 ip-address und prefix hinzugefügt",
+        "ru": "обновленная информация о зависимостях\neslint настройка изменена\nipv6 ip-адрес и префикс добавлены",
+        "pt": "dependências atualizadas\neslint configuração alterada\nipv6 ip-address e prefixo adicionado",
+        "nl": "afhankelijkheden bijgewerkt\neslint-configuratie gewijzigd\nipv6 ip-adres en voorvoegsel toegevoegd",
+        "fr": "dépendances mises à jour\nconfiguration d'eslint changé\nipv6 ip-adresse et préfixe ajoutés",
+        "it": "dipendenze aggiornate\nimpostazione eslint cambiata\nipv6 ip-address e prefisso aggiunto",
+        "es": "dependencias actualizadas\neslint setup changed\nipv6 ip-address y prefijo añadido",
+        "pl": "zaktualizowane zależności\nzmiana konfiguracji eslinta\nipv6 ip- address i prefix dodany",
+        "uk": "оновлені залежності\nзмінено налаштування eslint\nipv6 ip-address і prefix додано",
+        "zh-cn": "更新依赖关系\neslint 设置已更改\n添加 ipv6 地址和前缀"
+      },
       "1.2.8": {
         "en": "bugfix configuration\ndependencies updated",
         "de": "bugfix konfiguration\naktualisierte abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "Readme zaktualizowany\nzoptymalizowana funkcja jsontables\nw załączniku II wprowadza się następujące zmiany:\nw związku z tym Komisja uważa, że nie ma potrzeby wprowadzania zmian do rozporządzenia wykonawczego (UE) nr 540 / 2011",
         "uk": "Читати далі\nфункція jsontables оптимізована\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/253)\n[#240] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/240)",
         "zh-cn": "更新我\n函数 jsonables 优化\n(https://github.com/afuerhoff/ioBroker.fb-check presence/issues/253)\n优化日志信息[#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)"
-      },
-      "1.2.2": {
-        "en": "bug fixed json tables [#215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nlink feature optimized. See #206",
-        "de": "fehler behobene json Tabellen #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nlink-Feature optimiert. Vgl",
-        "ru": "баг фиксированные json таблицы #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nфункция ссылки оптимизирована. См #206",
-        "pt": "bug corrigido tabelas json #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresença/edições/215)\nrecurso de link otimizado. Ver #206",
-        "nl": "quality over Quantity (QoQ) Releases Vertaling:\nverbinding optimaal. #206",
-        "fr": "bug fixed json tables #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfonction de lien optimisé. Voir #206",
-        "it": "#[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunzione di collegamento ottimizzato. Vedere",
-        "es": "bug fixed json tables #[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunción de enlace optimizada. See #206",
-        "pl": "tablice jsonowe #215 (https:/github.com/afuerhoff/ioBroker.fb-checkpresence/issues/215)\nfunkcja łącza optymalizowana. Zobacz #206",
-        "uk": "[215](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/215)\nфункція посилання оптимізована. Бачити #206",
-        "zh-cn": "bugixson表格(http://github.com/afuerhoff/ioBroker.fb-rappresence/issues/215)\n联系是优化的。 见第206号行动。"
       }
     },
     "titleLang": {
