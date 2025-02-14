@@ -219,6 +219,9 @@ Here you will find information about the history of the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
+* (afuerhoff) dependencies updated
+* (afuerhoff) eslint setup changed
+* (afuerhoff) ipv6 ip-address and prefix added
 
 ### 1.2.8 (2024-11-20)
 * (afuerhoff) bugfix configuration
