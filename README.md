@@ -218,6 +218,10 @@ Here you will find information when the family member arrives or leaving home.
 Here you will find information about the history of the current day. 
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (afuerhoff) dependencies updated
+* (afuerhoff) bug fixed [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)
+
 ### 1.3.0 (2025-02-14)
 * (afuerhoff) dependencies updated
 * (afuerhoff) eslint setup changed

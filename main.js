@@ -992,9 +992,9 @@ class FbCheckpresence extends utils.Adapter {
                 return;
             }
             if (typeof obj === 'object' && obj.message) {
-                function reply(result) {
+                const reply = result => {
                     this.sendTo(obj.from, obj.command, JSON.stringify(result), obj.callback);
-                }
+                };
 
                 switch (obj.command) {
                     case 'triggerPresence': {
@@ -1025,7 +1025,6 @@ class FbCheckpresence extends utils.Adapter {
                             return true;
                         }
                         this.allDevices.onlyActive = onlyActive;
-
                         if (this.Fb && this.Fb.GETPATH && this.Fb.GETPATH == true) {
                             await this.Fb.getDeviceList();
                             if (this.Fb.deviceList == null) {
