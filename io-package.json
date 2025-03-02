@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "news": {
+      "1.3.1": {
+        "en": "dependencies updated\nbug fixed [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nbug fixed [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "de": "aktualisierte abhängigkeiten\nfehler behoben [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nfehler behoben [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "ru": "обновленные зависимости\nисправленный [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nисправленный [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "pt": "dependências atualizadas\nbug corrigido [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nbug corrigido [#305] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "nl": "afhankelijkheden bijgewerkt\nbugfixed [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nbug fixed [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "fr": "dépendances mises à jour\nbug corrigé [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nbug corrigé [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "it": "dipendenze aggiornate\nbug fisso [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nbug fisso [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "es": "dependencias actualizadas\nbug fixed [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)\nbug fixed [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)",
+        "pl": "zaktualizowane zależności\nrozporządzenie Parlamentu Europejskiego i Rady (UE) nr 1303 / 2013 z dnia 11 grudnia 2013 r. w sprawie Europejskiego Funduszu Społecznego (Dz.U. L 347 z 20.12.2013, s. 671)\nrozporządzenie Parlamentu Europejskiego i Rady (UE) nr 1303 / 2013 z dnia 11 grudnia 2013 r. w sprawie zasad finansowych mających zastosowanie do budżetu ogólnego Unii oraz uchylające rozporządzenie Rady (WE) nr 1606 / 2002 (Dz.U. L 347 z 20.12.2013, s. 671)",
+        "uk": "оновлені залежності\n[#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/333)\n[#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/305)",
+        "zh-cn": "更新依赖关系\n错误固定 [# 333] (https://github.com/afuerhoff/ioBroker.fb-check presence/ probes/333) (中文(简体) )\n错误已固定 [# 305] (https://github.com/afuerhoff/ioBroker.fb- check presence/issues/305) "
+      },
       "1.3.0": {
         "en": "dependencies updated\neslint setup changed\nipv6 ip-address and prefix added",
         "de": "aktualisierte abhängigkeiten\neslint setup geändert\nipv6 ip-address und prefix hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "kod testowy skreślony [# 257] (https: / / github.com / afuerhoff / ioBroker.fb- checksitness / issues / 257)\nzaktualizowane zależności",
         "uk": "test code remove [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/257)\nоновлені залежності",
         "zh-cn": "测试代码删除 [# 257] (https://github.com/afuerhoff/ioBroker.fb-check presence/issues/257)\n更新依赖关系"
-      },
-      "1.2.3": {
-        "en": "Readme updated\nfunction jsontables optimized\nnon existent members set to false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimization of log message [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "de": "Reader aktualisiert\nfunktion jsontables optimiert\nnicht existentielle Mitglieder auf false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimierung der Log-Nachricht [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "ru": "Читать дальше\nфункция jsontables оптимизирована\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\nоптимизация сообщения журнала [#240] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "pt": "Readme atualizado\njsontables função otimizada\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\notimização da mensagem de log [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "nl": "Readme bijgewerkt\nfunctie jsontables geoptimaliseerd\nniet-bestaande leden ingesteld op valse [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimalisatie van logbericht [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "fr": "Lire mise à jour\nfonction jsontables optimisé\nmembres inexistants fixés à faux [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimisation du message journal [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "it": "Readme aggiornato\nfunzione jsontables ottimizzato\nmembri non esistenti fissati a false [#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\nottimizzazione del messaggio di log [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "es": "Readme updated\nfunción jsontables optimizados\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/253)\noptimización del mensaje de registro [#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)",
-        "pl": "Readme zaktualizowany\nzoptymalizowana funkcja jsontables\nw załączniku II wprowadza się następujące zmiany:\nw związku z tym Komisja uważa, że nie ma potrzeby wprowadzania zmian do rozporządzenia wykonawczego (UE) nr 540 / 2011",
-        "uk": "Читати далі\nфункція jsontables оптимізована\n[#253](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/253)\n[#240] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/240)",
-        "zh-cn": "更新我\n函数 jsonables 优化\n(https://github.com/afuerhoff/ioBroker.fb-check presence/issues/253)\n优化日志信息[#240](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/240)"
       }
     },
     "titleLang": {

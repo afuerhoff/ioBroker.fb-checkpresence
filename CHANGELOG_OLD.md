@@ -1,4 +1,12 @@
 # Older changes
+## 1.2.5 (2024-09-18)
+* (afuerhoff) new filter function implemented (experimental)
+* (afuerhoff) node >=18
+* (afuerhoff) dependencies updated
+* (afuerhoff) repository checker issues fixed
+* (afuerhoff) issue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)
+* (afuerhoff) 'devicename' as state added [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)
+
 ## 1.2.4 (2024-02-09)
 * (afuerhoff) test code deleted [#257](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/257)
 * (afuerhoff) dependencies updated
