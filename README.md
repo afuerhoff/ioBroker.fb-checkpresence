@@ -221,6 +221,7 @@ Here you will find information about the history of the current day.
 ### **WORK IN PROGRESS**
 * (afuerhoff) dependencies updated
 * (afuerhoff) bug fixed [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)
+* (afuerhoff) bug fixed [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)
 
 ### 1.3.0 (2025-02-14)
 * (afuerhoff) dependencies updated
