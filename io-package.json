@@ -158,7 +158,7 @@
       {
         "condition": {
           "operand": "and",
-          "rules": ["oldVersion<1.3.2", "newVersion>=1.3.2"]
+          "rules": ["oldVersion<=1.3.2", "newVersion>=1.3.2"]
         },
         "title": {
           "en": "Important notice!",
@@ -184,7 +184,7 @@
             "pl": "Ustawienie zgodności zostanie usunięte w następnej wersji.\nJeśli to ustawienie jest nadal zaznaczone, należy je natychmiast odznaczyć i postępować zgodnie z instrukcjami w dzienniku.\nW wyniku tej zmiany model obiektu ulegnie zmianie, a także zostanie utworzony folder członków rodziny, w którym będzie można znaleźć punkty danych.",
             "uk": "Налаштування сумісності буде видалено з наступною версією.\nЯкщо цей параметр усе ще позначено, негайно зніміть його та дотримуйтесь інструкцій у журналі.\nУ результаті модель об’єкта зміниться, і буде створено папку членів родини, у якій можна буде знайти точки даних.",
             "zh-cn": "下一版本将删除兼容性设置。\n如果您仍选中此设置，您应该立即取消选中它并按照日志中的说明进行操作。\n对象模型将因此而发生改变，并且会创建一个家庭成员文件夹，然后可以在该文件夹下找到数据点。"
-          },
+        },
         "level": "warn",
         "buttons": ["agree", "cancel"]
       }
