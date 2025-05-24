@@ -546,6 +546,9 @@ class FbCheckpresence extends utils.Adapter {
             const membersFiltered = this.config.familymembers.filter(x => x.enabled == true);
             const familyGroups = this.removeDuplicates(membersFiltered);
 
+            if (this.config.username === '') {
+                throw new Error('username is empty! You have to define a username! Adapter shuts down!');
+            }
             this.Fb = await fb.Fb.init(
                 {
                     host: this.config.ipaddress,
