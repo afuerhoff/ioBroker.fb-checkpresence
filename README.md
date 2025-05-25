@@ -151,7 +151,19 @@ sendTo('fb-checkpresence.0', 'triggerPresence', {}
 
 ### Whitelist settings
 In the white list you can insert every known device. Any unknown devices are listed in the blacklist object. 
-If you check the checkbox in the headline of the table all devices are selected. 
+If you check the checkbox in the headline of the table all devices are selected.
+
+In Javascript you can send an item to the whitelist. 
+The sent data (hostname, MAC) is compared with the Fritzbox device list. If the entry is present, it is checked whether it is already saved in the whitelist. If not, the entry is saved in the whitelist configuration table.
+
+sendTo('fb-checkpresence.0', 'addDeviceToWhitelist', 
+    {
+        hostname: 'devicename',
+        mac: '00:00:00:00:00:00'
+    }
+    , function (result) {
+        log(result, 'info');
+});
 
 ## Features
 
