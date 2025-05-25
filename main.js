@@ -1049,6 +1049,51 @@ class FbCheckpresence extends utils.Adapter {
                         reply(this.allDevices);
                         return true;
                     }
+                    case 'addDeviceToWhitelist': {
+                        let hostName = obj.message.hostname;
+                        if (this.Fb) {
+                            //if (this.Fb && this.Fb.GETPATH && this.Fb.GETPATH == true) {
+                            //    await this.Fb.getDeviceList();
+                            //}
+                            //check, if the mac is in the fritzbox devicelist
+                            const host = this.hosts.filter(x => x.hnOrg == hostName); //find fb-device
+                            if (host && host.length == 0) {
+                                throw new Error(
+                                    `sendTo addDeviceToWhitelist: Cannot find device ${hostName} in fritzbox!`,
+                                );
+                            }
+                            const macs = host[0].mac.split(', ');
+                            let count = 0;
+                            for (let m = 0; m < macs.length; m++) {
+                                if (obj.message.mac == macs[m]) {
+                                    count++;
+                                }
+                            }
+                            if (count == 0) {
+                                throw new Error(
+                                    `sendTo addDeviceToWhitelist: Cannot find device ${hostName} with ${obj.message.mac} in fritzbox!`,
+                                );
+                            }
+                            hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
+                            //check, if the mac is always in whitelist
+                            let adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                            const wl = adapterObj.native.whitelist.filter(x => x.white_macaddress == obj.message.mac);
+                            if (wl.length > 0) {
+                                throw new Error(
+                                    `sendTo addDeviceToWhitelist: Device ${hostName} is already in the whitelist!`,
+                                );
+                            }
+                            if (wl.length == 0) {
+                                adapterObj.native.whitelist.push({
+                                    white_device: obj.message.hostname,
+                                    white_macaddress: obj.message.mac,
+                                });
+                                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                                this.log.info(`sendTo addDeviceToWhitelist: Device ${hostName} is added to whitelist`);
+                            }
+                        }
+                        return true;
+                    }
                     default:
                         //this.log.warn('Unknown command: ' + obj.command);
                         break;
