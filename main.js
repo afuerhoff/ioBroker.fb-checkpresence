@@ -1052,9 +1052,6 @@ class FbCheckpresence extends utils.Adapter {
                     case 'addDeviceToWhitelist': {
                         let hostName = obj.message.hostname;
                         if (this.Fb) {
-                            //if (this.Fb && this.Fb.GETPATH && this.Fb.GETPATH == true) {
-                            //    await this.Fb.getDeviceList();
-                            //}
                             //check, if the mac is in the fritzbox devicelist
                             const host = this.hosts.filter(x => x.hnOrg == hostName); //find fb-device
                             if (host && host.length == 0) {
@@ -1080,7 +1077,7 @@ class FbCheckpresence extends utils.Adapter {
                             const wl = adapterObj.native.whitelist.filter(x => x.white_macaddress == obj.message.mac);
                             if (wl.length > 0) {
                                 throw new Error(
-                                    `sendTo addDeviceToWhitelist: Device ${hostName} is already in the whitelist!`,
+                                    `sendTo addDeviceToWhitelist: Device ${hostName} with ${obj.message.mac} is already in the whitelist!`,
                                 );
                             }
                             if (wl.length == 0) {
