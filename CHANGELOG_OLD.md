@@ -1,4 +1,8 @@
 # Older changes
+## 1.2.6 (2024-11-14)
+* (afuerhoff) dependencies updated
+* (afuerhoff) DisAllowWanAccess optimized
+
 ## 1.2.5 (2024-09-18)
 * (afuerhoff) new filter function implemented (experimental)
 * (afuerhoff) node >=18
