@@ -23,7 +23,7 @@ scripts/gulp.sh
 scripts/update_node.sh
 
 iob_npm.done
-
+.commitinfo
 
 # ioBroker dev-server
 .dev-server/
