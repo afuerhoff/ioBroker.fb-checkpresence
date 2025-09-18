@@ -2,7 +2,9 @@
 # that is configured in .github/auto-merge.yml
 
 name: Auto-Merge Dependabot PRs
-
+permissions:
+  contents: read
+  pull-requests: write
 on:
   pull_request_target:
 
