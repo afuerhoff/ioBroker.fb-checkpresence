@@ -206,8 +206,8 @@ function dlgDevices(arr, title, id) {
         return `
             <tr class="add-device"
                 data-macaddress="${element.mac || ''}"
-                data-familymember="${(element.name || '').replace(/"/g, '\\"')}"
-                data-ip="${(element.ip || '').replace(/"/g, '\\"')}">
+                data-familymember="${(element.name || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"
+                data-ip="${(element.ip || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"')}">
                 <td class="valign-wrapper"><label><input class="filled-in" type="checkbox" name="chkFM"${chkVal2} /><span></span></label></td>
                 <td>${element.name}</td>
                 <td class="center">${element.mac}</td>
