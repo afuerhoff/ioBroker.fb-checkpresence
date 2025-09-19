@@ -1,4 +1,7 @@
 # Older changes
+## 1.2.7 (2024-11-18)
+* (afuerhoff) bugfix [#319](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/319)
+
 ## 1.2.6 (2024-11-14)
 * (afuerhoff) dependencies updated
 * (afuerhoff) DisAllowWanAccess optimized

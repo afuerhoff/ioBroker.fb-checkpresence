@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "news": {
+      "1.4.1": {
+        "en": "dependencies updated\nrepository checker & code scanning issues fixed",
+        "de": "Abhängigkeiten aktualisiert\nRepository-Checker und Code-Scanning-Probleme behoben",
+        "ru": "обновлены зависимости\nисправлены проблемы с проверкой репозитория и сканированием кода",
+        "pt": "dependências atualizadas\nProblemas de verificação de repositório e varredura de código corrigidos",
+        "nl": "afhankelijkheden bijgewerkt\nRepository checker & code scanning issues opgelost",
+        "fr": "dépendances mises à jour\nProblèmes de vérification du dépôt et de balayage de code corrigés",
+        "it": "dipendenze aggiornate\nproblemi risolti del controllo del repository e della scansione del codice",
+        "es": "dependencias actualizadas\nSe solucionaron problemas de verificación de repositorio y escaneo de código.",
+        "pl": "zaktualizowane zależności\nnaprawione problemy z sprawdzaniem repozytorium i skanowaniem kodu",
+        "uk": "оновлено залежності\nвиправлені проблеми з перевіркою репозиторію та скануванням коду",
+        "zh-cn": "依赖项已更新\n修复了存储库检查器和代码扫描问题"
+      },
       "1.4.0": {
         "en": "dependencies updated\nerror handling optimized\nenhancement  [#336](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/336)\nissue [#337](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/337)\nissue [#335](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/335)",
         "de": "aktualisierte abhängigkeiten\nfehlerbehandlung optimiert\nverbesserung [#336](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/336)\nausgabe [#337](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/337)\nausgabe [#335](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/335)",
@@ -80,19 +93,6 @@
         "pl": "zaktualizowane zależności\nDisAllowWanAccess zoptymalizowany",
         "uk": "оновлені залежності\nDisAllowWanAccess оптимізований",
         "zh-cn": "更新依赖关系\nDisallowWan 访问优化"
-      },
-      "1.2.5": {
-        "en": "new filter function implemented (experimental)\nnode >=18\ndependencies updated\nrepository checker issues fixed\nissue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' as state added [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "de": "neue filterfunktion implementiert (experimental)\nknoten >=18\naktualisierte abhängigkeiten\nrepository checker probleme behoben\nproblem behoben [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n„Devicename“ als Zustand hinzugefügt [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "ru": "реализована новая функция фильтра (экспериментальная)\nузел >=18\nобновленная информация о зависимостях\nвопросы репозитория\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n[#299] (https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "pt": "nova função de filtro implementada (experimental)\nnode >18\ndependências atualizadas\nproblemas do verificador do repositório corrigido\n(http://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' como estado adicionado [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "nl": "nieuwe filterfunctie geïmplementeerd (experimenteel)\nknooppunt\nafhankelijkheden bijgewerkt\nrepository checker problemen opgelost\nissue fixed [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresentce/issues/294)\n'devicename' als status toegevoegd [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "fr": "nouvelle fonction de filtre implémentée (expérimental)\nnoeud >=18\ndépendances mises à jour\nproblèmes de contrôle du dépôt corrigés\nnuméro corrigé [#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n«devicename» comme état ajouté [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "it": "nuova funzione filtro implementata (sperimentale)\n>=18\ndipendenze aggiornate\nrepository checker numeri fissi\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' come stato aggiunto [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "es": "nueva función de filtro implementada (experimental)\nnodo\ndependencias actualizadas\nrepositorio problemas de control fijo\n[#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294)\n'devicename' as state added [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/299)",
-        "pl": "wdrożona nowa funkcja filtra (eksperymentalna)\nwęzeł > = 18\nzaktualizowane zależności\nstałe problemy z sprawdzaniem repozytorium\nrozporządzenie Parlamentu Europejskiego i Rady (UE) nr 1303 / 2013 z dnia 11 grudnia 2013 r. ustanawiające instrument \"Łącząc Europę\" (Dz.U. L 347 z 20.12.2013, s. 671)\n\"devicename\" as state added [# 299] (https: / / github.com / afuerhoff / ioBroker.fb- checkexperience / issues / 299)",
-        "uk": "впроваджена нова функція фільтра (експериментально)\nвершина >=18\nоновлені залежності\nрепозиторійні питання перевірки\n[#294](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/294)\n'devicename' як держава додано [#299](https://github.com/afuerhoff/ioBroker.fb-checkpresence/products/299)",
-        "zh-cn": "已执行的新过滤功能(实验性)\n节点 qq18\n更新依赖关系\n固定的仓库检查器问题\n(https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/294) 互联网档案馆的存檔,存档日期2013-12-04\n“devicename”作为状态添加 [# 299] (https://github.com/afuerhoff/ioBroker.fb-check presence/issues/299)"
       }
     },
     "titleLang": {
