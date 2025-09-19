@@ -232,6 +232,7 @@ Here you will find information about the history of the current day.
 ## Changelog
 ### **WORK IN PROGRESS**
 * (afuerhoff) dependencies updated
+* (afuerhoff) repository checker & code scanning issues fixed
 
 ### 1.4.0 (2025-05-28)
 * (afuerhoff) dependencies updated
