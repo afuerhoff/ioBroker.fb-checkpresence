@@ -236,6 +236,7 @@ Here you will find information about the history of the current day.
 * (afuerhoff) npm security changes
 * (afuerhoff) filter time extended to 300s
 * (afuerhoff) guest wlan bug fixed [#353](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/353)
+* (afuerhoff) deprecated functions changed
 
 ### 1.4.1 (2025-09-19)
 * (afuerhoff) dependencies updated
