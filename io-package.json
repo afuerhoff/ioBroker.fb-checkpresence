@@ -173,7 +173,8 @@
           "it": "Avviso IMPORTANTE!",
           "es": "Noticia importante!",
           "pl": "Ważna uwaga!",
-          "zh-cn": "重要通知!"
+          "zh-cn": "重要通知!",
+          "uk": "Важливе повідомлення!"
         },
         "text": {
           "en": "The compatibility setting will be removed with the next version.\nIf you still have this setting checked, you should uncheck it immediately and follow the instructions in the log.\nThe object model will change as a result and a familymembers folder will be created under which the data points can then be found.",
