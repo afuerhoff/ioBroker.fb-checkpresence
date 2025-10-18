@@ -1977,8 +1977,8 @@ class FbCheckpresence extends utils.Adapter {
         });
     }
 
-    async getHistoryData(member, start, end, limit) {
-        return await this.sendToAsync('history.0', 'getHistory', {
+    async getHistoryData(adapter, member, start, end, limit) {
+        return await this.sendToAsync(adapter, 'getHistory', {
             id: member,
             options: {
                 end: end,
@@ -2094,7 +2094,13 @@ class FbCheckpresence extends utils.Adapter {
                 //const limit = histData.result.length*24*60*60*1000/(currentTime-midnightTime)*days+500;
                 //log('Limit: ' + limit, 'info');
                 const currentVal = await this.getStateAsync(memberID);
-                const histData = await this.getHistoryData(memberID, startDate.getTime(), currentTime, 5000);
+                const histData = await this.getHistoryData(
+                    this.config.history,
+                    memberID,
+                    startDate.getTime(),
+                    currentTime,
+                    5000,
+                );
                 if (!histData) {
                     this.log.warn(`history of family member is empty: ${memberID}`, 'info');
                     //await this.setStateChangedAsync(memberPath + '.presence', { val: !valPresence, ack: true });
