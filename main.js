@@ -709,10 +709,10 @@ class FbCheckpresence extends utils.Adapter {
             );
 
             this.Fb.suportedServices.forEach(async element => {
-                await this.setStateAsync(`info.${element.id}`, { val: element.enabled, ack: true });
+                await this.setState(`info.${element.id}`, { val: element.enabled, ack: true });
             });
-            await this.setStateAsync('reboot', { val: false, ack: true });
-            await this.setStateAsync('reconnect', { val: false, ack: true });
+            await this.setState('reboot', { val: false, ack: true });
+            await this.setState('reconnect', { val: false, ack: true });
 
             if (this.config.extip === false) {
                 //await this.setStateChangedAsync('info.extIp', { val: '', ack: true });
@@ -764,7 +764,7 @@ class FbCheckpresence extends utils.Adapter {
                     this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox! Adapter stops");
                     adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
                     adapterObj.common.enabled = false; // Adapter ausschalten
-                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                    await this.setForeignObject(`system.adapter.${this.namespace}`, adapterObj);
                 }
                 await this.resyncFbObjects(this.Fb.deviceList);
             }
@@ -1085,7 +1085,7 @@ class FbCheckpresence extends utils.Adapter {
                                     white_device: obj.message.hostname,
                                     white_macaddress: obj.message.mac,
                                 });
-                                await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                                await this.setForeignObject(`system.adapter.${this.namespace}`, adapterObj);
                                 this.log.info(`sendTo addDeviceToWhitelist: Device ${hostName} is added to whitelist`);
                             }
                         }
