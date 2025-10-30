@@ -1,4 +1,8 @@
 # Older changes
+## 1.2.8 (2024-11-20)
+* (afuerhoff) bugfix configuration
+* (afuerhoff) dependencies updated
+
 ## 1.2.7 (2024-11-18)
 * (afuerhoff) bugfix [#319](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/319)
 
