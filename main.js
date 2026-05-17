@@ -770,6 +770,23 @@ class FbCheckpresence extends utils.Adapter {
                 await this.resyncFbObjects(this.Fb.deviceList);
                 // Cleanup old FB device objects based on lastSeen
                 await this.cleanupOldFbDevices();
+                // Initialize lastSeen for existing devices that have never been seen (val = 0)
+                if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
+                    const devices = await this.getDevicesAsync();
+                    const fbDevices = devices.filter(x =>
+                        x._id.includes(`${this.namespace}.fb-devices.`));
+                    for (const dev of fbDevices) {
+                        const hostName = dev.common.name.replace('fb-devices.', '');
+                        const lastSeen = await this.getStateAsync(`fb-devices.${hostName}.lastSeen`);
+                        if (lastSeen && lastSeen.val === 0) {
+                            await this.setStateAsync(`fb-devices.${hostName}.lastSeen`, {
+                                val: Date.now(),
+                                ack: true,
+                            });
+                        }
+                    }
+                    this.log.info('lastSeen initialized for existing devices');
+                }
                 // Schedule next cleanup after deviceMaxAgeDays days
                 if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
                     const msUntilCleanup = this.config.deviceMaxAgeDays * 24 * 60 * 60 * 1000;
