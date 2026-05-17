@@ -71,6 +71,7 @@ class FbCheckpresence extends utils.Adapter {
         this.suppressMesgEmptyHostname = false;
         this.suppressArr = [];
         this.triggerActive = false;
+        this._cleanupTimer = null;
     }
 
     /**
@@ -769,6 +770,14 @@ class FbCheckpresence extends utils.Adapter {
                 await this.resyncFbObjects(this.Fb.deviceList);
                 // Cleanup old FB device objects based on lastSeen
                 await this.cleanupOldFbDevices();
+                // Schedule next cleanup after deviceMaxAgeDays days
+                if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
+                    const msUntilCleanup = this.config.deviceMaxAgeDays * 24 * 60 * 60 * 1000;
+                    this._cleanupTimer = setTimeout(async () => {
+                        await this.cleanupOldFbDevices();
+                    }, msUntilCleanup);
+                    this.log.info(`cleanupOldFbDevices scheduled in ${this.config.deviceMaxAgeDays} days`);
+                }
             }
 
             // states changes inside the adapters namespace are subscribed
@@ -831,6 +840,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.Fb.exitRequest();
             }
             this.tout && clearTimeout(this.tout);
+            this._cleanupTimer && clearTimeout(this._cleanupTimer);
             this.setState('info.connection', { val: false, ack: true });
             this.log.info('cleaned everything up ...');
             callback && callback();
