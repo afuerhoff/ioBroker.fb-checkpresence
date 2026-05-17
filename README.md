@@ -264,6 +264,8 @@ Here you will find information about the history of the current day.
 * (afuerhoff) eslint setup changed
 * (afuerhoff) ipv6 ip-address and prefix added
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
