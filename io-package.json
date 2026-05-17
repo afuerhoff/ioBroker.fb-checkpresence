@@ -119,7 +119,7 @@
       "es": "El adaptador comprueba la presencia de miembros de la familia sobre el fritzbox. ",
       "pl": "Adapter sprawdza obecność członków rodziny na fritzbox. ",
       "zh-cn": "适配器通过fritzbox检查家庭成员的存在。",
-      "uk": "Адаптер перевіряє присутність членів сім'ї над fritzbox. Необхідно вказати ім'я члена сім'ї та mac-адресу використовуваного пристрою. Коментар необов’язковий, і ви можете ввімкнути або вимкнути члена сім’ї. Точка даних на основі імені члена."
+      "uk": "Адаптер перевіряє присутність членів сім'ї над fritzbox. Необхідно вказати ім'я члена сім'ї та mac-адресу використовуваного пристрою. Коментар необов'язковий, і ви можете ввімкнути або вимкнути члена сім'ї. Точка даних на основі імені члена."
     },
     "authors": [
       "Achim Fürhoff <achim.fuerhoff@outlook.de>"
@@ -178,7 +178,7 @@
         },
         "text": {
           "en": "The compatibility setting will be removed with the next version.\nIf you still have this setting checked, you should uncheck it immediately and follow the instructions in the log.\nThe object model will change as a result and a familymembers folder will be created under which the data points can then be found.",
-          "de": "Die Kompatibilitätseinstellung wird mit der nächsten Version entfernt.\nWenn diese Einstellung bei Ihnen noch aktiviert ist, sollten Sie sie umgehend deaktivieren und den Anweisungen im Protokoll folgen.\nDadurch ändert sich das Objektmodell und es wird ein Ordner „familymembers“ erstellt, unter dem die Datenpunkte dann zu finden sind.",
+          "de": "Die Kompatibilitätseinstellung wird mit der nächsten Version entfernt.\nWenn diese Einstellung bei Ihnen noch aktiviert ist, sollten Sie sie umgehend deaktivieren und den Anweisungen im Protokoll folgen.\nDadurch ändert sich das Objektmodell und es wird ein Ordner „familymembers" erstellt, unter dem die Datenpunkte dann zu finden sind.",
           "ru": "Настройка совместимости будет удалена в следующей версии.\nЕсли у вас по-прежнему установлен этот флажок, вам следует немедленно снять его и следовать инструкциям в журнале.\nВ результате изменится объектная модель и будет создана папка familymembers, в которой затем можно будет найти точки данных.",
           "pt": "A configuração de compatibilidade será removida na próxima versão.\nSe você ainda tiver essa configuração marcada, desmarque-a imediatamente e siga as instruções no log.\nO modelo de objeto mudará como resultado e uma pasta de membros da família será criada, na qual os pontos de dados poderão ser encontrados.",
           "nl": "De compatibiliteitsinstelling wordt verwijderd bij de volgende versie.\nAls u deze instelling nog steeds hebt aangevinkt, moet u deze onmiddellijk uitvinken en de instructies in het logboek volgen.\nHierdoor verandert het objectmodel en wordt er een map 'familieleden' aangemaakt waarin de datapunten te vinden zijn.",
@@ -186,7 +186,7 @@
           "it": "L'impostazione di compatibilità verrà rimossa nella prossima versione.\nSe questa impostazione è ancora selezionata, dovresti deselezionarla immediatamente e seguire le istruzioni nel registro.\nDi conseguenza, il modello dell'oggetto cambierà e verrà creata una cartella \"familymembers\" in cui sarà possibile trovare i punti dati.",
           "es": "La configuración de compatibilidad se eliminará con la próxima versión.\nSi aún tiene esta configuración marcada, debe desmarcarla inmediatamente y seguir las instrucciones del registro.\nComo resultado, el modelo de objeto cambiará y se creará una carpeta de miembros de la familia en la que se podrán encontrar los puntos de datos.",
           "pl": "Ustawienie zgodności zostanie usunięte w następnej wersji.\nJeśli to ustawienie jest nadal zaznaczone, należy je natychmiast odznaczyć i postępować zgodnie z instrukcjami w dzienniku.\nW wyniku tej zmiany model obiektu ulegnie zmianie, a także zostanie utworzony folder członków rodziny, w którym będzie można znaleźć punkty danych.",
-          "uk": "Налаштування сумісності буде видалено з наступною версією.\nЯкщо цей параметр усе ще позначено, негайно зніміть його та дотримуйтесь інструкцій у журналі.\nУ результаті модель об’єкта зміниться, і буде створено папку членів родини, у якій можна буде знайти точки даних.",
+          "uk": "Налаштування сумісності буде видалено з наступною версією.\nЯкщо цей параметр усе ще позначено, негайно зніміть його та дотримуйтесь інструкцій у журналі.\nУ результаті модель об'єкта зміниться, і буде створено папку членів родини, у якій можна буде знайти точки даних.",
           "zh-cn": "下一版本将删除兼容性设置。\n如果您仍选中此设置，您应该立即取消选中它并按照日志中的说明进行操作。\n对象模型将因此而发生改变，并且会创建一个家庭成员文件夹，然后可以在该文件夹下找到数据点。"
         },
         "level": "warn",
@@ -198,12 +198,12 @@
     ],
     "dependencies": [
       {
-        "js-controller": ">=5.0.19"
+        "js-controller": ">=6.0.11"
       }
     ],
     "globalDependencies": [
       {
-        "admin": ">=6.17.14"
+        "admin": ">=7.6.17"
       }
     ]
   },
@@ -229,6 +229,7 @@
     "fbdevices": false,
     "meshinfo": false,
     "syncfbdevices": false,
+    "deviceMaxAgeDays": 0,
     "guestinfo": true,
     "qrcode": false,
     "qrcodecolor": "black",
