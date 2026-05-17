@@ -74,7 +74,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     /**
-     * @param {any | string} error - error object
+     * @param {Error | string | unknown} error - error object
      * @param {string} title - error name
      */
     errorHandler(error, title) {
@@ -145,7 +145,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     /**
-     * @param {string | any[]} items - fb-device objects of the adapter
+     * @param {FbDevice[]} items - fb-device objects of the adapter
      */
     async resyncFbObjects(items) {
         try {
