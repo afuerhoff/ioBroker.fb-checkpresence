@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fb-checkpresence",
-    "version": "1.4.2",
+    "version": "1.4.3",
     "news": {
+      "1.4.3": {
+        "en": "add lastSeen datapoint and automatic cleanup of old FB devices",
+        "de": "lastSeen Datenpunkt und automatisches Löschen alter FB-Geräte hinzugefügt",
+        "ru": "добавлена точка данных lastSeen и автоматическая очистка старых FB-устройств",
+        "pt": "adicionar ponto de dados lastSeen e limpeza automática de dispositivos FB antigos",
+        "nl": "lastSeen datapunt en automatisch verwijderen van oude FB-apparaten toegevoegd",
+        "fr": "ajout du point de données lastSeen et nettoyage automatique des anciens appareils FB",
+        "it": "aggiunto datapoint lastSeen e pulizia automatica dei vecchi dispositivi FB",
+        "es": "agregar punto de datos lastSeen y limpieza automática de dispositivos FB antiguos",
+        "pl": "dodano punkt danych lastSeen i automatyczne czyszczenie starych urządzeń FB",
+        "uk": "додано точку даних lastSeen та автоматичне очищення старих FB-пристроїв",
+        "zh-cn": "添加lastSeen数据点和自动清理旧FB设备"
+      },
       "1.4.2": {
         "en": "dependencies updated\npackage.json issues fixed [#350](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/350)\nnpm security changes\nfilter time extended to 300s\nguest wlan bug fixed [#353](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/353)\ndeprecated functions changed",
         "de": "aktualisierte abhängigkeiten\npaket.json-Ausgaben behoben [#350](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/350)\nnpm sicherheitsänderungen\nfilterzeit verlängert auf 300s\ngast wlan Bug behoben [#353](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/353)\ndepretiert funktionen geändert",
