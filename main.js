@@ -74,7 +74,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     /**
-     * @param {Error | string | unknown} error - error object
+     * @param {any | string} error - error object
      * @param {string} title - error name
      */
     errorHandler(error, title) {
@@ -145,7 +145,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     /**
-     * @param {FbDevice[]} items - fb-device objects of the adapter
+     * @param {string | any[]} items - fb-device objects of the adapter
      */
     async resyncFbObjects(items) {
         try {
@@ -2094,6 +2094,8 @@ class FbCheckpresence extends utils.Adapter {
                 //const limit = histData.result.length*24*60*60*1000/(currentTime-midnightTime)*days+500;
                 //log('Limit: ' + limit, 'info');
                 const currentVal = await this.getStateAsync(memberID);
+                const currentStateVal = currentVal?.val ?? newActive ?? false;
+                const currentStateTs = currentVal?.lc ?? currentTime;
                 const histData = await this.getHistoryData(
                     this.config.history,
                     memberID,
@@ -2139,6 +2141,90 @@ class FbCheckpresence extends utils.Adapter {
                             historyArrFiltered.unshift(historyArr[ih]);
                             v1 = v2;
                         }
+                    }
+
+                    if (historyArrFiltered.length === 0) {
+                        const dayMinutes = Math.round((currentTime - midnightTime) / 60 / 1000);
+                        const sinceMinutes = Math.round((currentTime - currentStateTs) / 60 / 1000);
+                        const stateDate = dateFormat(new Date(currentStateTs), this.config.dateformat);
+                        let comming = null;
+                        let going = null;
+
+                        this.log.debug(
+                            `No history entries in range for ${memberID}; using current state fallback`,
+                        );
+
+                        await this.setStateChangedAsync(`${memberPath}.presenceFiltered`, {
+                            val: currentStateVal,
+                            ack: true,
+                        });
+                        await this.setStateChangedAsync(`${memberPath}.present.since`, {
+                            val: currentStateVal ? sinceMinutes : 0,
+                            ack: true,
+                        });
+                        await this.setStateChangedAsync(`${memberPath}.absent.since`, {
+                            val: currentStateVal ? 0 : sinceMinutes,
+                            ack: true,
+                        });
+                        await this.setStateChangedAsync(`${memberPath}.present.sum_day`, {
+                            val: currentStateVal ? dayMinutes : 0,
+                            ack: true,
+                        });
+                        await this.setStateChangedAsync(`${memberPath}.absent.sum_day`, {
+                            val: currentStateVal ? 0 : dayMinutes,
+                            ack: true,
+                        });
+
+                        if (currentStateVal) {
+                            comming = currentStateTs;
+                            await this.setStateChangedAsync(`${memberPath}.comming`, {
+                                val: new Date(comming).toString(),
+                                ack: true,
+                            });
+                        } else {
+                            going = currentStateTs;
+                            await this.setStateChangedAsync(`${memberPath}.going`, {
+                                val: new Date(going).toString(),
+                                ack: true,
+                            });
+                        }
+
+                        htmlHistory += this.createHTMLTableRow([
+                            currentStateVal
+                                ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>'
+                                : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>',
+                            stateDate,
+                        ]);
+                        jsonHistory.push({
+                            Active: currentStateVal,
+                            Date: stateDate,
+                        });
+                        htmlHistory += this.HTML_END;
+
+                        await this.setStateChangedAsync(`${memberPath}.history`, {
+                            val: JSON.stringify(jsonHistory),
+                            ack: true,
+                        });
+                        await this.setStateChangedAsync(`${memberPath}.historyHtml`, {
+                            val: htmlHistory,
+                            ack: true,
+                        });
+
+                        this.jsonTab.push({
+                            Name: member,
+                            Active: newActive,
+                            Kommt: comming ? dateFormat(comming, this.config.dateformat) : '',
+                            Geht: going ? dateFormat(going, this.config.dateformat) : '',
+                        });
+                        this.htmlTab += this.createHTMLTableRow([
+                            member,
+                            newActive
+                                ? '<div class="mdui-green-bg mdui-state mdui-card">anwesend</div>'
+                                : '<div class="mdui-red-bg mdui-state mdui-card">abwesend</div>',
+                            comming ? dateFormat(comming, this.config.dateformat) : '',
+                            going ? dateFormat(going, this.config.dateformat) : '',
+                        ]);
+                        return;
                     }
 
                     lastWert = historyArrFiltered[0].val;
@@ -2196,7 +2282,7 @@ class FbCheckpresence extends utils.Adapter {
                     //calculation of comming and going and since
                     t1 = currentTime;
                     let flagBreak = false;
-                    lastWert = currentVal.val;
+                    lastWert = currentStateVal;
                     let comming = null;
                     let going = null;
 
