@@ -75,7 +75,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     /**
-     * @param {any | string} error - error object
+     * @param {Error | string | unknown} error - error object or message
      * @param {string} title - error name
      */
     errorHandler(error, title) {
@@ -146,7 +146,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     /**
-     * @param {string | any[]} items - fb-device objects of the adapter
+     * @param {{ HostName: string }[]} items - fb-device objects of the adapter
      */
     async resyncFbObjects(items) {
         try {
@@ -2212,9 +2212,7 @@ class FbCheckpresence extends utils.Adapter {
                         let comming = null;
                         let going = null;
 
-                        this.log.debug(
-                            `No history entries in range for ${memberID}; using current state fallback`,
-                        );
+                        this.log.debug(`No history entries in range for ${memberID}; using current state fallback`);
 
                         await this.setStateChangedAsync(`${memberPath}.presenceFiltered`, {
                             val: currentStateVal,
