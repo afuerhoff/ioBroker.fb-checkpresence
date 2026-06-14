@@ -786,13 +786,13 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     this.log.info('lastSeen initialized for existing devices');
                 }
-                // Schedule next cleanup after deviceMaxAgeDays days
+                // Schedule daily cleanup - each run deletes devices older than deviceMaxAgeDays
                 if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
-                    const msUntilCleanup = this.config.deviceMaxAgeDays * 24 * 60 * 60 * 1000;
-                    this._cleanupTimer = setTimeout(async () => {
+                    const msOneDay = 24 * 60 * 60 * 1000;
+                    this._cleanupTimer = setInterval(async () => {
                         await this.cleanupOldFbDevices();
-                    }, msUntilCleanup);
-                    this.log.info(`cleanupOldFbDevices scheduled in ${this.config.deviceMaxAgeDays} days`);
+                    }, msOneDay);
+                    this.log.info('cleanupOldFbDevices scheduled daily');
                 }
             }
 
@@ -850,6 +850,7 @@ class FbCheckpresence extends utils.Adapter {
             this.errorHandler(error, 'cleanupOldFbDevices: ');
         }
     }
+
     async onUnload(callback) {
         try {
             this.enabled = false;
@@ -857,7 +858,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.Fb.exitRequest();
             }
             this.tout && clearTimeout(this.tout);
-            this._cleanupTimer && clearTimeout(this._cleanupTimer);
+            this._cleanupTimer && clearInterval(this._cleanupTimer);
             this.setState('info.connection', { val: false, ack: true });
             this.log.info('cleaned everything up ...');
             callback && callback();
