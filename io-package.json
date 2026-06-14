@@ -229,6 +229,7 @@
     "fbdevices": false,
     "meshinfo": false,
     "syncfbdevices": false,
+    "deviceMaxAgeDays": 0,
     "guestinfo": true,
     "qrcode": false,
     "qrcodecolor": "black",

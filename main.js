@@ -71,6 +71,7 @@ class FbCheckpresence extends utils.Adapter {
         this.suppressMesgEmptyHostname = false;
         this.suppressArr = [];
         this.triggerActive = false;
+        this._cleanupTimer = null;
     }
 
     /**
@@ -767,6 +768,32 @@ class FbCheckpresence extends utils.Adapter {
                     await this.setForeignObject(`system.adapter.${this.namespace}`, adapterObj);
                 }
                 await this.resyncFbObjects(this.Fb.deviceList);
+                // Cleanup old FB device objects based on lastSeen
+                await this.cleanupOldFbDevices();
+                // Initialize lastSeen for existing devices that have never been seen (val = 0)
+                if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
+                    const devices = await this.getDevicesAsync();
+                    const fbDevices = devices.filter(x => x._id.includes(`${this.namespace}.fb-devices.`));
+                    for (const dev of fbDevices) {
+                        const hostName = dev.common.name.replace('fb-devices.', '');
+                        const lastSeen = await this.getStateAsync(`fb-devices.${hostName}.lastSeen`);
+                        if (lastSeen && lastSeen.val === 0) {
+                            await this.setStateAsync(`fb-devices.${hostName}.lastSeen`, {
+                                val: Date.now(),
+                                ack: true,
+                            });
+                        }
+                    }
+                    this.log.info('lastSeen initialized for existing devices');
+                }
+                // Schedule daily cleanup - each run deletes devices older than deviceMaxAgeDays
+                if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
+                    const msOneDay = 24 * 60 * 60 * 1000;
+                    this._cleanupTimer = setInterval(async () => {
+                        await this.cleanupOldFbDevices();
+                    }, msOneDay);
+                    this.log.info('cleanupOldFbDevices scheduled daily');
+                }
             }
 
             // states changes inside the adapters namespace are subscribed
@@ -797,6 +824,33 @@ class FbCheckpresence extends utils.Adapter {
      *
      * @param callback - callback
      */
+    /**
+     * Cleanup FB device objects that have not been seen for deviceMaxAgeDays days.
+     */
+    async cleanupOldFbDevices() {
+        try {
+            if (!this.config.fbdevices || !this.config.deviceMaxAgeDays || this.config.deviceMaxAgeDays === 0) {
+                return;
+            }
+            const maxAge = this.config.deviceMaxAgeDays * 24 * 60 * 60 * 1000;
+            const devices = await this.getDevicesAsync();
+            const fbDevices = devices.filter(x => x._id.includes(`${this.namespace}.fb-devices.`));
+            for (const dev of fbDevices) {
+                const hostName = dev.common.name.replace('fb-devices.', '');
+                const lastSeen = await this.getStateAsync(`fb-devices.${hostName}.lastSeen`);
+                if (lastSeen && lastSeen.val > 0 && Date.now() - lastSeen.val > maxAge) {
+                    await this.delObjectAsync(dev._id, { recursive: true });
+                    this.log.info(
+                        `cleanupOldFbDevices: deleted old device <${dev._id}> (not seen for ${this.config.deviceMaxAgeDays} days)`,
+                    );
+                }
+            }
+            this.log.info('cleanupOldFbDevices finished');
+        } catch (error) {
+            this.errorHandler(error, 'cleanupOldFbDevices: ');
+        }
+    }
+
     async onUnload(callback) {
         try {
             this.enabled = false;
@@ -804,6 +858,7 @@ class FbCheckpresence extends utils.Adapter {
                 this.Fb.exitRequest();
             }
             this.tout && clearTimeout(this.tout);
+            this._cleanupTimer && clearInterval(this._cleanupTimer);
             this.setState('info.connection', { val: false, ack: true });
             this.log.info('cleaned everything up ...');
             callback && callback();
@@ -1600,6 +1655,13 @@ class FbCheckpresence extends utils.Adapter {
                             val: hosts[i]['active'],
                             ack: true,
                         });
+                        // Update lastSeen when device is active
+                        if (hosts[i]['active'] === true) {
+                            await this.setStateChangedAsync(`fb-devices.${hostName}.lastSeen`, {
+                                val: Date.now(),
+                                ack: true,
+                            });
+                        }
                         await this.setStateChangedAsync(`fb-devices.${hostName}.interfacetype`, {
                             val: hosts[i]['interfaceType'],
                             ack: true,
