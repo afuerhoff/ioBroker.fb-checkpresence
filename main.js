@@ -126,7 +126,7 @@ class FbCheckpresence extends utils.Adapter {
      * @param {number | undefined} milliseconds - delay in milli seconds
      */
     _sleep(milliseconds) {
-        return new Promise(resolve => setTimeout(resolve, milliseconds));
+        return new Promise(resolve => this.setTimeout(resolve, milliseconds));
     }
 
     createHTMLTableRow(dataArray) {
@@ -254,7 +254,7 @@ class FbCheckpresence extends utils.Adapter {
      */
     async loop(cnt1, cnt2, int1, int2) {
         while (this.enabled === true) {
-            this.tout = setTimeout(() => {
+            this.tout = this.setTimeout(() => {
                 this.log.error('cycle error! Adapter restarted');
                 this.startAdapter();
             }, 300000);
@@ -789,7 +789,7 @@ class FbCheckpresence extends utils.Adapter {
                 // Schedule daily cleanup - each run deletes devices older than deviceMaxAgeDays
                 if (this.config.fbdevices && this.config.deviceMaxAgeDays > 0) {
                     const msOneDay = 24 * 60 * 60 * 1000;
-                    this._cleanupTimer = setInterval(async () => {
+                    this._cleanupTimer = this.setInterval(async () => {
                         await this.cleanupOldFbDevices();
                     }, msOneDay);
                     this.log.info('cleanupOldFbDevices scheduled daily');
