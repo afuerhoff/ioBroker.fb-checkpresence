@@ -186,7 +186,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
                 const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
-                if (adapterObj) {
+                if (adapterObj && this.config.syncfbdevices === true) {
                     adapterObj.native.syncfbdevices = false;
                     this.config.syncfbdevices = false;
                     await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
@@ -771,9 +771,9 @@ class FbCheckpresence extends utils.Adapter {
                 if (this.config.syncfbdevices === true) {
                     await this.resyncFbObjects(this.Fb.deviceList);
                 }
-                if (this.config.syncfbdevicesMaxDays > 0) {
+                /*if (this.config.syncfbdevicesMaxDays > 0) {
                     await this.resyncFbObjects(this.Fb.deviceList);
-                }
+                }*/
                 // Schedule cleanup - each run deletes devices older than deviceMaxAgeDays
                 if (this.config.fbdevices && this.config.syncfbdevicesMaxDays > 0) {
                     const duration = this.config.syncfbdevicesMaxDays * 5 * 60 * 1000;
