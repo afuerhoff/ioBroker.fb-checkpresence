@@ -185,14 +185,16 @@ class FbCheckpresence extends utils.Adapter {
                         }
                     }
                 }
-                const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
-                if (adapterObj && this.config.syncfbdevices === true) {
-                    adapterObj.native.syncfbdevices = false;
-                    this.config.syncfbdevices = false;
-                    await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
-                    this.log.info('fb-devices synchronized successfully');
-                } else {
-                    this.log.info('resyncFbObjects: could not clear the resync checkbox! ');
+                if (this.config.syncfbdevices === true) {
+                    const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                    if (adapterObj) {
+                        adapterObj.native.syncfbdevices = false;
+                        this.config.syncfbdevices = false;
+                        await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
+                        this.log.info('fb-devices synchronized successfully');
+                    } else {
+                        this.log.info('resyncFbObjects: could not clear the resync checkbox! ');
+                    }
                 }
             }
         } catch (error) {
