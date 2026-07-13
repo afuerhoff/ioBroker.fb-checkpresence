@@ -779,7 +779,7 @@ class FbCheckpresence extends utils.Adapter {
                 }*/
                 // Schedule cleanup - each run deletes devices older than deviceMaxAgeDays
                 if (this.config.fbdevices && this.config.syncfbdevicesMaxDays > 0) {
-                    const duration = this.config.syncfbdevicesMaxDays * 5 * 60 * 1000;
+                    const duration = this.config.syncfbdevicesMaxDays * 24 * 60 * 60 * 1000;
                     this._cleanupTimer = this.setInterval(async () => {
                         await this.resyncFbObjects(this.Fb.deviceList);
                     }, duration);
