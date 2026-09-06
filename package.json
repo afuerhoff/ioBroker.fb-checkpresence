@@ -21,7 +21,7 @@
     "url": "https://github.com/afuerhoff/ioBroker.fb-checkpresence"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.4.1",
+    "@iobroker/adapter-core": "^3.4.3",
     "axios": "^1.18.1",
     "qr-image": "^3.2.0",
     "xml2js": "^0.6.2"
