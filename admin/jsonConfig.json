@@ -1,0 +1,421 @@
+{
+    "i18n": true,
+    "type": "tabs",
+    "items": {
+        "main": {
+            "type": "panel",
+            "label": "mainTabLabel",
+            "items": {
+                "ipaddress": {
+                    "type": "text",
+                    "label": "mainTabIpLabel",
+                    "help": "mainTabIpHelp",
+                    "validator": "/^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)(?:\\.(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?))*$/.test((data.ipaddress || '').trim())",
+                    "validatorNoSaveOnError": true,
+                    "validatorErrorText": "validatortext_ip",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "username": {
+                    "type": "text",
+                    "label": "mainTabUserLabel",
+                    "help": "mainTabUserHelp",
+                    "validator": "data.username && data.username.trim() !== ''",
+                    "validatorNoSaveOnError": true,
+                    "validatorErrorText": "mainTabvalidatortext_user",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 3,
+                    "xl": 3
+                },
+                "password": {
+                    "type": "password",
+                    "label": "mainTabPwLabel",
+                    "encrypted": true,
+                    "visible": true,
+                    "help": "mainTabPwHelp",
+                    "validator": "!!(data.password && data.password.trim())",
+                    "validatorNoSaveOnError": true,
+                    "validatorErrorText": "validatortext_pw",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 3,
+                    "xl": 3
+                },
+                "ssl": {
+                    "type": "checkbox",
+                    "label": "mainTabSslLabel",
+                    "help": "mainTabSslHelp",
+                    "xs": 12,
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2
+                },
+                "history": {
+                    "newLine": true,
+                    "type": "instance",
+                    "adapter": "_dataSources",
+                    "allowDeactivate": true,
+                    "label": "mainTabhistoryLabel",
+                    "help": "mainTabhistoryHelp",
+                    "xs": 12,
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "dateformat": {
+                    "type": "text",
+                    "label": "mainTabdateformatLabel",
+                    "help": "mainTabdateformatHelp",
+                    "xs": 12,
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "interval": {
+                    "type": "number",
+                    "label": "mainTabIntervalLabel",
+                    "help": "mainTabIntervalHelp",
+                    "min": 10,
+                    "max": 3600,
+                    "step": 1,
+                    "xs": 12,
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
+                }
+            }
+        },
+        "devices": {
+            "type": "panel",
+            "label": "mainTabDevicesLabel",
+            "items": {
+                "fbdevices": {
+                    "type": "checkbox",
+                    "label": "mainTabfbdevicesLabel",
+                    "help": "mainTabfbdevicesHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "useDeviceList": {
+                    "type": "checkbox",
+                    "label": "mainTabuseDeviceListLabel",
+                    "help": "mainTabuseDeviceListHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4,
+                    "hidden": "data.fbdevices === false"
+                },
+                "devicelist": {
+                    "type": "selectSendTo",
+                    "label": "mainTabDevicelistLabel",
+                    "help": "mainTabDevicelistHelp",
+                    "command": "getDevicesForConfig",
+                    "multiple": true,
+                    "showAllValues": true,
+                    "default": [],
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
+                    "hidden": "data.useDeviceList === false || data.fbdevices === false"
+                },
+                "meshinfo": {
+                    "type": "checkbox",
+                    "label": "mainTabMeshLabel",
+                    "help": "mainTabMeshHelp",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
+                    "hidden": "data.fbdevices === false"
+                },
+                "syncfbdevices": {
+                    "type": "checkbox",
+                    "label": "mainTabFbsyncLabel",
+                    "help": "mainTabFbsyncHelp",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
+                    "hidden": "data.fbdevices === false"
+                },
+                "syncfbdevicesMaxDays": {
+                    "type": "number",
+                    "label": "mainTabSyncfbdevicesMaxDaysLabel",
+                    "help": "mainTabSyncfbdevicesMaxDaysHelp",
+                    "min": 0,
+                    "max": 3650,
+                    "step": 1,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
+                    "hidden": "data.fbdevices === false"
+                }
+            }
+        },
+        "features": {
+            "type": "panel",
+            "label": "mainTabFeaturesLabel",
+            "items": {
+                "guestinfo": {
+                    "type": "checkbox",
+                    "label": "mainTabGuestLabel",
+                    "help": "mainTabGuestHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "qrcode": {
+                    "type": "checkbox",
+                    "label": "mainTabQrLabel",
+                    "help": "mainTabQrHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "qrcodecolor": {
+                    "type": "color",
+                    "label": "mainTabQrcolorLabel",
+                    "help": "mainTabQrcolorHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
+                    "hidden": "data.qrcode === false"
+                },
+                "extip": {
+                    "type": "checkbox",
+                    "label": "mainTabextipLabel",
+                    "help": "mainTabextipHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                }
+            }
+        },
+        "family": {
+            "type": "panel",
+            "label": "fmTabLabel",
+            "disabled": "data._alive === false",
+            "items": {
+                "intervalFamily": {
+                    "type": "number",
+                    "label": "fmTabIntervalLabel",
+                    "help": "fmTabIntervalHelp",
+                    "min": 10,
+                    "max": 3600,
+                    "step": 1,
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 3,
+                    "xl": 3
+                },
+                "delay": {
+                    "type": "number",
+                    "label": "fmTabDelayLabel",
+                    "help": "fmTabDelayHelp",
+                    "min": 1,
+                    "max": 300,
+                    "step": 1,
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 3,
+                    "xl": 3
+                },
+                "newfilter": {
+                    "type": "checkbox",
+                    "label": "fmTabNewfilterLabel",
+                    "help": "fmTabNewfilterHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 3,
+                    "xl": 3,
+                    "hidden": "data.history === ''"
+                },
+                "compatibility": {
+                    "type": "checkbox",
+                    "label": "fmTabCompatibilityLabel",
+                    "help": "fmTabCompatibilityHelp",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 3,
+                    "xl": 3
+                },
+                "familymembers": {
+                    "type": "table",
+                    "label": "fmTabFamilymembersLabel",
+                    "compact": true,
+                    "showSecondAddAt": 1,
+                    "showFirstAddOnTop": true,
+                    "uniqueColumns": [
+                        "macaddress"
+                    ],
+                    "useCardFor": [
+                        "xs",
+                        "sm"
+                    ],
+                    "titleAttribute": "fmTabFamilymembersLabel",
+                    "clone": true,
+                    "validator": "Array.isArray(data.familymembers) && data.familymembers.filter(member => member && member.enabled !== false).every(member => [member.macaddress, member.familymember, member.ipaddress, member.devicename].every(value => typeof value === 'string' && value.trim() !== ''))",
+                    "validatorNoSaveOnError": true,
+                    "validatorErrorText": "fmTabFamilymembersValidatorError",
+                    "items": [
+                        {
+                            "attr": "enabled",
+                            "type": "checkbox",
+                            "title": "fmTabTableEnabledLabel",
+                            "width": "4%",
+                            "default": true
+                        },
+                        {
+                            "attr": "macaddress",
+                            "type": "selectSendTo",
+                            "title": "fmTabTableMacaddressLabel",
+                            "width": "15%",
+                            "command": "getDevicesForConfig",
+                            "manual": true,
+                            "instance": "fb-checkpresence.0",
+                            "noTranslation": true,
+                            "showAllValues": true,
+                            "default": ""
+                        },
+                        {
+                            "attr": "group",
+                            "type": "text",
+                            "title": "fmTabTableGroupLabel",
+                            "width": "7%",
+                            "default": ""
+                        },
+                        {
+                            "attr": "familymember",
+                            "type": "text",
+                            "title": "fmTabTableFamilymemberLabel",
+                            "width": "12%",
+                            "default": ""
+                        },
+                        {
+                            "attr": "devicename",
+                            "type": "autocompleteSendTo",
+                            "title": "fmTabTableHostnameLabel",
+                            "width": "19%",
+                            "command": "getDeviceNameForConfig",
+                            "jsonData": "{\"mac\": \"${data.macaddress}\"}",
+                            "alsoDependsOn": [
+                                "macaddress"
+                            ],
+                            "freeSolo": true,
+                            "default": ""
+                        },
+                        {
+                            "attr": "ipaddress",
+                            "type": "autocompleteSendTo",
+                            "title": "fmTabTableIpaddressLabel",
+                            "width": "19%",
+                            "command": "getDeviceIpForConfig",
+                            "jsonData": "{\"mac\": \"${data.macaddress}\"}",
+                            "alsoDependsOn": [
+                                "macaddress"
+                            ],
+                            "freeSolo": true,
+                            "default": ""
+                        },
+                        {
+                            "attr": "usage",
+                            "type": "select",
+                            "title": "fmTabTableIdentifyLabel",
+                            "width": "9%",
+                            "options": [
+                                {
+                                    "value": "MAC",
+                                    "label": "MAC"
+                                },
+                                {
+                                    "value": "IP",
+                                    "label": "IP"
+                                },
+                                {
+                                    "value": "Hostname",
+                                    "label": "Hostname"
+                                }
+                            ],
+                            "default": "MAC"
+                        },
+                        {
+                            "attr": "usefilter",
+                            "type": "checkbox",
+                            "title": "fmTabTableUsefilterLabel",
+                            "width": "6%",
+                            "default": false
+                        },
+                        {
+                            "attr": "comment",
+                            "type": "text",
+                            "title": "fmTabTableCommentLabel",
+                            "width": "9%",
+                            "default": ""
+                        }
+                    ]
+                }
+            }
+        },
+        "whitelist": {
+            "type": "panel",
+            "label": "wlTabLabel",
+            "disabled": "data._alive === false",
+            "items": {
+                "enableWl": {
+                    "type": "checkbox",
+                    "label": "wlTabEnableLabel",
+                    "help": "wlTabEnableHelp",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "whitelist": {
+                    "type": "selectSendTo",
+                    "label": "wlTabSelectLabel",
+                    "command": "getDevicesForConfig",
+                    "instance": "fb-checkpresence.0",
+                    "multiple": true,
+                    "noTranslation": true,
+                    "showAllValues": true,
+                    "default": [],
+                    "hidden": "data.enableWl === false"
+                }
+            }
+        }
+    }
+}

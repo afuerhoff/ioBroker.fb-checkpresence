@@ -148,7 +148,7 @@
     "dataSource": "poll",
     "compact": true,
     "adminUI": {
-      "config": "materialize"
+      "config": "json"
     },
     "stopBeforeUpdate": true,
     "stopTimeout": 1000,
@@ -215,6 +215,7 @@
   "native": {
     "familymembers": [],
     "whitelist": [],
+    "devicelist": [],
     "ipaddress": "fritz.box",
     "ssl": true,
     "interval": 60,
@@ -226,12 +227,13 @@
     "history": "",
     "dateformat": "yyyy.mm.dd HH:MM:ss",
     "fbdevices": false,
+    "useDeviceList": false,
     "meshinfo": false,
     "syncfbdevices": false,
     "syncfbdevicesMaxDays": 0,
     "guestinfo": true,
     "qrcode": false,
-    "qrcodecolor": "black",
+    "qrcodecolor": "#000000",
     "extip": true,
     "username": "",
     "password": "",
