@@ -1265,7 +1265,7 @@ class FbCheckpresence extends utils.Adapter {
 
                             const result = device?.ip ? [{ value: device.ip, label: device.ip }] : [];
 
-                           // this.log.debug(`getDeviceIpForConfig ${mac}: ${JSON.stringify(result)}`);
+                            // this.log.debug(`getDeviceIpForConfig ${mac}: ${JSON.stringify(result)}`);
 
                             this.sendTo(obj.from, obj.command, result, obj.callback);
                         } catch (error) {
