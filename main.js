@@ -1165,7 +1165,7 @@ class FbCheckpresence extends utils.Adapter {
             if (!obj) {
                 return;
             }
-            this.log.warn(`MESSAGE: ${JSON.stringify(obj)}`);
+            //this.log.warn(`MESSAGE: ${JSON.stringify(obj)}`);
             if (typeof obj === 'object') {
                 const reply = result => {
                     this.sendTo(obj.from, obj.command, JSON.stringify(result), obj.callback);
