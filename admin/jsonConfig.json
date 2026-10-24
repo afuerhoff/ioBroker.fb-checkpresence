@@ -290,6 +290,11 @@
                     "validator": "Array.isArray(data.familymembers) && data.familymembers.filter(member => member && member.enabled !== false).every(member => [member.macaddress, member.familymember, member.ipaddress, member.devicename].every(value => typeof value === 'string' && value.trim() !== ''))",
                     "validatorNoSaveOnError": true,
                     "validatorErrorText": "fmTabFamilymembersValidatorError",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         {
                             "attr": "enabled",
@@ -413,7 +418,12 @@
                     "noTranslation": true,
                     "showAllValues": true,
                     "default": [],
-                    "hidden": "data.enableWl === false"
+                    "hidden": "data.enableWl === false",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         }
