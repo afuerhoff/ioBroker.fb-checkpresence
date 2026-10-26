@@ -85,7 +85,9 @@ If the adapter reports connection timeouts, check the username, password, and ac
 
 ### SSL
 
-If the adapter cannot connect to the FRITZ!Box using SSL, try disabling this option. The adapter will then connect without HTTPS.
+Enable **SSL** to connect to the FRITZ!Box via HTTPS. If **Verify certificate** is enabled, the adapter checks whether the FRITZ!Box certificate is valid and trusted. This option is disabled by default for compatibility with FRITZ!Box installations that use self-signed or otherwise untrusted certificates.
+
+If your FRITZ!Box uses a valid certificate from a trusted CA, enable **Verify certificate** for stricter security. If the adapter cannot establish an HTTPS connection, first check the certificate and the FRITZ!Box configuration. If necessary, disable **Verify certificate** or turn off **SSL** completely to fall back to an unencrypted HTTP connection.
 
 ### Polling intervals
 The adapter has separate polling intervals for family members and FRITZ!Box devices. Both can be set between 10 and 3600 seconds. Each polling cycle starts after the previous cycle has finished.
@@ -262,14 +264,16 @@ Contain the member's history for the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
-- (copilot) Adapter requires node.js >= 22 now
+* (afuerhoff) Adapter requires node.js >= 22 now
+* (afuerhoff) configuration changed to jsonConfig
 * (afuerhoff) dependencies updated
 * (afuerhoff) dependabot.yml fixed [#358](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/358)
 * (afuerhoff) new fb-devices cyclic sync option integrated
+* (afuerhoff) SSL certificate validation added; certificate checks can be enabled explicitly, while self-signed certificates remain compatible when disabled
 * (afuerhoff) readme updated
 * (softwarecrash) PR398 fixes a crash in newfilter mode
 * (afuerhoff) issues [#413]
-* (afuerhoff) configuration changed to jsonConfig 
+
 
 ### 1.4.2 (2025-10-30)
 * (afuerhoff) dependencies updated
