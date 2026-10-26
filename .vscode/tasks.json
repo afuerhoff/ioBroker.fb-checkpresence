@@ -4,13 +4,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "npm",
-            "script": "devserver:debug", // <-- from package.json <-- scripts: dev-server debug --wait
+            "type": "process",
+            "command": "bash",
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/start-devserver-debug.sh",
+                "${workspaceFolder}"
+            ],
             "label": "preLaunchTask_startDevServer",
             "isBackground": true,
             "presentation": {
               "reveal": "always",
-              "panel": "new"
+              "panel": "dedicated"
             },
             "problemMatcher": {
               "pattern": {
@@ -24,26 +28,14 @@
             }
           },
           {
-            "label": "postDebug_KillChoice",
+            "label": "postDebug_stopDevServer",
             "type": "process",
-            "command": [
-              "${command:workbench.action.tasks.terminate}",
-              "${command:workbench.action.acceptSelectedQuickOpenItem}"
-            ]
-          },
-          {
-            "label": "postDebug_KillAll",
-            "command": "echo ${input:terminate}",
-            "type": "shell",
+            "command": "bash",
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/stop-devserver-debug.sh",
+                "${workspaceFolder}/.dev-server/default/.vscode-debug-server.pid"
+            ],
             "problemMatcher": []
           }
-        ],
-        "inputs": [
-          {
-            "id": "terminate",
-            "type": "command",
-            "command": "workbench.action.tasks.terminate",
-            "args": "terminateAll"
-          }
-    ]
+        ]
 }

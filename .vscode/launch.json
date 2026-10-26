@@ -24,7 +24,7 @@
 		  "smartStep": true,
 		  "skipFiles": ["<node_internals>/**"],
 		  "preLaunchTask": "preLaunchTask_startDevServer", // Start dev server before attaching a debugger to it
-		  "postDebugTask": "postDebug_KillAll", // Kill all tasks after debugging
+		  "postDebugTask": "postDebug_stopDevServer", // Stop the dev-server process group after debugging
 		  "continueOnAttach": true // This is needed to prevent the debugger from stopping on the first line
 	  	},
 	  	{
@@ -43,7 +43,7 @@
 			"../src/*": "${workspaceFolder}/src/*"
 		  },
 		  "preLaunchTask": "preLaunchTask_startDevServer", // Start dev server before attaching a debugger to it
-		  "postDebugTask": "postDebug_KillAll", // Kill all tasks after debugging
+		  "postDebugTask": "postDebug_stopDevServer", // Stop the dev-server process group after debugging
 		  "continueOnAttach": true // This is needed to prevent the debugger from stopping on the first line
 	  	}
 	]
