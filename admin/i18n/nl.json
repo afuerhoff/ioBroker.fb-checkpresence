@@ -56,7 +56,7 @@
     "mainTabhistoryLabel": "Geschiedenis-adapter",
     "mainTabuseDeviceListHelp": "Schakel deze optie in om alleen datapunten aan te maken voor de geselecteerde FRITZ!Box-apparaten. Schakel dit uit om datapunten voor alle FRITZ!Box-apparaten aan te maken. Als u de selectie wijzigt, worden bestaande gegevenspunten niet verwijderd; verwijder eventuele ongewenste bestanden handmatig.",
     "mainTabuseDeviceListLabel": "Gebruik alleen geselecteerde apparaten",
-    "mainTabvalidatortext_ip": "Voer een geldig IPv4-adres of hostnaam in.",
+    "mainTabvalidatortext_ip": "Voer een geldig IPv4- of IPv6-adres of een hostnaam in.",
     "mainTabvalidatortext_pw": "Voer een wachtwoord in.",
     "mainTabvalidatortext_user": "Voer een gebruikersnaam in.",
     "wlTabEnableHelp": "Schakel deze optie in om de witte en zwarte lijst te gebruiken. Vervolgens kun je opgeven welke FRITZ!Box-apparaten bekend zijn en van de zwarte lijst moeten worden uitgesloten.",

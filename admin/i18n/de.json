@@ -56,7 +56,7 @@
     "mainTabhistoryLabel": "Verlaufsadapter",
     "mainTabuseDeviceListHelp": "Aktivieren Sie diese Option, um Datenpunkte nur für die ausgewählten FRITZ!Box-Geräte zu erstellen. Deaktivieren Sie es, um Datenpunkte für alle FRITZ!Box-Geräte anzulegen. Durch das Ändern der Auswahl werden vorhandene Datenpunkte nicht gelöscht; Entfernen Sie alle unerwünschten Dateien manuell.",
     "mainTabuseDeviceListLabel": "Verwenden Sie nur ausgewählte Geräte",
-    "mainTabvalidatortext_ip": "Geben Sie eine gültige IPv4-Adresse oder einen gültigen Hostnamen ein.",
+    "mainTabvalidatortext_ip": "Geben Sie eine gültige IPv4- oder IPv6-Adresse oder einen gültigen Hostnamen ein.",
     "mainTabvalidatortext_pw": "Bitte geben Sie ein Passwort ein.",
     "mainTabvalidatortext_user": "Bitte geben Sie einen Benutzernamen ein.",
     "wlTabEnableHelp": "Aktivieren Sie diese Option, um die Whitelist und die Blacklist zu verwenden. Anschließend können Sie festlegen, welche FRITZ!Box-Geräte bekannt sind und von der Blacklist ausgeschlossen werden sollen.",

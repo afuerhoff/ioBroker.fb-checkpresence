@@ -56,7 +56,7 @@
     "mainTabhistoryLabel": "Adaptador de historia",
     "mainTabuseDeviceListHelp": "Active esta opción para crear puntos de datos solo para los dispositivos FRITZ!Box seleccionados. Desactívelo para crear puntos de datos para todos los dispositivos FRITZ!Box. Cambiar la selección no elimina los puntos de datos existentes; elimine los no deseados manualmente.",
     "mainTabuseDeviceListLabel": "Usar solo dispositivos seleccionados",
-    "mainTabvalidatortext_ip": "Ingrese una dirección IPv4 válida o un nombre de host.",
+    "mainTabvalidatortext_ip": "Ingrese una dirección IPv4 o IPv6 válida, o un nombre de host.",
     "mainTabvalidatortext_pw": "Por favor ingrese una contraseña.",
     "mainTabvalidatortext_user": "Por favor ingrese un nombre de usuario.",
     "wlTabEnableHelp": "Habilite esta opción para utilizar la lista blanca y la lista negra. A continuación podrá especificar qué dispositivos FRITZ!Box son conocidos y deben excluirse de la lista negra.",

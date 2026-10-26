@@ -18,7 +18,7 @@
     "mainTabIntervalHelp": "Set the polling interval between 10 and 3600 seconds.",
     "mainTabfbdevicesLabel": "Create data points for FRITZ!Box devices",
     "mainTabfbdevicesHelp": "Enable this option to create data points for FRITZ!Box devices.",
-    "mainTabvalidatortext_ip": "Enter a valid IPv4 address or hostname.",
+    "mainTabvalidatortext_ip": "Enter a valid IPv4 or IPv6 address, or hostname.",
     "mainTabvalidatortext_user": "Please enter a username.",
     "mainTabvalidatortext_pw": "Please enter a password.",
     "mainTabuseDeviceListLabel": "Use selected devices only",

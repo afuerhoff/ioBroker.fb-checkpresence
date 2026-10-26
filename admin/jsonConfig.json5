@@ -10,7 +10,7 @@
                     "type": "text",
                     "label": "mainTabIpLabel",
                     "help": "mainTabIpHelp",
-                    "validator": "/^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)(?:\\.(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?))*$/.test((data.ipaddress || '').trim())",
+                    "validator": "typeof data.ipaddress === 'string' && data.ipaddress.trim().length > 0 && data.ipaddress.trim().length <= 253 && (/^(?:(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$/.test(data.ipaddress.trim()) || (data.ipaddress.trim().includes(':') && URL.canParse('http://[' + data.ipaddress.trim() + ']/') && new URL('http://[' + data.ipaddress.trim() + ']/').hostname.startsWith('[')) || /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\\.)*(?=[A-Za-z0-9-]*[A-Za-z])(?=[A-Za-z0-9-]{2,63}\\.?$)[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\\.?$/.test(data.ipaddress.trim()))",
                     "validatorNoSaveOnError": true,
                     "validatorErrorText": "mainTabvalidatortext_ip",
                     "xs": 12,
@@ -23,7 +23,7 @@
                     "type": "text",
                     "label": "mainTabUserLabel",
                     "help": "mainTabUserHelp",
-                    "validator": "data.username && data.username.trim() !== ''",
+                    "validator": "typeof data.username === 'string' && data.username.trim() !== ''",
                     "validatorNoSaveOnError": true,
                     "validatorErrorText": "mainTabvalidatortext_user",
                     "xs": 12,
@@ -38,7 +38,7 @@
                     "encrypted": true,
                     "visible": true,
                     "help": "mainTabPwHelp",
-                    "validator": "!!(data.password && data.password.trim())",
+                    "validator": "typeof data.password === 'string' && data.password.trim() !== ''",
                     "validatorNoSaveOnError": true,
                     "validatorErrorText": "mainTabvalidatortext_pw",
                     "xs": 12,
@@ -118,7 +118,7 @@
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "hidden": "data.fbdevices === false"
+                    "hidden": "!data.fbdevices"
                 },
                 "devicelist": {
                     "type": "selectSendTo",
@@ -133,7 +133,7 @@
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
-                    "hidden": "data.useDeviceList === false || data.fbdevices === false"
+                    "hidden": "!data.useDeviceList || !data.fbdevices"
                 },
                 "meshinfo": {
                     "type": "checkbox",
@@ -144,7 +144,7 @@
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "hidden": "data.fbdevices === false"
+                    "hidden": "!data.fbdevices"
                 },
                 "syncfbdevices": {
                     "type": "checkbox",
@@ -155,7 +155,7 @@
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "hidden": "data.fbdevices === false"
+                    "hidden": "!data.fbdevices"
                 },
                 "syncfbdevicesMaxDays": {
                     "type": "number",
@@ -169,7 +169,7 @@
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "hidden": "data.fbdevices === false"
+                    "hidden": "!data.fbdevices"
                 }
             }
         },
@@ -206,7 +206,7 @@
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "hidden": "data.qrcode === false"
+                    "hidden": "!data.qrcode"
                 },
                 "extip": {
                     "type": "checkbox",
@@ -287,7 +287,7 @@
                     ],
                     "titleAttribute": "fmTabFamilymembersLabel",
                     "clone": true,
-                    "validator": "Array.isArray(data.familymembers) && data.familymembers.filter(member => member && member.enabled !== false).every(member => [member.macaddress, member.familymember, member.ipaddress, member.devicename].every(value => typeof value === 'string' && value.trim() !== ''))",
+                    "validator": "data.familymembers == null || (Array.isArray(data.familymembers) && data.familymembers.filter(member => member && member.enabled !== false).every(member => [member.macaddress, member.familymember, member.ipaddress, member.devicename].every(value => typeof value === 'string' && value.trim() !== '')))",
                     "validatorNoSaveOnError": true,
                     "validatorErrorText": "fmTabFamilymembersValidatorError",
                     "xs": 12,
@@ -418,7 +418,7 @@
                     "noTranslation": true,
                     "showAllValues": true,
                     "default": [],
-                    "hidden": "data.enableWl === false",
+                    "hidden": "!data.enableWl",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,

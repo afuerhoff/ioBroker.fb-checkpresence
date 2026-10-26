@@ -56,7 +56,7 @@
     "mainTabhistoryLabel": "历史适配器",
     "mainTabuseDeviceListHelp": "启用此选项可以仅为所选的 FRITZ!Box 设备创建数据点。禁用它可为所有 FRITZ!Box 设备创建数据点。更改选择不会删除现有数据点；手动删除任何不需要的。",
     "mainTabuseDeviceListLabel": "仅使用选定的设备",
-    "mainTabvalidatortext_ip": "输入有效的 IPv4 地址或主机名。",
+    "mainTabvalidatortext_ip": "输入有效的 IPv4 或 IPv6 地址，或主机名。",
     "mainTabvalidatortext_pw": "请输入密码。",
     "mainTabvalidatortext_user": "请输入用户名。",
     "wlTabEnableHelp": "启用此选项可使用白名单和黑名单。然后，您可以指定哪些 FRITZ!Box 设备是已知的并且应从黑名单中排除。",
