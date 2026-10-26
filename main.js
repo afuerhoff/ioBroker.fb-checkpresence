@@ -12,6 +12,7 @@ const utils = require('@iobroker/adapter-core');
 // own libraries
 const fb = require('./lib/fb');
 const obj = require('./lib/objects');
+const { matchesIpAddress } = require('./lib/ip');
 const dateFormat = require('./lib/dateformat/dateformat');
 
 class Warn extends Error {
@@ -628,6 +629,7 @@ class FbCheckpresence extends utils.Adapter {
                 },
                 this.config.ssl,
                 this,
+                this.config.sslVerifyCertificate,
             );
 
             if (this.Fb.services === null) {
@@ -1187,7 +1189,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
 
                     case 'getDevicesForConfig': {
-                        this.log.debug('getDevicesForConfig: CASE erreicht');
+                        //this.log.debug('getDevicesForConfig: CASE erreicht');
 
                         if (!obj.callback) {
                             this.log.warn('getDevicesForConfig: KEIN CALLBACK');
@@ -1983,7 +1985,7 @@ class FbCheckpresence extends utils.Adapter {
                                         if (
                                             x.name === memberRow.familymember &&
                                             x.mac === memberRow.macaddress &&
-                                            x.ipaddress === memberRow.ip &&
+                                            x.ip === memberRow.ipaddress &&
                                             x.hostname === memberRow.devicename
                                         ) {
                                             x.suppress = true;
@@ -2020,8 +2022,7 @@ class FbCheckpresence extends utils.Adapter {
                         break;
                     case 'IP':
                         if (ip != '') {
-                            //host = hosts.filter(x => x.ip == ip);
-                            host = hosts.filter(x => x.ip.includes(ip) === true);
+                            host = hosts.filter(x => matchesIpAddress(x.ip, ip));
                             if (host && host.length > 0) {
                                 active = host[0].active;
                                 //this.log.info('getActive ' + host[0].hn + ' ' + host[0].ip + ' ' + host[0].active);
@@ -2039,9 +2040,7 @@ class FbCheckpresence extends utils.Adapter {
                                         }
                                     });
                                     throw new Warn(
-                                        `The configured mac-address for member ${
-                                            member
-                                        } was not found in the fritzbox. Please insert a valid mac-address!`,
+                                        `The configured IP address for member ${member} was not found in the Fritzbox. Please enter a valid IP address!`,
                                     );
                                 }
                             }

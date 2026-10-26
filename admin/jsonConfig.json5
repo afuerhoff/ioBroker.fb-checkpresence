@@ -48,9 +48,21 @@
                     "xl": 3
                 },
                 "ssl": {
+                    "newLine": true,
                     "type": "checkbox",
                     "label": "mainTabSslLabel",
                     "help": "mainTabSslHelp",
+                    "xs": 12,
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2
+                },
+                "sslVerifyCertificate": {
+                    "type": "checkbox",
+                    "label": "mainTabSslCertLabel",
+                    "help": "mainTabSslCertHelp",
+                    "hidden": "!data.ssl",
                     "xs": 12,
                     "sm": 2,
                     "md": 2,
@@ -147,6 +159,7 @@
                     "hidden": "!data.fbdevices"
                 },
                 "syncfbdevices": {
+                    "newLine": true,
                     "type": "checkbox",
                     "label": "mainTabFbsyncLabel",
                     "help": "mainTabFbsyncHelp",
@@ -184,8 +197,8 @@
                     "xs": 12,
                     "sm": 6,
                     "md": 6,
-                    "lg": 6,
-                    "xl": 6
+                    "lg": 4,
+                    "xl": 4
                 },
                 "qrcode": {
                     "type": "checkbox",
@@ -194,8 +207,8 @@
                     "xs": 12,
                     "sm": 6,
                     "md": 6,
-                    "lg": 6,
-                    "xl": 6
+                    "lg": 4,
+                    "xl": 4
                 },
                 "qrcodecolor": {
                     "type": "color",
@@ -204,11 +217,12 @@
                     "xs": 12,
                     "sm": 6,
                     "md": 6,
-                    "lg": 6,
-                    "xl": 6,
+                    "lg": 4,
+                    "xl": 4,
                     "hidden": "!data.qrcode"
                 },
                 "extip": {
+                    "newLine": true,
                     "type": "checkbox",
                     "label": "mainTabextipLabel",
                     "help": "mainTabextipHelp",

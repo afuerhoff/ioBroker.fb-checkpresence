@@ -10,6 +10,8 @@
     "mainTabPwHelp": "Enter the password of your FRITZ!Box user.",
     "mainTabSslLabel": "Use SSL",
     "mainTabSslHelp": "Disable this option if you have problems connecting to your FRITZ!Box.",
+    "mainTabSslCertLabel": "Verify certificate",
+    "mainTabSslCertHelp": "Checks whether the HTTPS certificate is valid and trustworthy. Self-signed certificates are rejected.",
     "mainTabhistoryLabel": "History adapter",
     "mainTabhistoryHelp": "Select the History adapter to store and evaluate family member data points.",
     "mainTabdateformatLabel": "Date format",

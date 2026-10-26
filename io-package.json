@@ -218,6 +218,7 @@
     "devicelist": [],
     "ipaddress": "fritz.box",
     "ssl": true,
+    "sslVerifyCertificate": false,
     "interval": 60,
     "interval_seconds": true,
     "intervalFamily": 60,
