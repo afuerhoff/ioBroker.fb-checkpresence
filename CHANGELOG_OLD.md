@@ -1,4 +1,9 @@
 # Older changes
+## 1.3.0 (2025-02-14)
+* (afuerhoff) dependencies updated
+* (afuerhoff) eslint setup changed
+* (afuerhoff) ipv6 ip-address and prefix added
+
 ## 1.2.8 (2024-11-20)
 * (afuerhoff) bugfix configuration
 * (afuerhoff) dependencies updated

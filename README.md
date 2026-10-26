@@ -263,7 +263,7 @@ Contain the member's arrival and departure information. The state ID `comming` i
 Contain the member's history for the current day.
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.5.0 (2026-10-26)
 * (afuerhoff) Adapter requires node.js >= 22 now
 * (afuerhoff) configuration changed to jsonConfig
 * (afuerhoff) dependencies updated
@@ -273,7 +273,6 @@ Contain the member's history for the current day.
 * (afuerhoff) readme updated
 * (softwarecrash) PR398 fixes a crash in newfilter mode
 * (afuerhoff) issues [#413]
-
 
 ### 1.4.2 (2025-10-30)
 * (afuerhoff) dependencies updated
@@ -298,11 +297,6 @@ Contain the member's history for the current day.
 * (afuerhoff) dependencies updated
 * (afuerhoff) bug fixed [#333](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/333)
 * (afuerhoff) bug fixed [#305](https://github.com/afuerhoff/ioBroker.fb-checkpresence/issues/305)
-
-### 1.3.0 (2025-02-14)
-* (afuerhoff) dependencies updated
-* (afuerhoff) eslint setup changed
-* (afuerhoff) ipv6 ip-address and prefix added
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
