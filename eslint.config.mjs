@@ -27,5 +27,12 @@ export default [
             'jsdoc/no-types': 'off'
         },
     },
+    {
+        files: ['**/*.js'],
+        rules: {
+            // JSDoc types are required by TypeScript's checkJs for JavaScript sources.
+            'jsdoc/check-tag-names': ['warn', { typed: false }],
+        },
+    },
     
 ];
