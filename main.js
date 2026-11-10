@@ -27,7 +27,7 @@ class Warn extends Error {
 
 class FbCheckpresence extends utils.Adapter {
     /**
-     * @param {Partial<utils.AdapterOptions>} options - adapter options
+     * @param {Partial<utils.AdapterOptions>} [options] - adapter options
      */
     constructor(options) {
         super({
@@ -39,7 +39,9 @@ class FbCheckpresence extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         //this.on('objectChange', this.onObjectChange);
         this.on('stateChange', this.onStateChange.bind(this));
-        this.on('message', this.onMessage.bind(this));
+        this.on('message', obj => {
+            void this.onMessage(obj);
+        });
         this.on('unload', this.onUnload.bind(this));
 
         //constants
@@ -58,12 +60,15 @@ class FbCheckpresence extends utils.Adapter {
         this.errorCntMax = 10;
 
         this.allDevices = [];
+        this.allDevicesOnlyActive = undefined;
         this.adapterStates = [];
         this.memberStates = [];
-        this.historyAlive = { val: 'false' }; //false;
+        /** @type {ioBroker.State | { val: boolean } | null | undefined} */
+        this.historyAlive = { val: false };
         this.hosts = null;
-        this.jsonTab;
-        this.htmlTab;
+        this.jsonTab = [];
+        this.htmlTab = this.HTML;
+        /** @type {boolean} */
         this.enabled = true;
         this.errorCnt = 0;
         this.Fb = null;
@@ -88,7 +93,9 @@ class FbCheckpresence extends utils.Adapter {
                 this.log.warn(`${title}: ${error}`);
             }
         } else if (typeof error === 'object') {
-            if (error instanceof TypeError) {
+            if (error === null) {
+                this.log.warn(`${title} error unknown`);
+            } else if (error instanceof TypeError) {
                 if (error.name === undefined || error.message === undefined) {
                     this.log.warn(title); // + ' ' + JSON.stringify(error));
                 } else {
@@ -118,16 +125,18 @@ class FbCheckpresence extends utils.Adapter {
                     }
                 }
             } else {
-                this.log.warn(`${title} ${error.name}: ${error.message}`);
+                const name = 'name' in error ? String(error.name) : 'Error';
+                const message = 'message' in error ? String(error.message) : String(error);
+                this.log.warn(`${title} ${name}: ${message}`);
             }
         }
     }
 
     /**
-     * @param {number | undefined} milliseconds - delay in milli seconds
+     * @param {number} milliseconds - delay in milli seconds
      */
     _sleep(milliseconds) {
-        return new Promise(resolve => this.setTimeout(resolve, milliseconds));
+        return new Promise(resolve => this.setTimeout(resolve, milliseconds, undefined));
     }
 
     createHTMLTableRow(dataArray) {
@@ -157,6 +166,9 @@ class FbCheckpresence extends utils.Adapter {
                 for (const id in devices) {
                     if (devices[id] != undefined && devices[id].common != undefined) {
                         const dName = devices[id].common.name;
+                        if (typeof dName !== 'string') {
+                            continue;
+                        }
                         const shortName = dName.replace('fb-devices.', '');
                         let found = false;
                         if (dName.includes('fb-devices.')) {
@@ -292,10 +304,18 @@ class FbCheckpresence extends utils.Adapter {
     /**
      * @param {number} cnt1 - loop counter family members
      * @param {number} cnt2 - loop counter fb-devices
-     * @param {number | undefined} int1 - max count family members
-     * @param {number | undefined} int2 - max count fb-devices
+     * @param {number} int1 - max count family members
+     * @param {number} int2 - max count fb-devices
      */
     async loop(cnt1, cnt2, int1, int2) {
+        const fb = this.Fb;
+        if (!fb) {
+            this.errorHandler(
+                new Error('Cannot start the polling loop before the Fritzbox connection is initialized'),
+                'loop: ',
+            );
+            return;
+        }
         while (this.enabled === true) {
             this.tout = this.setTimeout(() => {
                 this.log.error('cycle error! Adapter restarted');
@@ -318,20 +338,20 @@ class FbCheckpresence extends utils.Adapter {
                 if (cnt2 >= int2) {
                     cnt2 = 0;
                     if (this.config.extip === true) {
-                        await this.setStateChangedAsync('info.extIp', { val: await this.Fb.getExtIp(), ack: true });
-                        await this.setStateChangedAsync('info.extIpv6', { val: await this.Fb.getExtIpv6(), ack: true });
+                        await this.setStateChangedAsync('info.extIp', { val: await fb.getExtIp(), ack: true });
+                        await this.setStateChangedAsync('info.extIpv6', { val: await fb.getExtIpv6(), ack: true });
                         await this.setStateChangedAsync('info.extIpv6Prf', {
-                            val: await this.Fb.getExtIpv6Prefix(),
+                            val: await fb.getExtIpv6Prefix(),
                             ack: true,
                         });
                     }
                     if (this.config.guestinfo === true) {
-                        await this.setStateChangedAsync('guest.wlan', { val: await this.Fb.getGuestWlan(), ack: true });
+                        await this.setStateChangedAsync('guest.wlan', { val: await fb.getGuestWlan(), ack: true });
                     }
                     if (this.config.qrcode === true) {
-                        await this.setStateChangedAsync('guest.wlanQR', { val: await this.Fb.getGuestQR(), ack: true });
+                        await this.setStateChangedAsync('guest.wlanQR', { val: await fb.getGuestQR(), ack: true });
                     }
-                    if (this.Fb.GETPATH != null && this.Fb.GETPATH == true) {
+                    if (fb.GETPATH === true) {
                         await this.checkDevices();
                     }
                     time = process.hrtime(work);
@@ -340,7 +360,7 @@ class FbCheckpresence extends utils.Adapter {
             } catch (error) {
                 this.errorHandler(error, 'loop: ');
             } finally {
-                clearTimeout(this.tout);
+                this.clearTimeout(this.tout);
                 this.tout = null;
             }
         }
@@ -348,7 +368,11 @@ class FbCheckpresence extends utils.Adapter {
 
     async setDeviceStates() {
         try {
-            const deviceList = this.Fb.deviceList;
+            const fb = this.Fb;
+            if (!fb || !fb.deviceList) {
+                throw new Error('Cannot update device states: Fritzbox device list is unavailable');
+            }
+            const deviceList = fb.deviceList;
             if (this.config.compatibility == true) {
                 await this.setStateChangedAsync('devices', { val: deviceList.length, ack: true });
             }
@@ -387,7 +411,11 @@ class FbCheckpresence extends utils.Adapter {
 
     async getAllFbObjects() {
         try {
-            const items = this.Fb.deviceList;
+            const fb = this.Fb;
+            if (!fb) {
+                throw new Error('Cannot get Fritzbox objects before the Fritzbox connection is initialized');
+            }
+            const items = fb.deviceList;
             if (items === null || items === false) {
                 return null;
             }
@@ -541,6 +569,9 @@ class FbCheckpresence extends utils.Adapter {
             for (const id in fbDevices) {
                 if (fbDevices[id] != undefined && fbDevices[id].common != undefined) {
                     const dName = fbDevices[id].common.name;
+                    if (typeof dName !== 'string') {
+                        continue;
+                    }
                     const shortName = dName.replace('fb-devices.', '');
                     const shortNameOrg = fbDevices[id].common.desc;
                     //shortNameOrg = shortNameOrg.replace('-', '.');
@@ -577,11 +608,7 @@ class FbCheckpresence extends utils.Adapter {
             if (newObjs) {
                 await obj.createFbDeviceObjects(this, this.adapterStates, newObjs, this.enabled);
             }*/
-            devices = null;
-            //newObjs = null;
-            fbDevices = null;
             this.hosts = hosts;
-            hosts = null;
             return true;
         } catch (error) {
             this.errorHandler(error, 'getAllFbObjects: ');
@@ -592,6 +619,9 @@ class FbCheckpresence extends utils.Adapter {
     async stopAdapter() {
         try {
             const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+            if (!adapterObj) {
+                throw new Error(`Adapter object system.adapter.${this.namespace} not found`);
+            }
             adapterObj.common.enabled = false; // Adapter ausschalten
             await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
         } catch (error) {
@@ -602,6 +632,9 @@ class FbCheckpresence extends utils.Adapter {
     async startAdapter() {
         try {
             const adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+            if (!adapterObj) {
+                throw new Error(`Adapter object system.adapter.${this.namespace} not found`);
+            }
             adapterObj.common.enabled = true; // Adapter ausschalten
             await this.setForeignObjectAsync(`system.adapter.${this.namespace}`, adapterObj);
         } catch (error) {
@@ -673,6 +706,9 @@ class FbCheckpresence extends utils.Adapter {
 
             //Configuration changes if needed
             let adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+            if (!adapterObj) {
+                throw new Error(`Adapter object system.adapter.${this.namespace} not found`);
+            }
             let adapterObjChanged = false; //for changes
 
             // Migrate whitelist from old table format to MAC address array
@@ -700,7 +736,7 @@ class FbCheckpresence extends utils.Adapter {
 
                             return null;
                         })
-                        .filter(Boolean);
+                        .filter(entry => typeof entry === 'string');
 
                     const uniqueWhitelist = [...new Set(whitelist)];
 
@@ -872,15 +908,23 @@ class FbCheckpresence extends utils.Adapter {
                 this.config,
                 this.HTML_HISTORY + this.HTML_END,
                 this.enabled,
-                this.historyAlive.val,
+                this.historyAlive?.val ?? false,
             );
 
             //create Fb devices
-            if (this.Fb.GETPATH != null && this.Fb.GETPATH == true && this.config.fbdevices == true) {
-                await this.Fb.getDeviceList();
-                if (this.Fb.deviceList != null) {
+            const fbConnection = this.Fb;
+            if (!fbConnection) {
+                throw new Error('Fritzbox connection is unavailable after initialization');
+            }
+            if (fbConnection.GETPATH === true && this.config.fbdevices === true) {
+                await fbConnection.getDeviceList();
+                if (fbConnection.deviceList != null) {
                     await this.getAllFbObjects();
-                    const selectedHosts = this.hosts.filter(host => this.isFbDeviceSelected(host.mac));
+                    const hosts = this.hosts;
+                    if (!hosts) {
+                        throw new Error('Cannot create Fritzbox device objects: host list is unavailable');
+                    }
+                    const selectedHosts = hosts.filter(host => this.isFbDeviceSelected(host.mac));
                     const res = await obj.createFbDeviceObjects(this, this.adapterStates, selectedHosts, this.enabled);
                     //const res = await obj.createFbDeviceObjects(this, this.adapterStates, this.hosts, this.enabled);
                     if (res === true) {
@@ -889,21 +933,24 @@ class FbCheckpresence extends utils.Adapter {
                 } else {
                     this.log.error('createFbDeviceObjects -> ' + "can't read devices from fritzbox! Adapter stops");
                     adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                    if (!adapterObj) {
+                        throw new Error(`Adapter object system.adapter.${this.namespace} not found`);
+                    }
                     adapterObj.common.enabled = false; // Adapter ausschalten
                     await this.setForeignObject(`system.adapter.${this.namespace}`, adapterObj);
                 }
                 // Start once if syncfbdevices is set to true
                 if (this.config.syncfbdevices === true) {
-                    await this.resyncFbObjects(this.Fb.deviceList);
+                    await this.resyncFbObjects(fbConnection.deviceList);
                 }
                 /*if (this.config.syncfbdevicesMaxDays > 0) {
-                    await this.resyncFbObjects(this.Fb.deviceList);
+                    await this.resyncFbObjects(fbConnection.deviceList);
                 }*/
                 // Schedule cleanup - each run deletes devices older than deviceMaxAgeDays
                 if (this.config.fbdevices && this.config.syncfbdevicesMaxDays > 0) {
                     const duration = this.config.syncfbdevicesMaxDays * 24 * 60 * 60 * 1000;
                     this._cleanupTimer = this.setInterval(async () => {
-                        await this.resyncFbObjects(this.Fb.deviceList);
+                        await this.resyncFbObjects(fbConnection.deviceList);
                     }, duration);
                     this.log.info(`resyncFbObjects scheduled every ${this.config.syncfbdevicesMaxDays} days`);
                 }
@@ -980,17 +1027,21 @@ class FbCheckpresence extends utils.Adapter {
     async onStateChange(id, state) {
         try {
             if (state) {
+                const fb = this.Fb;
+                if (!fb) {
+                    throw new Error('Cannot handle state changes before the Fritzbox connection is initialized');
+                }
                 //Enable/disable Guest WLAN
                 if (
                     id == `${this.namespace}` + '.guest.wlan' &&
-                    this.Fb.SETENABLE == true &&
+                    fb.SETENABLE == true &&
                     state.ack === false &&
-                    this.Fb.WLAN3INFO === true &&
+                    fb.WLAN3INFO === true &&
                     this.config.guestinfo === true
                 ) {
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     const val = state.val ? '1' : '0';
-                    const soapResult = await this.Fb.soapAction(
+                    const soapResult = await fb.soapAction(
                         '/upnp/control/wlanconfig3',
                         'urn:dslforum-org:service:' + 'WLANConfiguration:3',
                         'SetEnable',
@@ -998,7 +1049,7 @@ class FbCheckpresence extends utils.Adapter {
                     );
                     //if (guestwlan['status'] == 200 || guestwlan['result'] == true) {
                     if (soapResult) {
-                        await this.Fb.getGuestWlan(id, this.config.qrcode);
+                        await fb.getGuestWlan();
                         //if(state.val == wlanStatus) this.setState('guest.wlan', { val: wlanStatus, ack: true });
                     } else {
                         throw {
@@ -1009,12 +1060,7 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 //Enable/disable Internet
-                if (
-                    id.includes('disabled') &&
-                    !state.ack &&
-                    this.Fb.DISALLOWWANACCESSBYIP &&
-                    this.Fb.GETWANACCESSBYIP
-                ) {
+                if (id.includes('disabled') && !state.ack && fb.DISALLOWWANACCESSBYIP && fb.GETWANACCESSBYIP) {
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 
                     // IP-Adresse des Geräts holen
@@ -1026,7 +1072,7 @@ class FbCheckpresence extends utils.Adapter {
                         throw { name: `onStateChange ${id}`, message: 'Cannot change state. IP address is empty!' };
                     }
 
-                    const soapResult = await this.Fb.soapAction(
+                    const soapResult = await fb.soapAction(
                         '/upnp/control/x_hostfilter',
                         'urn:dslforum-org:service:' + 'X_AVM-DE_HostFilter:1',
                         'DisallowWANAccessByIP',
@@ -1045,7 +1091,7 @@ class FbCheckpresence extends utils.Adapter {
 
                     // Kurz warten und Zugriffsstatus überprüfen
                     await this._sleep(1000);
-                    const newDisallow = (await this.Fb.getWanAccess(ipaddress)) !== '0';
+                    const newDisallow = (await fb.getWanAccess(ipaddress)) !== '0';
 
                     if (newDisallow === state.val) {
                         this.setState(id, { val: newDisallow, ack: true });
@@ -1056,10 +1102,10 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 //Reboot Fritzbox
-                if (id == `${this.namespace}` + '.reboot' && this.Fb.REBOOT === true) {
+                if (id == `${this.namespace}` + '.reboot' && fb.REBOOT === true) {
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true) {
-                        const soapResult = await this.Fb.soapAction(
+                        const soapResult = await fb.soapAction(
                             '/upnp/control/deviceconfig',
                             'urn:dslforum-org:service:' + 'DeviceConfig:1',
                             'Reboot',
@@ -1076,24 +1122,19 @@ class FbCheckpresence extends utils.Adapter {
                 }
 
                 //Reconnect
-                if (id == `${this.namespace}` + '.reconnect' && this.Fb.RECONNECT === true) {
+                if (id == `${this.namespace}` + '.reconnect' && fb.RECONNECT === true) {
                     this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                     if (state.val === true) {
                         let soapResult = null;
-                        if (
-                            this.Fb &&
-                            this.Fb.RECONNECT &&
-                            this.Fb.RECONNECT == true &&
-                            this.Fb.connection == '1.WANPPPConnection.1'
-                        ) {
-                            soapResult = await this.Fb.soapAction(
+                        if (fb.RECONNECT && fb.RECONNECT == true && fb.connection == '1.WANPPPConnection.1') {
+                            soapResult = await fb.soapAction(
                                 '/upnp/control/wanpppconn1',
                                 'urn:dslforum-org:service:' + 'WANPPPConnection:1',
                                 'ForceTermination',
                                 null,
                             );
                         } else {
-                            soapResult = await this.Fb.soapAction(
+                            soapResult = await fb.soapAction(
                                 '/upnp/control/wanipconnection1',
                                 'urn:dslforum-org:service:' + 'WANIPConnection:1',
                                 'ForceTermination',
@@ -1159,7 +1200,7 @@ class FbCheckpresence extends utils.Adapter {
      * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
      * Using this method requires "common.message" property to be set to true in io-package.json
      *
-     * @param obj - message object
+     * @param {ioBroker.Message} obj - message object
      */
     async onMessage(obj) {
         try {
@@ -1279,7 +1320,6 @@ class FbCheckpresence extends utils.Adapter {
                     }
 
                     case 'getDevices': {
-                        this.allDevices = [];
                         let onlyActive, reread;
                         if (typeof obj.message === 'object') {
                             onlyActive = obj.message.onlyActive;
@@ -1288,11 +1328,12 @@ class FbCheckpresence extends utils.Adapter {
                         if (!obj.callback) {
                             return false;
                         }
-                        if (!reread && this.allDevices.length > 0 && this.allDevices.onlyActive === onlyActive) {
+                        if (!reread && this.allDevices.length > 0 && this.allDevicesOnlyActive === onlyActive) {
                             reply(this.allDevices);
                             return true;
                         }
-                        this.allDevices.onlyActive = onlyActive;
+                        this.allDevices = [];
+                        this.allDevicesOnlyActive = onlyActive;
                         if (this.Fb && this.Fb.GETPATH && this.Fb.GETPATH == true) {
                             await this.Fb.getDeviceList();
                             if (this.Fb.deviceList == null) {
@@ -1318,8 +1359,12 @@ class FbCheckpresence extends utils.Adapter {
                         let hostName = obj.message.hostname;
                         if (this.Fb) {
                             //check, if the mac is in the fritzbox devicelist
-                            const host = this.hosts.filter(x => x.hnOrg == hostName); //find fb-device
-                            if (host && host.length == 0) {
+                            const hosts = this.hosts;
+                            if (!hosts) {
+                                throw new Error('Cannot add a device to the whitelist: host list is unavailable');
+                            }
+                            const host = hosts.filter(x => x.hnOrg == hostName); //find fb-device
+                            if (host.length === 0) {
                                 throw new Error(
                                     `sendTo addDeviceToWhitelist: Cannot find device ${hostName} in fritzbox!`,
                                 );
@@ -1339,6 +1384,9 @@ class FbCheckpresence extends utils.Adapter {
                             hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                             //check, if the mac is always in whitelist
                             let adapterObj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                            if (!adapterObj) {
+                                throw new Error(`Adapter object system.adapter.${this.namespace} not found`);
+                            }
                             const wl = adapterObj.native.whitelist.filter(x => x.white_macaddress == obj.message.mac);
                             if (wl.length > 0) {
                                 throw new Error(
@@ -1373,7 +1421,11 @@ class FbCheckpresence extends utils.Adapter {
     async getMeshInfo() {
         try {
             const hosts = this.hosts;
-            const mesh = this.Fb.meshList;
+            const fb = this.Fb;
+            if (!fb) {
+                throw new Error('Cannot get mesh info before the Fritzbox connection is initialized');
+            }
+            const mesh = fb.meshList;
             if (!hosts) {
                 return false;
             }
@@ -1399,7 +1451,7 @@ class FbCheckpresence extends utils.Adapter {
                 //hostName = hostName.replace(this.FORBIDDEN_CHARS, '-');
                 const hostCh = ch.filter(ch => ch._id.includes(`.${hostName}.`));
                 //Get mesh info for device
-                if (this.Fb.GETMESHPATH != null && this.Fb.GETMESHPATH == true && enabledMeshInfo == true) {
+                if (fb.GETMESHPATH === true && enabledMeshInfo == true) {
                     if (mesh != null) {
                         let meshdevice = mesh.find(el =>
                             String(el.device_mac_address || '')
@@ -1631,7 +1683,11 @@ class FbCheckpresence extends utils.Adapter {
     async getWlBlInfo() {
         try {
             const hosts = this.hosts;
-            const items = this.Fb.deviceList;
+            const fb = this.Fb;
+            if (!fb || !fb.deviceList || !hosts) {
+                throw new Error('Cannot get whitelist and blacklist info: Fritzbox device data is unavailable');
+            }
+            const items = fb.deviceList;
             //let wlCnt = 0;
             let blCnt = 0;
             const jsonWlRow = [];
@@ -1745,8 +1801,6 @@ class FbCheckpresence extends utils.Adapter {
             this.log.debug(`getWlBlInfo blCnt: ${blCnt}`);
             //jsonWlRow = null;
             //jsonBlRow = null;
-            htmlBlRow = null;
-            htmlWlRow = null;
             return true;
         } catch (error) {
             this.errorHandler(error, 'getWlBlInfo');
@@ -1770,7 +1824,9 @@ class FbCheckpresence extends utils.Adapter {
             const jsonFbDevActive = [];
             const jsonFbDevInactive = [];
             const jsonFbDevActiveVPN = [];
+            /** @type {boolean | null} */
             let disabled = false;
+            /** @type {boolean | null} */
             let vpn = false;
 
             if (!hosts) {
@@ -1890,7 +1946,7 @@ class FbCheckpresence extends utils.Adapter {
                             ack: true,
                         });
                         await this.setStateChangedAsync(`fb-devices.${hostName}.speed`, {
-                            val: parseInt(hosts[i]['speed']),
+                            val: Number.parseInt(String(hosts[i]['speed']), 10),
                             ack: true,
                         });
                         await this.setStateChangedAsync(`fb-devices.${hostName}.guest`, {
@@ -1950,6 +2006,10 @@ class FbCheckpresence extends utils.Adapter {
     async getActive(memberRow) {
         const member = memberRow.familymember;
         try {
+            const fb = this.Fb;
+            if (!fb) {
+                throw new Error(`Cannot determine presence for ${member}: Fritzbox connection is unavailable`);
+            }
             const hosts = this.hosts;
             //const memberPath = memberRow.group == '' ? member : 'familyMembers.' + memberRow.group + '.' + member;
             const mac = memberRow.macaddress;
@@ -1967,7 +2027,7 @@ class FbCheckpresence extends utils.Adapter {
                     return x;
                 }
             });
-            if (this.Fb.GETPATH === true) {
+            if (fb.GETPATH === true) {
                 if (hosts === null) {
                     return null;
                 }
@@ -2117,7 +2177,7 @@ class FbCheckpresence extends utils.Adapter {
                 switch (memberRow.usage) {
                     case 'MAC':
                         if (mac != '') {
-                            const soapResult = await this.Fb.soapAction(
+                            const soapResult = await fb.soapAction(
                                 '/upnp/control/hosts',
                                 'urn:dslforum-org:service:' + 'Hosts:1',
                                 'GetSpecificHostEntry',
@@ -2139,7 +2199,7 @@ class FbCheckpresence extends utils.Adapter {
                                         return x;
                                     }
                                 });
-                                throw Warn(
+                                throw new Warn(
                                     `The configured mac-address for member ${
                                         member
                                     } is empty. Please insert a valid mac-address!`,
@@ -2148,8 +2208,8 @@ class FbCheckpresence extends utils.Adapter {
                         }
                         break;
                     case 'IP':
-                        if (this.Fb.GETBYIP == true && ip != '') {
-                            const soapResult = await this.Fb.soapAction(
+                        if (fb.GETBYIP == true && ip != '') {
+                            const soapResult = await fb.soapAction(
                                 '/upnp/control/hosts',
                                 'urn:dslforum-org:service:' + 'Hosts:1',
                                 'X_AVM-DE_GetSpecificHostEntryByIP',
@@ -2276,11 +2336,19 @@ class FbCheckpresence extends utils.Adapter {
     sendToAsync(adapterNamespace, cmd, options) {
         return new Promise((resolve, reject) => {
             this.sendTo(adapterNamespace, cmd, options, result => {
-                if (result.error) {
-                    reject(null);
-                } else {
-                    resolve(result);
+                if (!result) {
+                    reject(new Error(`No response received from ${adapterNamespace}`));
+                    return;
                 }
+                if (result instanceof Error) {
+                    reject(result);
+                    return;
+                }
+                if ('error' in result && result.error) {
+                    reject(new Error(String(result.error)));
+                    return;
+                }
+                resolve(result);
             });
         });
     }
@@ -2339,8 +2407,12 @@ class FbCheckpresence extends utils.Adapter {
         presence.val = newActive;
 
         //History is alive and enabled
-        if (this.config.history != '' && this.historyAlive.val === true) {
-            if (dPoint.common.custom != undefined && dPoint.common.custom[this.config.history].enabled == true) {
+        if (this.config.history != '' && this.historyAlive?.val === true) {
+            if (
+                dPoint &&
+                dPoint.common.custom != undefined &&
+                dPoint.common.custom[this.config.history]?.enabled == true
+            ) {
                 const memberID = `${this.namespace}` + `.${historyPath}`;
                 let filterTime = 0;
                 if (memberRow.usefilter === true) {
@@ -2386,7 +2458,7 @@ class FbCheckpresence extends utils.Adapter {
                     5000,
                 );
                 if (!histData) {
-                    this.log.warn(`history of family member is empty: ${memberID}`, 'info');
+                    this.log.warn(`history of family member is empty: ${memberID}`);
                     //await this.setStateChangedAsync(memberPath + '.presence', { val: !valPresence, ack: true });
                     //await this._sleep(1000);
                     //await this.setStateChangedAsync(memberPath + '.presence', { val: valPresence, ack: true });
@@ -2698,7 +2770,7 @@ class FbCheckpresence extends utils.Adapter {
             }
             if (curVal && curVal.val != null) {
                 //calculation of '.since'
-                const diff = Math.round((dnow - new Date(curVal.lc)) / 1000 / 60);
+                const diff = Math.round((dnow.getTime() - new Date(curVal.lc).getTime()) / 1000 / 60);
                 if (curVal.val == true) {
                     await this.setStateChangedAsync(`${memberPath}.present.since`, { val: diff, ack: true });
                     await this.setStateChangedAsync(`${memberPath}.absent.since`, { val: 0, ack: true });
@@ -2735,7 +2807,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == null) {
                         this.log.warn('Member value is null! Value set to true');
-                        if (memberPath.group == '' && this.config.compatibility === true) {
+                        if (memberRow.group == '' && this.config.compatibility === true) {
                             await this.setStateChangedAsync(memberPath, { val: true, ack: true });
                         }
                         await this.setStateChangedAsync(`${memberPath}.presence`, { val: true, ack: true });
@@ -2758,7 +2830,7 @@ class FbCheckpresence extends utils.Adapter {
                     }
                     if (curVal.val == null) {
                         this.log.warn('Member value is null! Value set to false');
-                        if (memberPath.group == '' && this.config.compatibility === true) {
+                        if (memberRow.group == '' && this.config.compatibility === true) {
                             await this.setStateChangedAsync(memberPath, { val: false, ack: true });
                         }
                         await this.setStateChangedAsync(`${memberPath}.presence`, { val: false, ack: true });
@@ -2766,14 +2838,14 @@ class FbCheckpresence extends utils.Adapter {
                 }
                 presence.val = newActive;
                 const comming1 = await this.getStateAsync(`${memberPath}.comming`);
-                comming = comming !== null ? comming.toString() : comming1.val;
+                comming = comming !== null ? comming.toString() : comming1?.val;
                 const going1 = await this.getStateAsync(`${memberPath}.going`);
-                going = going !== null ? going.toString() : going1.val;
-                if (comming1.val == null) {
+                going = going !== null ? going.toString() : going1?.val;
+                if (comming1?.val == null) {
                     comming = new Date(curVal.lc);
                     await this.setStateChangedAsync(`${memberPath}.comming`, { val: comming.toString(), ack: true });
                 }
-                if (going1.val == null) {
+                if (going1?.val == null) {
                     going = new Date(curVal.lc);
                     await this.setStateChangedAsync(`${memberPath}.going`, { val: going.toString(), ack: true });
                 }
@@ -2798,7 +2870,7 @@ class FbCheckpresence extends utils.Adapter {
 
             if (presence != null) {
                 //get history data
-                let present = Math.round((dnow - midnight) / 1000 / 60); //time from midnight to now = max. present time
+                let present = Math.round((dnow.getTime() - midnight.getTime()) / 1000 / 60); //time from midnight to now = max. present time
                 let absent = 0;
 
                 const end = new Date().getTime();
@@ -2806,10 +2878,11 @@ class FbCheckpresence extends utils.Adapter {
                 let lastVal = null;
                 let lastValCheck = false;
                 const memb = member;
-                if (this.config.history != '' && this.historyAlive.val === true) {
+                if (this.config.history != '' && this.historyAlive?.val === true) {
                     if (
+                        dPoint &&
                         dPoint.common.custom != undefined &&
-                        dPoint.common.custom[this.config.history].enabled == true
+                        dPoint.common.custom[this.config.history]?.enabled == true
                     ) {
                         try {
                             const result = await this.getHistoryTable(this, memb, historyPath, start, end);
@@ -2849,7 +2922,7 @@ class FbCheckpresence extends utils.Adapter {
                                         Date: dateFormat(hTime, this.config.dateformat),
                                     });
                                     //cnt += 1;
-                                    if (hTime >= midnight.getTime()) {
+                                    if (hTime.getTime() >= midnight.getTime()) {
                                         if (lastVal == null) {
                                             //if no lastVal exists
                                             lastVal = presence.val;
@@ -2857,7 +2930,7 @@ class FbCheckpresence extends utils.Adapter {
                                             this.log.debug(`${memb}: No history item before this day is available`);
                                         } else {
                                             if (lastVal == false && lastValCheck == true) {
-                                                absent = Math.round((hTime - midnight.getTime()) / 1000 / 60);
+                                                absent = Math.round((hTime.getTime() - midnight.getTime()) / 1000 / 60);
                                                 lastValCheck = false;
                                             }
                                             if (result.result[i].val == false) {
@@ -2869,7 +2942,9 @@ class FbCheckpresence extends utils.Adapter {
                                             if (result.result[i].val == true) {
                                                 if (bfirstFalse == true) {
                                                     bfirstFalse = false;
-                                                    absent += Math.round((hTime - firstFalse.getTime()) / 1000 / 60);
+                                                    absent += Math.round(
+                                                        (hTime.getTime() - firstFalse.getTime()) / 1000 / 60,
+                                                    );
                                                 }
                                             }
                                         }
@@ -2951,9 +3026,12 @@ class FbCheckpresence extends utils.Adapter {
             });
 
             //speed property
-            const speed = items.length > 0 ? (items.find(item => item.active === '1') || items[0]).speed : 0;
+            const speed = items.length > 0 ? (items.find(item => item.active === true) || items[0]).speed : 0;
 
-            await this.setStateChangedAsync(`${memberPath}.speed`, { val: parseInt(speed), ack: true });
+            await this.setStateChangedAsync(`${memberPath}.speed`, {
+                val: Number.parseInt(String(speed), 10),
+                ack: true,
+            });
 
             //link property
             const link = await this.findStateInStructure(`${this.namespace}.fb-devices.${devicename}`, 'link');
@@ -3060,7 +3138,7 @@ class FbCheckpresence extends utils.Adapter {
 
             const familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
             for (let g = 0; g < familyGroups.length; g++) {
-                if (this.enabled === false) {
+                if (!this.enabled) {
                     break;
                 } //cancel if disabled over unload
                 const group = familyGroups[g];
@@ -3087,7 +3165,7 @@ class FbCheckpresence extends utils.Adapter {
                 };
                 for (let k = 0; k < groupMembers.length; k++) {
                     //loop over enabled family members
-                    if (this.enabled === false) {
+                    if (!this.enabled) {
                         break;
                     } //cancel if disabled over unload
                     const memberRow = groupMembers[k].memberRow; //Row from family members table
@@ -3108,7 +3186,7 @@ class FbCheckpresence extends utils.Adapter {
                         }
                     }
                 }
-                if (this.enabled == false) {
+                if (!this.enabled) {
                     break;
                 } //cancel if disabled over unload
 
