@@ -3,6 +3,11 @@
 const assert = require('node:assert/strict');
 const { Fb } = require('../lib/fb');
 
+const adapter = {
+    log: { info() {}, warn() {} },
+    config: { qrcodecolor: '#000000' },
+};
+
 describe('FRITZ!Box HTTPS agent', () => {
     const originalGetSSLPort = Fb.prototype._getSSLPort;
     const originalGetAccessRights = Fb.prototype._getAccessRights;
@@ -11,8 +16,9 @@ describe('FRITZ!Box HTTPS agent', () => {
     before(() => {
         Fb.prototype._getSSLPort = async function () {
             this._sslPort = 443;
+            return 443;
         };
-        Fb.prototype._getAccessRights = async () => {};
+        Fb.prototype._getAccessRights = async () => '';
         Fb.prototype._getServices = async () => false;
     });
 
@@ -23,13 +29,13 @@ describe('FRITZ!Box HTTPS agent', () => {
     });
 
     it('verifies certificates when configured', async () => {
-        const fb = await Fb.init({ host: 'fritz.box', uid: '', pwd: '' }, true, null, true);
+        const fb = await Fb.init({ host: 'fritz.box', uid: '', pwd: '' }, true, adapter, true);
 
         assert.equal(fb.agent.options.rejectUnauthorized, true);
     });
 
     it('keeps certificate verification disabled by default for compatibility', async () => {
-        const fb = await Fb.init({ host: 'fritz.box', uid: '', pwd: '' }, true, null);
+        const fb = await Fb.init({ host: 'fritz.box', uid: '', pwd: '' }, true, adapter);
 
         assert.equal(fb.agent.options.rejectUnauthorized, false);
     });

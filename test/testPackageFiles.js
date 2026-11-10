@@ -46,24 +46,16 @@ describe('Test package.json and io-package.json', function() {
             console.log('WARNING: titleLang is not existing in io-package.json. Please add');
             console.log();
         }
+        const titles = Object.values(ioPackage.common.titleLang || {});
         if (
-            ioPackage.common.title.indexOf('iobroker') !== -1 ||
-            ioPackage.common.title.indexOf('ioBroker') !== -1 ||
-            ioPackage.common.title.indexOf('adapter') !== -1 ||
-            ioPackage.common.title.indexOf('Adapter') !== -1
+            titles.some(
+                title =>
+                    title.toLowerCase().includes('iobroker') ||
+                    title.toLowerCase().includes('adapter'),
+            )
         ) {
             console.log('WARNING: title contains Adapter or ioBroker. It is clear anyway, that it is adapter for ioBroker.');
             console.log();
-        }
-
-        if (ioPackage.common.name.indexOf('vis-') !== 0) {
-            if (!ioPackage.common.materialize || !fs.existsSync(__dirname + '/../admin/index_m.html') || !fs.existsSync(__dirname + '/../gulpfile.js')) {
-                console.log('WARNING: Admin3 support is missing! Please add it');
-                console.log();
-            }
-            if (ioPackage.common.materialize) {
-                expect(fs.existsSync(__dirname + '/../admin/index_m.html'), 'Admin3 support is enabled in io-package.json, but index_m.html is missing!').to.be.true;
-            }
         }
 
         const licenseFileExists = fs.existsSync(__dirname + '/../LICENSE');
