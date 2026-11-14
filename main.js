@@ -11,6 +11,7 @@ const utils = require('@iobroker/adapter-core');
 
 // own libraries
 const fb = require('./lib/fb');
+const filteredPresence = require('./lib/filteredPresence');
 const obj = require('./lib/objects');
 const { matchesIpAddress } = require('./lib/ip');
 const dateFormat = require('./lib/dateformat/dateformat');
@@ -2354,6 +2355,7 @@ class FbCheckpresence extends utils.Adapter {
     }
 
     async calcMemberAttributesNew(memberRow, index, newActive, dnow, presence) {
+        let filteredActive = memberRow.usefilter === true && newActive !== true ? null : newActive;
         const member = memberRow.familymember; //name of member
         let memberPath = '';
         let historyPath = '';
@@ -2509,6 +2511,7 @@ class FbCheckpresence extends utils.Adapter {
                         await this.setStateChangedAsync(`${memberPath}.presenceFiltered`, {
                             val: currentStateVal,
                             ack: true,
+                            q: 0,
                         });
                         await this.setStateChangedAsync(`${memberPath}.present.since`, {
                             val: currentStateVal ? sinceMinutes : 0,
@@ -2576,7 +2579,7 @@ class FbCheckpresence extends utils.Adapter {
                             comming ? dateFormat(comming, this.config.dateformat) : '',
                             going ? dateFormat(going, this.config.dateformat) : '',
                         ]);
-                        return;
+                        return currentStateVal;
                     }
 
                     lastWert = historyArrFiltered[0].val;
@@ -2592,6 +2595,7 @@ class FbCheckpresence extends utils.Adapter {
                             ack: true,
                         });
                     }
+                    filteredActive = memberRow.usefilter === true ? lastWert : newActive;
                     //calculation of absence and presence this day
                     t1 = currentTime;
                     for (let ih = 0; ih < historyArrFiltered.length; ih++) {
@@ -2732,6 +2736,12 @@ class FbCheckpresence extends utils.Adapter {
                 'New filter function: History is not enabled! Function was not used! Some datapoints were not calculated!',
             );
         }
+        await this.setStateChangedAsync(`${memberPath}.presenceFiltered`, {
+            val: filteredActive,
+            ack: true,
+            q: typeof filteredActive === 'boolean' ? 0 : 0x40,
+        });
+        return filteredActive;
     }
 
     async calcMemberAttributes(memberRow, index, newActive, dnow, presence) {
@@ -3137,6 +3147,7 @@ class FbCheckpresence extends utils.Adapter {
             }
 
             const familyGroups = this.removeDuplicates(membersFiltered); //family groups without duplicates
+            const allFilteredMembers = [];
             for (let g = 0; g < familyGroups.length; g++) {
                 if (!this.enabled) {
                     break;
@@ -3163,12 +3174,14 @@ class FbCheckpresence extends utils.Adapter {
                     presentCount: 0,
                     absentCount: 0,
                 };
+                const filteredMembers = [];
                 for (let k = 0; k < groupMembers.length; k++) {
                     //loop over enabled family members
                     if (!this.enabled) {
                         break;
                     } //cancel if disabled over unload
                     const memberRow = groupMembers[k].memberRow; //Row from family members table
+                    let filteredActive = null;
                     if (this.Fb && this.Fb.GETBYMAC == true) {
                         //member enabled in configuration settings and service is supported
                         const newActive = groupMembers[k].newVal;
@@ -3177,14 +3190,24 @@ class FbCheckpresence extends utils.Adapter {
                         }
                         if (newActive != null && !this.config.newfilter) {
                             await this.calcMemberAttributes(memberRow, k, newActive, dnow, presence);
+                            filteredActive = newActive;
                         }
                         if (newActive != null && this.config.newfilter) {
-                            await this.calcMemberAttributesNew(memberRow, k, newActive, dnow, presence);
+                            filteredActive = await this.calcMemberAttributesNew(
+                                memberRow,
+                                k,
+                                newActive,
+                                dnow,
+                                presence,
+                            );
                         }
                         if (newActive != null) {
                             this.getMemberPropertiesFromFBDevices(memberRow);
                         }
                     }
+                    const filteredMember = { name: memberRow.familymember, present: filteredActive };
+                    filteredMembers.push(filteredMember);
+                    allFilteredMembers.push(filteredMember);
                 }
                 if (!this.enabled) {
                     break;
@@ -3208,6 +3231,14 @@ class FbCheckpresence extends utils.Adapter {
                 });
                 await this.setStateChangedAsync(`${memberPath}presentCount`, { val: presence.presentCount, ack: true });
                 await this.setStateChangedAsync(`${memberPath}absentCount`, { val: presence.absentCount, ack: true });
+                if (group !== '') {
+                    await filteredPresence.publish(this, memberPath, filteredMembers);
+                }
+            }
+
+            if (this.enabled) {
+                const globalPrefix = this.config.compatibility === true ? '' : 'familyMembers.';
+                await filteredPresence.publish(this, globalPrefix, allFilteredMembers);
             }
 
             //membersFiltered = null;
