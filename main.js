@@ -14,6 +14,7 @@ const fb = require('./lib/fb');
 const filteredPresence = require('./lib/filteredPresence');
 const obj = require('./lib/objects');
 const { matchesIpAddress } = require('./lib/ip');
+const { matchesMacAddress } = require('./lib/mac');
 const dateFormat = require('./lib/dateformat/dateformat');
 
 class Warn extends Error {
@@ -77,6 +78,7 @@ class FbCheckpresence extends utils.Adapter {
         this.suppressMesg = false;
         this.suppressMesgEmptyHostname = false;
         this.suppressArr = [];
+        this.duplicateActiveHostWarnings = new Map();
         this.triggerActive = false;
         this._cleanupTimer = null;
     }
@@ -410,6 +412,54 @@ class FbCheckpresence extends utils.Adapter {
             .some(value => selectedMacs.has(value.trim().toLowerCase()));
     }
 
+    warnDuplicateActiveMacs(items) {
+        if (!Array.isArray(items)) {
+            return;
+        }
+        if (!(this.duplicateActiveHostWarnings instanceof Map)) {
+            this.duplicateActiveHostWarnings = new Map();
+        }
+
+        const activeHosts = new Map();
+        for (const item of items) {
+            const hostName = typeof item?.HostName === 'string' ? item.HostName.trim() : '';
+            const mac = typeof item?.MACAddress === 'string' ? item.MACAddress.trim() : '';
+            const active = item?.Active === '1' || item?.Active === 1 || item?.Active === true;
+            if (!hostName || !mac || !active) {
+                continue;
+            }
+            if (!activeHosts.has(hostName)) {
+                activeHosts.set(hostName, []);
+            }
+            activeHosts.get(hostName).push(mac);
+        }
+
+        const currentWarnings = new Set();
+        for (const [hostName, macs] of activeHosts) {
+            const normalizedMacs = new Map(macs.map(mac => [mac.replace(/[-:.]/g, '').toLowerCase(), mac]));
+            const uniqueMacs = [...normalizedMacs.values()].sort((a, b) => a.localeCompare(b));
+            if (uniqueMacs.length < 2) {
+                continue;
+            }
+            const normalizedKey = [...normalizedMacs.keys()].sort((a, b) => a.localeCompare(b)).join(',');
+            const key = `${hostName}\u0000${normalizedKey}`;
+            currentWarnings.add(key);
+            if (!this.duplicateActiveHostWarnings.has(key)) {
+                this.log.warn(
+                    `Potential presence conflict: hostname "${hostName}" has multiple active MAC addresses (${uniqueMacs.join(', ')}). ` +
+                        'This may indicate MAC randomization or two different devices using the same hostname.',
+                );
+                this.duplicateActiveHostWarnings.set(key, true);
+            }
+        }
+
+        for (const key of this.duplicateActiveHostWarnings.keys()) {
+            if (!currentWarnings.has(key)) {
+                this.duplicateActiveHostWarnings.delete(key);
+            }
+        }
+    }
+
     async getAllFbObjects() {
         try {
             const fb = this.Fb;
@@ -420,6 +470,7 @@ class FbCheckpresence extends utils.Adapter {
             if (items === null || items === false) {
                 return null;
             }
+            this.warnDuplicateActiveMacs(items);
             // Get all fb-device objects of this adapter
             let hosts = [];
             let devices = await this.getDevicesAsync();
@@ -2035,12 +2086,19 @@ class FbCheckpresence extends utils.Adapter {
                 switch (memberRow.usage) {
                     case 'MAC':
                         if (mac != '') {
-                            //host = hosts.filter(x => x.mac == mac);
-                            host = hosts.filter(x => x.mac.includes(mac) === true);
-                            if (host && host.length > 0) {
-                                active = host[0].active;
-                                //this.log.info('getActive ' + host[0].hn + ' ' + host[0].mac + ' ' + host[0].active);
+                            const rawDevice = Array.isArray(fb.deviceList)
+                                ? fb.deviceList.find(x => matchesMacAddress(x.MACAddress, mac))
+                                : null;
+                            if (rawDevice) {
+                                active =
+                                    rawDevice.Active === '1' || rawDevice.Active === 1 || rawDevice.Active === true;
                             } else {
+                                host = hosts.filter(x => matchesMacAddress(x.mac, mac));
+                                if (host && host.length > 0) {
+                                    active = host[0].active;
+                                }
+                            }
+                            if (!rawDevice && (!host || host.length === 0)) {
                                 if (mesg[0].suppress === false) {
                                     mesg = this.suppressArr.filter(function (x) {
                                         if (

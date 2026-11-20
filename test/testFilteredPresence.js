@@ -6,6 +6,7 @@ const { createRequire } = require('node:module');
 const path = require('node:path');
 const filtered = require('../lib/filteredPresence');
 const objects = require('../lib/objects');
+const { matchesMacAddress } = require('../lib/mac');
 
 // Load the real adapter methods without starting a controller or connecting to a FRITZ!Box.
 const filename = path.join(__dirname, '../main.js');
@@ -41,6 +42,64 @@ function harness(compatibility = false, newfilter = true) {
 }
 
 describe('Filtered presence aggregates', () => {
+    it('warns once for duplicate active MAC addresses and warns again after the combination changes', () => {
+        const {adapter} = harness();
+        const warnings = [];
+        adapter.log.warn = message => warnings.push(message);
+        adapter.warnDuplicateActiveMacs = Adapter.prototype.warnDuplicateActiveMacs;
+        adapter.duplicateActiveHostWarnings = new Map();
+
+        const first = [
+            {HostName: 'HostABC', MACAddress: 'AA:AA:AA:AA:AA:AA', Active: '1'},
+            {HostName: 'HostABC', MACAddress: 'BB:BB:BB:BB:BB:BB', Active: '1'},
+        ];
+        adapter.warnDuplicateActiveMacs(first);
+        adapter.warnDuplicateActiveMacs(first);
+        assert.equal(warnings.length, 1);
+        assert.match(warnings[0], /HostABC/);
+        assert.match(warnings[0], /AA:AA:AA:AA:AA:AA/);
+        assert.match(warnings[0], /BB:BB:BB:BB:BB:BB/);
+
+        adapter.warnDuplicateActiveMacs([
+            ...first,
+            {HostName: 'HostABC', MACAddress: 'CC:CC:CC:CC:CC:CC', Active: '1'},
+        ]);
+        assert.equal(warnings.length, 2);
+
+        adapter.warnDuplicateActiveMacs([{HostName: 'HostABC', MACAddress: 'AA:AA:AA:AA:AA:AA', Active: '0'}]);
+        adapter.warnDuplicateActiveMacs([
+            {HostName: 'HostABC', MACAddress: 'AA:AA:AA:AA:AA:AA', Active: '1'},
+            {HostName: 'HostABC', MACAddress: 'BB:BB:BB:BB:BB:BB', Active: '1'},
+        ]);
+        assert.equal(warnings.length, 3);
+    });
+    it('matches MAC addresses exactly across comma-separated and formatted values', () => {
+        assert.equal(matchesMacAddress('AA:BB:CC:DD:EE:FF, 11:22:33:44:55:66', '11-22-33-44-55-66'), true);
+        assert.equal(matchesMacAddress('AA:BB:CC:DD:EE:FF', 'BB:CC'), false);
+        assert.equal(matchesMacAddress('AA:BB:CC:DD:EE:FF', ''), false);
+    });
+    it('uses the exact MAC state when duplicate hostnames aggregate another active MAC', async () => {
+        const {adapter} = harness();
+        adapter.suppressArr = [];
+        adapter.getActive = Adapter.prototype.getActive;
+        adapter.Fb = {
+            GETBYMAC: true,
+            GETPATH: true,
+            deviceList: [
+                {MACAddress: 'AA:BB:CC:DD:EE:FF', Active: '1'},
+                {MACAddress: '11:22:33:44:55:66', Active: '0'},
+            ],
+        };
+        adapter.hosts = [{hn: 'Phone', mac: 'AA:BB:CC:DD:EE:FF, 11:22:33:44:55:66', active: true}];
+        const active = await adapter.getActive({
+            familymember: 'Guest',
+            usage: 'MAC',
+            macaddress: '11:22:33:44:55:66',
+            ipaddress: '',
+            devicename: '',
+        });
+        assert.equal(active, false);
+    });
     for (const [values, expected] of [
         [[true, false], [true, false, true, false]],
         [[false, true], [true, false, true, false]],
