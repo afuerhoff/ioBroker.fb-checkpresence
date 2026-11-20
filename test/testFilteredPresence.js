@@ -107,6 +107,27 @@ describe('Filtered presence aggregates', () => {
         await adapter.checkPresence(false);
         assert.equal(states.get('familyMembers.presenceFiltered').val, true);
     });
+    it('restores presence after a short legacy-filter disconnect', async () => {
+        const {adapter, states} = harness(false, false);
+        adapter.config.familymembers = [{enabled: true, familymember: 'A', group: '', raw: false, usefilter: true}];
+        adapter.getAdapterState = () => true;
+        adapter._sleep = async () => {};
+        let lookups = 0;
+        adapter.getActive = async () => (++lookups === 1 ? false : true);
+        adapter.calcMemberAttributes = async () => {};
+        await adapter.checkPresence(false);
+        assert.equal(states.get('familyMembers.presenceFiltered').val, true);
+    });
+    it('keeps presence absent after a sustained legacy-filter disconnect', async () => {
+        const {adapter, states} = harness(false, false);
+        adapter.config.familymembers = [{enabled: true, familymember: 'A', group: '', raw: false, usefilter: true}];
+        adapter.getAdapterState = () => true;
+        adapter._sleep = async () => {};
+        adapter.getActive = async () => false;
+        adapter.calcMemberAttributes = async () => {};
+        await adapter.checkPresence(false);
+        assert.equal(states.get('familyMembers.presenceFiltered').val, false);
+    });
     it('does not treat a failed device lookup as absence', async () => {
         const {adapter, states} = harness();
         adapter.config.familymembers = [{enabled: true, familymember: 'A', group: '', raw: null}];

@@ -3140,7 +3140,7 @@ class FbCheckpresence extends utils.Adapter {
                             x.member == memberRow.familymember &&
                             JSON.stringify(x.memberRow) == JSON.stringify(memberRow),
                     );
-                    if (activeNew === false) {
+                    if (ind !== -1) {
                         memberValues[ind].newVal = activeNew;
                     }
                 }
