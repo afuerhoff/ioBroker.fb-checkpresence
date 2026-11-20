@@ -166,6 +166,23 @@ describe('Filtered presence aggregates', () => {
         await adapter.checkPresence(false);
         assert.equal(states.get('familyMembers.presenceFiltered').val, true);
     });
+    it('creates and updates the legacy member presenceFiltered state', async () => {
+        const {adapter, states} = harness(false, false);
+        adapter.config.familymembers = [{enabled: true, familymember: 'A', group: '', raw: false, usefilter: true}];
+        adapter.config.history = '';
+        states.set('familyMembers.A.presence', {val: true, lc: Date.now(), q: 0});
+        states.set('familyMembers.A.comming', {val: 'existing', lc: Date.now(), q: 0});
+        states.set('familyMembers.A.going', {val: 'existing', lc: Date.now(), q: 0});
+        await adapter.calcMemberAttributes(
+            adapter.config.familymembers[0],
+            0,
+            false,
+            new Date(),
+            {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false, presentCount: 0, absentCount: 0},
+        );
+        assert.equal(states.get('familyMembers.A.presenceFiltered').val, false);
+        assert.equal(states.get('familyMembers.A.presenceFiltered').q, 0);
+    });
     it('restores presence after a short legacy-filter disconnect', async () => {
         const {adapter, states} = harness(false, false);
         adapter.config.familymembers = [{enabled: true, familymember: 'A', group: '', raw: false, usefilter: true}];

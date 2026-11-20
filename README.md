@@ -148,7 +148,9 @@ The legacy structure may be removed in a future version. When changing from the 
 
 The adapter creates a presence state for each enabled family member and checks whether the configured device is present or absent. The presence state changes when the detected status changes.
 
-You can enable filtering for an individual family member. When the device is detected as present, the presence state changes to `true` immediately. When it is detected as absent, the adapter waits for the configured filter delay and checks again. The state changes to `false` only if the device is still absent after the delay.
+You can enable filtering for an individual family member. With the legacy filter (the new history-based filter is disabled), filtering directly affects the member's `presence` state: when the device is detected as present, `presence` changes to `true` immediately; when it is detected as absent, the adapter waits for the configured delay and checks again. `presence` changes to `false` only if the device is still absent after the delay.
+
+With the new history-based filter enabled, the member's `presence` state reports the detected status directly. The filtered result is published separately as `presenceFiltered`; it keeps a member present until an absence has lasted for the configured filter time.
 
 Some device information, such as connection speed, is read from the individual FRITZ!Box device data points. Enable **Create data points for FRITZ!Box devices** to make this information available.
 
@@ -281,6 +283,7 @@ Contain the member's history for the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
+* (afuerhoff) Fixed legacy `presenceFiltered` states that did not update
 * (afuerhoff) Fixed false-positive presence detection for devices with duplicate hostnames or MAC addresses and added warnings for conflicting active MAC addresses (issue #151)
 * (afuerhoff) Fixed the legacy filter to restore presence immediately when the device is detected again after a short absence
 * (softwarecrash) Added filtered family-wide and group presence/absence states, member lists and counts

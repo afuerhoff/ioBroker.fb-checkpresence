@@ -3060,6 +3060,11 @@ class FbCheckpresence extends utils.Adapter {
             } else {
                 this.log.warn(`can not get active state from member ${member}`);
             }
+            await this.setStateChangedAsync(`${memberPath}.presenceFiltered`, {
+                val: typeof newActive === 'boolean' ? newActive : null,
+                ack: true,
+                q: typeof newActive === 'boolean' ? 0 : 0x40,
+            });
             return presence;
         } catch (error) {
             this.errorHandler(error, 'calcMemberAttributes: ');
