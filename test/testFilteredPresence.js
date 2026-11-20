@@ -183,6 +183,27 @@ describe('Filtered presence aggregates', () => {
         assert.equal(states.get('familyMembers.A.presenceFiltered').val, false);
         assert.equal(states.get('familyMembers.A.presenceFiltered').q, 0);
     });
+    it('updates legacy presenceFiltered before optional history processing can fail', async () => {
+        const {adapter, states} = harness(false, false);
+        adapter.config.history = 'history.0';
+        adapter.historyAlive = {val: true};
+        adapter.errorHandler = () => {};
+        adapter.getHistoryTable = async () => {
+            throw new Error('history unavailable');
+        };
+        states.set('familyMembers.A.presence', {val: false, lc: Date.now(), q: 0});
+        states.set('familyMembers.A.comming', {val: 'existing', lc: Date.now(), q: 0});
+        states.set('familyMembers.A.going', {val: 'existing', lc: Date.now(), q: 0});
+        await adapter.calcMemberAttributes(
+            {familymember: 'A', group: '', usefilter: false},
+            0,
+            true,
+            new Date(),
+            {val: null, all: true, one: false, presentMembers: '', absentMembers: '', allAbsence: true, oneAbsence: false, presentCount: 0, absentCount: 0},
+        );
+        assert.equal(states.get('familyMembers.A.presence').val, true);
+        assert.equal(states.get('familyMembers.A.presenceFiltered').val, true);
+    });
     it('restores presence after a short legacy-filter disconnect', async () => {
         const {adapter, states} = harness(false, false);
         adapter.config.familymembers = [{enabled: true, familymember: 'A', group: '', raw: false, usefilter: true}];
