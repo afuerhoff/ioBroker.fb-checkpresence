@@ -281,6 +281,7 @@ Contain the member's history for the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
+* (afuerhoff) Fixed the legacy filter to restore presence immediately when the device is detected again after a short absence
 * (softwarecrash) Added filtered family-wide and group presence/absence states, member lists and counts
 * (afuerhoff) Improved JavaScript type checking and fixed type-safety issues in error handling and timer usage
 * (afuerhoff) Guarded device names before applying string operations
