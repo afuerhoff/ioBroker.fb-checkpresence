@@ -152,6 +152,23 @@ You can enable filtering for an individual family member. When the device is det
 
 Some device information, such as connection speed, is read from the individual FRITZ!Box device data points. Enable **Create data points for FRITZ!Box devices** to make this information available.
 
+### Filtered family and group states
+
+The existing aggregate states keep their original behavior. The following additional read-only states use the filtered results of enabled family members, without a second filter delay:
+
+| State | Meaning |
+| --- | --- |
+| `presenceFiltered` | At least one member is present |
+| `presenceAllFiltered` | All members are present |
+| `absenceFiltered` | At least one member is absent |
+| `absenceAllFiltered` | All members are absent |
+| `presentMembersFiltered` / `absentMembersFiltered` | Comma-separated member names |
+| `presentCountFiltered` / `absentCountFiltered` | Number of present / absent members |
+
+In the current structure, family-wide states are below `familyMembers` and group states below `familyMembers.<group>`. The filtered family-wide states include **all enabled members**, including members assigned to named groups. In compatibility mode, family-wide states are at the adapter root; group paths remain unchanged. Disabled members are excluded.
+
+With the new history-based filter, the aggregate uses exactly the result published as each person's `presenceFiltered` value. Members with filtering disabled use their detected status immediately. With the legacy filter, it uses the already filtered presence results. If a required filtered result cannot be calculated (for example, a missing device response or unavailable history), the aggregate is published as `null` with quality `0x40`, rather than reporting an uncertain absence. An empty enabled-member list is also unknown. The existing empty-history fallback remains unchanged.
+
 ### Manually trigger presence detection
 
 You can manually trigger a presence check by sending the `triggerPresence` message to the adapter. Further trigger requests are rejected during the 10-second cooldown. The callback returns `false` if the request is blocked and `true` if the adapter accepts it.
@@ -264,6 +281,7 @@ Contain the member's history for the current day.
 
 ## Changelog
 ### **WORK IN PROGRESS**
+* (softwarecrash) Added filtered family-wide and group presence/absence states, member lists and counts
 * (afuerhoff) Improved JavaScript type checking and fixed type-safety issues in error handling and timer usage
 * (afuerhoff) Guarded device names before applying string operations
 * (afuerhoff) Added TypeScript definitions for adapter configuration options
